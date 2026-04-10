@@ -59,7 +59,7 @@ export default function DashboardLayout(
           {/* Page breadcrumb */}
           <div class="flex items-center gap-2.5 min-w-0">
             <div class="hidden md:flex items-center gap-1.5 text-sm text-gray-400">
-              <span class="text-teal-600 font-600">istay</span>
+              <span class="text-istay-900 font-700">istay</span>
               <span aria-hidden="true">/</span>
               <span class="text-gray-600 font-500 capitalize">
                 {currentPath.split("/").filter(Boolean).slice(-1)[0] ||
@@ -91,7 +91,7 @@ export default function DashboardLayout(
               {/* Indicator dot — only shown when there are unread notifications */}
               {unreadCount > 0 && (
                 <span
-                  class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-teal-500 ring-2 ring-white"
+                  class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-mint-500 ring-2 ring-white"
                   aria-hidden="true"
                 />
               )}
@@ -102,7 +102,7 @@ export default function DashboardLayout(
 
             {/* Host Avatar + Name */}
             <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center text-white text-sm font-700 shadow-sm">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-istay-900 to-istay-700 flex items-center justify-center text-white text-sm font-700 shadow-sm">
                 {hostInitial}
               </div>
               <div class="hidden sm:block">

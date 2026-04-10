@@ -101,9 +101,9 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
         style="font-family: 'Inter', system-ui, sans-serif;"
       >
         {/* ── Header ───────────────────────────────────────────── */}
-        <div class="bg-gradient-to-b from-teal-900/40 to-transparent px-4 pt-6 pb-4">
+        <div class="bg-gradient-to-b from-istay-900/60 to-transparent px-4 pt-6 pb-4">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-xl bg-teal-500/20 border border-teal-500/30 flex items-center justify-center">
+            <div class="w-10 h-10 rounded-xl bg-istay-900/40 border border-istay-400/30 flex items-center justify-center">
               <svg
                 width="20"
                 height="20"
@@ -113,7 +113,7 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
               >
                 <path
                   d="M10 1.5L2 7.5V18H7V12H13V18H18V7.5L10 1.5Z"
-                  stroke="#14b8a6"
+                  stroke="#0C4D4D"
                   stroke-width="1.5"
                   stroke-linejoin="round"
                 />
@@ -123,7 +123,7 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
               <h1 class="text-base font-700 text-white leading-tight">
                 {property.name}
               </h1>
-              <p class="text-xs text-teal-400 font-500">Caretaker Access</p>
+              <p class="text-xs text-istay-400 font-600 uppercase tracking-tight">Caretaker Access</p>
             </div>
           </div>
 
@@ -139,7 +139,7 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
             </div>
             <div class="text-right">
               <p class="text-xs text-gray-500">Arrivals</p>
-              <p class="text-2xl font-800 text-teal-400">
+              <p class="text-2xl font-800 text-istay-400">
                 {todayCheckIns.length}
               </p>
             </div>
@@ -272,7 +272,7 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
           {/* Footer */}
           <div class="pt-4 border-t border-gray-900 text-center">
             <p class="text-xs text-gray-700">
-              istay Caretaker Portal · Chishti Ventures Pvt. Ltd.
+              istay Caretaker Portal
             </p>
           </div>
         </div>

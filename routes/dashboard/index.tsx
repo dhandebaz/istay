@@ -8,7 +8,7 @@ interface OverviewData {
   recentBookings: Booking[];
   setupFeePaid: boolean;
 }
-
+export const handler: Handlers<OverviewData> = {
   async GET(_req, ctx) {
     const { hostId } = ctx.state;
     const kv = await Deno.openKv();
@@ -135,7 +135,7 @@ export default function DashboardOverview(
           label="Active Bookings"
           value={String(stats.activeBookings)}
           sub="Upcoming confirmed stays"
-          gradient="bg-gradient-to-br from-teal-500 to-emerald-600"
+          gradient="bg-gradient-to-br from-istay-900 to-istay-700"
           icon={
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
               <rect x="3" y="4" width="14" height="13" rx="2" stroke="white" stroke-width="1.5" />
@@ -198,7 +198,7 @@ export default function DashboardOverview(
             icon: "🏠",
             label: "Add Property",
             desc: "Import from Airbnb in seconds",
-            color: "hover:border-teal-300",
+            color: "hover:border-istay-300",
           },
           {
             href: "#",
@@ -235,7 +235,7 @@ export default function DashboardOverview(
           <h2 class="text-base font-700 text-gray-900">Recent Bookings</h2>
           <a
             href="/dashboard/bookings"
-            class="text-xs text-teal-600 font-600 hover:text-teal-700 transition-colors"
+            class="text-xs text-istay-700 font-600 hover:text-istay-800 transition-colors"
           >
             View all →
           </a>
@@ -251,7 +251,7 @@ export default function DashboardOverview(
               </p>
               <a
                 href="/dashboard/properties"
-                class="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-teal-500 text-white text-xs font-600 hover:bg-teal-600 transition-colors"
+                class="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-istay-900 text-white text-xs font-600 hover:bg-istay-800 transition-colors"
               >
                 Add your first property →
               </a>
@@ -297,7 +297,7 @@ export default function DashboardOverview(
                         <p class="font-700 text-gray-900">
                           {formatINR(booking.amount)}
                         </p>
-                        <p class="text-xs text-teal-600">
+                        <p class="text-xs text-istay-700">
                           {formatINR(booking.amount * 0.95)} yours
                         </p>
                       </td>

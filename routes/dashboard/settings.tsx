@@ -120,7 +120,7 @@ export default function SettingsPage(
               type="text"
               value={host?.name ?? ""}
               required
-              class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 focus:border-teal-400 focus:bg-white focus:outline-none transition-all"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 focus:border-istay-700 focus:bg-white focus:outline-none transition-all"
             />
           </div>
 
@@ -135,7 +135,7 @@ export default function SettingsPage(
               type="email"
               value={host?.email ?? ""}
               required
-              class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 focus:border-teal-400 focus:bg-white focus:outline-none transition-all"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 focus:border-istay-700 focus:bg-white focus:outline-none transition-all"
             />
           </div>
 
@@ -149,13 +149,13 @@ export default function SettingsPage(
               name="phone"
               type="tel"
               value={host?.phone ?? ""}
-              class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 focus:border-teal-400 focus:bg-white focus:outline-none transition-all"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 focus:border-istay-700 focus:bg-white focus:outline-none transition-all"
             />
           </div>
 
           <button
             type="submit"
-            class="px-6 py-3 rounded-xl bg-teal-500 text-white text-sm font-700 hover:bg-teal-600 active:scale-95 transition-all shadow-sm"
+            class="px-6 py-3 rounded-xl bg-istay-900 text-white text-sm font-700 hover:bg-istay-800 active:scale-95 transition-all shadow-sm"
           >
             Save Changes
           </button>
@@ -165,14 +165,14 @@ export default function SettingsPage(
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
           <h2 class="text-base font-700 text-gray-900 mb-3">Subscription</h2>
 
-          <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-100">
+          <div class="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-istay-50 to-istay-100 border border-istay-200">
             <div>
-              <p class="text-sm font-700 text-teal-800">Lifetime Plan</p>
-              <p class="text-xs text-teal-600 mt-0.5">
+              <p class="text-sm font-700 text-istay-900">Lifetime Plan</p>
+              <p class="text-xs text-istay-700 mt-0.5">
                 5% commission per booking · No monthly fees
               </p>
             </div>
-            <span class="px-3 py-1 rounded-full bg-teal-500 text-white text-xs font-700">
+            <span class="px-3 py-1 rounded-full bg-istay-900 text-white text-xs font-700">
               Active
             </span>
           </div>

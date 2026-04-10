@@ -109,7 +109,7 @@ export default function KnowledgePage(
             </p>
             <a
               href="/dashboard/properties"
-              class="px-5 py-2.5 rounded-xl bg-teal-500 text-white text-sm font-700 hover:bg-teal-600 transition-colors"
+              class="px-5 py-2.5 rounded-xl bg-istay-900 text-white text-sm font-700 hover:bg-istay-800 transition-colors"
             >
               → Go to Properties
             </a>
