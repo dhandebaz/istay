@@ -124,11 +124,10 @@ export default function CheckoutForm(
         setTimeout(() => {
           globalThis.location.href = data.paymentLink;
         }, 800);
-      } else if (data.mock) {
-        // Dev mode: show booking ID
-        setTimeout(() => {
-          globalThis.location.href = data.paymentLink;
-        }, 800);
+      } else {
+        // No payment link returned — show error
+        step.value = "error";
+        errorMsg.value = "Payment link not available. Please contact support.";
       }
     } catch {
       step.value = "error";

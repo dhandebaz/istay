@@ -158,16 +158,17 @@ export const handler: Handlers = {
 
     // ── Initiate Payment ───────────────────────────────────────
     if (!CASHFREE_APP_ID || !CASHFREE_SECRET_KEY) {
-      // Dev mode: return a mock booking confirmation URL
-      return Response.json({
-        ok: true,
-        bookingId,
-        amount,
-        nights,
-        paymentLink: `${APP_BASE_URL}/p/checkout/confirm?bookingId=${bookingId}&mock=1`,
-        mock: true,
-        message: "Payment gateway not configured. Set CASHFREE_APP_ID and CASHFREE_SECRET_KEY.",
-      });
+      // Payment gateway not configured — return error with booking ID
+      // so it can be recovered once payment is set up
+      return Response.json(
+        {
+          error: "Payment gateway not configured. Set CASHFREE_APP_ID and CASHFREE_SECRET_KEY.",
+          bookingId,
+          amount,
+          nights,
+        },
+        { status: 503 },
+      );
     }
 
     const orderId = `istay_${bookingId}_${Date.now()}`;

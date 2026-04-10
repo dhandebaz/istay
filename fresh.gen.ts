@@ -26,6 +26,9 @@ import * as $dashboard_layout from "./routes/dashboard/_layout.tsx";
 import * as $dashboard_index from "./routes/dashboard/index.tsx";
 import * as $dashboard_properties from "./routes/dashboard/properties.tsx";
 import * as $dashboard_knowledge from "./routes/dashboard/knowledge.tsx";
+import * as $dashboard_bookings from "./routes/dashboard/bookings.tsx";
+import * as $dashboard_guests from "./routes/dashboard/guests.tsx";
+import * as $dashboard_settings from "./routes/dashboard/settings.tsx";
 import * as $p_propId from "./routes/p/[propId].tsx";
 import * as $p_checkout from "./routes/p/checkout.tsx";
 import * as $care_token from "./routes/care/[token].tsx";
@@ -67,6 +70,9 @@ const manifest = {
     "./routes/dashboard/index.tsx": $dashboard_index,
     "./routes/dashboard/properties.tsx": $dashboard_properties,
     "./routes/dashboard/knowledge.tsx": $dashboard_knowledge,
+    "./routes/dashboard/bookings.tsx": $dashboard_bookings,
+    "./routes/dashboard/guests.tsx": $dashboard_guests,
+    "./routes/dashboard/settings.tsx": $dashboard_settings,
     "./routes/p/[propId].tsx": $p_propId,
     "./routes/p/checkout.tsx": $p_checkout,
     "./routes/care/[token].tsx": $care_token,

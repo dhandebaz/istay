@@ -5,7 +5,6 @@ interface NavItem {
   label: string;
   icon: JSX.Element;
   exact?: boolean;
-  comingSoon?: boolean;
 }
 
 interface SidebarProps {
@@ -77,7 +76,6 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
     {
       href: "/dashboard/bookings",
       label: "Bookings",
-      comingSoon: true,
       icon: (
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
           <rect x="2.5" y="3.5" width="13" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5" />
@@ -88,7 +86,6 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
     {
       href: "/dashboard/guests",
       label: "Guests",
-      comingSoon: true,
       icon: (
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
           <circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.5" />
@@ -99,7 +96,6 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
     {
       href: "/dashboard/settings",
       label: "Settings",
-      comingSoon: true,
       icon: (
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
           <circle cx="9" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5" />
@@ -142,15 +138,15 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
           return (
             <a
               key={item.href}
-              href={item.comingSoon ? undefined : item.href}
+              href={item.href}
               onClick={() => {
-                if (!item.comingSoon) setActivePath(item.href);
+                setActivePath(item.href);
                 setMobileOpen(false);
               }}
               aria-current={active ? "page" : undefined}
               class={`
                 flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-500 transition-all duration-150
-                ${item.comingSoon ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+                cursor-pointer
                 ${
                 active
                   ? "bg-teal-500 text-white shadow-sm"
@@ -162,11 +158,6 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
                 {item.icon}
               </span>
               <span class="flex-1">{item.label}</span>
-              {item.comingSoon && (
-                <span class="text-xs px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-400 font-500">
-                  Soon
-                </span>
-              )}
             </a>
           );
         })}

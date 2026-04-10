@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 67 notes | Score threshold: >40
+> 79 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,6 +20,7 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **⚠️ GOTCHA: Strengthened types Fixed** — - - Fixed null crash in Guest — prevents null/undefined runtime crashe
 - **gotcha in brainsync_auto.md** — - > 35 notes | Score threshold: >40
 + > 36 notes | Score threshold: >4
 - **gotcha in brainsync_auto.md** — - > 27 notes | Score threshold: >40
@@ -28,31 +29,23 @@
 
 Content summary (3
 
-## Active: `.`
-
-- **convention in .gitignore**
-- **[.windsurfrules] NEVER use TailwindCSS. Only use vanilla CSS.**
-- **[CLAUDE.md] NEVER use TailwindCSS. Only use vanilla CSS.**
-- **gotcha in brainsync_auto.md**
-- **gotcha in brainsync_auto.md**
-
 ## Project Standards
 
-- convention in .gitignore
-- [.windsurfrules] NEVER use TailwindCSS. Only use vanilla CSS.
-- [CLAUDE.md] NEVER use TailwindCSS. Only use vanilla CSS.
+- Strengthened types Optimized
+- Added API key auth authentication — prevents XSS injection attacks — confirmed 3x
+- what-changed in shared-context.json — confirmed 7x
+- Strengthened types Optimized
 - Strengthened types Optimized
 - Strengthened types Fixed
 - Strengthened types Optimized
 - what-changed in shared-context.json — confirmed 3x
-- Strengthened types Optimized
 
 ## Recent Decisions
 
+- Optimized Property — parallelizes async operations for speed
+- Optimized Score — evolves the database schema to support new requirements
 - Optimized Project — evolves the database schema to support new requirements
 - Optimized Score — evolves the database schema to support new requirements
-- Optimized Score — evolves the database schema to support new requirements
-- Optimized Property — parallelizes async operations for speed
 
 ## Verified Best Practices
 

@@ -14,28 +14,28 @@ const BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 // ── Types ─────────────────────────────────────────────────────
 
 export interface GeminiTextOptions {
-  /** The user prompt */
+  // The user prompt
   prompt: string;
-  /** System instruction (injected as systemInstruction) */
+  // System instruction (injected as systemInstruction)
   systemPrompt?: string;
-  /** Conversation history (for multi-turn chat) */
+  // Conversation history (for multi-turn chat)
   history?: Array<{ role: "user" | "model"; content: string }>;
-  /** Controls randomness. 0=deterministic, 1=creative. Default: 0.3 */
+  // Controls randomness. 0=deterministic, 1=creative. Default: 0.3
   temperature?: number;
-  /** Max output tokens. Default: 1024 */
+  // Max output tokens. Default: 1024
   maxOutputTokens?: number;
-  /** If true, forces Gemini to return valid JSON */
+  // If true, forces Gemini to return valid JSON
   jsonMode?: boolean;
 }
 
 export interface GeminiVisionOptions {
-  /** The text prompt accompanying the image */
+  // The text prompt accompanying the image
   prompt: string;
-  /** System instruction */
+  // System instruction
   systemPrompt?: string;
-  /** Base64-encoded image data (without data:image/... prefix) */
+  // Base64-encoded image data (without data:image/... prefix)
   imageBase64: string;
-  /** MIME type of the image. Default: "image/jpeg" */
+  // MIME type of the image. Default: "image/jpeg"
   imageMimeType?: string;
   temperature?: number;
   maxOutputTokens?: number;
@@ -43,24 +43,22 @@ export interface GeminiVisionOptions {
 }
 
 export interface GeminiResponse {
-  /** The generated text */
+  // The generated text
   text: string;
-  /** Estimated input token count */
+  // Estimated input token count
   inputTokens?: number;
-  /** Estimated output token count */
+  // Estimated output token count
   outputTokens?: number;
-  /** Whether the response was truncated */
+  // Whether the response was truncated
   truncated: boolean;
-  /** Raw finish reason from API */
+  // Raw finish reason from API
   finishReason?: string;
 }
 
 // ── Helpers ───────────────────────────────────────────────────
 
-/**
- * Strip data-URI prefix from base64 strings.
- * "data:image/jpeg;base64,/9j/4A..." → "/9j/4A..."
- */
+// Strip data-URI prefix from base64 strings.
+// "data:image/jpeg;base64,/9j/4A..." → "/9j/4A..."
 export function stripDataUri(b64: string): { data: string; mime: string } {
   const match = b64.match(/^data:([^;]+);base64,(.+)$/s);
   if (match) {
@@ -69,9 +67,7 @@ export function stripDataUri(b64: string): { data: string; mime: string } {
   return { data: b64, mime: "image/jpeg" };
 }
 
-/**
- * Builds the generationConfig block.
- */
+// Builds the generationConfig block.
 function buildGenerationConfig(opts: {
   temperature?: number;
   maxOutputTokens?: number;
@@ -89,9 +85,7 @@ function buildGenerationConfig(opts: {
   return config;
 }
 
-/**
- * Builds safety settings (permissive for OCR/KYC content).
- */
+// Builds safety settings (permissive for OCR/KYC content).
 function buildSafetySettings() {
   return [
     { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
@@ -101,9 +95,7 @@ function buildSafetySettings() {
   ];
 }
 
-/**
- * Parse the Gemini API response into our clean GeminiResponse.
- */
+// Parse the Gemini API response into our clean GeminiResponse.
 function parseResponse(data: Record<string, unknown>): GeminiResponse {
   const candidates = data.candidates as Array<Record<string, unknown>> | undefined;
   if (!candidates || candidates.length === 0) {
@@ -140,19 +132,15 @@ function parseResponse(data: Record<string, unknown>): GeminiResponse {
 
 // ── Main API Calls ────────────────────────────────────────────
 
-/**
- * Call Gemini Flash-Lite with a text-only prompt.
- * Supports multi-turn conversation via `history`.
- */
+// Call Gemini Flash-Lite with a text-only prompt.
+// Supports multi-turn conversation via `history`.
 export async function callGemini(opts: GeminiTextOptions): Promise<GeminiResponse> {
   const apiKey = GEMINI_API_KEY();
   if (!apiKey) {
-    console.warn("[gemini] GEMINI_API_KEY not set — returning mock response");
-    return {
-      text: "AI features require GEMINI_API_KEY. Please set it in your .env file.",
-      truncated: false,
-      finishReason: "MOCK",
-    };
+    throw new GeminiError(
+      "GEMINI_API_KEY is not configured. Set it in your .env file. Get a free key at https://aistudio.google.com/apikey",
+      401,
+    );
   }
 
   // Build contents array (history + current message)
@@ -206,26 +194,15 @@ export async function callGemini(opts: GeminiTextOptions): Promise<GeminiRespons
   return result;
 }
 
-/**
- * Call Gemini Flash-Lite with an image (multimodal / vision).
- * Used for OCR / ID verification.
- */
+// Call Gemini Flash-Lite with an image (multimodal / vision).
+// Used for OCR / ID verification.
 export async function callGeminiVision(opts: GeminiVisionOptions): Promise<GeminiResponse> {
   const apiKey = GEMINI_API_KEY();
   if (!apiKey) {
-    console.warn("[gemini] GEMINI_API_KEY not set — returning mock OCR response");
-    return {
-      text: JSON.stringify({
-        name: "Mock User",
-        dob: "1990-01-01",
-        id_number: "XXXX-XXXX-1234",
-        address: "Mock Address",
-        match_score: 50,
-        flags: ["mock_mode"],
-      }),
-      truncated: false,
-      finishReason: "MOCK",
-    };
+    throw new GeminiError(
+      "GEMINI_API_KEY is not configured. Set it in your .env file. Get a free key at https://aistudio.google.com/apikey",
+      401,
+    );
   }
 
   const { data: imageData, mime: detectedMime } = stripDataUri(opts.imageBase64);

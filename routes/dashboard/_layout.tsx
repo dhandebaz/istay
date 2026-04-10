@@ -1,13 +1,51 @@
 import { type PageProps } from "$fresh/server.ts";
-import type { DashboardState } from "../../utils/types.ts";
+import { type Handlers } from "$fresh/server.ts";
+import type { DashboardState, Notification } from "../../utils/types.ts";
 import DashboardSidebar from "../../islands/DashboardSidebar.tsx";
 
+const getKv = (() => {
+  let kv: Deno.Kv | null = null;
+  return async () => {
+    if (!kv) kv = await Deno.openKv();
+    return kv;
+  };
+})();
+
+interface LayoutData {
+  unreadCount: number;
+}
+
+export const handler: Handlers<LayoutData, DashboardState> = {
+  async GET(_req, ctx) {
+    // Load unread notification count from KV
+    let unreadCount = 0;
+    try {
+      const kv = await getKv();
+      const iter = kv.list<Notification>({
+        prefix: ["notification", ctx.state.hostId],
+      });
+      for await (const entry of iter) {
+        if (entry.value && !entry.value.read) {
+          unreadCount++;
+        }
+      }
+    } catch {
+      // KV not available — show 0
+    }
+
+    ctx.state = { ...ctx.state };
+    const resp = await ctx.render({ unreadCount });
+    return resp;
+  },
+};
+
 export default function DashboardLayout(
-  { Component, url, state }: PageProps<unknown, DashboardState>,
+  { Component, url, state, data }: PageProps<LayoutData, DashboardState>,
 ) {
   const hostName = state?.hostName ?? "Host";
   const hostInitial = hostName.charAt(0).toUpperCase();
   const currentPath = url.pathname;
+  const unreadCount = data?.unreadCount ?? 0;
 
   return (
     <div class="flex h-screen overflow-hidden bg-gray-50 font-sans">
@@ -32,10 +70,11 @@ export default function DashboardLayout(
 
           {/* Right side — Host info + actions */}
           <div class="flex items-center gap-3">
-            {/* Notification bell (stub) */}
-            <button
+            {/* Notification bell */}
+            <a
+              href="/dashboard/bookings"
               class="relative p-2 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-              aria-label="Notifications"
+              aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
             >
               <svg
                 width="18"
@@ -49,12 +88,14 @@ export default function DashboardLayout(
                   fill="currentColor"
                 />
               </svg>
-              {/* Indicator dot */}
-              <span
-                class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-teal-500 ring-2 ring-white"
-                aria-hidden="true"
-              />
-            </button>
+              {/* Indicator dot — only shown when there are unread notifications */}
+              {unreadCount > 0 && (
+                <span
+                  class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-teal-500 ring-2 ring-white"
+                  aria-hidden="true"
+                />
+              )}
+            </a>
 
             {/* Divider */}
             <div class="w-px h-6 bg-gray-100" aria-hidden="true" />

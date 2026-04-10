@@ -2,15 +2,24 @@
 // routes/dashboard/_middleware.ts — Auth guard for all /dashboard/* routes
 //
 // Checks for a "host_session" cookie.
-// MVP: The cookie VALUE is used directly as the hostId.
-// Production: The value should be an opaque session token looked up in KV.
+// Format: "hostId|hostName" (URL-encoded)
+//
+// Loads host data from KV to verify the session is valid.
 //
 // To test locally, set in DevTools:
-//   document.cookie = "host_session=demo_host_123; path=/"
+//   document.cookie = "host_session=demo_host_123|Demo%20Host; path=/"
 // ================================================================
 
 import { type MiddlewareHandlerContext } from "$fresh/server.ts";
 import type { DashboardState } from "../../utils/types.ts";
+
+const getKv = (() => {
+  let kv: Deno.Kv | null = null;
+  return async () => {
+    if (!kv) kv = await Deno.openKv();
+    return kv;
+  };
+})();
 
 function parseCookies(cookieHeader: string | null): Record<string, string> {
   const result: Record<string, string> = {};
@@ -41,20 +50,42 @@ export async function handler(
     });
   }
 
-  // TODO (Production): Replace the direct cookie-as-hostId pattern with:
-  //   const sessionData = await getSession(session);
-  //   if (!sessionData || sessionData.expiresAt < Date.now()) {
-  //     return redirect to login;
-  //   }
-  //   ctx.state.hostId = sessionData.hostId;
-  //   ctx.state.hostName = sessionData.hostName;
+  // Parse session cookie: "hostId|hostName" (URL-encoded)
+  let hostId: string;
+  let hostName = "Host";
 
-  // TODO (Production): Load host name from KV
-  //   const host = await getHost(session);
-  //   ctx.state.hostName = host?.name ?? "Host";
+  try {
+    const decoded = decodeURIComponent(session);
+    const parts = decoded.split("|");
+    hostId = parts[0]?.trim() ?? "";
+    if (parts[1]) {
+      hostName = parts[1].trim();
+    }
+  } catch {
+    hostId = session.trim();
+  }
 
-  ctx.state.hostId = session;
-  ctx.state.hostName = "Host"; // Overridden by dashboard pages once KV is populated
+  if (!hostId) {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: "/?auth=invalid" },
+    });
+  }
+
+  // Try to load host from KV to verify they exist and get latest name
+  try {
+    const kv = await getKv();
+    const hostEntry = await kv.get(["host", hostId]);
+    if (hostEntry.value) {
+      const host = hostEntry.value as { name?: string };
+      hostName = host.name ?? hostName;
+    }
+  } catch (err) {
+    console.warn("[middleware] KV lookup failed, using cookie data:", err);
+  }
+
+  ctx.state.hostId = hostId;
+  ctx.state.hostName = hostName;
 
   return await ctx.next();
 }

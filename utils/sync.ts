@@ -83,13 +83,11 @@ export async function syncPropertyCalendar(
   }
 }
 
-/**
- * syncAllProperties — scans all property indices and syncs
- * any property that has an `icalUrl` configured.
- *
- * Registered as Deno.cron in main.ts:
- *   Deno.cron("ical-sync", "*/30 * * * *", syncAllProperties);
- */
+// syncAllProperties — scans all property indices and syncs
+// any property that has an `icalUrl` configured.
+//
+// Registered as Deno.cron in main.ts:
+//   Deno.cron("ical-sync", "*/30 * * * *", syncAllProperties);
 export async function syncAllProperties(): Promise<{
   total: number;
   synced: number;

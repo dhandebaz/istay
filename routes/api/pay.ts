@@ -106,25 +106,21 @@ export const handler: Handlers = {
       order_note: `istay booking #${bookingId}`,
     };
 
-    // ── Vendor Split (enable once hosts are onboarded as vendors) ──
-    // TODO: Uncomment this block after vendor onboarding is live.
-    // Each host must complete Cashfree sub-merchant onboarding at:
-    // https://docs.cashfree.com/docs/payout-create-beneficiary
-    //
-    // if (CASHFREE_ISTAY_VENDOR_ID) {
-    //   orderPayload.vendor_split = [
-    //     {
-    //       vendor_id: hostVendorId,
-    //       amount: hostAmount,
-    //       percentage: null,
-    //     },
-    //     {
-    //       vendor_id: CASHFREE_ISTAY_VENDOR_ID,
-    //       amount: istayAmount,
-    //       percentage: null,
-    //     },
-    //   ];
-    // }
+    // ── Vendor Split (active when istay vendor ID is configured) ───
+    if (CASHFREE_ISTAY_VENDOR_ID) {
+      orderPayload.vendor_split = [
+        {
+          vendor_id: hostVendorId,
+          amount: hostAmount,
+          percentage: null,
+        },
+        {
+          vendor_id: CASHFREE_ISTAY_VENDOR_ID,
+          amount: istayAmount,
+          percentage: null,
+        },
+      ];
+    }
 
     try {
       const cfRes = await fetch(`${CASHFREE_BASE_URL}/pg/orders`, {
