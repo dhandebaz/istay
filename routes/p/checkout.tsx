@@ -68,20 +68,13 @@ export default function CheckoutPage({ data }: PageProps<CheckoutData>) {
         {/* Top Bar */}
         <header class="bg-white border-b border-gray-100 py-4 px-4 sm:px-6">
           <div class="max-w-3xl mx-auto flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2">
-              <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-teal-500 text-white">
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="white" aria-hidden="true">
-                  <path d="M6.5 0.5L0.5 5V12.5H4.5V8H8.5V12.5H12.5V5L6.5 0.5Z" stroke-width="0.3" stroke-linejoin="round" />
-                </svg>
-              </span>
-              <span class="text-base font-800 text-gray-900">
-                i<span class="text-teal-500">stay</span>
-              </span>
+            <a href="/" class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95">
+              <img src="/logo.svg" alt="istay logo" class="h-6 w-auto" />
             </a>
             <div class="flex items-center gap-1.5 text-xs text-gray-400">
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
                 <rect x="1" y="1" width="11" height="11" rx="2" stroke="#d1d5db" stroke-width="1.25" />
-                <path d="M4 6.5L5.5 8L9 4.5" stroke="#14b8a6" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M4 6.5L5.5 8L9 4.5" stroke="#00E676" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
               Secure Checkout
             </div>
@@ -147,7 +140,7 @@ export default function CheckoutPage({ data }: PageProps<CheckoutData>) {
                     </div>
                     <div class="border-t border-gray-100 pt-2 flex justify-between">
                       <span class="font-700 text-gray-900">Total</span>
-                      <span class="font-800 text-teal-600 text-lg">
+                      <span class="font-800 text-istay-900 text-lg">
                         {formatINR(amount)}
                       </span>
                     </div>
@@ -156,7 +149,7 @@ export default function CheckoutPage({ data }: PageProps<CheckoutData>) {
                   {/* Change dates */}
                   <a
                     href={`/p/${property.id}`}
-                    class="block text-center text-xs text-teal-600 hover:text-teal-700 font-500 transition-colors"
+                    class="block text-center text-xs text-istay-900 hover:text-istay-800 font-500 transition-colors"
                   >
                     ← Change dates
                   </a>

@@ -14,10 +14,11 @@ import {
   getBookingById,
   saveBooking,
   saveGuestVerification,
+  saveNotification,
   savePrivateVerification,
 } from "../../utils/db.ts";
-import { callGeminiVision } from "../../utils/gemini.ts";
-import type { GuestVerification, OcrResult, PrivateVerification } from "../../utils/types.ts";
+import { callGeminiVision, GeminiError } from "../../utils/gemini.ts";
+import type { GuestVerification, Notification, OcrResult, PrivateVerification } from "../../utils/types.ts";
 
 const ALLOWED_ID_TYPES = [
   "aadhaar",
@@ -161,12 +162,6 @@ export const handler: Handlers = {
         }
       }
 
-      console.log(
-        `[verify] OCR result: matchScore=${ocrResult.match_score}, flags=${
-          ocrResult.flags?.join(", ") ?? "none"
-        }`,
-      );
-    } catch (err) {
       console.error("[verify] Gemini OCR error:", err);
 
       // Mark as failed but don't crash — the booking is still valid
@@ -174,9 +169,23 @@ export const handler: Handlers = {
       verification.flags = ["ocr_error"];
       await saveGuestVerification(verification);
 
+      // Notify the host about the failed verification
+      const failNotification: Notification = {
+        id: crypto.randomUUID().replace(/-/g, "").slice(0, 12),
+        hostId: booking.hostId,
+        type: "verification_failed" as Notification["type"],
+        title: "ID Verification Failed",
+        message: `Guest ${guestName.trim()} uploaded an ID for booking #${bookingId.slice(0, 8).toUpperCase()} but OCR processing failed. Manual review is required.`,
+        propertyName: "",
+        meta: { bookingId, guestName: guestName.trim() },
+        read: false,
+        createdAt: now,
+      };
+      await saveNotification(failNotification);
+
       return Response.json({
         ok: true,
-        status: "failed",
+        status: "review_needed",
         message: "ID verification encountered an error. Our team will review manually.",
         bookingId,
         matchScore: 0,
@@ -234,13 +243,22 @@ export const handler: Handlers = {
         updatedAt: now,
       });
 
-      console.log(
-        `[verify] Booking ${bookingId} verified (score: ${matchScore}). ID last4: ${updatedVerification.extractedData?.idLast4}`,
-      );
-    } else {
-      console.log(
-        `[verify] Booking ${bookingId} NOT verified (score: ${matchScore}). Flags: ${flags.join(", ")}`,
-      );
+    }
+
+    // If not verified, notify the host to review manually
+    if (!isVerified) {
+      const reviewNotification: Notification = {
+        id: crypto.randomUUID().replace(/-/g, "").slice(0, 12),
+        hostId: booking.hostId,
+        type: "verification_complete" as Notification["type"],
+        title: matchScore >= 70 ? "ID Partial Match" : "ID Verification Failed",
+        message: `Guest ${guestName.trim()} (booking #${bookingId.slice(0, 8).toUpperCase()}) scored ${matchScore}/100 on ID verification. ${flags.length > 0 ? `Flags: ${flags.join(", ")}` : "Manual review recommended."}`,
+        propertyName: "",
+        meta: { bookingId, matchScore: String(matchScore), guestName: guestName.trim() },
+        read: false,
+        createdAt: now,
+      };
+      await saveNotification(reviewNotification);
     }
 
     return Response.json({

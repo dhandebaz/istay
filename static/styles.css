@@ -25,8 +25,8 @@ html {
 
 /* --- Selection Color --- */
 ::selection {
-  background-color: #99f6e4; /* brand-200 */
-  color: #134e4a;            /* brand-900 */
+  background-color: #B2DFDB; /* brand-teal-200 */
+  color: #0c4d4d;            /* brand-teal-900 */
 }
 
 /* --- Custom Scrollbar (webkit) --- */
@@ -50,7 +50,7 @@ html {
 
 /* --- Focus Visible Ring --- */
 :focus-visible {
-  outline: 2px solid #14b8a6;
+  outline: 2px solid #0c4d4d;
   outline-offset: 3px;
   border-radius: 4px;
 }

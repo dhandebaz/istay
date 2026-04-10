@@ -1,18 +1,17 @@
 // ================================================================
-// routes/api/pay.ts — Booking Payment Initiation (Cashfree Split)
+// routes/api/pay.ts — Booking Payment Initiation (Easebuzz Split)
 //
 // POST /api/pay
 // Body: PayRequestBody
-// Returns: { ok, order, paymentSessionId, split } | { error }
+// Returns: { ok, order, access_key, split } | { error }
 //
-// Architecture: 95% → Host vendor account, 5% → istay vendor account
-// Requires Hosts to be onboarded as Cashfree sub-merchants (Vendors).
+// Architecture: 95% → Host bank account, 5% → istay commission
+// Uses Easebuzz "Slices" / Marketplace API for automated splitting.
 //
 // Environment Variables:
-//   CASHFREE_APP_ID        — Cashfree Client ID
-//   CASHFREE_SECRET_KEY    — Cashfree Client Secret
-//   CASHFREE_ENV           — "production" | "sandbox" (default: sandbox)
-//   CASHFREE_ISTAY_VENDOR_ID — istay's own Cashfree vendor ID
+//   EASEBUZZ_KEY          — Easebuzz Client Key
+//   EASEBUZZ_SALT         — Easebuzz Client Salt
+//   EASEBUZZ_ENV          — "production" | "test" (default: test)
 // ================================================================
 
 import { type Handlers } from "$fresh/server.ts";
@@ -21,40 +20,58 @@ import type { PaymentOrder, PayRequestBody } from "../../utils/types.ts";
 const ISTAY_COMMISSION = 0.05; // 5%
 const HOST_SHARE = 1 - ISTAY_COMMISSION; // 95%
 
-const CASHFREE_APP_ID = Deno.env.get("CASHFREE_APP_ID");
-const CASHFREE_SECRET_KEY = Deno.env.get("CASHFREE_SECRET_KEY");
-const CASHFREE_ISTAY_VENDOR_ID = Deno.env.get("CASHFREE_ISTAY_VENDOR_ID");
-const IS_PRODUCTION = Deno.env.get("CASHFREE_ENV") === "production";
+const EASEBUZZ_KEY = Deno.env.get("EASEBUZZ_KEY");
+const EASEBUZZ_SALT = Deno.env.get("EASEBUZZ_SALT");
+const EASEBUZZ_ENV = Deno.env.get("EASEBUZZ_ENV") || "test";
+const IS_PRODUCTION = EASEBUZZ_ENV === "production";
 
-const CASHFREE_BASE_URL = IS_PRODUCTION
-  ? "https://api.cashfree.com"
-  : "https://sandbox.cashfree.com";
+const EASEBUZZ_BASE_URL = IS_PRODUCTION
+  ? "https://pay.easebuzz.in"
+  : "https://testpay.easebuzz.in";
 
-const API_VERSION = "2023-08-01";
+/**
+ * Encodes the hash for Easebuzz.
+ * Format: key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10|salt
+ */
+async function generateHash(params: Record<string, string>, salt: string) {
+  const hashString = [
+    params.key,
+    params.txnid,
+    params.amount,
+    params.productinfo,
+    params.firstname,
+    params.email,
+    params.udf1 || "",
+    params.udf2 || "",
+    params.udf3 || "",
+    params.udf4 || "",
+    params.udf5 || "",
+    params.udf6 || "",
+    params.udf7 || "",
+    params.udf8 || "",
+    params.udf9 || "",
+    params.udf10 || "",
+    salt,
+  ].join("|");
+
+  const encoder = new TextEncoder();
+  const data = encoder.encode(hashString);
+  const hashBuffer = await crypto.subtle.digest("SHA-512", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 
 export const handler: Handlers = {
   async POST(req) {
-    // ── Credential Guard ───────────────────────────────────────
-    if (!CASHFREE_APP_ID || !CASHFREE_SECRET_KEY) {
+    if (!EASEBUZZ_KEY || !EASEBUZZ_SALT) {
       return Response.json(
         {
-          error:
-            "Payment gateway not configured. Set CASHFREE_APP_ID and CASHFREE_SECRET_KEY in your environment.",
-          setup: {
-            docs: "https://docs.cashfree.com/docs/create-order",
-            required_env_vars: [
-              "CASHFREE_APP_ID",
-              "CASHFREE_SECRET_KEY",
-              "CASHFREE_ENV",
-              "CASHFREE_ISTAY_VENDOR_ID",
-            ],
-          },
+          error: "Easebuzz not configured. Set EASEBUZZ_KEY and EASEBUZZ_SALT.",
         },
         { status: 503 },
       );
     }
 
-    // ── Parse Body ─────────────────────────────────────────────
     let body: Partial<PayRequestBody>;
     try {
       body = await req.json();
@@ -62,100 +79,81 @@ export const handler: Handlers = {
       return Response.json({ error: "Invalid JSON body" }, { status: 400 });
     }
 
-    const { bookingId, amount, hostVendorId, guestEmail, guestName, guestPhone } =
-      body;
+    const { bookingId, amount, hostVendorId, guestEmail, guestName, guestPhone } = body;
 
     if (!bookingId || !amount || !hostVendorId || !guestEmail || !guestName) {
       return Response.json(
-        {
-          error:
-            "Required: bookingId, amount, hostVendorId, guestEmail, guestName",
-        },
+        { error: "Missing required fields" },
         { status: 400 },
       );
     }
 
-    if (typeof amount !== "number" || amount < 100) {
-      return Response.json(
-        { error: "amount must be a number and at least ₹100" },
-        { status: 400 },
-      );
-    }
-
-    // ── Calculate Split ────────────────────────────────────────
     const hostAmount = Math.round(amount * HOST_SHARE * 100) / 100;
     const istayAmount = Math.round(amount * ISTAY_COMMISSION * 100) / 100;
-    const orderId = `istay_${bookingId}_${Date.now()}`;
+    const txnid = `istay_${bookingId}_${Date.now()}`;
 
-    // ── Cashfree Order Creation ────────────────────────────────
-    const orderPayload: Record<string, unknown> = {
-      order_id: orderId,
-      order_amount: amount,
-      order_currency: "INR",
-      customer_details: {
-        customer_id: `guest_${bookingId}`,
-        customer_email: guestEmail,
-        customer_name: guestName,
-        customer_phone: guestPhone ?? "9999999999",
-      },
-      order_meta: {
-        return_url:
-          `https://istay.space/booking/confirm?order_id={order_id}&booking_id=${bookingId}`,
-        notify_url: `https://istay.space/api/payment-webhook`,
-      },
-      order_note: `istay booking #${bookingId}`,
+    // ── Easebuzz Slices / Marketplace Split ──────────────────────
+    // Constructing the split details JSON
+    const splitDetails = {
+      label: `split_istay_${bookingId}`,
+      commission_type: "fixed",
+      split_payments: [
+        {
+          merchant_id: hostVendorId, // The Host's sub-merchant ID
+          amount: hostAmount.toFixed(2),
+        },
+      ],
     };
 
-    // ── Vendor Split (active when istay vendor ID is configured) ───
-    if (CASHFREE_ISTAY_VENDOR_ID) {
-      orderPayload.vendor_split = [
-        {
-          vendor_id: hostVendorId,
-          amount: hostAmount,
-          percentage: null,
-        },
-        {
-          vendor_id: CASHFREE_ISTAY_VENDOR_ID,
-          amount: istayAmount,
-          percentage: null,
-        },
-      ];
-    }
+    const params: any = {
+      key: EASEBUZZ_KEY,
+      txnid,
+      amount: amount.toFixed(2),
+      productinfo: `Booking #${bookingId}`,
+      firstname: guestName,
+      phone: guestPhone || "9999999999",
+      email: guestEmail,
+      surl: `https://istay.space/booking/confirm?booking_id=${bookingId}`,
+      furl: `https://istay.space/booking/failed?booking_id=${bookingId}`,
+      udf1: bookingId,
+      split_payments: JSON.stringify(splitDetails),
+    };
+
+    params.hash = await generateHash(params, EASEBUZZ_SALT);
 
     try {
-      const cfRes = await fetch(`${CASHFREE_BASE_URL}/pg/orders`, {
+      // Easebuzz expects form-data for initiation
+      const formData = new URLSearchParams();
+      for (const [key, value] of Object.entries(params)) {
+        formData.append(key, value as string);
+      }
+
+      const ebRes = await fetch(`${EASEBUZZ_BASE_URL}/payment/initiate.php`, {
         method: "POST",
         headers: {
-          "x-client-id": CASHFREE_APP_ID,
-          "x-client-secret": CASHFREE_SECRET_KEY,
-          "x-api-version": API_VERSION,
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
           "Accept": "application/json",
         },
-        body: JSON.stringify(orderPayload),
+        body: formData.toString(),
       });
 
-      const cfData = await cfRes.json();
+      const ebData = await ebRes.json();
 
-      if (!cfRes.ok) {
-        console.error("[pay] Cashfree error:", cfData);
+      if (ebData.status !== 1) {
+        console.error("[pay] Easebuzz error:", ebData.data);
         return Response.json(
-          {
-            error: "Payment gateway error",
-            // Expose Cashfree message in non-production
-            ...(IS_PRODUCTION ? {} : { details: cfData }),
-          },
+          { error: "Easebuzz initiation failed", details: ebData.data },
           { status: 502 },
         );
       }
 
       const order: PaymentOrder = {
-        orderId,
+        orderId: txnid,
         bookingId: bookingId!,
         amount,
         hostAmount,
         istayAmount,
-        paymentSessionId: cfData.payment_session_id,
+        paymentLink: ebData.data, // This is the access key or initiation URL
         status: "created",
         createdAt: new Date().toISOString(),
       };
@@ -163,22 +161,12 @@ export const handler: Handlers = {
       return Response.json({
         ok: true,
         order,
-        // Frontend: use paymentSessionId with Cashfree.js
-        // https://docs.cashfree.com/docs/cashfree-js
-        paymentSessionId: cfData.payment_session_id,
-        split: {
-          hostAmount,
-          istayAmount,
-          hostSharePct: HOST_SHARE * 100,
-          istaySharePct: ISTAY_COMMISSION * 100,
-        },
+        access_key: ebData.data,
+        split: { hostAmount, istayAmount },
       });
     } catch (err) {
-      console.error("[pay] Error calling Cashfree:", err);
-      return Response.json(
-        { error: "Internal error initiating payment. Please try again." },
-        { status: 500 },
-      );
+      console.error("[pay] Easebuzz initiation exception:", err);
+      return Response.json({ error: "Internal payment error" }, { status: 500 });
     }
   },
 };

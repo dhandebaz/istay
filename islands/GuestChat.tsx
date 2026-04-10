@@ -34,6 +34,28 @@ export default function GuestChat({ propId, propertyName }: GuestChatProps) {
       : 0
   );
 
+  // Persist sessionId in sessionStorage so refreshing the page doesn't lose context
+  const SESSION_STORAGE_KEY = `istay_chat_${propId}`;
+
+  useEffect(() => {
+    try {
+      const stored = globalThis.sessionStorage?.getItem(SESSION_STORAGE_KEY);
+      if (stored) sessionId.value = stored;
+    } catch {
+      // SSR or sessionStorage not available
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      if (sessionId.value) {
+        globalThis.sessionStorage?.setItem(SESSION_STORAGE_KEY, sessionId.value);
+      }
+    } catch {
+      // SSR or sessionStorage not available
+    }
+  }, [sessionId.value]);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -82,13 +104,23 @@ export default function GuestChat({ propId, propertyName }: GuestChatProps) {
           suggestions.value = data.suggestions;
         }
       } else {
-        messages.value = [
-          ...messages.value,
-          {
-            role: "model",
-            content: data.error ?? "Something went wrong. Try again! 🔄",
-          },
-        ];
+        if (res.status === 401) {
+          messages.value = [
+            ...messages.value,
+            {
+              role: "model",
+              content: "AI Concierge is currently undergoing maintenance. Please contact the host directly for assistance! 📱",
+            },
+          ];
+        } else {
+          messages.value = [
+            ...messages.value,
+            {
+              role: "model",
+              content: data.error ?? "Something went wrong. Try again! 🔄",
+            },
+          ];
+        }
       }
     } catch {
       messages.value = [
@@ -109,6 +141,8 @@ export default function GuestChat({ propId, propertyName }: GuestChatProps) {
   }
 
   function handleSuggestionClick(text: string) {
+    // Immediately show typing indicator for snappier perceived performance
+    isLoading.value = true;
     sendMessage(text);
   }
 

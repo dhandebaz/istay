@@ -1,15 +1,16 @@
 // ================================================================
-// routes/api/webhooks/payment.ts — Cashfree Payment Webhook
+// routes/api/webhooks/payment.ts — Easebuzz Payment Webhook
 //
 // POST /api/webhooks/payment
-// Called by Cashfree after a successful payment.
+// Called by Easebuzz after a payment attempt.
 //
-// On PAYMENT_SUCCESS_WEBHOOK:
-//   1. Verify HMAC-SHA256 signature
-//   2. Update Booking status → "confirmed"
-//   3. Block the booked dates in the calendar (["calendar"] KV)
-//   4. Create LedgerEntry (95/5 split)
-//   5. Create "booking_confirmed" notification for the host
+// Logic:
+//   1. Verify SHA-512 Response Hash
+//   2. If status === "success":
+//      a. Update Booking status → "confirmed"
+//      b. Block booked dates in KV
+//      c. Create LedgerEntry (95/5 split logic)
+//      d. Notify host
 // ================================================================
 
 import { type Handlers } from "$fresh/server.ts";
@@ -23,29 +24,43 @@ import {
 } from "../../../utils/db.ts";
 import type { LedgerEntry, Notification } from "../../../utils/types.ts";
 
-const CASHFREE_WEBHOOK_SECRET = Deno.env.get("CASHFREE_WEBHOOK_SECRET");
+const EASEBUZZ_SALT = Deno.env.get("EASEBUZZ_SALT");
+const EASEBUZZ_KEY = Deno.env.get("EASEBUZZ_KEY");
 const ISTAY_COMMISSION = 0.05;
 
 /**
- * Verifies Cashfree webhook signature.
- * Cashfree sends: x-webhook-signature header = base64(HMAC-SHA256(payload, secret))
+ * Verifies Easebuzz response hash.
+ * Hash Format: salt|status|udf10|udf9|udf8|udf7|udf6|udf5|udf4|udf3|udf2|udf1|email|firstname|productinfo|amount|txnid|key
  */
-async function verifySignature(
-  payload: string,
-  signature: string,
-  secret: string,
-): Promise<boolean> {
+async function verifyResponseHash(params: Record<string, string>, salt: string) {
+  const hashString = [
+    salt,
+    params.status,
+    params.udf10 || "",
+    params.udf9 || "",
+    params.udf8 || "",
+    params.udf7 || "",
+    params.udf6 || "",
+    params.udf5 || "",
+    params.udf4 || "",
+    params.udf3 || "",
+    params.udf2 || "",
+    params.udf1 || "",
+    params.email,
+    params.firstname,
+    params.productinfo,
+    params.amount,
+    params.txnid,
+    params.key,
+  ].join("|");
+
   const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(payload));
-  const expectedSig = btoa(String.fromCharCode(...new Uint8Array(sig)));
-  return expectedSig === signature;
+  const data = encoder.encode(hashString);
+  const hashBuffer = await crypto.subtle.digest("SHA-512", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const calculatedHash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  
+  return calculatedHash === params.hash;
 }
 
 function enumerateDates(checkIn: string, checkOut: string): string[] {
@@ -61,58 +76,35 @@ function enumerateDates(checkIn: string, checkOut: string): string[] {
 
 export const handler: Handlers = {
   async POST(req) {
-    const rawBody = await req.text();
+    const formData = await req.formData();
+    const params: Record<string, string> = {};
+    for (const [key, value] of formData.entries()) {
+      params[key] = value.toString();
+    }
 
     // ── Signature Verification ─────────────────────────────────
-    if (CASHFREE_WEBHOOK_SECRET) {
-      const signature = req.headers.get("x-webhook-signature") ?? "";
-      const isValid = await verifySignature(
-        rawBody,
-        signature,
-        CASHFREE_WEBHOOK_SECRET,
-      );
+    if (EASEBUZZ_SALT && EASEBUZZ_KEY) {
+      const isValid = await verifyResponseHash(params, EASEBUZZ_SALT);
       if (!isValid) {
-        console.warn("[webhook] Invalid signature — rejected");
-        return Response.json({ error: "Invalid signature" }, { status: 401 });
+        console.warn("[webhook] Invalid Easebuzz hash — rejected");
+        return Response.json({ error: "Invalid hash" }, { status: 401 });
       }
     } else {
-      console.warn(
-        "[webhook] CASHFREE_WEBHOOK_SECRET not set — skipping signature verification (dev only)",
-      );
+      console.warn("[webhook] Easebuzz credentials missing — skipping verification (dev only)");
     }
 
-    // ── Parse Payload ──────────────────────────────────────────
-    let payload: Record<string, unknown>;
-    try {
-      payload = JSON.parse(rawBody);
-    } catch {
-      return Response.json({ error: "Invalid JSON payload" }, { status: 400 });
+    const { status, txnid, udf1: bookingId, amount: amountStr } = params;
+    const amount = parseFloat(amountStr);
+
+    if (status !== "success") {
+      console.log(`[webhook] Payment not successful: ${status} for ${txnid}`);
+      return Response.json({ ok: true, status });
     }
 
-    const eventType = payload["type"] as string | undefined;
-
-    // Only handle payment success events
-    if (eventType !== "PAYMENT_SUCCESS_WEBHOOK") {
-      console.log(`[webhook] Ignoring event type: ${eventType}`);
-      return Response.json({ ok: true, skipped: true, eventType });
+    if (!bookingId) {
+      console.error("[webhook] Missing udf1 (bookingId) in payload");
+      return Response.json({ error: "Missing bookingId" }, { status: 400 });
     }
-
-    const data = payload["data"] as Record<string, unknown> | undefined;
-    const order = data?.["order"] as Record<string, unknown> | undefined;
-    const cashfreeOrderId = order?.["order_id"] as string | undefined;
-
-    if (!cashfreeOrderId) {
-      return Response.json({ error: "Missing order_id in payload" }, { status: 400 });
-    }
-
-    // Extract bookingId from orderId format: "istay_{bookingId}_{timestamp}"
-    const parts = cashfreeOrderId.split("_");
-    if (parts.length < 3 || parts[0] !== "istay") {
-      console.warn(`[webhook] Unrecognized orderId format: ${cashfreeOrderId}`);
-      return Response.json({ ok: true, skipped: true, reason: "Not an istay order" });
-    }
-
-    const bookingId = parts[1];
 
     // ── Load Booking ───────────────────────────────────────────
     const booking = await getBookingById(bookingId);
@@ -121,22 +113,20 @@ export const handler: Handlers = {
       return Response.json({ error: "Booking not found" }, { status: 404 });
     }
 
-    // Idempotency: already processed this payment
     if (booking.status === "confirmed") {
-      console.log(`[webhook] Booking ${bookingId} already confirmed — idempotent skip`);
       return Response.json({ ok: true, idempotent: true });
     }
 
-    // ── Update Booking Status ──────────────────────────────────
+    // ── Update Booking ─────────────────────────────────────────
     const confirmedBooking = {
       ...booking,
       status: "confirmed" as const,
-      cashfreeOrderId,
+      gatewayOrderId: txnid,
       updatedAt: new Date().toISOString(),
     };
     await saveBooking(confirmedBooking);
 
-    // ── Block Calendar Dates ───────────────────────────────────
+    // ── Block Calendar ─────────────────────────────────────────
     const datesToBlock = enumerateDates(booking.checkIn, booking.checkOut);
     await Promise.all(
       datesToBlock.map((date) =>
@@ -149,21 +139,19 @@ export const handler: Handlers = {
       ),
     );
 
-    // ── Save Ledger Entry (95/5 split) ─────────────────────────
-    // Only create if not already exists (idempotency)
+    // ── Ledger Entry ───────────────────────────────────────────
     const existingLedger = await getLedgerEntry(bookingId);
     if (!existingLedger) {
-      const grossAmount = booking.amount;
-      const hostAmount = Math.round(grossAmount * (1 - ISTAY_COMMISSION) * 100) / 100;
-      const istayAmount = Math.round(grossAmount * ISTAY_COMMISSION * 100) / 100;
+      const hostAmount = Math.round(amount * (1 - ISTAY_COMMISSION) * 100) / 100;
+      const istayAmount = Math.round(amount * ISTAY_COMMISSION * 100) / 100;
 
       const ledgerEntry: LedgerEntry = {
         id: crypto.randomUUID().replace(/-/g, "").slice(0, 16),
         bookingId,
         hostId: booking.hostId,
         propertyId: booking.propertyId,
-        cashfreeOrderId,
-        grossAmount,
+        gatewayOrderId: txnid,
+        grossAmount: amount,
         hostAmount,
         istayAmount,
         status: "settled",
@@ -174,38 +162,21 @@ export const handler: Handlers = {
       await saveLedgerEntry(ledgerEntry);
     }
 
-    // ── Host Notification ──────────────────────────────────────
+    // ── Notification ───────────────────────────────────────────
     const notification: Notification = {
       id: crypto.randomUUID().replace(/-/g, "").slice(0, 16),
       hostId: booking.hostId,
       type: "booking_confirmed",
       title: "New Booking Confirmed! 🎉",
-      message: `${booking.guestName} booked ${booking.nights} night${booking.nights > 1 ? "s" : ""} (${booking.checkIn} → ${booking.checkOut}) for ₹${booking.amount.toLocaleString("en-IN")}.`,
+      message: `${booking.guestName} booked ${booking.nights} nights for ₹${amount.toLocaleString("en-IN")}.`,
       propertyName: booking.propertyId,
-      meta: {
-        bookingId,
-        guestName: booking.guestName,
-        guestEmail: booking.guestEmail,
-        checkIn: booking.checkIn,
-        checkOut: booking.checkOut,
-      },
+      meta: { bookingId, txnid },
       read: false,
       createdAt: new Date().toISOString(),
     };
-
     await saveNotification(notification);
 
-    console.log(
-      `[webhook] Booking ${bookingId} confirmed. ` +
-        `Blocked ${datesToBlock.length} dates. ` +
-        `Ledger: ₹${booking.amount} gross.`,
-    );
-
-    return Response.json({
-      ok: true,
-      bookingId,
-      datesBlocked: datesToBlock.length,
-      ledger: { gross: booking.amount },
-    });
+    console.log(`[webhook] Booking ${bookingId} confirmed via Easebuzz (txnid: ${txnid})`);
+    return Response.json({ ok: true, bookingId });
   },
 };

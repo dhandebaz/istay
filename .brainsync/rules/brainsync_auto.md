@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 79 notes | Score threshold: >40
+> 132 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,6 +20,20 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **gotcha in shared-context.json** — -     }
++     },
+-   ]
++     {
+- }
++       "id": "a58d2809e01b853e",
++
+- **⚠️ GOTCHA: Strengthened types Optimized** — - 
++ - Optimized Score
+- ## Recent fixes
++ 
+- 
++ ## Recent fixes
+- - F
 - **⚠️ GOTCHA: Strengthened types Fixed** — - - Fixed null crash in Guest — prevents null/undefined runtime crashe
 - **gotcha in brainsync_auto.md** — - > 35 notes | Score threshold: >40
 + > 36 notes | Score threshold: >4
@@ -31,21 +45,21 @@ Content summary (3
 
 ## Project Standards
 
-- Strengthened types Optimized
-- Added API key auth authentication — prevents XSS injection attacks — confirmed 3x
-- what-changed in shared-context.json — confirmed 7x
-- Strengthened types Optimized
-- Strengthened types Optimized
+- what-changed in shared-context.json — confirmed 4x
+- what-changed in shared-context.json — confirmed 6x
 - Strengthened types Fixed
-- Strengthened types Optimized
-- what-changed in shared-context.json — confirmed 3x
+- Strengthened types PricingCheckout — prevents null/undefined runtime crashes
+- Strengthened types Fixed
+- Strengthened types Person — optimizes data fetching with relational query ins...
+- discovery in shared-context.json — confirmed 3x
+- Strengthened types Person — ensures atomic multi-step database operations
 
 ## Recent Decisions
 
-- Optimized Property — parallelizes async operations for speed
-- Optimized Score — evolves the database schema to support new requirements
-- Optimized Project — evolves the database schema to support new requirements
-- Optimized Score — evolves the database schema to support new requirements
+- decision in contact.tsx
+- decision in IdVerification.tsx
+- decision in Footer.tsx
+- decision in Header.tsx
 
 ## Verified Best Practices
 

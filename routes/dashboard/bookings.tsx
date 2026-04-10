@@ -33,6 +33,19 @@ export const handler: Handlers<BookingsPageData, DashboardState> = {
     // Sort by creation date descending
     bookings.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
+    // Mark all notifications for this host as read
+    try {
+      const iterNotif = kv.list<Notification>({ prefix: ["notification", hostId] });
+      for await (const entry of iterNotif) {
+        if (entry.value && !entry.value.read) {
+          const updated = { ...entry.value, read: true };
+          await kv.set(entry.key, updated);
+        }
+      }
+    } catch (e) {
+      console.error("[bookings] Failed to mark notifications as read:", e);
+    }
+
     return ctx.render({ bookings });
   },
 };

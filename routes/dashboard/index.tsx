@@ -6,17 +6,21 @@ import type { Booking, DashboardState, DashboardStats } from "../../utils/types.
 interface OverviewData {
   stats: DashboardStats;
   recentBookings: Booking[];
+  setupFeePaid: boolean;
 }
 
-export const handler: Handlers<OverviewData, DashboardState> = {
   async GET(_req, ctx) {
     const { hostId } = ctx.state;
+    const kv = await Deno.openKv();
+    const hostEntry = await kv.get(["host", hostId]);
+    const setupFeePaid = (hostEntry.value as any)?.setupFeePaid ?? false;
+
     const [stats, allBookings] = await Promise.all([
       getDashboardStats(hostId),
       listBookings(hostId),
     ]);
     const recentBookings = allBookings.slice(0, 5);
-    return ctx.render({ stats, recentBookings });
+    return ctx.render({ stats, recentBookings, setupFeePaid });
   },
 };
 
@@ -95,11 +99,30 @@ export default function DashboardOverview(
         <title>Overview | istay Dashboard</title>
       </Head>
 
+      {/* Payment Reminder Banner */}
+      {!data.setupFeePaid && (
+        <div class="mb-8 rounded-2xl bg-amber-50 border border-amber-200 p-4 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">⚠️</span>
+            <div>
+              <p class="text-sm font-700 text-amber-900">Account Activation Required</p>
+              <p class="text-xs text-amber-700">Pay the one-time ₹1,000 setup fee to activate your booking page and start accepting guests.</p>
+            </div>
+          </div>
+          <a
+            href="/pricing"
+            class="whitespace-nowrap px-4 py-2 rounded-full bg-amber-600 text-white text-xs font-700 hover:bg-amber-700 transition-colors"
+          >
+            Activate Now
+          </a>
+        </div>
+      )}
+
       {/* Page heading */}
       <div class="mb-8">
         <h1 class="text-2xl sm:text-3xl font-800 text-gray-900 tracking-tight">
           Good {getGreeting()},{" "}
-          <span class="text-teal-500">Host 👋</span>
+          <span class="text-mint-500">Host 👋</span>
         </h1>
         <p class="mt-1 text-sm text-gray-400">
           Here's what's happening with your properties today.

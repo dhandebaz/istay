@@ -8,7 +8,7 @@ const SCHEMA = JSON.stringify({
   name: "istay",
   url: "https://istay.space",
   email: "support@istay.space",
-  description: "Direct booking SaaS for property hosts. Operated by Chishti Ventures Pvt. Ltd.",
+  description: "Direct booking SaaS for property hosts. Operated by istay",
   address: {
     "@type": "PostalAddress",
     streetAddress: "Ghaffar Manzil, Okhla",
@@ -57,7 +57,7 @@ export default function Contact() {
         <section class="bg-white border-b border-gray-100 py-16">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="max-w-2xl">
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-700 text-xs font-600 uppercase tracking-wider mb-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-istay-50 border border-istay-100 text-istay-800 text-xs font-600 uppercase tracking-wider mb-4">
                 Support
               </div>
               <h1 class="text-4xl sm:text-5xl font-800 text-gray-900 tracking-tight leading-tight">
@@ -73,21 +73,21 @@ export default function Contact() {
 
         {/* Content Grid */}
         <section class="py-16">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
               {/* Left Column — Contact Info */}
               <div class="lg:col-span-2 space-y-8">
                 {/* Email */}
                 <div class="group">
                   <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center group-hover:bg-teal-100 transition-colors duration-200">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-istay-50 border border-istay-100 flex items-center justify-center group-hover:bg-istay-100 transition-colors duration-200">
                       <svg
                         width="20"
                         height="20"
                         viewBox="0 0 20 20"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        class="text-teal-600"
+                        class="text-istay-700"
                         aria-hidden="true"
                       >
                         <path
@@ -105,7 +105,7 @@ export default function Contact() {
                       </h2>
                       <a
                         href="mailto:support@istay.space"
-                        class="text-lg font-600 text-teal-600 hover:text-teal-700 transition-colors duration-200"
+                        class="text-lg font-600 text-istay-900 hover:text-istay-800 transition-colors duration-200"
                       >
                         support@istay.space
                       </a>
@@ -167,9 +167,7 @@ export default function Contact() {
                       Registered Office
                     </h2>
                     <address class="not-italic text-sm text-gray-600 leading-relaxed">
-                      Chishti Ventures Pvt. Ltd.
-                      <br />
-                      (A part of Ziddi)
+                      istay
                       <br />
                       Ghaffar Manzil, Okhla,
                       <br />
@@ -209,7 +207,7 @@ export default function Contact() {
                         />
                         <label
                           for="contact-name"
-                          class="absolute left-4 top-2 text-xs text-gray-400 font-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-teal-600"
+                          class="absolute left-4 top-2 text-xs text-gray-400 font-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-istay-700"
                         >
                           Full Name *
                         </label>
@@ -227,7 +225,7 @@ export default function Contact() {
                         />
                         <label
                           for="contact-email"
-                          class="absolute left-4 top-2 text-xs text-gray-400 font-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-teal-600"
+                          class="absolute left-4 top-2 text-xs text-gray-400 font-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-istay-700"
                         >
                           Email Address *
                         </label>
@@ -247,7 +245,7 @@ export default function Contact() {
                         for="contact-property"
                         class="absolute left-4 top-2 text-xs text-gray-400 font-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-teal-600"
                       >
-                        Airbnb / Property Link (optional)
+                        Airbnb link (e.g. airbnb.com/rooms/123)
                       </label>
                     </div>
 
@@ -272,7 +270,7 @@ export default function Contact() {
                     <button
                       type="submit"
                       id="contact-submit"
-                      class="w-full py-3.5 rounded-full bg-teal-500 text-white font-600 text-sm shadow-sm hover:bg-teal-600 hover:shadow-md active:scale-95 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                      class="w-full py-3.5 rounded-full bg-istay-900 text-white font-600 text-sm shadow-sm hover:bg-istay-800 hover:shadow-md active:scale-95 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       Send Message →
                     </button>

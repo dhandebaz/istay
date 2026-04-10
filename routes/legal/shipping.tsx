@@ -37,15 +37,14 @@ export default function Shipping() {
               Shipping & Delivery Policy
             </h1>
             <p class="mt-3 text-sm text-gray-400">
-              Last updated: {LAST_UPDATED} · Operated by Chishti Ventures Pvt.
-              Ltd.
+              Last updated: {LAST_UPDATED} · Operated by istay
             </p>
           </div>
 
           <div class="prose-legal">
             <p>
               This Shipping & Delivery Policy applies to all products and services
-              offered by istay, operated by Chishti Ventures Pvt. Ltd.
+              offered by istay, operated by Sheikh Arsalan Ullah Chishti (istay).
             </p>
 
             <h2>1. Digital-Only Platform — No Physical Shipping</h2>
@@ -178,7 +177,7 @@ export default function Shipping() {
             <p>
               For queries regarding delivery of our digital services, email{" "}
               <a href="mailto:support@istay.space">support@istay.space</a> or
-              write to Chishti Ventures Pvt. Ltd., Ghaffar Manzil, Okhla, New
+              write to istay, Ghaffar Manzil, Okhla, New
               Delhi, Delhi 110025, India.
             </p>
           </div>

@@ -34,15 +34,14 @@ export default function Privacy() {
               Privacy Policy
             </h1>
             <p class="mt-3 text-sm text-gray-400">
-              Last updated: {LAST_UPDATED} · Operated by Chishti Ventures Pvt.
-              Ltd.
+              Last updated: {LAST_UPDATED} · Operated by istay
             </p>
           </div>
 
           <div class="prose-legal">
             <h2>1. Introduction</h2>
             <p>
-              Chishti Ventures Pvt. Ltd. ("istay", "we", "us") is committed to
+              Sheikh Arsalan Ullah Chishti (istay) ("istay", "we", "us") is committed to
               protecting the privacy of our users. This Privacy Policy explains
               what information we collect, why we collect it, how we use it, and
               your rights in relation to your data. This policy applies to Hosts
@@ -114,7 +113,7 @@ export default function Privacy() {
               </li>
             </ul>
 
-            <h2>4. OCR Guest ID Verification</h2>
+            <h2>4. OCR Guest ID Verification & Secure Storage</h2>
             <p>
               istay offers an optional Optical Character Recognition (OCR)
               feature that allows Hosts to scan and digitally record
@@ -123,23 +122,22 @@ export default function Privacy() {
               by applicable Indian laws and regulations.
             </p>
             <p>
-              <strong>Security Measures:</strong>
+              <strong>Security & Data Storage:</strong>
             </p>
             <ul>
               <li>
-                ID images are transmitted over TLS 1.3-encrypted connections.
+                <strong>Encrypted Transmission:</strong> ID images are transmitted over TLS 1.3-encrypted connections.
               </li>
               <li>
-                OCR processing is performed in-memory and the raw image is not
+                <strong>Ephemeral Processing:</strong> OCR processing is performed in-memory and the raw image is not
                 permanently stored on istay servers after extraction is complete.
               </li>
               <li>
-                Extracted data (name, ID number, date of birth) is stored in
-                encrypted form within the Host's account, accessible only to the
-                Host and authorised istay staff for support purposes.
+                <strong>Secure ID Storage:</strong> Extracted data (name, ID number, date of birth) is stored in
+                encrypted form within the Host's account. This data is processed by our secure AI engine locally to verify identity and is never shared with third-party tracking services.
               </li>
               <li>
-                We do not use guest ID data for profiling, advertising, or any
+                <strong>Privacy-First AI:</strong> We do not use guest ID data for profiling, advertising, or any
                 purpose beyond the specific check-in compliance purpose.
               </li>
               <li>
@@ -220,7 +218,7 @@ export default function Privacy() {
             <p>
               For privacy-related queries, contact our Data Protection Officer at{" "}
               <a href="mailto:support@istay.space">support@istay.space</a> or
-              write to Chishti Ventures Pvt. Ltd., Ghaffar Manzil, Okhla, New
+              write to istay, Ghaffar Manzil, Okhla, New
               Delhi, Delhi 110025, India.
             </p>
           </div>

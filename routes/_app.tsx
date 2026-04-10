@@ -6,7 +6,7 @@ export default function App({ Component }: PageProps) {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#14b8a6" />
+        <meta name="theme-color" content="#0C4D4D" />
 
         {/* Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,11 +20,10 @@ export default function App({ Component }: PageProps) {
           rel="stylesheet"
         />
 
-        {/* Favicon (SVG inline) */}
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>"
-        />
+        {/* Favicons & Manifest */}
+        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
 
         <link rel="stylesheet" href="/styles.css" />
       </head>

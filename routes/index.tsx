@@ -62,8 +62,8 @@ const SCHEMA = JSON.stringify({
     },
   },
   provider: {
-    "@type": "Organization",
-    name: "Chishti Ventures Pvt. Ltd.",
+    "@type": "Person",
+    name: "Sheikh Arsalan Ullah Chishti (istay)",
     address: {
       "@type": "PostalAddress",
       streetAddress: "Ghaffar Manzil, Okhla",
@@ -113,7 +113,7 @@ export default function Home() {
           {/* Decorative gradient blobs */}
           <div
             aria-hidden="true"
-            class="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-teal-100 opacity-40 blur-3xl pointer-events-none"
+            class="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-istay-50 opacity-40 blur-3xl pointer-events-none"
           />
           <div
             aria-hidden="true"
@@ -122,8 +122,8 @@ export default function Home() {
 
           <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 md:pt-32 md:pb-28 text-center">
             {/* Badge */}
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-50 border border-teal-200 text-teal-700 text-xs font-600 uppercase tracking-wider mb-6">
-              <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-istay-50 border border-istay-100 text-istay-800 text-xs font-600 uppercase tracking-wider mb-6">
+              <span class="w-1.5 h-1.5 rounded-full bg-mint-500 animate-pulse" />
               Now live in India
             </div>
 
@@ -149,7 +149,7 @@ export default function Home() {
               </span>{" "}
               just to get booked.
               <br />
-              <span class="text-teal-500">Own your audience.</span>
+              <span class="text-mint-500">Own your audience.</span>
             </h1>
 
             <p class="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
@@ -163,9 +163,9 @@ export default function Home() {
               <a
                 href="/pricing"
                 id="hero-cta-primary"
-                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-teal-500 text-white font-600 text-base shadow-md hover:bg-teal-600 hover:shadow-lg active:scale-95 transition-all duration-200"
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-mint-500 text-white font-700 text-base shadow-md hover:bg-mint-600 hover:shadow-lg active:scale-95 transition-all duration-200"
               >
-                Start Hosting — ₹1,000 setup
+                Start Subscription — ₹1,000
                 <svg
                   width="16"
                   height="16"
@@ -195,16 +195,16 @@ export default function Home() {
             {/* Trust bar */}
             <div class="mt-14 flex flex-wrap items-center justify-center gap-6 text-xs text-gray-400">
               <span class="flex items-center gap-1.5">
-                <span class="text-teal-500">✓</span> No monthly fees
+                <span class="text-mint-500">✓</span> No monthly fees
               </span>
               <span class="flex items-center gap-1.5">
-                <span class="text-teal-500">✓</span> Instant account activation
+                <span class="text-mint-500">✓</span> Instant account activation
               </span>
               <span class="flex items-center gap-1.5">
-                <span class="text-teal-500">✓</span> Razorpay-secured payments
+                <span class="text-mint-500">✓</span> Razorpay-secured payments
               </span>
               <span class="flex items-center gap-1.5">
-                <span class="text-teal-500">✓</span> GST compliant invoices
+                <span class="text-mint-500">✓</span> GST compliant invoices
               </span>
             </div>
           </div>
@@ -228,19 +228,19 @@ export default function Home() {
                   key={name}
                   class={`relative rounded-2xl p-5 border-2 text-center transition-transform hover:-translate-y-1 duration-200 ${
                     highlight
-                      ? "border-teal-400 bg-teal-50 shadow-lg"
+                      ? "border-istay-400 bg-istay-50 shadow-lg"
                       : "border-gray-100 bg-white shadow-sm"
                   }`}
                 >
                   {highlight && (
-                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-teal-500 text-white text-xs font-700">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-istay-900 text-white text-xs font-700">
                       Best
                     </div>
                   )}
                   <div class={`text-2xl font-800 ${color}`}>{fee}</div>
                   <div class="mt-1 text-xs text-gray-500 font-500">{name}</div>
                   {highlight && (
-                    <div class="mt-2 text-xs text-teal-700 font-600">
+                    <div class="mt-2 text-xs text-istay-800 font-600">
                       You keep ₹47,500
                     </div>
                   )}
@@ -250,9 +250,76 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── THE MAGIC SCRAPER ────────────────────────────────────── */}
+        <section class="py-24 bg-white border-y border-gray-50 overflow-hidden">
+          <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-mint-50 border border-mint-100 text-mint-700 text-xs font-700 uppercase tracking-wider mb-6">
+                  Magic Scraper
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight leading-tight">
+                  One link to rule them all.
+                  <br />
+                  <span class="text-mint-600">Import in 3 seconds.</span>
+                </h2>
+                <p class="mt-6 text-lg text-gray-500 leading-relaxed">
+                  Don't waste hours copy-pasting descriptions and uploading photos. 
+                  Paste your Airbnb link, and our "Magic Scraper" automatically builds 
+                  your istay booking page, import reviews, and syncs your calendar.
+                </p>
+                <div class="mt-8 space-y-4">
+                  {[
+                    "Auto-syncs property descriptions",
+                    "Imports high-res photo galleries",
+                    "One-click calendar integration",
+                  ].map((item) => (
+                    <div key={item} class="flex items-center gap-3">
+                      <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-100 flex items-center justify-center text-mint-600">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                          <path d="M3 8L6 11L13 4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </div>
+                      <span class="text-gray-700 font-500">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Animation Mockup */}
+              <div class="relative">
+                <div class="absolute -inset-4 bg-mint-50 rounded-3xl -rotate-2 scale-95 opacity-50 blur-xl" />
+                <div class="relative bg-white rounded-3xl border border-gray-200 shadow-2xl p-6 sm:p-8 animate-slide-up">
+                  <div class="flex items-center gap-3 mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center text-white font-800">A</div>
+                    <div class="flex-1">
+                      <div class="h-2 w-24 bg-gray-200 rounded-full mb-2" />
+                      <div class="h-1.5 w-40 bg-gray-100 rounded-full" />
+                    </div>
+                    <div class="w-6 h-3 bg-mint-500 rounded-full animate-pulse" />
+                  </div>
+
+                  <div class="space-y-4">
+                    <div class="h-4 w-3/4 bg-gray-100 rounded-full" />
+                    <div class="h-4 w-5/6 bg-gray-100 rounded-full" />
+                    <div class="grid grid-cols-3 gap-2 py-4">
+                      <div class="h-20 bg-gray-50 rounded-xl" />
+                      <div class="h-20 bg-gray-50 rounded-xl border-2 border-mint-400 animate-pulse" />
+                      <div class="h-20 bg-gray-50 rounded-xl" />
+                    </div>
+                    <div class="h-12 w-full bg-mint-500 rounded-2xl shadow-lg flex items-center justify-center text-white font-700 text-sm">
+                      Importing to istay...
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── HOW IT WORKS ─────────────────────────────────────── */}
-        <section id="how-it-works" class="py-24 bg-white">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="how-it-works" class="py-24 bg-gray-50">
+          <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8">
             <div class="text-center mb-16">
               <h2 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight">
                 Up and running in minutes
@@ -288,8 +355,8 @@ export default function Home() {
                   },
                 ].map(({ step, title, desc }) => (
                   <div key={step} class="text-center">
-                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-teal-50 border-2 border-teal-100 mb-5">
-                      <span class="text-2xl font-800 text-teal-600">{step}</span>
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-istay-50 border-2 border-istay-100 mb-5">
+                      <span class="text-2xl font-800 text-istay-900">{step}</span>
                     </div>
                     <h3 class="text-lg font-700 text-gray-900 mb-2">{title}</h3>
                     <p class="text-gray-500 text-sm leading-relaxed">{desc}</p>
@@ -300,9 +367,58 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── TRUST & SECURITY ─────────────────────────────────── */}
+        <section class="py-24 bg-white">
+          <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8 text-center">
+            <h2 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight mb-16">
+              Security you can <span class="text-mint-500 underline decoration-mint-200">trust.</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                {
+                  icon: "🆔",
+                  title: "AI OCR Verification",
+                  desc: "Host-required ID scanning that's 99% faster than manual checks.",
+                },
+                {
+                  icon: "🔐",
+                  title: "Private Data",
+                  desc: "Guest IDs are stored in an encrypted host-only vault. Zero tracking.",
+                },
+                {
+                  icon: "💳",
+                  title: "Secure Settlements",
+                  desc: "Direct transfers via Razorpay & Easebuzz without middleman holds.",
+                },
+                {
+                  icon: "🛡️",
+                  title: "Fraud Filter",
+                  desc: "Our AI flags edited or blurred IDs before you confirm the booking.",
+                },
+              ].map((item) => (
+                <div key={item.title} class="relative p-8 rounded-3xl bg-gray-50 border border-transparent hover:border-mint-200 transition-all duration-300">
+                  <div class="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl mx-auto mb-6">
+                    {item.icon}
+                  </div>
+                  <h3 class="text-base font-700 text-gray-900 mb-2">{item.title}</h3>
+                  <p class="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                  
+                  {item.title === "AI OCR Verification" && (
+                    <div class="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-50 text-mint-700 text-[10px] font-800 uppercase tracking-widest">
+                      <span class="w-1.5 h-1.5 rounded-full bg-mint-500" />
+                      Verified by AI
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── FEATURE GRID ─────────────────────────────────────── */}
         <section class="py-24 bg-gray-50" id="features">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8">
             <div class="text-center mb-14">
               <h2 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight">
                 Everything you need to go direct
@@ -328,18 +444,18 @@ export default function Home() {
         </section>
 
         {/* ── CTA BANNER ───────────────────────────────────────── */}
-        <section class="py-20 bg-teal-600">
+        <section class="py-20 bg-istay-900">
           <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl sm:text-4xl font-800 text-white tracking-tight">
               Ready to stop sharing your revenue?
             </h2>
-            <p class="mt-4 text-teal-100 text-lg">
+            <p class="mt-4 text-istay-100 text-lg">
               Join hundreds of hosts across India who have switched to direct bookings.
             </p>
             <a
               href="/pricing"
               id="banner-cta"
-              class="mt-8 inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-teal-700 font-700 text-base shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+              class="mt-8 inline-flex items-center gap-2 px-8 py-4 rounded-full bg-mint-500 text-white font-700 text-base shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
             >
               See Pricing & Start Today
             </a>

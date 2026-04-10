@@ -13,30 +13,14 @@ export default function Header() {
           {/* Logo */}
           <a
             href="/"
-            class="flex items-center gap-2 group"
+            class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95"
             aria-label="istay — Home"
           >
-            <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-teal-500 shadow-sm group-hover:bg-teal-600 transition-colors duration-200">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  d="M8 1.5L1.5 7V14.5H5.5V10H10.5V14.5H14.5V7L8 1.5Z"
-                  fill="white"
-                  stroke="white"
-                  stroke-width="0.5"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </span>
-            <span class="text-xl font-800 tracking-tight text-gray-900">
-              i<span class="text-teal-500">stay</span>
-            </span>
+            <img 
+              src="/logo.svg" 
+              alt="istay logo" 
+              class="h-8 w-auto sm:h-10" 
+            />
           </a>
 
           {/* Desktop Nav */}

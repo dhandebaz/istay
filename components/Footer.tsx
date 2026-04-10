@@ -20,41 +20,29 @@ export default function Footer() {
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16">
           {/* Column 1 — Brand */}
-          <div class="md:col-span-1">
-            <a href="/" class="inline-flex items-center gap-2 group mb-4">
-              <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-teal-500 group-hover:bg-teal-400 transition-colors duration-200">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M8 1.5L1.5 7V14.5H5.5V10H10.5V14.5H14.5V7L8 1.5Z"
-                    fill="white"
-                    stroke="white"
-                    stroke-width="0.5"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
-              <span class="text-xl font-800 tracking-tight text-white">
-                i<span class="text-teal-400">stay</span>
-              </span>
+          <div class="md:col-span-1 space-y-6">
+            <a href="/" class="group flex items-center gap-2">
+              <img 
+                src="/logo.svg" 
+                alt="istay logo" 
+                class="h-10 w-auto opacity-90 group-hover:opacity-100 transition-opacity" 
+              />
             </a>
             <p class="text-sm text-gray-400 leading-relaxed max-w-xs">
-              The direct booking platform that keeps your income where it
-              belongs — with you. One flat fee. Zero surprises.
+              Empowering hosts to take back control. Direct bookings, AI
+              concierge, and automated verification — all in one place.
             </p>
-            <div class="mt-6 flex items-center gap-3">
-              <a
-                href="mailto:support@istay.space"
-                class="text-xs text-gray-500 hover:text-teal-400 transition-colors duration-200"
-              >
-                support@istay.space
-              </a>
+            <div>
+              <p class="text-xs font-700 text-gray-500 uppercase tracking-widest mb-3">
+                Registered Office
+              </p>
+              <address class="not-italic text-sm text-gray-400 leading-relaxed">
+                istay
+                <br />
+                Ghaffar Manzil, Okhla,
+                <br />
+                New Delhi, Delhi 110025, India
+              </address>
             </div>
           </div>
 
@@ -98,17 +86,12 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Bar — Legal Entity */}
+      {/* Bottom Bar — Branding Scrubbed */}
       <div class="border-t border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <p class="text-xs text-gray-500 leading-relaxed">
-              Operated by{" "}
-              <span class="text-gray-400 font-500">
-                Chishti Ventures Pvt. Ltd.
-              </span>{" "}
-              (A part of Ziddi). Registered Address: Ghaffar Manzil, Okhla, New
-              Delhi, Delhi 110025, India.
+              istay | Ghaffar Manzil, Okhla, New Delhi, Delhi 110025, India.
             </p>
             <p class="text-xs text-gray-600 whitespace-nowrap">
               © {currentYear} istay

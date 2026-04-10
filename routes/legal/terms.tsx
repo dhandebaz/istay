@@ -11,8 +11,8 @@ const SCHEMA = JSON.stringify({
   url: "https://istay.space/legal/terms",
   dateModified: "2026-04-11",
   publisher: {
-    "@type": "Organization",
-    name: "Chishti Ventures Pvt. Ltd.",
+    "@type": "Person",
+    name: "Sheikh Arsalan Ullah Chishti (istay)",
   },
 });
 
@@ -51,8 +51,7 @@ export default function Terms() {
               Terms & Conditions
             </h1>
             <p class="mt-3 text-sm text-gray-400">
-              Last updated: {LAST_UPDATED} · Operated by Chishti Ventures Pvt.
-              Ltd.
+              Last updated: {LAST_UPDATED} · Operated by istay
             </p>
           </div>
 
@@ -63,9 +62,8 @@ export default function Terms() {
               istay (accessible at{" "}
               <a href="https://istay.space">https://istay.space</a>) is a
               Software-as-a-Service (SaaS) platform operated by{" "}
-              <strong>Chishti Ventures Pvt. Ltd.</strong> (hereinafter "istay",
-              "we", "us", or "our"), a company incorporated under the Companies
-              Act, 2013 in India. Our registered office is at Ghaffar Manzil,
+              <strong>Sheikh Arsalan Ullah Chishti (istay)</strong> (hereinafter "istay",
+              "we", "us", or "our"). Our registered office is at Ghaffar Manzil,
               Okhla, New Delhi, Delhi 110025, India.
             </p>
             <p>
@@ -169,7 +167,7 @@ export default function Terms() {
             <h2>6. Intellectual Property</h2>
             <p>
               All content, trademarks, software, and designs on the istay
-              platform are the exclusive property of Chishti Ventures Pvt. Ltd.
+              platform are the exclusive property of Sheikh Arsalan Ullah Chishti (istay)
               or its licensors. You may not reproduce, distribute, or create
               derivative works without our express written consent.
             </p>
@@ -195,7 +193,7 @@ export default function Terms() {
             <p>
               For questions about these Terms, please contact us at{" "}
               <a href="mailto:support@istay.space">support@istay.space</a> or
-              write to Chishti Ventures Pvt. Ltd., Ghaffar Manzil, Okhla, New
+              write to istay, Ghaffar Manzil, Okhla, New
               Delhi, Delhi 110025, India.
             </p>
           </div>

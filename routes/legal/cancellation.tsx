@@ -37,16 +37,14 @@ export default function Cancellation() {
               Cancellation & Refund Policy
             </h1>
             <p class="mt-3 text-sm text-gray-400">
-              Last updated: {LAST_UPDATED} · Operated by Chishti Ventures Pvt.
-              Ltd.
+              Last updated: {LAST_UPDATED} · Operated by istay
             </p>
           </div>
 
           <div class="prose-legal">
             <p>
               This Cancellation & Refund Policy applies to all transactions
-              processed through the istay platform, operated by Chishti Ventures
-              Pvt. Ltd. Please read this policy carefully before making any
+              processed through the istay platform, operated by Sheikh Arsalan Ullah Chishti (istay). Please read this policy carefully before making any
               payment.
             </p>
 

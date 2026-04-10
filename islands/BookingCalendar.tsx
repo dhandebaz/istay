@@ -83,6 +83,7 @@ export default function BookingCalendar(
   const checkIn = useSignal<string | null>(null);
   const checkOut = useSignal<string | null>(null);
   const hovered = useSignal<string | null>(null);
+  const showSoldOutAlert = useSignal(false);
 
   const nights = computed(() => {
     if (!checkIn.value || !checkOut.value) return 0;
@@ -122,7 +123,14 @@ export default function BookingCalendar(
 
   // ── Date selection logic ───────────────────────────────────
   function handleDateClick(date: string) {
-    if (date < today || blocked.has(date)) return;
+    if (date < today || blocked.has(date)) {
+      if (blocked.has(date)) {
+        showSoldOutAlert.value = true;
+        setTimeout(() => (showSoldOutAlert.value = false), 5000);
+      }
+      return;
+    }
+    showSoldOutAlert.value = false;
 
     if (!checkIn.value || (checkIn.value && checkOut.value)) {
       // Start fresh selection
@@ -162,13 +170,13 @@ export default function BookingCalendar(
       return `${base} text-gray-300 line-through cursor-not-allowed`;
     }
     if (isCheckIn || isCheckOut) {
-      return `${base} bg-teal-500 text-white font-700 shadow-sm cursor-pointer`;
+      return `${base} bg-mint-500 text-white font-700 shadow-sm cursor-pointer`;
     }
     if (inRange) {
-      return `${base} bg-teal-100 text-teal-800 rounded-none cursor-pointer`;
+      return `${base} bg-mint-100 text-mint-800 rounded-none cursor-pointer`;
     }
     if (inHover) {
-      return `${base} bg-teal-50 text-teal-600 rounded-none cursor-pointer`;
+      return `${base} bg-mint-50 text-mint-600 rounded-none cursor-pointer`;
     }
     return `${base} text-gray-700 hover:bg-gray-100 cursor-pointer`;
   }
@@ -269,7 +277,7 @@ export default function BookingCalendar(
       {/* Legend */}
       <div class="px-5 pb-3 flex items-center gap-4 text-xs text-gray-400">
         <span class="flex items-center gap-1.5">
-          <span class="w-3 h-3 rounded-full bg-teal-500 inline-block" />
+          <span class="w-3 h-3 rounded-full bg-mint-500 inline-block" />
           Selected
         </span>
         <span class="flex items-center gap-1.5">
@@ -281,7 +289,7 @@ export default function BookingCalendar(
       {/* Booking Summary + CTA */}
       <div class="px-5 pb-5">
         {checkIn.value && !checkOut.value && (
-          <p class="text-xs text-teal-600 font-500 text-center py-2">
+          <p class="text-xs text-mint-600 font-500 text-center py-2">
             Now select your check-out date
           </p>
         )}
@@ -300,7 +308,7 @@ export default function BookingCalendar(
               </div>
               <div class="flex justify-between text-xs text-gray-400">
                 <span>{checkIn.value} → {checkOut.value}</span>
-                <span class="text-teal-600 font-500">No hidden fees</span>
+                <span class="text-mint-600 font-500">No hidden fees</span>
               </div>
             </div>
 
@@ -308,7 +316,7 @@ export default function BookingCalendar(
             <button
               id="book-now-btn"
               onClick={handleBookNow}
-              class="w-full py-3.5 rounded-xl bg-teal-500 text-white font-700 text-sm shadow-sm hover:bg-teal-600 active:scale-95 transition-all duration-150"
+              class="w-full py-3.5 rounded-xl bg-mint-500 text-white font-700 text-sm shadow-sm hover:bg-mint-600 active:scale-95 transition-all duration-150"
             >
               Book Now — {formatINR(totalAmount.value)}
             </button>
@@ -327,9 +335,24 @@ export default function BookingCalendar(
         )}
 
         {!checkIn.value && (
-          <p class="text-xs text-gray-400 text-center py-2">
-            Select your check-in date to begin
-          </p>
+          <div class="space-y-3">
+            {showSoldOutAlert.value && (
+              <div class="p-3 rounded-xl bg-amber-50 border border-amber-100 animate-fade-in">
+                <p class="text-[11px] font-700 text-amber-900 leading-tight">Sold Out for these dates!</p>
+                <p class="text-[10px] text-amber-700 mt-1">This stay is fully booked. Want to see similar vibes nearby?</p>
+                <a 
+                  href="#vibe-match" 
+                  class="mt-2 block w-full py-2 rounded-lg bg-amber-200 text-amber-900 text-center text-[10px] font-800 hover:bg-amber-300 transition-colors"
+                  onClick={() => (showSoldOutAlert.value = false)}
+                >
+                  See Similar Stays You'll Love →
+                </a>
+              </div>
+            )}
+            <p class="text-xs text-gray-400 text-center py-2">
+              Select your check-in date to begin
+            </p>
+          </div>
         )}
       </div>
     </div>

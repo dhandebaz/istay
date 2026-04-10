@@ -113,21 +113,9 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
   const SidebarContent = () => (
     <div class="flex flex-col h-full">
       {/* Logo */}
-      <div class="flex items-center gap-2.5 px-4 h-16 border-b border-gray-100/80 flex-shrink-0">
-        <a href="/" class="flex items-center gap-2 group">
-          <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-teal-500 shadow-sm group-hover:bg-teal-600 transition-colors duration-200">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path
-                d="M8 1.5L1.5 7V14.5H5.5V10H10.5V14.5H14.5V7L8 1.5Z"
-                fill="white"
-                stroke-width="0.5"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-          <span class="text-lg font-800 text-gray-900 tracking-tight">
-            i<span class="text-teal-500">stay</span>
-          </span>
+      <div class="flex items-center px-4 h-16 border-b border-gray-100/80 flex-shrink-0">
+        <a href="/" class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95">
+          <img src="/logo.svg" alt="istay logo" class="h-8 w-auto px-1" />
         </a>
       </div>
 
@@ -149,7 +137,7 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
                 cursor-pointer
                 ${
                 active
-                  ? "bg-teal-500 text-white shadow-sm"
+                  ? "bg-istay-900 text-white shadow-md"
                   : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
               }
               `}
@@ -185,7 +173,7 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
         <div class="px-3 py-2 rounded-xl bg-gray-50 border border-gray-100">
           <div class="flex items-center justify-between">
             <span class="text-xs text-gray-400">Lifetime Plan</span>
-            <span class="text-xs px-1.5 py-0.5 rounded-full bg-teal-50 text-teal-600 font-600">
+            <span class="text-xs px-1.5 py-0.5 rounded-full bg-istay-50 text-istay-700 font-600">
               Active
             </span>
           </div>

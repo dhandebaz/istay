@@ -12,8 +12,8 @@ export interface Host {
   /** Always "lifetime" — one-time ₹1,000 setup */
   plan: "lifetime";
   setupFeePaid: boolean;
-  /** Cashfree sub-merchant vendor ID (set after onboarding) */
-  cashfreeVendorId?: string;
+  /** Payment gateway vendor/sub-merchant ID (Easebuzz/Cashfree) */
+  gatewayVendorId?: string;
   createdAt: string; // ISO 8601
   updatedAt: string;
 }
@@ -57,9 +57,9 @@ export interface Booking {
   /** Total gross booking amount in INR */
   amount: number;
   status: "pending" | "confirmed" | "cancelled" | "refunded";
-  /** Cashfree order ID */
-  cashfreeOrderId?: string;
-  /** Cashfree payment session ID */
+  /** Gateway Order ID (txnid) */
+  gatewayOrderId?: string;
+  /** Gateway Payment Session / Access Key */
   paymentSessionId?: string;
   /** Whether guest ID has been verified */
   idVerified?: boolean;
@@ -82,7 +82,7 @@ export interface LedgerEntry {
   bookingId: string;
   hostId: string;
   propertyId: string;
-  cashfreeOrderId: string;
+  gatewayOrderId: string;
   grossAmount: number;
   hostAmount: number;
   istayAmount: number;
@@ -101,6 +101,7 @@ export interface Notification {
     | "booking_confirmed"
     | "checkin_reminder"
     | "verification_complete"
+    | "verification_failed"
     | "ical_sync_error";
   title: string;
   message: string;

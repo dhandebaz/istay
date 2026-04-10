@@ -2,23 +2,26 @@
 // utils/recommendations.ts — "Vibe Match" property recommendation engine
 //
 // When a property is fully booked, suggests similar stays by:
-//   1. Fetching sibling properties from the same host
+//   1. Scanning prop_index to find properties in the same city
 //   2. Prompting Gemini to rank them by vibe/luxury match
 //   3. Returning top 2 with scores and reasons
 //
 // Designed for the sold-out / all-dates-blocked property page.
 // ================================================================
 
-import { listProperties, getPropertyById } from "./db.ts";
-import { callGemini } from "./gemini.ts";
+import {
+  listProperties,
+  getPropertyById,
+  listAllPropertyIndices,
+  getProperty,
+} from "./db.ts";
+import { callGemini, GeminiError } from "./gemini.ts";
 import type { Property, VibeMatch } from "./types.ts";
 
 const MAX_CANDIDATES = 5;
 const MAX_RESULTS = 2;
 
-/**
- * Builds the Gemini comparison prompt.
- */
+// Builds the Gemini comparison prompt.
 function buildVibePrompt(
   currentProp: Property,
   candidates: Property[],
@@ -73,25 +76,73 @@ Rules:
 - If candidates are very different, still rank them — lower score is fine`;
 }
 
-/**
- * Get vibe-matched recommendations for a fully-booked property.
- *
- * @param currentPropId - The property the guest wanted but couldn't book
- * @returns Array of VibeMatch (max 2), or empty if no alternatives exist
- */
+// Extracts the city from an address string (best-effort).
+// Looks for Indian city names or falls back to last substantial word.
+function extractCity(address: string | undefined): string | null {
+  if (!address) return null;
+  const lower = address.toLowerCase();
+
+  // Common Indian cities to match against
+  const cities = [
+    "mumbai", "delhi", "bangalore", "bengaluru", "hyderabad",
+    "chennai", "kolkata", "pune", "goa", "jaipur", "udaipur",
+    "shimla", "manali", "gurgaon", "gurugram", "noida", "lucknow",
+    "ahmedabad", "chandigarh", "kochi", "pondicherry", "ooty",
+    "mussoorie", "nainital", "rishikesh", "varanasi", "agra",
+    "jodhpur", "coorg", "lonavala", "mahabaleshwar", "alibaug",
+    "kodaikanal", "darjeeling", "gangtok", "leh", "ladakh",
+    "kasol", "mcleodganj", "amritsar", "mysore", "mysuru",
+  ];
+
+  for (const city of cities) {
+    if (lower.includes(city)) return city;
+  }
+
+  // Fallback: split by comma, take the 2nd-to-last segment (usually city)
+  const parts = address.split(",").map((s) => s.trim()).filter(Boolean);
+  if (parts.length >= 2) {
+    return parts[parts.length - 2].toLowerCase();
+  }
+
+  return null;
+}
+
+// Get vibe-matched recommendations for a fully-booked property.
+// Searches same-city properties across ALL hosts, not just the same host.
 export async function getVibeMatches(
   currentPropId: string,
 ): Promise<VibeMatch[]> {
   const currentProp = await getPropertyById(currentPropId);
   if (!currentProp) return [];
 
-  // Fetch all properties from the same host
-  const allProps = await listProperties(currentProp.hostId);
+  const currentCity = extractCity(currentProp.address);
 
-  // Filter out current property + inactive ones
-  const candidates = allProps
-    .filter((p) => p.id !== currentPropId && p.status === "active")
-    .slice(0, MAX_CANDIDATES);
+  // Strategy 1: Find properties in the same city across all hosts
+  let candidates: Property[] = [];
+
+  if (currentCity) {
+    const allIndices = await listAllPropertyIndices();
+    for (const { propId, hostId } of allIndices) {
+      if (propId === currentPropId) continue;
+      if (candidates.length >= MAX_CANDIDATES) break;
+
+      const prop = await getProperty(hostId, propId);
+      if (!prop || prop.status !== "active") continue;
+
+      const propCity = extractCity(prop.address);
+      if (propCity && propCity === currentCity) {
+        candidates.push(prop);
+      }
+    }
+  }
+
+  // Strategy 2: Fallback to same-host properties if no city matches
+  if (candidates.length === 0) {
+    const allProps = await listProperties(currentProp.hostId);
+    candidates = allProps
+      .filter((p) => p.id !== currentPropId && p.status === "active")
+      .slice(0, MAX_CANDIDATES);
+  }
 
   if (candidates.length === 0) return [];
 
@@ -102,8 +153,8 @@ export async function getVibeMatches(
       propertyName: p.name,
       imageUrl: p.imageUrl,
       basePrice: p.basePrice,
-      score: 70, // Default "reasonable match" score
-      reason: `✨ Another lovely stay by the same host at ₹${p.basePrice}/night`,
+      score: 70,
+      reason: `✨ Another lovely stay in the same area at ₹${p.basePrice}/night`,
     }));
   }
 
@@ -158,7 +209,12 @@ export async function getVibeMatches(
 
     return matches;
   } catch (err) {
-    console.error("[vibe-match] AI recommendation failed:", err);
+    // If it's a missing API key error, don't fallback to random results
+    if (err instanceof GeminiError && err.status === 401) {
+      console.warn("[vibe-match] GEMINI_API_KEY not set — skipping AI ranking");
+    } else {
+      console.error("[vibe-match] AI recommendation failed:", err);
+    }
 
     // Graceful fallback: return first 2 candidates without AI ranking
     return candidates.slice(0, MAX_RESULTS).map((p) => ({
@@ -167,7 +223,7 @@ export async function getVibeMatches(
       imageUrl: p.imageUrl,
       basePrice: p.basePrice,
       score: 70,
-      reason: `✨ Another stay by the same host at ₹${p.basePrice}/night`,
+      reason: `✨ Another stay in the same area at ₹${p.basePrice}/night`,
     }));
   }
 }

@@ -73,6 +73,7 @@ export default function KnowledgeEditor({
   const testSessionId = useSignal<string | null>(null);
   const testLoading = useSignal(false);
   const testSuggestions = useSignal<string[]>([]);
+  const isApiConfigured = useSignal(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const MAX_CHARS = 10_000;
@@ -164,6 +165,9 @@ export default function KnowledgeEditor({
           testSuggestions.value = data.suggestions;
         }
       } else {
+        if (res.status === 401) {
+          isApiConfigured.value = false;
+        }
         testMessages.value = [
           ...testMessages.value,
           { role: "model", content: `Error: ${data.error ?? "Unknown error"}` },
@@ -213,7 +217,7 @@ export default function KnowledgeEditor({
 Include WiFi credentials, check-in instructions, house rules, nearby places, caretaker contact, and emergency numbers.
 
 Your AI concierge will use ONLY this information to answer guests."
-          class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 font-mono leading-relaxed focus:border-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-100 resize-y transition-all"
+          class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 font-mono leading-relaxed focus:border-mint-400 focus:outline-none focus:ring-2 focus:ring-mint-100 resize-y transition-all"
           aria-label="Knowledge base content"
           spellcheck={false}
         />
@@ -237,7 +241,7 @@ Your AI concierge will use ONLY this information to answer guests."
           class={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-700 transition-all active:scale-95 ${
             state.value === "saved"
               ? "bg-emerald-500 text-white"
-              : "bg-teal-500 text-white hover:bg-teal-600"
+              : "bg-mint-500 text-white hover:bg-mint-600"
           } disabled:opacity-40 disabled:cursor-not-allowed`}
         >
           {state.value === "saving" && (
@@ -304,109 +308,154 @@ Your AI concierge will use ONLY this information to answer guests."
         </div>
       )}
 
-      {/* Test Chat Panel */}
+      {/* Side Drawer for Test AI */}
       {showTestChat.value && (
-        <div class="border border-purple-100 rounded-2xl overflow-hidden bg-gray-50">
-          {/* Test header */}
-          <div class="px-4 py-2.5 bg-purple-50 border-b border-purple-100 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-            <p class="text-xs font-700 text-purple-700">
-              AI Test Mode — Chatting as a guest
-            </p>
-          </div>
+        <div class="fixed inset-0 z-50 overflow-hidden">
+          {/* Backdrop */}
+          <div
+            class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity duration-300"
+            onClick={() => (showTestChat.value = false)}
+          />
 
-          {/* Messages */}
-          <div class="max-h-64 overflow-y-auto px-4 py-3 space-y-2.5">
-            {testMessages.value.length === 0 && (
-              <p class="text-xs text-gray-400 text-center py-4">
-                Type a guest question to test your AI concierge
-              </p>
-            )}
-
-            {testMessages.value.map((msg, i) => (
-              <div
-                key={i}
-                class={`flex ${msg.role === "user" ? "justify-end" : ""}`}
+          {/* Drawer */}
+          <div class="absolute inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl flex flex-col transform transition-transform duration-300 translate-x-0">
+            {/* Header */}
+            <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
+              <div>
+                <h3 class="text-base font-800 text-gray-900">AI Playground</h3>
+                <p class="text-[11px] text-gray-400 font-500 uppercase tracking-wider">
+                  Testing as Guest
+                </p>
+              </div>
+              <button
+                onClick={() => (showTestChat.value = false)}
+                class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-all"
               >
-                <div
-                  class={`px-3 py-2 rounded-xl max-w-[80%] text-xs leading-relaxed ${
-                    msg.role === "user"
-                      ? "bg-purple-500 text-white rounded-tr-sm"
-                      : "bg-white border border-gray-200 text-gray-700 rounded-tl-sm"
-                  }`}
-                >
-                  {msg.content}
-                </div>
-              </div>
-            ))}
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </button>
+            </div>
 
-            {testLoading.value && (
-              <div class="flex gap-1 items-center px-3 py-2">
-                {[0, 1, 2].map((i) => (
-                  <div
-                    key={i}
-                    class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce"
-                    style={`animation-delay: ${i * 100}ms;`}
-                  />
-                ))}
+            {/* API Key Missing Notice */}
+            {!isApiConfigured.value && (
+              <div class="m-4 p-4 rounded-2xl bg-amber-50 border border-amber-100">
+                <div class="flex items-center gap-2 text-amber-800 font-700 text-xs mb-1">
+                  <span>⚠️ AI Not Configured</span>
+                </div>
+                <p class="text-[11px] text-amber-700 leading-relaxed">
+                  GEMINI_API_KEY is missing. AI concierge functions are disabled. Please set the key in your environment to enable chat.
+                </p>
               </div>
             )}
-          </div>
 
-          {/* Test suggestion pills */}
-          {testSuggestions.value.length > 0 && !testLoading.value && (
-            <div class="px-4 pb-2 flex gap-1.5 overflow-x-auto no-scrollbar">
-              {testSuggestions.value.map((s, i) => (
-                <button
+            {/* Chat Body */}
+            <div class="flex-1 overflow-y-auto px-6 py-6 space-y-4 no-scrollbar bg-gray-50/50">
+              {testMessages.value.length === 0 && (
+                <div class="h-full flex flex-col items-center justify-center text-center px-4 space-y-4">
+                  <div class="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center text-3xl">
+                    🤖
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-700 text-gray-900">Ask your Concierge</h4>
+                    <p class="text-[11px] text-gray-400 mt-1 max-w-[180px]">
+                      Type a question or pick a suggestion below to see how the AI answers.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {testMessages.value.map((msg, i) => (
+                <div
                   key={i}
-                  onClick={() => sendTestMessage(s)}
-                  class="flex-shrink-0 px-2.5 py-1 rounded-full bg-purple-50 border border-purple-100 text-[11px] font-600 text-purple-700 hover:bg-purple-100 active:scale-95 transition-all whitespace-nowrap"
+                  class={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  {s}
-                </button>
+                  <div
+                    class={`max-w-[85%] px-4 py-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
+                      msg.role === "user"
+                        ? "bg-purple-600 text-white rounded-tr-sm"
+                        : "bg-white border border-gray-100 text-gray-800 rounded-tl-sm"
+                    }`}
+                  >
+                    {msg.content}
+                  </div>
+                </div>
               ))}
-            </div>
-          )}
 
-          {/* Test input */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              sendTestMessage(testInput.value);
-            }}
-            class="flex items-center gap-2 px-3 py-2.5 border-t border-gray-200 bg-white"
-          >
-            <input
-              type="text"
-              value={testInput.value}
-              onInput={(e) =>
-                (testInput.value = (e.target as HTMLInputElement).value)
-              }
-              placeholder="Ask as a guest..."
-              class="flex-1 px-3 py-2 rounded-lg bg-gray-50 text-xs text-gray-900 placeholder:text-gray-400 focus:outline-none"
-              maxLength={500}
-            />
-            <button
-              type="submit"
-              disabled={!testInput.value.trim() || testLoading.value}
-              class="w-8 h-8 rounded-lg bg-purple-500 text-white flex items-center justify-center hover:bg-purple-600 active:scale-90 transition-all disabled:opacity-40"
-            >
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M1 6L11 1L6 11L5.25 6.75L1 6Z" fill="currentColor" />
-              </svg>
-            </button>
-          </form>
+              {testLoading.value && (
+                <div class="flex gap-1.5 items-center px-4 py-3 bg-white border border-gray-100 rounded-2xl w-fit shadow-sm">
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={i}
+                      class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce"
+                      style={`animation-delay: ${i * 150}ms;`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Input & Footer */}
+            <div class="p-6 border-t border-gray-100 bg-white">
+              {/* Suggestions */}
+              {testSuggestions.value.length > 0 && !testLoading.value && (
+                <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-1">
+                  {testSuggestions.value.map((s, i) => (
+                    <button
+                      key={i}
+                      onClick={() => sendTestMessage(s)}
+                      class="flex-shrink-0 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-[10px] font-700 text-purple-700 hover:bg-purple-100 transition-all whitespace-nowrap"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  sendTestMessage(testInput.value);
+                }}
+                class="relative"
+              >
+                <input
+                  type="text"
+                  value={testInput.value}
+                  onInput={(e) => (testInput.value = (e.target as HTMLInputElement).value)}
+                  placeholder="Ask a guest question..."
+                  disabled={!isApiConfigured.value}
+                  class="w-full pl-4 pr-12 py-3.5 rounded-2xl bg-gray-100 text-xs text-gray-900 placeholder:text-gray-400 focus:bg-white focus:ring-2 focus:ring-purple-100 focus:outline-none transition-all border-none disabled:opacity-50"
+                  maxLength={500}
+                />
+                <button
+                  type="submit"
+                  disabled={!testInput.value.trim() || testLoading.value || !isApiConfigured.value}
+                  class="absolute right-2 top-2 w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center hover:bg-purple-700 active:scale-90 transition-all disabled:opacity-40 shadow-sm"
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M1 7L13 1L7 13L6.25 7.75L1 7Z" fill="white" />
+                  </svg>
+                </button>
+              </form>
+              <p class="mt-3 text-[10px] text-center text-gray-400">
+                AI uses your saved knowledge to respond.
+              </p>
+            </div>
+          </div>
         </div>
       )}
 
       {/* Help text */}
-      <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
-        <p class="text-xs text-gray-500 leading-relaxed">
-          <span class="font-700 text-gray-600">How it works:</span> Write your
-          property info in Markdown. Your AI concierge will answer guest
-          questions using <em>only</em> this information. Include WiFi
-          passwords, check-in times, house rules, nearby places, and emergency
-          contacts. Guests see a chat bubble on your booking page.
+      <div class="p-5 rounded-2xl bg-gray-50 border border-gray-100">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-lg">📖</span>
+          <h4 class="text-xs font-800 text-gray-700">Writing Great Knowledge</h4>
+        </div>
+        <p class="text-[11px] text-gray-500 leading-relaxed">
+          Use clear bullet points. Include <span class="text-gray-900 font-600">WiFi password</span>, 
+          <span class="text-gray-900 font-600">caretaker name</span>, and <span class="text-gray-900 font-600">emergency spots</span>. 
+          Markdown is supported. The AI only knows what you write here — it has no access to your Airbnb account once imported.
         </p>
       </div>
     </div>
