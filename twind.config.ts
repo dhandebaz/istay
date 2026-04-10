@@ -14,6 +14,7 @@ export default {
           "sans-serif",
         ],
       },
+      colors: {
         istay: {
           50: "#f0f8f8",
           100: "#e0f1f1",

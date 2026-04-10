@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 132 notes | Score threshold: >40
+> 138 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,8 +18,10 @@
 
 **Stack:** Unknown stack
 
-## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
+## Important Warnings
 
+- **⚠️ GOTCHA: Updated schema Optimized** — - - Optimized Score
++ - Optimized Score — evolves the database schema 
 - **gotcha in shared-context.json** — -     }
 +     },
 -   ]
@@ -39,12 +41,10 @@
 + > 36 notes | Score threshold: >4
 - **gotcha in brainsync_auto.md** — - > 27 notes | Score threshold: >40
 + > 30 notes | Score threshold: >4
-- **gotcha in agent-rules.md** — File updated (external): .brainsync/agent-rules.md
-
-Content summary (3
 
 ## Project Standards
 
+- Optimized Score — confirmed 3x
 - what-changed in shared-context.json — confirmed 4x
 - what-changed in shared-context.json — confirmed 6x
 - Strengthened types Fixed
@@ -52,7 +52,6 @@ Content summary (3
 - Strengthened types Fixed
 - Strengthened types Person — optimizes data fetching with relational query ins...
 - discovery in shared-context.json — confirmed 3x
-- Strengthened types Person — ensures atomic multi-step database operations
 
 ## Recent Decisions
 
