@@ -1,0 +1,122 @@
+/* ================================================================
+   istay.space — Global Stylesheet
+   Extends Tailwind (twind) with custom scrollbar, smooth scroll,
+   focus-visible ring, and typography baseline.
+================================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- Google Fonts (loaded via _app.tsx <head>) --- */
+/* Plus Jakarta Sans: 300 400 500 600 700 800          */
+
+/* --- Smooth Scroll & Box Sizing --- */
+html {
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* --- Selection Color --- */
+::selection {
+  background-color: #99f6e4; /* brand-200 */
+  color: #134e4a;            /* brand-900 */
+}
+
+/* --- Custom Scrollbar (webkit) --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f9fafb; /* gray-50 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #14b8a6; /* brand-500 */
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0d9488; /* brand-600 */
+}
+
+/* --- Focus Visible Ring --- */
+:focus-visible {
+  outline: 2px solid #14b8a6;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* --- Range Slider Styling --- */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: #e5e7eb; /* gray-200 */
+  cursor: pointer;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #14b8a6; /* brand-500 */
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px #14b8a6;
+  cursor: grab;
+  transition: box-shadow 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.3);
+}
+
+/* --- Legal Page Prose --- */
+.prose-legal h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-legal p {
+  color: #4b5563;
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.prose-legal ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  color: #4b5563;
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.prose-legal li {
+  margin-bottom: 0.35rem;
+}
+
+.prose-legal a {
+  color: #0d9488;
+  text-decoration: underline;
+}
+
+.prose-legal a:hover {
+  color: #0f766e;
+}
