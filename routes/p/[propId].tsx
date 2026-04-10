@@ -251,4 +251,5 @@ export default function PropertyPage(
       {/* AI Concierge Chat Bubble */}
       <GuestChat propId={property.id} propertyName={property.name} />
     </>
+  );
 }
