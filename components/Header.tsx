@@ -41,7 +41,7 @@ export default function Header() {
             <a
               href="/pricing"
               id="cta-start-hosting"
-              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-teal-500 text-white text-sm font-600 shadow-sm hover:bg-teal-600 hover:shadow-md active:scale-95 transition-all duration-200"
+              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-mint-500 text-istay-900 text-sm font-800 shadow-sm hover:bg-mint-400 hover:shadow-md active:scale-95 transition-all duration-200"
             >
               Start Hosting
               <svg
@@ -54,7 +54,7 @@ export default function Header() {
               >
                 <path
                   d="M1 7H13M7 1L13 7L7 13"
-                  stroke="white"
+                  stroke="currentColor"
                   stroke-width="1.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"

@@ -88,7 +88,7 @@ export default function MobileMenu({ links }: MobileMenuProps) {
               <a
                 href="/pricing"
                 onClick={close}
-                class="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-full bg-teal-500 text-white font-600 shadow-sm hover:bg-teal-600 transition-all duration-200"
+                class="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-full bg-mint-500 text-istay-900 font-800 shadow-sm hover:bg-mint-400 transition-all duration-200"
               >
                 Start Hosting
               </a>

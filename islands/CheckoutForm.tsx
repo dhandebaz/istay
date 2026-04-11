@@ -270,7 +270,7 @@ export default function CheckoutForm(
       <button
         id="confirm-booking-btn"
         type="submit"
-        class="w-full py-4 rounded-xl bg-teal-500 text-white font-700 text-sm shadow-sm hover:bg-teal-600 active:scale-95 transition-all duration-150 flex items-center justify-center gap-2"
+        class="w-full py-4 rounded-xl bg-mint-500 text-istay-900 font-900 text-sm shadow-sm hover:bg-mint-400 active:scale-95 transition-all duration-150 flex items-center justify-center gap-2"
       >
         <svg
           width="16"
@@ -279,9 +279,9 @@ export default function CheckoutForm(
           fill="none"
           aria-hidden="true"
         >
-          <rect x="1" y="4" width="14" height="10" rx="1.5" stroke="white" stroke-width="1.25" />
-          <path d="M5 4V3C5 1.89543 5.89543 1 7 1H9C10.1046 1 11 1.89543 11 3V4" stroke="white" stroke-width="1.25" />
-          <circle cx="8" cy="9" r="1.5" fill="white" />
+          <rect x="1" y="4" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.25" />
+          <path d="M5 4V3C5 1.89543 5.89543 1 7 1H9C10.1046 1 11 1.89543 11 3V4" stroke="currentColor" stroke-width="1.25" />
+          <circle cx="8" cy="9" r="1.5" fill="currentColor" />
         </svg>
         Confirm Booking — {formatINR(amount)}
       </button>

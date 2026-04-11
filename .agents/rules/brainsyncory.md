@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 204 notes | Score threshold: >40
+> 208 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -46,10 +46,10 @@
 
 ## Recent Decisions
 
+- decision in pricing.tsx
 - decision in settings.tsx
 - decision in index.tsx
 - decision in contact.tsx
-- decision in IdVerification.tsx
 
 ## Learned Patterns
 

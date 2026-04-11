@@ -154,7 +154,7 @@ export default function EarningsCalculator() {
             class={`relative rounded-2xl border-2 p-5 transition-transform hover:-translate-y-1 duration-200 ${bg} ${border}`}
           >
             {badge && (
-              <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-teal-500 text-white text-xs font-700 shadow-sm">
+              <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-mint-500 text-istay-900 text-xs font-900 shadow-sm">
                 {badge}
               </div>
             )}
@@ -186,26 +186,26 @@ export default function EarningsCalculator() {
       </div>
 
       {/* ── SAVINGS BANNER ──────────────────────────────── */}
-      <div class="rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-500 p-5 sm:p-6 text-white shadow-md">
+      <div class="rounded-2xl bg-gradient-to-r from-mint-500 to-emerald-400 p-5 sm:p-6 text-istay-900 shadow-md">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <p class="text-sm font-500 text-teal-100 mb-1">
+            <p class="text-sm font-800 text-istay-900/80 mb-1">
               vs Airbnb (15%), you save every month:
             </p>
-            <p class="text-3xl font-800 drop-shadow-sm">
+            <p class="text-3xl font-900 drop-shadow-sm">
               {formatINR(istaySavingsVsAirbnb)}
             </p>
           </div>
           <div class="sm:text-right">
-            <p class="text-sm font-500 text-teal-100 mb-1">
+            <p class="text-sm font-800 text-istay-900/80 mb-1">
               vs MakeMyTrip (18%):
             </p>
-            <p class="text-3xl font-800 drop-shadow-sm">
+            <p class="text-3xl font-900 drop-shadow-sm">
               {formatINR(istaySavingsVsMMT)}
             </p>
           </div>
         </div>
-        <p class="mt-4 text-xs text-teal-200">
+        <p class="mt-4 text-xs text-istay-900/80 font-500">
           * Calculation based on gross revenue of {formatINR(grossRevenue)}/month. istay's one-time ₹{SETUP_FEE.toLocaleString("en-IN")} setup fee breaks even in your first booking.
         </p>
       </div>

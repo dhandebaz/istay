@@ -92,7 +92,7 @@ export default function Pricing({ data }: PageProps<PricingData>) {
             class="absolute top-0 right-0 w-96 h-96 rounded-full bg-mint-50 opacity-50 blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"
           />
           <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-istay-50 border border-istay-100 text-istay-800 text-xs font-700 uppercase tracking-wider mb-6">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-mint-100 border border-mint-200 text-istay-900 text-xs font-800 uppercase tracking-wider mb-6">
               Transparent Pricing
             </div>
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-800 text-gray-900 tracking-tight leading-tight max-w-4xl mx-auto">
@@ -113,7 +113,7 @@ export default function Pricing({ data }: PageProps<PricingData>) {
               <div class="rounded-[23px] bg-white p-8 sm:p-12">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                   <div>
-                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-50 text-mint-700 text-xs font-800 mb-5 tracking-tight uppercase">
+                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-100 text-istay-900 text-xs font-900 mb-5 tracking-tight uppercase">
                       ✦ Lifetime Plan
                     </div>
                     <div class="mb-8">
@@ -153,11 +153,11 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                     ) : (
                       <a
                         href="/contact"
-                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-mint-500 text-white font-700 shadow-md hover:bg-mint-600 hover:shadow-lg active:scale-95 transition-all duration-200"
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-mint-500 text-istay-900 font-800 shadow-md hover:bg-mint-400 hover:shadow-lg active:scale-95 transition-all duration-200"
                       >
                         Register to Start Hosting
                         <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-                          <path d="M2 8H14M8 2L14 8L8 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                          <path d="M2 8H14M8 2L14 8L8 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                       </a>
                     )}
@@ -183,7 +183,7 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                           <tr key={name} class={`${highlight ? "bg-white shadow-sm rounded-xl" : ""}`}>
                             <td class={`px-4 py-4 font-700 ${highlight ? "text-istay-900" : "text-gray-700"}`}>
                               {name}
-                              {highlight && <span class="ml-2 text-[10px] bg-mint-500 text-white px-1.5 py-0.5 rounded-full">RECOMMENDED</span>}
+                              {highlight && <span class="ml-2 text-[10px] bg-mint-500 text-istay-900 font-900 px-1.5 py-0.5 rounded-full">RECOMMENDED</span>}
                             </td>
                             <td class={`px-4 py-4 text-right font-600 ${highlight ? "text-mint-500" : "text-rose-400"}`}>{pct}</td>
                             <td class="px-4 py-4 text-right font-800 text-gray-900">{home}</td>

@@ -1,6 +1,7 @@
 import { Head } from "$fresh/runtime.ts";
 import Header from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
+import MagicScraperAnimation from "../islands/MagicScraperAnimation.tsx";
 
 const FEATURES = [
   {
@@ -163,7 +164,7 @@ export default function Home() {
               <a
                 href="/pricing"
                 id="hero-cta-primary"
-                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-mint-500 text-white font-700 text-base shadow-md hover:bg-mint-600 hover:shadow-lg active:scale-95 transition-all duration-200"
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-mint-500 text-istay-900 font-900 text-base shadow-md hover:bg-mint-400 hover:shadow-lg active:scale-95 transition-all duration-200"
               >
                 Start Subscription — ₹1,000
                 <svg
@@ -176,7 +177,7 @@ export default function Home() {
                 >
                   <path
                     d="M2 8H14M8 2L14 8L8 14"
-                    stroke="white"
+                    stroke="currentColor"
                     stroke-width="1.8"
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -287,31 +288,9 @@ export default function Home() {
               </div>
 
               {/* Animation Mockup */}
-              <div class="relative">
+              <div class="relative animate-slide-up">
                 <div class="absolute -inset-4 bg-mint-50 rounded-3xl -rotate-2 scale-95 opacity-50 blur-xl" />
-                <div class="relative bg-white rounded-3xl border border-gray-200 shadow-2xl p-6 sm:p-8 animate-slide-up">
-                  <div class="flex items-center gap-3 mb-6 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                    <div class="w-10 h-10 rounded-xl bg-rose-500 flex items-center justify-center text-white font-800">A</div>
-                    <div class="flex-1">
-                      <div class="h-2 w-24 bg-gray-200 rounded-full mb-2" />
-                      <div class="h-1.5 w-40 bg-gray-100 rounded-full" />
-                    </div>
-                    <div class="w-6 h-3 bg-mint-500 rounded-full animate-pulse" />
-                  </div>
-
-                  <div class="space-y-4">
-                    <div class="h-4 w-3/4 bg-gray-100 rounded-full" />
-                    <div class="h-4 w-5/6 bg-gray-100 rounded-full" />
-                    <div class="grid grid-cols-3 gap-2 py-4">
-                      <div class="h-20 bg-gray-50 rounded-xl" />
-                      <div class="h-20 bg-gray-50 rounded-xl border-2 border-mint-400 animate-pulse" />
-                      <div class="h-20 bg-gray-50 rounded-xl" />
-                    </div>
-                    <div class="h-12 w-full bg-mint-500 rounded-2xl shadow-lg flex items-center justify-center text-white font-700 text-sm">
-                      Importing to istay...
-                    </div>
-                  </div>
-                </div>
+                <MagicScraperAnimation />
               </div>
             </div>
           </div>
@@ -455,7 +434,7 @@ export default function Home() {
             <a
               href="/pricing"
               id="banner-cta"
-              class="mt-8 inline-flex items-center gap-2 px-8 py-4 rounded-full bg-mint-500 text-white font-700 text-base shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+              class="mt-8 inline-flex items-center gap-2 px-8 py-4 rounded-full bg-mint-500 text-istay-900 font-900 text-base shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
             >
               See Pricing & Start Today
             </a>
