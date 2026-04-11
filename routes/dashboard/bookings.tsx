@@ -19,7 +19,7 @@ interface BookingsPageData {
 }
 
 export const handler: Handlers<BookingsPageData, DashboardState> = {
-  async GET(_req, ctx) {
+  GET: async (_req, ctx) => {
     const { hostId } = ctx.state;
     const kv = await getKv();
 

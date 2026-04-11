@@ -26,7 +26,7 @@ interface ContactInquiry {
 }
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     const form = await req.formData();
     const name = (form.get("name") as string || "").trim();
     const email = (form.get("email") as string || "").trim();

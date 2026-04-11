@@ -62,7 +62,7 @@ async function generateHash(params: Record<string, string>, salt: string) {
 }
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     if (!EASEBUZZ_KEY || !EASEBUZZ_SALT) {
       return Response.json(
         {

@@ -31,7 +31,7 @@ function getHostIdFromCookie(req: Request): string | null {
 }
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     let body: {
       hostId?: string;
       propertyId?: string;

@@ -19,7 +19,7 @@ interface SettingsPageData {
 }
 
 export const handler: Handlers<SettingsPageData, DashboardState> = {
-  async GET(_req, ctx) {
+  GET: async (_req, ctx) => {
     const { hostId } = ctx.state;
     const kv = await getKv();
 
@@ -27,7 +27,7 @@ export const handler: Handlers<SettingsPageData, DashboardState> = {
     return ctx.render({ host: entry.value });
   },
 
-  async POST(req, ctx) {
+  POST: async (req, ctx) => {
     const { hostId } = ctx.state;
     const kv = await getKv();
     const form = await req.formData();

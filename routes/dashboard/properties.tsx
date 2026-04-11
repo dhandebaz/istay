@@ -9,7 +9,7 @@ interface PropertiesData {
 }
 
 export const handler: Handlers<PropertiesData, DashboardState> = {
-  async GET(_req, ctx) {
+  GET: async (_req, ctx) => {
     const properties = await listProperties(ctx.state.hostId);
     return ctx.render({ properties });
   },
@@ -77,7 +77,7 @@ export default function PropertiesPage({ data }: PageProps<PropertiesData>) {
                     />
                   )
                   : (
-                    <div class="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-teal-50 to-emerald-50">
+                    <div class="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-istay-50 to-istay-100">
                       🏠
                     </div>
                   )}
@@ -104,7 +104,7 @@ export default function PropertiesPage({ data }: PageProps<PropertiesData>) {
 
                 <div class="flex items-center justify-between">
                   <div>
-                    <span class="text-lg font-800 text-teal-600">
+                    <span class="text-lg font-800 text-istay-900">
                       {formatINR(property.basePrice)}
                     </span>
                     <span class="text-xs text-gray-400 ml-1">/ night</span>
@@ -112,7 +112,7 @@ export default function PropertiesPage({ data }: PageProps<PropertiesData>) {
                   <div class="flex items-center gap-2">
                     {/* Copy booking link */}
                     <button
-                      class="p-2 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-teal-600 transition-colors duration-150"
+                      class="p-2 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-istay-900 transition-colors duration-150"
                       title="Copy booking link"
                       aria-label={`Copy booking link for ${property.name}`}
                     >

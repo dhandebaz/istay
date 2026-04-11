@@ -13,7 +13,7 @@ interface CheckoutData {
 }
 
 export const handler: Handlers<CheckoutData> = {
-  async GET(req, ctx) {
+  GET: async (req, ctx) => {
     const url = new URL(req.url);
     const propId = url.searchParams.get("propId") ?? "";
     const checkIn = url.searchParams.get("checkIn") ?? "";

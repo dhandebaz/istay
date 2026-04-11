@@ -11,7 +11,7 @@ import { syncAllProperties } from "../../../utils/sync.ts";
 const CRON_SECRET = Deno.env.get("CRON_SECRET");
 
 export const handler: Handlers = {
-  async GET(req) {
+  GET: async (req) => {
     // Basic secret guard (optional — set CRON_SECRET in .env)
     if (CRON_SECRET) {
       const url = new URL(req.url);

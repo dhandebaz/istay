@@ -82,7 +82,7 @@ If the image is NOT a government ID document, return:
 }
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     let body: {
       bookingId?: string;
       idType?: string;

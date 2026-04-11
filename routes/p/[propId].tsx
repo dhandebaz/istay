@@ -14,7 +14,7 @@ interface PropertyPageData {
 }
 
 export const handler: Handlers<PropertyPageData> = {
-  async GET(_req, ctx) {
+  GET: async (_req, ctx) => {
     const { propId } = ctx.params;
     const property = await getPropertyById(propId);
 

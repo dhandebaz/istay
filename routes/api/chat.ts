@@ -104,7 +104,7 @@ function generateSuggestions(
 }
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     let body: {
       propId?: string;
       sessionId?: string;

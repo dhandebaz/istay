@@ -28,7 +28,7 @@ async function verifySignature(orderId: string, paymentId: string, signature: st
 }
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     if (!KEY_SECRET) {
       return Response.json({ error: "Razorpay secret not set" }, { status: 503 });
     }

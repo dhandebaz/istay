@@ -9,7 +9,7 @@ interface OverviewData {
   setupFeePaid: boolean;
 }
 export const handler: Handlers<OverviewData> = {
-  async GET(_req, ctx) {
+  GET: async (_req, ctx) => {
     const { hostId } = ctx.state;
     const kv = await Deno.openKv();
     const hostEntry = await kv.get(["host", hostId]);

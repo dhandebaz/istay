@@ -16,7 +16,7 @@ interface LayoutData {
 }
 
 export const handler: Handlers<LayoutData, DashboardState> = {
-  async GET(_req, ctx) {
+  GET: async (_req, ctx) => {
     // Load unread notification count from KV
     let unreadCount = 0;
     try {

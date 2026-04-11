@@ -75,7 +75,7 @@ function enumerateDates(checkIn: string, checkOut: string): string[] {
 }
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     const formData = await req.formData();
     const params: Record<string, string> = {};
     for (const [key, value] of formData.entries()) {

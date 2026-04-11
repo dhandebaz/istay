@@ -58,7 +58,7 @@ function enumerateDates(checkIn: string, checkOut: string): string[] {
 }
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     let body: Partial<CreateBookingPayload>;
     try {
       body = await req.json();

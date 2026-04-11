@@ -17,7 +17,7 @@ interface CaretakerData {
 }
 
 export const handler: Handlers<CaretakerData> = {
-  async GET(_req, ctx) {
+  GET: async (_req, ctx) => {
     const { token } = ctx.params;
 
     const caretakerData = await getCaretakerToken(token);

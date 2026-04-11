@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 138 notes | Score threshold: >40
+> 198 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -18,50 +18,44 @@
 
 **Stack:** Unknown stack
 
-## Important Warnings
+## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **⚠️ GOTCHA: Added API key auth authentication** — - > 155 notes | Score threshold: >40
++ > 156 notes | Score threshold: 
+- **⚠️ GOTCHA: Added API key auth authentication — evolves the database schema to support ne...** — - > 149 notes | Score threshold: >40
++ > 152 notes | Score threshold: 
+- **⚠️ GOTCHA: Added API key auth authentication — evolves the database schema to support ne...** — - > 146 notes | Score threshold: >40
++ > 149 notes | Score threshold: 
+- **⚠️ GOTCHA: Updated schema Score — evolves the database schema to support new requirements** — - > 138 notes | Score threshold: >40
++ > 146 notes | Score threshold: 
+- **⚠️ GOTCHA: Updated schema Score — evolves the database schema to support new requirements** — - > 132 notes | Score threshold: >40
++ > 138 notes | Score threshold: 
 - **⚠️ GOTCHA: Updated schema Optimized** — - - Optimized Score
 + - Optimized Score — evolves the database schema 
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "a58d2809e01b853e",
-+
-- **⚠️ GOTCHA: Strengthened types Optimized** — - 
-+ - Optimized Score
-- ## Recent fixes
-+ 
-- 
-+ ## Recent fixes
-- - F
-- **⚠️ GOTCHA: Strengthened types Fixed** — - - Fixed null crash in Guest — prevents null/undefined runtime crashe
-- **gotcha in brainsync_auto.md** — - > 35 notes | Score threshold: >40
-+ > 36 notes | Score threshold: >4
-- **gotcha in brainsync_auto.md** — - > 27 notes | Score threshold: >40
-+ > 30 notes | Score threshold: >4
 
 ## Project Standards
 
-- Optimized Score — confirmed 3x
-- what-changed in shared-context.json — confirmed 4x
-- what-changed in shared-context.json — confirmed 6x
-- Strengthened types Fixed
-- Strengthened types PricingCheckout — prevents null/undefined runtime crashes
-- Strengthened types Fixed
-- Strengthened types Person — optimizes data fetching with relational query ins...
-- discovery in shared-context.json — confirmed 3x
+- Added API key auth authentication — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- Added API key auth authentication — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- Added API key auth authentication — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
 
 ## Recent Decisions
 
+- decision in settings.tsx
+- decision in index.tsx
 - decision in contact.tsx
 - decision in IdVerification.tsx
-- decision in Footer.tsx
-- decision in Header.tsx
 
-## Verified Best Practices
+## Learned Patterns
 
+- Always: Updated schema Score — evolves the database schema to support new requirements — confirmed 3x (seen 2x)
+- Always: what-changed in brainsync_auto.md — confirmed 3x (seen 2x)
+- Always: what-changed in brainsync_auto.md — confirmed 3x (seen 3x)
 - Agent generates new migration for every change (squash related changes)
 - Agent installs packages without checking if already installed
 

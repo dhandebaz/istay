@@ -29,7 +29,7 @@ interface GuestsPageData {
 }
 
 export const handler: Handlers<GuestsPageData, DashboardState> = {
-  async GET(_req, ctx) {
+  GET: async (_req, ctx) => {
     const { hostId } = ctx.state;
     const kv = await getKv();
 
@@ -120,7 +120,7 @@ export default function GuestsPage(
               >
                 {/* Avatar + Name */}
                 <div class="flex items-center gap-3 mb-4">
-                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center text-white text-sm font-700">
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-istay-900 to-istay-700 flex items-center justify-center text-white text-sm font-700">
                     {g.name.charAt(0).toUpperCase()}
                   </div>
                   <div class="min-w-0 flex-1">

@@ -27,7 +27,7 @@ function getHostId(req: Request): string | null {
 }
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     const hostId = getHostId(req);
     if (!hostId) {
       return Response.json({ error: "Unauthorized — no active session" }, {

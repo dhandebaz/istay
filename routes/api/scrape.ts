@@ -91,7 +91,7 @@ function decodeEntities(str: string): string {
 }
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     let body: { url?: unknown };
     try {
       body = await req.json();

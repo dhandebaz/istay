@@ -28,7 +28,7 @@ const ALLOWED_ITEMS = [
 type SupplyItem = typeof ALLOWED_ITEMS[number];
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     let body: {
       token?: string;
       item?: string;

@@ -22,7 +22,7 @@ interface KnowledgePageData {
 }
 
 export const handler: Handlers<KnowledgePageData, DashboardState> = {
-  async GET(_req, ctx) {
+  GET: async (_req, ctx) => {
     const { hostId, hostName } = ctx.state;
 
     const properties = await listProperties(hostId);

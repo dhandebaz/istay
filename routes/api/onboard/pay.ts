@@ -16,7 +16,7 @@ const KEY_ID = Deno.env.get("RAZORPAY_KEY_ID");
 const KEY_SECRET = Deno.env.get("RAZORPAY_KEY_SECRET");
 
 export const handler: Handlers = {
-  async POST(req) {
+  POST: async (req) => {
     if (!KEY_ID || !KEY_SECRET) {
       return Response.json({ error: "Razorpay not configured" }, { status: 503 });
     }
