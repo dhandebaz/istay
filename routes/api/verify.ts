@@ -161,7 +161,7 @@ export const handler: Handlers = {
           throw new Error("Could not parse OCR response as JSON");
         }
       }
-
+    } catch (err) {
       console.error("[verify] Gemini OCR error:", err);
 
       // Mark as failed but don't crash — the booking is still valid

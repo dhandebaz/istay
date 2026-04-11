@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 198 notes | Score threshold: >40
+> 204 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -35,14 +35,14 @@
 
 ## Project Standards
 
-- Added API key auth authentication — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - Added API key auth authentication — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - Added API key auth authentication — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- Added API key auth authentication — confirmed 3x
 
 ## Recent Decisions
 
