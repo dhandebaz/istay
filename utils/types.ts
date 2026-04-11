@@ -18,6 +18,17 @@ export interface Host {
   updatedAt: string;
 }
 
+export interface AuthRecord {
+  hostId: string;
+  email: string;
+  passwordHash: string;
+  salt: string;
+  emailVerified?: boolean;
+  verifyToken?: string;
+  resetToken?: string;
+  resetTokenExpires?: string;
+}
+
 export interface Property {
   id: string;
   hostId: string;
@@ -289,4 +300,5 @@ export interface DashboardStats {
 export interface DashboardState {
   hostId: string;
   hostName: string;
+  emailVerified: boolean;
 }

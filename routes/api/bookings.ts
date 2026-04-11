@@ -22,22 +22,32 @@ import {
 } from "../../utils/db.ts";
 import type { Booking, CreateBookingPayload } from "../../utils/types.ts";
 
-const CASHFREE_APP_ID = Deno.env.get("CASHFREE_APP_ID");
-const CASHFREE_SECRET_KEY = Deno.env.get("CASHFREE_SECRET_KEY");
-const IS_PRODUCTION = Deno.env.get("CASHFREE_ENV") === "production";
-const CASHFREE_BASE_URL = IS_PRODUCTION
-  ? "https://api.cashfree.com"
-  : "https://sandbox.cashfree.com";
+const EASEBUZZ_KEY = Deno.env.get("EASEBUZZ_KEY");
+const EASEBUZZ_SALT = Deno.env.get("EASEBUZZ_SALT");
+const EASEBUZZ_ENV = Deno.env.get("EASEBUZZ_ENV") || "test";
+const IS_PRODUCTION = EASEBUZZ_ENV === "production";
+const EASEBUZZ_BASE_URL = IS_PRODUCTION
+  ? "https://pay.easebuzz.in"
+  : "https://testpay.easebuzz.in";
 const APP_BASE_URL = Deno.env.get("APP_BASE_URL") ?? "http://localhost:8000";
 
-function parseCookies(header: string | null): Record<string, string> {
-  const result: Record<string, string> = {};
-  if (!header) return result;
-  for (const pair of header.split(";")) {
-    const [k, ...v] = pair.trim().split("=");
-    if (k?.trim()) result[k.trim()] = v.join("=").trim();
-  }
-  return result;
+const ISTAY_COMMISSION = 0.05; // 5%
+const HOST_SHARE = 1 - ISTAY_COMMISSION; // 95%
+
+/** Easy hash encoder for Easebuzz */
+async function generateHash(params: Record<string, string>, salt: string) {
+  const hashString = [
+    params.key, params.txnid, params.amount, params.productinfo,
+    params.firstname, params.email, params.udf1 || "", params.udf2 || "",
+    params.udf3 || "", params.udf4 || "", params.udf5 || "", params.udf6 || "",
+    params.udf7 || "", params.udf8 || "", params.udf9 || "", params.udf10 || "",
+    salt,
+  ].join("|");
+
+  const encoder = new TextEncoder();
+  const data = encoder.encode(hashString);
+  const hashBuffer = await crypto.subtle.digest("SHA-512", data);
+  return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 function daysBetween(start: string, end: string): number {
@@ -156,13 +166,11 @@ export const handler: Handlers = {
 
     await saveBooking(booking);
 
-    // ── Initiate Payment ───────────────────────────────────────
-    if (!CASHFREE_APP_ID || !CASHFREE_SECRET_KEY) {
-      // Payment gateway not configured — return error with booking ID
-      // so it can be recovered once payment is set up
+    // ── Initiate Easebuzz Splitting Payment ──────────────────────
+    if (!EASEBUZZ_KEY || !EASEBUZZ_SALT) {
       return Response.json(
         {
-          error: "Payment gateway not configured. Set CASHFREE_APP_ID and CASHFREE_SECRET_KEY.",
+          error: "Payment gateway not configured. Set EASEBUZZ_KEY and EASEBUZZ_SALT.",
           bookingId,
           amount,
           nights,
@@ -171,51 +179,66 @@ export const handler: Handlers = {
       );
     }
 
-    const orderId = `istay_${bookingId}_${Date.now()}`;
+    const txnid = `istay_${bookingId}_${Date.now()}`;
+    const hostAmount = Math.round(amount * HOST_SHARE * 100) / 100;
+    
+    // Easebuzz Slices Payload
+    const splitDetails = {
+      label: `split_istay_${bookingId}`,
+      commission_type: "fixed",
+      split_payments: [
+        {
+          merchant_id: property.hostId, // Assumes hostId resolves to Easebuzz Vendor ID right now
+          amount: hostAmount.toFixed(2),
+        },
+      ],
+    };
+
+    const params: any = {
+      key: EASEBUZZ_KEY,
+      txnid,
+      amount: amount.toFixed(2),
+      productinfo: `istay booking at ${property.name}`,
+      firstname: guestName,
+      phone: guestPhone || "9999999999",
+      email: guestEmail,
+      surl: `${APP_BASE_URL}/p/checkout/confirm?txnid=${txnid}&booking_id=${bookingId}`,
+      furl: `${APP_BASE_URL}/p/checkout/failed?txnid=${txnid}&booking_id=${bookingId}`,
+      udf1: bookingId,
+      split_payments: JSON.stringify(splitDetails),
+    };
+
+    params.hash = await generateHash(params, EASEBUZZ_SALT);
 
     try {
-      const cfRes = await fetch(`${CASHFREE_BASE_URL}/pg/orders`, {
+      const formData = new URLSearchParams();
+      for (const [k, v] of Object.entries(params)) {
+        formData.append(k, v as string);
+      }
+
+      const ebRes = await fetch(`${EASEBUZZ_BASE_URL}/payment/initiate.php`, {
         method: "POST",
         headers: {
-          "x-client-id": CASHFREE_APP_ID,
-          "x-client-secret": CASHFREE_SECRET_KEY,
-          "x-api-version": "2023-08-01",
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
           "Accept": "application/json",
         },
-        body: JSON.stringify({
-          order_id: orderId,
-          order_amount: amount,
-          order_currency: "INR",
-          customer_details: {
-            customer_id: `guest_${bookingId}`,
-            customer_email: guestEmail,
-            customer_name: guestName,
-            customer_phone: guestPhone,
-          },
-          order_meta: {
-            return_url: `${APP_BASE_URL}/p/checkout/confirm?order_id={order_id}&booking_id=${bookingId}`,
-            notify_url: `${APP_BASE_URL}/api/webhooks/payment`,
-          },
-          order_note: `istay booking at ${property.name}`,
-        }),
+        body: formData.toString(),
       });
 
-      const cfData = await cfRes.json();
+      const ebData = await ebRes.json();
 
-      if (!cfRes.ok) {
-        console.error("[bookings] Cashfree error:", cfData);
+      if (ebData.status !== 1) {
+        console.error("[bookings] Easebuzz error:", ebData.data);
         return Response.json(
           { error: "Payment gateway error — booking saved, please contact support", bookingId },
           { status: 502 },
         );
       }
 
-      // Update booking with Cashfree order ID and session ID
+      // Update booking with Easebuzz transaction ID and access key
       await saveBooking({
         ...booking,
-        cashfreeOrderId: orderId,
-        paymentSessionId: cfData.payment_session_id,
+        paymentSessionId: ebData.data, // access_key
         updatedAt: new Date().toISOString(),
       });
 
@@ -224,9 +247,8 @@ export const handler: Handlers = {
         bookingId,
         amount,
         nights,
-        paymentSessionId: cfData.payment_session_id,
-        // Cashfree hosted payment page URL
-        paymentLink: cfData.payment_link ?? `https://payments.cashfree.com/order/#${cfData.payment_session_id}`,
+        paymentSessionId: ebData.data,
+        paymentLink: `${EASEBUZZ_BASE_URL}/pay/${ebData.data}`,
       });
     } catch (err) {
       console.error("[bookings] Error creating payment:", err);

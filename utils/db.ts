@@ -20,6 +20,7 @@
 // ================================================================
 
 import type {
+  AuthRecord,
   Booking,
   CalendarBlock,
   CaretakerToken,
@@ -58,7 +59,55 @@ export async function saveHost(data: Host): Promise<void> {
   await kv.atomic()
     .set(["host", data.id], data)
     .set(["host_index", data.id], true)
+    // Email index mapping email (lowercased) -> hostId
+    .set(["host_email", data.email.toLowerCase()], data.id)
     .commit();
+}
+
+// ── AUTH & CRYPTO ─────────────────────────────────────────────
+
+export async function hashPassword(password: string, saltHex?: string) {
+  // Generate a salt if not provided
+  const salt = saltHex 
+    ? new Uint8Array(saltHex.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)))
+    : crypto.getRandomValues(new Uint8Array(16));
+  
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw", enc.encode(password), { name: "PBKDF2" }, false, ["deriveBits", "deriveKey"]
+  );
+  
+  const key = await crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt: salt,
+      iterations: 100000,
+      hash: "SHA-256"
+    },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
+    true,
+    ["encrypt", "decrypt"]
+  );
+  
+  const exportedKey = await crypto.subtle.exportKey("raw", key);
+  const hashBuffer = new Uint8Array(exportedKey);
+  const hashArray = Array.from(hashBuffer);
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  const thisSaltHex = Array.from(salt).map(b => b.toString(16).padStart(2, '0')).join('');
+  
+  return { hash: hashHex, salt: thisSaltHex };
+}
+
+export async function getAuthRecord(email: string): Promise<AuthRecord | null> {
+  const kv = await getKv();
+  const entry = await kv.get<AuthRecord>(["auth", email.toLowerCase()]);
+  return entry.value;
+}
+
+export async function saveAuthRecord(data: AuthRecord): Promise<void> {
+  const kv = await getKv();
+  await kv.set(["auth", data.email.toLowerCase()], data);
 }
 
 // ── PROPERTIES ────────────────────────────────────────────────

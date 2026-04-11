@@ -72,13 +72,33 @@ export async function handler(
     });
   }
 
-  // Try to load host from KV to verify they exist and get latest name
+  // Try to load host from KV to verify they exist and get latest name and setupFee status
+  // Also load AuthRecord to check email verification status
+  let emailVerified = true; // Default true if schema missing
   try {
     const kv = await getKv();
     const hostEntry = await kv.get(["host", hostId]);
     if (hostEntry.value) {
-      const host = hostEntry.value as { name?: string };
+      const host = hostEntry.value as { email: string; name?: string; setupFeePaid?: boolean };
       hostName = host.name ?? hostName;
+      
+      // Crucial part of Onboarding sync: if not paid, route them out of dashboard to pricing
+      if (host.setupFeePaid === false) {
+          const redirectTo = new URL(req.url).pathname;
+          return new Response(null, {
+            status: 302,
+            headers: {
+              Location: `/pricing?auth=onboarding_incomplete&redirect=${encodeURIComponent(redirectTo)}`,
+            },
+          });
+      }
+
+      // Check Email Verification
+      const authEntry = await kv.get(["auth", host.email.toLowerCase()]);
+      if (authEntry.value) {
+        const authRecord = authEntry.value as { emailVerified?: boolean };
+        emailVerified = authRecord.emailVerified ?? true; // if missing, assume old account which is verified
+      }
     }
   } catch (err) {
     console.warn("[middleware] KV lookup failed, using cookie data:", err);
@@ -86,6 +106,7 @@ export async function handler(
 
   ctx.state.hostId = hostId;
   ctx.state.hostName = hostName;
+  ctx.state.emailVerified = emailVerified;
 
   return await ctx.next();
 }

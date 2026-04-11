@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 208 notes | Score threshold: >40
+> 323 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -35,21 +35,21 @@
 
 ## Project Standards
 
+- Strengthened types Fixed
+- Added API key auth authentication — confirmed 3x
+- Added session cookies authentication — uses a proper password hashing algorithm — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - Added API key auth authentication — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
-- Added API key auth authentication — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Added API key auth authentication — confirmed 3x
 
 ## Recent Decisions
 
-- decision in pricing.tsx
-- decision in settings.tsx
+- decision in brainsync_auto.md
+- decision in CheckoutForm.tsx
+- decision in PricingCheckout.tsx
 - decision in index.tsx
-- decision in contact.tsx
 
 ## Learned Patterns
 

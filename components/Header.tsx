@@ -7,7 +7,7 @@ const NAV_LINKS = [
 
 export default function Header() {
   return (
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-gray-100/80 shadow-sm">
+    <header class="sticky top-0 z-[100] backdrop-blur-xl bg-white/95 border-b border-gray-100 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           {/* Logo */}
@@ -34,12 +34,18 @@ export default function Header() {
                 {label}
               </a>
             ))}
+            <a
+              href="/login"
+              class="px-4 py-2 text-sm font-700 text-mint-600 rounded-xl hover:bg-mint-50 transition-all duration-200"
+            >
+              Login
+            </a>
           </nav>
 
           {/* Desktop CTA */}
           <div class="hidden md:block">
             <a
-              href="/pricing"
+              href="/register"
               id="cta-start-hosting"
               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-mint-500 text-istay-900 text-sm font-800 shadow-sm hover:bg-mint-400 hover:shadow-md active:scale-95 transition-all duration-200"
             >

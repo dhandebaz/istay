@@ -73,22 +73,30 @@ export default function MobileMenu({ links }: MobileMenuProps) {
           role="dialog"
           aria-label="Mobile navigation"
         >
-          <nav class="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
-            {links.map(({ href, label }) => (
+          <nav class="max-w-7xl mx-auto flex flex-col">
+            <div class="px-4 py-4 flex flex-col gap-1">
+              {links.map(({ href, label }) => (
+                <a
+                  key={href}
+                  href={href}
+                  onClick={close}
+                  class="px-4 py-3 text-base font-500 text-gray-700 rounded-xl hover:text-gray-900 hover:bg-gray-50 transition-all duration-150"
+                >
+                  {label}
+                </a>
+              ))}
               <a
-                key={href}
-                href={href}
-                onClick={close}
-                class="px-4 py-3 text-base font-500 text-gray-700 rounded-xl hover:text-gray-900 hover:bg-gray-50 transition-all duration-150"
+                href="/login"
+                class="block px-3 py-3 text-base font-600 text-istay-900 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-colors"
               >
-                {label}
+                Login
               </a>
-            ))}
-            <div class="pt-2 mt-1 border-t border-gray-100">
+            </div>
+
+            <div class="p-6 bg-gray-50 border-t border-gray-100">
               <a
-                href="/pricing"
-                onClick={close}
-                class="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-full bg-mint-500 text-istay-900 font-800 shadow-sm hover:bg-mint-400 transition-all duration-200"
+                href="/register"
+                class="flex items-center justify-center w-full px-6 py-3.5 rounded-xl bg-mint-500 text-istay-900 text-sm font-800 shadow-sm active:scale-[0.98] transition-all"
               >
                 Start Hosting
               </a>
