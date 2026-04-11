@@ -12,17 +12,6 @@ export default function MagicScraperAnimation() {
 
   return (
     <div class="relative bg-white rounded-3xl border border-gray-200 shadow-2xl overflow-hidden h-[340px] flex flex-col">
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes scan {
-          0% { top: 0; }
-          50% { top: 100%; }
-          100% { top: 0; }
-        }
-        .animate-scan {
-          animation: scan 2s ease-in-out infinite;
-        }
-      `}} />
-      
       {/* Header bar simulating browser */}
       <div class="bg-gray-50 border-b border-gray-100 flex items-center px-4 py-3 gap-2">
         <div class="flex gap-1.5">
@@ -65,8 +54,8 @@ export default function MagicScraperAnimation() {
                  <div class="bg-gray-200 rounded-lg h-1/2" />
                </div>
             </div>
-            {/* Scanner line */}
-            <div class="absolute inset-x-0 top-0 h-1 bg-mint-500 shadow-[0_0_15px_3px_rgba(0,230,118,0.5)] animate-scan z-10" />
+            {/* Pulsing indicator */}
+            <div class="absolute inset-0 bg-mint-500 opacity-10 animate-pulse pointer-events-none" />
           </div>
           <p class="text-xs font-700 text-mint-600 animate-pulse text-center">Extracting photos & amenities...</p>
         </div>
