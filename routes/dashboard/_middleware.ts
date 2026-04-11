@@ -21,7 +21,7 @@ const getKv = (() => {
   };
 })();
 
-function parseCookies(cookieHeader: string | null): Record<string, string> {
+export function parseCookies(cookieHeader: string | null): Record<string, string> {
   const result: Record<string, string> = {};
   if (!cookieHeader) return result;
   for (const pair of cookieHeader.split(";")) {
