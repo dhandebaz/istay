@@ -300,5 +300,6 @@ export interface DashboardStats {
 export interface DashboardState {
   hostId: string;
   hostName: string;
+  hostEmail: string;
   emailVerified: boolean;
 }

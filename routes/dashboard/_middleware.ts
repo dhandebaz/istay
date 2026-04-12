@@ -75,12 +75,14 @@ export async function handler(
   // Try to load host from KV to verify they exist and get latest name and setupFee status
   // Also load AuthRecord to check email verification status
   let emailVerified = true; // Default true if schema missing
+  let hostEmail = "";
   try {
     const kv = await getKv();
     const hostEntry = await kv.get(["host", hostId]);
     if (hostEntry.value) {
       const host = hostEntry.value as { email: string; name?: string; setupFeePaid?: boolean };
       hostName = host.name ?? hostName;
+      hostEmail = host.email;
       
       // Crucial part of Onboarding sync: if not paid, route them out of dashboard to pricing
       if (host.setupFeePaid === false) {
@@ -106,6 +108,7 @@ export async function handler(
 
   ctx.state.hostId = hostId;
   ctx.state.hostName = hostName;
+  ctx.state.hostEmail = hostEmail;
   ctx.state.emailVerified = emailVerified;
 
   return await ctx.next();

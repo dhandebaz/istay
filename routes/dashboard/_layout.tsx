@@ -2,6 +2,7 @@ import { type PageProps } from "$fresh/server.ts";
 import { type Handlers } from "$fresh/server.ts";
 import type { DashboardState, Notification } from "../../utils/types.ts";
 import DashboardSidebar from "../../islands/DashboardSidebar.tsx";
+import ResendVerificationBtn from "../../islands/ResendVerificationBtn.tsx";
 
 const getKv = (() => {
   let kv: Deno.Kv | null = null;
@@ -71,6 +72,8 @@ export default function DashboardLayout(
                 <p class="text-xs text-amber-700 mt-0.5">Please check your inbox and verify your email to fully activate your live booking links.</p>
               </div>
             </div>
+            {/* Resend button */}
+            <ResendVerificationBtn email={state.hostEmail} name={hostName} />
           </div>
         )}
 

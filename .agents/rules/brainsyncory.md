@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 323 notes | Score threshold: >40
+> 398 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,29 +20,42 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
-- **⚠️ GOTCHA: Added API key auth authentication** — - > 155 notes | Score threshold: >40
-+ > 156 notes | Score threshold: 
-- **⚠️ GOTCHA: Added API key auth authentication — evolves the database schema to support ne...** — - > 149 notes | Score threshold: >40
-+ > 152 notes | Score threshold: 
-- **⚠️ GOTCHA: Added API key auth authentication — evolves the database schema to support ne...** — - > 146 notes | Score threshold: >40
-+ > 149 notes | Score threshold: 
-- **⚠️ GOTCHA: Updated schema Score — evolves the database schema to support new requirements** — - > 138 notes | Score threshold: >40
-+ > 146 notes | Score threshold: 
-- **⚠️ GOTCHA: Updated schema Score — evolves the database schema to support new requirements** — - > 132 notes | Score threshold: >40
-+ > 138 notes | Score threshold: 
-- **⚠️ GOTCHA: Updated schema Optimized** — - - Optimized Score
-+ - Optimized Score — evolves the database schema 
+- **⚠️ GOTCHA: Replaced auth Crucial — prevents null/undefined runtime crashes** — -   try {
++   let hostEmail = "";
+-     const kv = await getKv();
++   
+- **⚠️ GOTCHA: Fixed null crash in LedgerEntry — parallelizes async operations for speed** — -   saveBooking,
++   getPropertyById,
+-   saveLedgerEntry,
++   saveBoo
+- **⚠️ GOTCHA: Added JWT tokens authentication** — - > 348 notes | Score threshold: >40
++ > 351 notes | Score threshold: 
+- **⚠️ GOTCHA: Added JWT tokens authentication** — - > 345 notes | Score threshold: >40
++ > 348 notes | Score threshold: 
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 341 notes | Score threshold: >40
++ > 345 notes | Score threshold: 
+- **gotcha in shared-context.json** — -     }
++     },
+-   ]
++     {
+- }
++       "id": "c2a830ae6f917113",
++
 
 ## Project Standards
 
-- Strengthened types Fixed
-- Added API key auth authentication — confirmed 3x
-- Added session cookies authentication — uses a proper password hashing algorithm — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- Added JWT tokens authentication — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
-- Added API key auth authentication — confirmed 3x
+- Added JWT tokens authentication — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
+- Added JWT tokens authentication — evolves the database schema to support new ... — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
+
+## Known Fixes
+
+- ❌ -         return Response.json({ error: "All fields are required" }, { status: 400 }); → ✅ Fixed null crash in Handlers
 
 ## Recent Decisions
 

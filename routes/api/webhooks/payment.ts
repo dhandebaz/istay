@@ -18,10 +18,12 @@ import {
   blockDate,
   getBookingById,
   getLedgerEntry,
+  getPropertyById,
   saveBooking,
   saveLedgerEntry,
   saveNotification,
 } from "../../../utils/db.ts";
+import { sendBookingConfirmation } from "../../../utils/email.ts";
 import type { LedgerEntry, Notification } from "../../../utils/types.ts";
 
 const EASEBUZZ_SALT = Deno.env.get("EASEBUZZ_SALT");
@@ -175,6 +177,26 @@ export const handler: Handlers = {
       createdAt: new Date().toISOString(),
     };
     await saveNotification(notification);
+
+    // ── Email Confirmation ───────────────────────────────────────
+    try {
+      const property = await getPropertyById(booking.propertyId);
+      const propName = property?.name || "istay Property";
+      
+      // Dispatch securely (non-blocking)
+      sendBookingConfirmation(
+        booking.guestEmail,
+        booking.guestName,
+        propName,
+        booking.checkIn,
+        booking.checkOut,
+        amount,
+        bookingId
+      ).catch((err) => console.error("[webhook] Email error:", err));
+      
+    } catch (e) {
+      console.error("[webhook] Error preparing confirmation email", e);
+    }
 
     console.log(`[webhook] Booking ${bookingId} confirmed via Easebuzz (txnid: ${txnid})`);
     return Response.json({ ok: true, bookingId });
