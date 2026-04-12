@@ -5,7 +5,7 @@ import type { Notification } from "../../../utils/types.ts";
 export const handler: Handlers = {
   POST: async (req) => {
     try {
-      const { bookingId, guestName, photoBase64 } = await req.json();
+      const { bookingId, guestName, photoBase64, checklist } = await req.json();
 
       if (!bookingId || !photoBase64) {
         return Response.json({ error: "Missing required fields" }, { status: 400 });
@@ -16,8 +16,9 @@ export const handler: Handlers = {
         return Response.json({ error: "Booking not found" }, { status: 404 });
       }
 
-      // Update Booking Status
+      // Update Booking Status & Checklist
       booking.status = "room_ready";
+      booking.checkoutChecklist = checklist;
       booking.updatedAt = new Date().toISOString();
       await saveBooking(booking);
 

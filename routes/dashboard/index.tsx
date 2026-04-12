@@ -245,6 +245,29 @@ export default function DashboardOverview(
           }
         />
       </div>
+      
+      {/* ── OTA Savings Module ✨ ─────────────────────────────── */}
+      <div class="mb-8 p-8 rounded-[2rem] bg-istay-900 border border-gray-800 shadow-2xl relative overflow-hidden group">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-mint-500/10 rounded-full blur-3xl -mr-20 -mt-20" />
+        <div class="relative flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="text-center md:text-left">
+            <h2 class="text-sm font-800 text-mint-400 uppercase tracking-widest mb-2 flex items-center gap-2 justify-center md:justify-start">
+               <span class="w-2 h-2 rounded-full bg-mint-500 animate-pulse" />
+               Revenue Protection
+            </h2>
+            <p class="text-3xl font-900 text-white tracking-tight">
+               You've saved <span class="text-transparent bg-clip-text bg-gradient-to-r from-mint-300 to-mint-500">{formatINR(Math.round((stats.monthlyEarnings / 0.85) - stats.monthlyEarnings))}</span> in OTA commissions
+            </p>
+            <p class="text-gray-400 mt-2 text-sm font-500">
+               *Assuming average 15% commission on Airbnb/MMT. You keep 95% with istay.
+            </p>
+          </div>
+          <div class="flex-shrink-0 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm text-center">
+             <p class="text-xs font-700 text-gray-500 uppercase mb-1">Total Payout Share</p>
+             <p class="text-2xl font-900 text-white">95%</p>
+          </div>
+        </div>
+      </div>
 
       {/* ── Quick Actions ──────────────────────────────────────── */}
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
@@ -366,7 +389,7 @@ export default function DashboardOverview(
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-600">
                         <div class="flex flex-col items-end gap-1">
                           <span class="text-istay-900">{formatINR(booking.amount)}</span>
-                          <a href={`/api/invoice/${booking.id}`} target="_blank" class="text-xs text-mint-600 hover:text-mint-700 font-700 decoration-mint-600/30 hover:underline">
+                          <a href={`/invoice/${booking.id}?download=1`} target="_blank" class="text-xs text-mint-600 hover:text-mint-700 font-700 decoration-mint-600/30 hover:underline">
                             Invoice ↗
                           </a>
                         </div>

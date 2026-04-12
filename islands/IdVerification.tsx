@@ -1,5 +1,6 @@
 import { useSignal } from "@preact/signals";
 import { useRef } from "preact/hooks";
+import { compressImage } from "../utils/compression.ts";
 
 interface IdVerificationProps {
   bookingId: string;
@@ -121,8 +122,18 @@ export default function IdVerification(
 
     // Convert to base64 for upload
     const reader = new FileReader();
-    reader.onload = (ev) => {
-      imageB64.value = (ev.target?.result as string) ?? null;
+    reader.onload = async (ev) => {
+      const rawB64 = (ev.target?.result as string) ?? null;
+      if (rawB64 && file.type.startsWith("image/")) {
+        try {
+          imageB64.value = await compressImage(rawB64);
+        } catch (err) {
+          console.error("Compression failed:", err);
+          imageB64.value = rawB64;
+        }
+      } else {
+        imageB64.value = rawB64;
+      }
       step.value = "preview";
     };
     reader.readAsDataURL(file);
@@ -299,7 +310,7 @@ export default function IdVerification(
           </button>
           <button
             onClick={handleSubmit}
-            class="flex-1 py-3 rounded-xl bg-istay-900 text-white text-sm font-700 hover:bg-istay-800 active:scale-95 transition-all shadow-sm"
+            class="flex-1 py-3 rounded-xl bg-teal-600 text-white text-sm font-700 hover:bg-teal-700 active:scale-95 transition-all shadow-sm"
           >
             Submit & Verify →
           </button>
@@ -372,7 +383,7 @@ export default function IdVerification(
         </div>
         <a
           href="#checkin-instructions"
-          class="w-full py-3 rounded-xl bg-istay-900 text-white text-sm font-700 hover:bg-istay-800 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2"
+          class="w-full py-3 rounded-xl bg-teal-600 text-white text-sm font-700 hover:bg-teal-700 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
             <path d="M8 1L1.5 5.5V14.5H6V10H10V14.5H14.5V5.5L8 1Z" fill="white" />

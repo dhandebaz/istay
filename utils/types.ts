@@ -66,6 +66,7 @@ export interface Booking {
   guestIdRef?: string;
   checkIn: string;  // YYYY-MM-DD
   checkOut: string; // YYYY-MM-DD
+  checkoutChecklist?: Record<string, boolean>;
   nights: number;
   /** Total gross booking amount in INR */
   amount: number;

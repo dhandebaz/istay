@@ -13,12 +13,13 @@ import * as $api_caretaker_ready from "./routes/api/caretaker/ready.ts";
 import * as $api_caretaker_supply from "./routes/api/caretaker/supply.ts";
 import * as $api_chat from "./routes/api/chat.ts";
 import * as $api_contact from "./routes/api/contact.ts";
+import * as $api_cron_reviews from "./routes/api/cron/reviews.ts";
 import * as $api_cron_sync from "./routes/api/cron/sync.ts";
-import * as $api_invoice_bookingId from "./routes/api/invoice/[bookingId].ts";
 import * as $api_knowledge from "./routes/api/knowledge.ts";
 import * as $api_knowledge_ocr from "./routes/api/knowledge/ocr.ts";
 import * as $api_onboard_pay from "./routes/api/onboard/pay.ts";
 import * as $api_onboard_verify from "./routes/api/onboard/verify.ts";
+import * as $api_ical_propId_ from "./routes/api/ical/[propId].ts";
 import * as $api_pay from "./routes/api/pay.ts";
 import * as $api_properties from "./routes/api/properties.ts";
 import * as $api_scrape from "./routes/api/scrape.ts";
@@ -28,6 +29,7 @@ import * as $blog_index from "./routes/blog/index.tsx";
 import * as $api_webhooks_payment from "./routes/api/webhooks/payment.ts";
 import * as $api_webhooks_whatsapp from "./routes/api/webhooks/whatsapp.ts";
 import * as $care_token_ from "./routes/care/[token].tsx";
+import * as $feedback_token_ from "./routes/feedback/[token].tsx";
 import * as $contact from "./routes/contact.tsx";
 import * as $dashboard_layout from "./routes/dashboard/_layout.tsx";
 import * as $dashboard_middleware from "./routes/dashboard/_middleware.ts";
@@ -44,15 +46,18 @@ import * as $legal_privacy from "./routes/legal/privacy.tsx";
 import * as $legal_shipping from "./routes/legal/shipping.tsx";
 import * as $legal_terms from "./routes/legal/terms.tsx";
 import * as $login from "./routes/login.tsx";
+import * as $invoice_bookingId from "./routes/invoice/[bookingId].tsx";
 import * as $p_propId_ from "./routes/p/[propId].tsx";
 import * as $p_checkout from "./routes/p/checkout.tsx";
 import * as $pricing from "./routes/pricing.tsx";
 import * as $register from "./routes/register.tsx";
 import * as $search from "./routes/search.tsx";
 import * as $verify from "./routes/verify.tsx";
+import * as $_404 from "./routes/_404.tsx";
 import * as $AddProperty from "./islands/AddProperty.tsx";
 import * as $BookingCalendar from "./islands/BookingCalendar.tsx";
 import * as $BookingFlow from "./islands/BookingFlow.tsx";
+import * as $CaretakerChecklist from "./islands/CaretakerChecklist.tsx";
 import * as $CheckoutForm from "./islands/CheckoutForm.tsx";
 import * as $DashboardSidebar from "./islands/DashboardSidebar.tsx";
 import * as $EarningsCalculator from "./islands/EarningsCalculator.tsx";
@@ -87,8 +92,8 @@ const manifest = {
     "./routes/api/caretaker/supply.ts": $api_caretaker_supply,
     "./routes/api/chat.ts": $api_chat,
     "./routes/api/contact.ts": $api_contact,
+    "./routes/api/cron/reviews.ts": $api_cron_reviews,
     "./routes/api/cron/sync.ts": $api_cron_sync,
-    "./routes/api/invoice/[bookingId].ts": $api_invoice_bookingId,
     "./routes/api/knowledge.ts": $api_knowledge,
     "./routes/api/knowledge/ocr.ts": $api_knowledge_ocr,
     "./routes/api/onboard/pay.ts": $api_onboard_pay,
@@ -96,12 +101,14 @@ const manifest = {
     "./routes/api/pay.ts": $api_pay,
     "./routes/api/properties.ts": $api_properties,
     "./routes/api/scrape.ts": $api_scrape,
+    "./routes/api/ical/[propId].ts": $api_ical_propId_,
     "./routes/api/verify.ts": $api_verify,
     "./routes/blog/[slug].tsx": $blog_slug,
     "./routes/blog/index.tsx": $blog_index,
     "./routes/api/webhooks/payment.ts": $api_webhooks_payment,
     "./routes/api/webhooks/whatsapp.ts": $api_webhooks_whatsapp,
     "./routes/care/[token].tsx": $care_token_,
+    "./routes/feedback/[token].tsx": $feedback_token_,
     "./routes/contact.tsx": $contact,
     "./routes/dashboard/_layout.tsx": $dashboard_layout,
     "./routes/dashboard/_middleware.ts": $dashboard_middleware,
@@ -118,17 +125,20 @@ const manifest = {
     "./routes/legal/shipping.tsx": $legal_shipping,
     "./routes/legal/terms.tsx": $legal_terms,
     "./routes/login.tsx": $login,
+    "./routes/invoice/[bookingId].tsx": $invoice_bookingId,
     "./routes/p/[propId].tsx": $p_propId_,
     "./routes/p/checkout.tsx": $p_checkout,
     "./routes/pricing.tsx": $pricing,
     "./routes/register.tsx": $register,
     "./routes/search.tsx": $search,
     "./routes/verify.tsx": $verify,
+    "./routes/_404.tsx": $_404,
   },
   islands: {
     "./islands/AddProperty.tsx": $AddProperty,
     "./islands/BookingCalendar.tsx": $BookingCalendar,
     "./islands/BookingFlow.tsx": $BookingFlow,
+    "./islands/CaretakerChecklist.tsx": $CaretakerChecklist,
     "./islands/CheckoutForm.tsx": $CheckoutForm,
     "./islands/DashboardSidebar.tsx": $DashboardSidebar,
     "./islands/EarningsCalculator.tsx": $EarningsCalculator,

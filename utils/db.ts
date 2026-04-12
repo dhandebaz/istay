@@ -257,6 +257,23 @@ export async function listBookings(hostId: string): Promise<Booking[]> {
   );
 }
 
+export async function listBookingsByProperty(
+  hostId: string,
+  propertyId: string,
+): Promise<Booking[]> {
+  const kv = await getKv();
+  const iter = kv.list<Booking>({ prefix: ["booking", hostId] });
+  const bookings: Booking[] = [];
+  for await (const entry of iter) {
+    if (entry.value.propertyId === propertyId) {
+      bookings.push(entry.value);
+    }
+  }
+  return bookings.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+}
+
 /**
  * Returns confirmed bookings where checkIn equals today's date (IST).
  * Used by the Caretaker Portal to show today's arrivals.
@@ -590,3 +607,51 @@ export async function getBookingsDaily(
   }));
 }
 
+// ── REVIEWS & FEEDBACK ────────────────────────────────────────
+
+export interface Review {
+  id: string;
+  bookingId: string;
+  propertyId: string;
+  rating: number; // 1-5
+  comment?: string;
+  createdAt: string;
+}
+
+export async function saveReview(review: Review): Promise<void> {
+  const kv = await getKv();
+  await kv.set(["reviews", review.propertyId, review.id], review);
+}
+
+export async function listReviews(propertyId: string): Promise<Review[]> {
+  const kv = await getKv();
+  const iter = kv.list<Review>({ prefix: ["reviews", propertyId] });
+  const reviews: Review[] = [];
+  for await (const entry of iter) {
+    reviews.push(entry.value);
+  }
+  return reviews;
+}
+
+export async function saveSurveyToken(token: string, bookingId: string): Promise<void> {
+  const kv = await getKv();
+  await kv.set(["survey_tokens", token], { bookingId, createdAt: new Date().toISOString() }, { expireIn: 7 * 24 * 60 * 60 * 1000 }); // 7 days
+}
+
+export async function getSurveyToken(token: string): Promise<{ bookingId: string } | null> {
+  const kv = await getKv();
+  const res = await kv.get<{ bookingId: string }>(["survey_tokens", token]);
+  return res.value;
+}
+
+export async function getBookingsCheckingOutIn(date: string): Promise<Booking[]> {
+  const kv = await getKv();
+  const iter = kv.list<Booking>({ prefix: ["booking"] });
+  const matches: Booking[] = [];
+  for await (const entry of iter) {
+    if ((entry.value.checkOut === date) && (entry.value.status === "confirmed" || entry.value.status === "room_ready")) {
+      matches.push(entry.value);
+    }
+  }
+  return matches;
+}

@@ -277,24 +277,13 @@ export default function GuestChat({ propId, propertyName }: GuestChatProps) {
           </div>
         ))}
 
-        {/* Typing indicator */}
+        {/* Typing indicator / Skeleton Loader */}
         {isLoading.value && (
-          <div class="flex gap-2">
-            <div class="w-7 h-7 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M6 1L1 4.5V11H4V8H8V11H11V4.5L6 1Z" fill="#14b8a6" />
-              </svg>
-            </div>
-            <div class="bg-gray-50 rounded-2xl rounded-tl-md px-4 py-3">
-              <div class="flex items-center gap-1">
-                {[0, 1, 2].map((i) => (
-                  <div
-                    key={i}
-                    class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce"
-                    style={`animation-delay: ${i * 150}ms; animation-duration: 0.8s;`}
-                  />
-                ))}
-              </div>
+          <div class="flex gap-2 animate-pulse">
+            <div class="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0" />
+            <div class="space-y-2 flex-1">
+              <div class="h-4 bg-gray-100 rounded-md w-3/4" />
+              <div class="h-4 bg-gray-100 rounded-md w-1/2" />
             </div>
           </div>
         )}

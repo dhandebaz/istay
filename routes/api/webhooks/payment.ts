@@ -17,13 +17,14 @@ import { type Handlers } from "$fresh/server.ts";
 import {
   blockDate,
   getBookingById,
+  getHost,
   getLedgerEntry,
   getPropertyById,
   saveBooking,
   saveLedgerEntry,
   saveNotification,
 } from "../../../utils/db.ts";
-import { sendBookingConfirmation } from "../../../utils/email.ts";
+import { sendBookingConfirmation, sendHostNewBookingAlert } from "../../../utils/email.ts";
 import type { LedgerEntry, Notification } from "../../../utils/types.ts";
 
 const EASEBUZZ_SALT = Deno.env.get("EASEBUZZ_SALT");
@@ -193,7 +194,22 @@ export const handler: Handlers = {
         amount,
         bookingId,
         booking.propertyId
-      ).catch((err) => console.error("[webhook] Email error:", err));
+      ).catch((err) => console.error("[webhook] Guest email error:", err));
+
+      // ── Host New Booking Alert ─────────────────────────────────
+      const host = await getHost(booking.hostId);
+      if (host) {
+        sendHostNewBookingAlert(
+          host.email,
+          host.name,
+          booking.guestName,
+          propName,
+          booking.checkIn,
+          booking.checkOut,
+          amount,
+          bookingId
+        ).catch((err) => console.error("[webhook] Host email error:", err));
+      }
       
     } catch (e) {
       console.error("[webhook] Error preparing confirmation email", e);

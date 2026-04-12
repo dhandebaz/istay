@@ -71,7 +71,7 @@ export default function BookingFlow({
 
         <div class="pt-6">
           <a
-            href={`/api/invoice/${bookingId}`}
+            href={`/invoice/${bookingId}?download=1`}
             target="_blank"
             class="inline-flex items-center gap-2 text-sm font-600 text-teal-600 hover:text-teal-700 transition-colors"
           >

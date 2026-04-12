@@ -126,7 +126,7 @@ export async function sendBookingConfirmation(
   propertyId: string
 ): Promise<boolean> {
   const portalUrl = `${APP_BASE_URL}/p/${propertyId}?bookingId=${bookingId}`;
-  const invoiceUrl = `${APP_BASE_URL}/api/invoice/${bookingId}`;
+  const invoiceUrl = `${APP_BASE_URL}/invoice/${bookingId}?download=1`;
   
   const subject = `Confirmed: Your stay at ${propertyName}`;
   const html = `
@@ -162,12 +162,12 @@ export async function sendBookingConfirmation(
         </div>
       </div>
 
-      <div style="text-align: center; background-color: #111827; border-radius: 24px; padding: 32px; color: #ffffff;">
-        <h3 style="font-size: 18px; font-weight: 800; margin: 0 0 12px 0;">Unlock Check-in Details</h3>
-        <p style="font-size: 14px; color: #9ca3af; margin-bottom: 24px; line-height: 1.5;">
-          For security and compliance, please verify your government ID to unlock WiFi codes and check-in instructions.
+      <div style="text-align: center; background-color: #042f2e; border-radius: 24px; padding: 40px 32px; color: #ffffff; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
+        <h3 style="font-size: 20px; font-weight: 800; margin: 0 0 12px 0; color: #14b8a6;">Action Required</h3>
+        <p style="font-size: 15px; color: #ccfbf1; margin-bottom: 24px; line-height: 1.6;">
+          For security and compliance, you must verify your government ID to unlock WiFi codes and check-in instructions.
         </p>
-        <a href="${portalUrl}" style="display: inline-block; background-color: #00E676; color: #042f2e; padding: 14px 32px; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 15px;">
+        <a href="${portalUrl}" style="display: inline-block; background-color: #14b8a6; color: #ffffff; padding: 16px 40px; text-decoration: none; border-radius: 14px; font-weight: 900; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
           Verify ID to Unlock
         </a>
       </div>
@@ -180,5 +180,63 @@ export async function sendBookingConfirmation(
   `;
 
   return sendBrevoEmail(guestEmail, guestName, subject, html);
+}
+
+/**
+ * Dispatches a New Booking Alert to the Host.
+ */
+export async function sendHostNewBookingAlert(
+  hostEmail: string,
+  hostName: string,
+  guestName: string,
+  propertyName: string,
+  checkIn: string,
+  checkOut: string,
+  amount: number,
+  bookingId: string
+): Promise<boolean> {
+  const dashboardUrl = `${APP_BASE_URL}/dashboard`;
+  const hostEarnings = Math.round(amount * 0.95 * 100) / 100;
+  
+  const subject = `New Booking: ${guestName} — ${propertyName}`;
+  const html = `
+    <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #111827;">
+      <div style="margin-bottom: 32px;">
+         <h1 style="color: #0d9488; margin: 0; font-size: 24px; font-weight: 900;">istay Host</h1>
+      </div>
+
+      <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 16px;">New Booking Confirmed! 🎉</h2>
+      <p style="font-size: 16px; color: #4b5563; margin-bottom: 32px;">
+        Great news ${hostName}, your property <b>${propertyName}</b> has a new confirmed booking.
+      </p>
+
+      <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 20px; padding: 24px; margin-bottom: 32px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 6px 0; color: #166534; font-size: 14px;">Guest</td>
+            <td style="padding: 6px 0; text-align: right; font-weight: 700; color: #166534;">${guestName}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #166534; font-size: 14px;">Dates</td>
+            <td style="padding: 6px 0; text-align: right; font-weight: 700; color: #166534;">${checkIn} → ${checkOut}</td>
+          </tr>
+          <tr style="border-top: 1px solid #bbf7d0; margin-top: 12px;">
+            <td style="padding: 12px 0 0 0; color: #166534; font-size: 14px; font-weight: 800;">Your Earnings</td>
+            <td style="padding: 12px 0 0 0; text-align: right; font-weight: 900; color: #166534; font-size: 18px;">₹${hostEarnings.toLocaleString("en-IN")}</td>
+          </tr>
+        </table>
+      </div>
+
+      <a href="${dashboardUrl}" style="display: block; text-align: center; background-color: #111827; color: #ffffff; padding: 16px; text-decoration: none; border-radius: 12px; font-weight: 800;">
+        View Booking in Dashboard
+      </a>
+
+      <p style="font-size: 12px; color: #9ca3af; text-align: center; margin-top: 40px;">
+        istay · Ghaffar Manzil, Okhla, New Delhi 110025.
+      </p>
+    </div>
+  `;
+
+  return sendBrevoEmail(hostEmail, hostName, subject, html);
 }
 

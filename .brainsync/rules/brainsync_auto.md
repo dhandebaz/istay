@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 531 notes | Score threshold: >40
+> 569 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,6 +20,14 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in CaretakerChecklist — avoids unnecessary re-ren
+- **gotcha in shared-context.json** — -     }
++     },
+-   ]
++     {
+- }
++       "id": "688569d3ede65bdd",
++
 - **gotcha in shared-context.json** — -     }
 +     },
 -   ]
@@ -40,32 +48,30 @@
 - **gotcha in agent-rules.md** — File updated (external): .brainsync/agent-rules.md
 
 Content summary (8
-- **⚠️ GOTCHA: Optimized GOTCHA** — - - ⚠️ GOTCHA: Optimized GOTCHA
-+ - ⚠️ GOTCHA: Added JWT tokens authen
-- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 442 notes | Score threshold: >40
-+ > 446 notes | Score threshold: 
 
 ## Project Standards
 
-- Strengthened types EarningsComparison — parallelizes async operations for speed
-- Replaced auth AddProperty — improves module reusability — confirmed 6x
-- Optimized Score — confirmed 3x
-- what-changed in shared-context.json — confirmed 3x
-- Strengthened types ComponentChildren — parallelizes async operations for speed
-- what-changed in brainsync_auto.md — confirmed 3x
-- decision in index.tsx — confirmed 3x
+- Strengthened types IdVerification
+- problem-fix in agent-rules.md — confirmed 5x
+- what-changed in shared-context.json — confirmed 11x
+- problem-fix in shared-context.json — confirmed 3x
+- Fixed null crash in Compression — prevents null/undefined runtime crashes — confirmed 6x
+- convention in shared-context.json
+- Replaced auth AddProperty — improves module reusability — confirmed 3x
 - Added JWT tokens authentication — confirmed 3x
 
 ## Known Fixes
 
+- ❌ - - Fixed null crash in CaretakerChecklist — avoids unnecessary re-renders in React → ✅ problem-fix in agent-rules.md
 - ❌ -         return Response.json({ error: "All fields are required" }, { status: 400 }); → ✅ Fixed null crash in Handlers
+- ❌ -   const [error, setError] = useState<string | null>(null); → ✅ Fixed null crash in ProofOfCleanUploaderProps — avoids unnecessary re-renders...
 
 ## Recent Decisions
 
-- decision in index.tsx
+- decision in IdVerification.tsx
 - Optimized Score — evolves the database schema to support new requirements
-- decision in brainsync_auto.md
-- decision in CheckoutForm.tsx
+- Optimized Score — evolves the database schema to support new requirements
+- Optimized Score — evolves the database schema to support new requirements
 
 ## Learned Patterns
 

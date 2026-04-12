@@ -101,9 +101,10 @@ export default function ScraperPreview() {
                 </div>
                 <a
                   href="/register"
-                  class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-istay-900 text-white font-800 text-sm hover:bg-black transition-all shadow-xl active:scale-95"
+                  class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#0d9488] text-white font-900 text-base hover:bg-[#0f766e] transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group"
                 >
-                  Go Independent for ₹1,000
+                  Try it Now
+                  <span class="group-hover:translate-x-1 transition-transform">→</span>
                 </a>
               </div>
               

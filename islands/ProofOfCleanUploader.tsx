@@ -1,4 +1,6 @@
-import { useState, useRef } from "preact/hooks";
+import { useState, useRef, useMemo } from "preact/hooks";
+import CaretakerChecklist from "./CaretakerChecklist.tsx";
+import { compressImage } from "../utils/compression.ts";
 
 interface ProofOfCleanUploaderProps {
   bookingId: string;
@@ -11,7 +13,12 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
   const [isUploading, setIsUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [checklist, setChecklist] = useState<Record<string, boolean>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const checklistComplete = useMemo(() => {
+    return Object.keys(checklist).length > 0 && Object.values(checklist).every(Boolean);
+  }, [checklist]);
 
   const handleFileChange = (e: Event) => {
     const input = e.target as HTMLInputElement;
@@ -20,7 +27,17 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
       setFile(selectedFile);
 
       const reader = new FileReader();
-      reader.onload = (e) => setPreviewUrl(e.target?.result as string);
+      reader.onload = async (e) => {
+        const rawB64 = (e.target?.result as string) ?? null;
+        if (rawB64) {
+          try {
+            setPreviewUrl(await compressImage(rawB64));
+          } catch (err) {
+            console.error("Compression failed:", err);
+            setPreviewUrl(rawB64);
+          }
+        }
+      };
       reader.readAsDataURL(selectedFile);
     }
   };
@@ -41,6 +58,7 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
           bookingId,
           guestName,
           photoBase64: previewUrl.split(",")[1], // Strip raw Data URL prefix
+          checklist,
         }),
       });
 
@@ -72,6 +90,14 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
     <div class="mt-4 pt-4 border-t border-gray-800">
       <h3 class="text-xs font-600 text-gray-400 uppercase tracking-widest mb-3">Housekeeping</h3>
       
+      <div class="mb-6">
+        <CaretakerChecklist 
+          bookingId={bookingId} 
+          onComplete={setChecklist} 
+          disabled={isUploading} 
+        />
+      </div>
+      
       {!previewUrl ? (
         <button
           onClick={() => fileInputRef.current?.click()}
@@ -102,8 +128,8 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
 
           <button
             onClick={handleUpload}
-            disabled={isUploading}
-            class="w-full py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 active:scale-95 text-gray-950 font-800 text-sm transition-all disabled:opacity-50 disabled:active:scale-100"
+            disabled={isUploading || !checklistComplete}
+            class="w-full py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 active:scale-95 text-gray-950 font-800 text-sm transition-all disabled:opacity-50 disabled:active:scale-100 disabled:grayscale"
           >
             {isUploading ? "Uploading..." : "Mark Room as Ready"}
           </button>
