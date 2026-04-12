@@ -122,32 +122,63 @@ export async function sendBookingConfirmation(
   checkIn: string,
   checkOut: string,
   amount: number,
-  bookingId: string
+  bookingId: string,
+  propertyId: string
 ): Promise<boolean> {
-  const subject = `Your Booking Confirmation: ${propertyName}`;
+  const portalUrl = `${APP_BASE_URL}/p/${propertyId}?bookingId=${bookingId}`;
+  const invoiceUrl = `${APP_BASE_URL}/api/invoice/${bookingId}`;
+  
+  const subject = `Confirmed: Your stay at ${propertyName}`;
   const html = `
-    <div style="font-family: sans-serif; max-w-xl mx-auto; p-6 text-gray-800">
-      <h2 style="color: #00E676;">Booking Confirmed! 🎉</h2>
-      <p>Hello ${guestName},</p>
-      <p>Your stay at <strong>${propertyName}</strong> is locked in.</p>
-      
-      <div style="background-color: #f9fafb; padding: 20px; border-radius: 12px; margin: 20px 0;">
-        <h3 style="margin-top: 0; color: #111827;">Reservation Details</h3>
-        <ul style="list-style: none; padding: 0; margin: 0; color: #374151;">
-          <li style="margin-bottom: 8px;"><strong>Check-in:</strong> ${checkIn}</li>
-          <li style="margin-bottom: 8px;"><strong>Check-out:</strong> ${checkOut}</li>
-          <li style="margin-bottom: 8px;"><strong>Amount Paid:</strong> ₹${amount.toLocaleString("en-IN")}</li>
-          <li><strong>Booking ID:</strong> ${bookingId}</li>
-        </ul>
+    <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #111827; background-color: #ffffff;">
+      <div style="text-align: center; margin-bottom: 32px;">
+         <h1 style="color: #0d9488; margin: 0; font-size: 28px; font-weight: 900; letter-spacing: -0.025em;">istay</h1>
       </div>
 
-      <p>Your host will be in touch shortly with check-in instructions.</p>
-      <p style="font-size: 13px; color: #666; margin-top: 40px;">
-        Thank you for choosing istay.<br/>
-        <a href="https://istay.space" style="color: #00E676; text-decoration: none;">istay.space</a>
+      <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.025em;">You're going to ${propertyName}! 🎉</h2>
+      <p style="font-size: 16px; line-height: 1.6; color: #4b5563; margin-bottom: 32px;">
+        Hi ${guestName}, your booking is confirmed. We've notified the host, and they're excited to welcome you.
+      </p>
+
+      <div style="background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 24px; padding: 32px; margin-bottom: 32px;">
+        <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #9ca3af; margin: 0 0 16px 0;">Reservation Summary</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Check-in</td>
+            <td style="padding: 8px 0; text-align: right; font-weight: 700;">${checkIn}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Check-out</td>
+            <td style="padding: 8px 0; text-align: right; font-weight: 700;">${checkOut}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Total Paid</td>
+            <td style="padding: 8px 0; text-align: right; font-weight: 700; color: #0d9488;">₹${amount.toLocaleString("en-IN")}</td>
+          </tr>
+        </table>
+        
+        <div style="margin-top: 24px; pt-16; border-top: 1px solid #e5e7eb; padding-top: 24px;">
+           <a href="${invoiceUrl}" style="color: #0d9488; font-size: 13px; font-weight: 700; text-decoration: none;">Download Tax Invoice (PDF) ↗</a>
+        </div>
+      </div>
+
+      <div style="text-align: center; background-color: #111827; border-radius: 24px; padding: 32px; color: #ffffff;">
+        <h3 style="font-size: 18px; font-weight: 800; margin: 0 0 12px 0;">Unlock Check-in Details</h3>
+        <p style="font-size: 14px; color: #9ca3af; margin-bottom: 24px; line-height: 1.5;">
+          For security and compliance, please verify your government ID to unlock WiFi codes and check-in instructions.
+        </p>
+        <a href="${portalUrl}" style="display: inline-block; background-color: #00E676; color: #042f2e; padding: 14px 32px; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 15px;">
+          Verify ID to Unlock
+        </a>
+      </div>
+
+      <p style="font-size: 12px; color: #9ca3af; text-align: center; margin-top: 48px; line-height: 1.6;">
+        This is an automated message from istay. You can access your booking anytime at <a href="${portalUrl}" style="color: #0d9488; text-decoration: none;">your guest portal</a>.<br/>
+        Ghaffar Manzil, Okhla, New Delhi 110025.
       </p>
     </div>
   `;
 
   return sendBrevoEmail(guestEmail, guestName, subject, html);
 }
+

@@ -14,6 +14,8 @@ export interface Host {
   setupFeePaid: boolean;
   /** Payment gateway vendor/sub-merchant ID (Easebuzz/Cashfree) */
   gatewayVendorId?: string;
+  /** Cashfree sub-merchant ID for split payments */
+  cashfreeVendorId?: string;
   createdAt: string; // ISO 8601
   updatedAt: string;
 }
@@ -67,7 +69,7 @@ export interface Booking {
   nights: number;
   /** Total gross booking amount in INR */
   amount: number;
-  status: "pending" | "confirmed" | "cancelled" | "refunded";
+  status: "pending" | "confirmed" | "room_ready" | "cancelled" | "refunded";
   /** Gateway Order ID (txnid) */
   gatewayOrderId?: string;
   /** Gateway Payment Session / Access Key */
@@ -293,6 +295,7 @@ export interface DashboardStats {
   monthlyEarnings: number;
   blockedDates: number;
   totalProperties: number;
+  linkViews7Days: number;
 }
 
 // ── MIDDLEWARE STATE ───────────────────────────────────────────

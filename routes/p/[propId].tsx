@@ -1,9 +1,10 @@
 import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
-import { getPropertyById, listBlockedDates } from "../../utils/db.ts";
+import { getBookingById, getGuestVerification, getKnowledgeByPropId, getPropertyById, listBlockedDates, recordPropertyView } from "../../utils/db.ts";
 import { getVibeMatches } from "../../utils/recommendations.ts";
-import type { Property, VibeMatch } from "../../utils/types.ts";
+import type { Booking, GuestVerification, Property, VibeMatch, HostKnowledge } from "../../utils/types.ts";
 import BookingCalendar from "../../islands/BookingCalendar.tsx";
+import BookingFlow from "../../islands/BookingFlow.tsx";
 import GuestChat from "../../islands/GuestChat.tsx";
 
 interface PropertyPageData {
@@ -11,16 +12,25 @@ interface PropertyPageData {
   blockedDates: string[];
   vibeMatches: VibeMatch[];
   isHighlyBooked: boolean;
+  bookingData?: {
+    booking: Booking;
+    verification: GuestVerification | null;
+    knowledge: HostKnowledge | null;
+  };
 }
 
 export const handler: Handlers<PropertyPageData> = {
-  GET: async (_req, ctx) => {
+  GET: async (req, ctx) => {
     const { propId } = ctx.params;
+    const url = new URL(req.url);
+    const bookingId = url.searchParams.get("bookingId");
     const property = await getPropertyById(propId);
 
     if (!property || property.status !== "active") {
       return ctx.renderNotFound();
     }
+
+    recordPropertyView(propId).catch(console.error);
 
     const blocks = await listBlockedDates(propId);
     const blockedDates = blocks.map((b) => b.date);
@@ -46,14 +56,26 @@ export const handler: Handlers<PropertyPageData> = {
       }
     }
 
-    return ctx.render({ property, blockedDates, vibeMatches, isHighlyBooked });
+    let bookingData;
+    if (bookingId) {
+      const booking = await getBookingById(bookingId);
+      if (booking && booking.propertyId === propId) {
+        const [verification, knowledge] = await Promise.all([
+          getGuestVerification(bookingId),
+          getKnowledgeByPropId(propId),
+        ]);
+        bookingData = { booking, verification, knowledge };
+      }
+    }
+
+    return ctx.render({ property, blockedDates, vibeMatches, isHighlyBooked, bookingData });
   },
 };
 
 export default function PropertyPage(
   { data }: PageProps<PropertyPageData>,
 ) {
-  const { property, blockedDates, vibeMatches, isHighlyBooked } = data;
+  const { property, blockedDates, vibeMatches, isHighlyBooked, bookingData } = data;
 
   const formatINR = (n: number) =>
     new Intl.NumberFormat("en-IN", {
@@ -293,14 +315,27 @@ export default function PropertyPage(
               </div>
             </div>
 
-            {/* Right column: calendar sticky */}
+            {/* Right column: calendar sticky OR Booking Flow */}
             <div class="lg:col-span-2">
               <div class="lg:sticky lg:top-10">
-                <BookingCalendar
-                  blockedDates={blockedDates}
-                  basePrice={property.basePrice}
-                  propId={property.id}
-                />
+                {bookingData ? (
+                  <BookingFlow
+                    bookingId={bookingData.booking.id}
+                    guestName={bookingData.booking.guestName}
+                    checkIn={bookingData.booking.checkIn}
+                    checkOut={bookingData.booking.checkOut}
+                    status={bookingData.booking.status}
+                    verificationStatus={bookingData.verification?.status || "pending"}
+                    instructionsContent={bookingData.knowledge?.content}
+                    propertyName={property.name}
+                  />
+                ) : (
+                  <BookingCalendar
+                    blockedDates={blockedDates}
+                    basePrice={property.basePrice}
+                    propId={property.id}
+                  />
+                )}
               </div>
             </div>
           </div>

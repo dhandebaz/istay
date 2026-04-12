@@ -191,7 +191,8 @@ export const handler: Handlers = {
         booking.checkIn,
         booking.checkOut,
         amount,
-        bookingId
+        bookingId,
+        booking.propertyId
       ).catch((err) => console.error("[webhook] Email error:", err));
       
     } catch (e) {

@@ -428,7 +428,7 @@ export default function AddProperty() {
           onPriceChange={(v) => (editPrice.value = v)}
           onSave={saveProperty}
           onReset={reset}
-          isSaving={step.value === "saving"}
+          isSaving={false}
         />
       )}
 

@@ -214,6 +214,10 @@ export async function saveBooking(data: Booking): Promise<void> {
       propertyId: data.propertyId,
     });
 
+  if (data.guestPhone) {
+    atomic.set(["booking_phone", data.guestPhone], data.id);
+  }
+
   await atomic.commit();
 
   // Update running monthly net-earnings tally for confirmed bookings
@@ -227,6 +231,17 @@ export async function saveBooking(data: Booking): Promise<void> {
       Math.round((prev + data.amount * 0.95) * 100) / 100,
     );
   }
+}
+
+/**
+ * Looks up the latest booking by guest phone number.
+ * Used by WhatsApp Concierge webhook to route messages to properties.
+ */
+export async function getBookingByPhone(phone: string): Promise<Booking | null> {
+  const kv = await getKv();
+  const idx = await kv.get<string>(["booking_phone", phone]);
+  if (!idx.value) return null;
+  return getBookingById(idx.value);
 }
 
 export async function listBookings(hostId: string): Promise<Booking[]> {
@@ -408,11 +423,17 @@ export async function getDashboardStats(
     blockedDates += blocks.filter((b) => new Date(b.date) >= now).length;
   }
 
+  let linkViews7Days = 0;
+  for (const p of properties) {
+    linkViews7Days += await getPropertyViewsLast7Days(p.id);
+  }
+
   return {
     activeBookings,
     monthlyEarnings,
     blockedDates,
     totalProperties: properties.length,
+    linkViews7Days,
   };
 }
 
@@ -482,3 +503,90 @@ export async function getPrivateVerification(
   );
   return entry.value;
 }
+
+// ── INSIGHTS & ANALYTICS ──────────────────────────────────────
+
+export async function recordPropertyView(propId: string): Promise<void> {
+  const kv = await getKv();
+  const dateStr = new Date().toISOString().slice(0, 10);
+  const key = ["prop_view", propId, dateStr];
+  
+  const entry = await kv.get<number>(key);
+  const current = entry.value ?? 0;
+  
+  await kv.set(key, current + 1);
+}
+
+export async function getPropertyViewsLast7Days(propId: string): Promise<number> {
+  const kv = await getKv();
+  let total = 0;
+  const today = new Date();
+  
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().slice(0, 10);
+    const entry = await kv.get<number>(["prop_view", propId, dateStr]);
+    if (entry.value) {
+      total += entry.value;
+    }
+  }
+  
+  return total;
+}
+
+/**
+ * Returns daily view counts for a single property over the last N days.
+ * Used by the Link Performance chart on the Dashboard.
+ */
+export async function getPropertyViewsDaily(
+  propId: string,
+  days = 7,
+): Promise<Array<{ date: string; views: number }>> {
+  const kv = await getKv();
+  const results: Array<{ date: string; views: number }> = [];
+  const today = new Date();
+
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().slice(0, 10);
+    const entry = await kv.get<number>(["prop_view", propId, dateStr]);
+    results.push({ date: dateStr, views: entry.value ?? 0 });
+  }
+
+  return results;
+}
+
+/**
+ * Returns daily confirmed-booking counts for a host over the last N days.
+ * Counts bookings by their `createdAt` date (not check-in date).
+ */
+export async function getBookingsDaily(
+  hostId: string,
+  days = 7,
+): Promise<Array<{ date: string; count: number }>> {
+  const bookings = await listBookings(hostId);
+  const today = new Date();
+  const buckets = new Map<string, number>();
+
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    buckets.set(d.toISOString().slice(0, 10), 0);
+  }
+
+  for (const b of bookings) {
+    if (b.status !== "confirmed") continue;
+    const created = b.createdAt.slice(0, 10);
+    if (buckets.has(created)) {
+      buckets.set(created, (buckets.get(created) ?? 0) + 1);
+    }
+  }
+
+  return Array.from(buckets.entries()).map(([date, count]) => ({
+    date,
+    count,
+  }));
+}
+

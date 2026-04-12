@@ -1,9 +1,10 @@
 import { useEffect, useState } from "preact/hooks";
+import { type ComponentChildren } from "preact";
 
 interface NavItem {
   href: string;
   label: string;
-  icon: JSX.Element;
+  icon: ComponentChildren;
   exact?: boolean;
 }
 

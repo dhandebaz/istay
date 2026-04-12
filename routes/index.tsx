@@ -2,6 +2,7 @@ import { Head } from "$fresh/runtime.ts";
 import Header from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
 import MagicScraperAnimation from "../islands/MagicScraperAnimation.tsx";
+import ScraperPreview from "../islands/ScraperPreview.tsx";
 
 const FEATURES = [
   {
@@ -121,7 +122,7 @@ export default function Home() {
             class="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full bg-emerald-100 opacity-30 blur-3xl pointer-events-none"
           />
 
-          <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 md:pt-32 md:pb-28 text-center">
+          <div class="relative max-w-7xl mx-auto px-6 lg:px-8 pt-24 pb-20 md:pt-32 md:pb-28 text-center">
             {/* Badge */}
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-istay-50 border border-istay-100 text-istay-800 text-xs font-600 uppercase tracking-wider mb-6">
               <span class="w-1.5 h-1.5 rounded-full bg-mint-500 animate-pulse" />
@@ -213,7 +214,7 @@ export default function Home() {
 
         {/* ── PLATFORM COMPARISON ───────────────────────────────── */}
         <section class="py-20 bg-gray-50" id="compare">
-          <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-5xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-12">
               <h2 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight">
                 The math is simple.
@@ -253,7 +254,7 @@ export default function Home() {
 
         {/* ── THE MAGIC SCRAPER ────────────────────────────────────── */}
         <section class="py-24 bg-white border-y border-gray-50 overflow-hidden">
-          <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8">
+          <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-mint-50 border border-mint-100 text-mint-700 text-xs font-700 uppercase tracking-wider mb-6">
@@ -290,7 +291,7 @@ export default function Home() {
               {/* Animation Mockup */}
               <div class="relative animate-slide-up">
                 <div class="absolute -inset-4 bg-mint-50 rounded-3xl -rotate-2 scale-95 opacity-50 blur-xl" />
-                <MagicScraperAnimation />
+                <ScraperPreview />
               </div>
             </div>
           </div>
@@ -298,7 +299,7 @@ export default function Home() {
 
         {/* ── HOW IT WORKS ─────────────────────────────────────── */}
         <section id="how-it-works" class="py-24 bg-gray-50">
-          <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8">
+          <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-16">
               <h2 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight">
                 Up and running in minutes
@@ -348,16 +349,16 @@ export default function Home() {
 
         {/* ── TRUST & SECURITY ─────────────────────────────────── */}
         <section class="py-24 bg-white">
-          <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8 text-center">
+          <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
             <h2 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight mb-16">
-              Security you can <span class="text-mint-500 underline decoration-mint-200">trust.</span>
+              Trusted by <span class="text-mint-500 underline decoration-mint-200">Local Hosts.</span>
             </h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
                   icon: "🆔",
-                  title: "AI OCR Verification",
+                  title: "Gemini ID Setup",
                   desc: "Host-required ID scanning that's 99% faster than manual checks.",
                 },
                 {
@@ -383,10 +384,10 @@ export default function Home() {
                   <h3 class="text-base font-700 text-gray-900 mb-2">{item.title}</h3>
                   <p class="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
                   
-                  {item.title === "AI OCR Verification" && (
+                  {item.title === "Gemini ID Setup" && (
                     <div class="mt-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-50 text-mint-700 text-[10px] font-800 uppercase tracking-widest">
                       <span class="w-1.5 h-1.5 rounded-full bg-mint-500" />
-                      Verified by AI
+                      Verified by istay
                     </div>
                   )}
                 </div>
@@ -397,7 +398,7 @@ export default function Home() {
 
         {/* ── FEATURE GRID ─────────────────────────────────────── */}
         <section class="py-24 bg-gray-50" id="features">
-          <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8">
+          <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-14">
               <h2 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight">
                 Everything you need to go direct
@@ -424,7 +425,7 @@ export default function Home() {
 
         {/* ── CTA BANNER ───────────────────────────────────────── */}
         <section class="py-20 bg-istay-900">
-          <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center">
             <h2 class="text-3xl sm:text-4xl font-800 text-white tracking-tight">
               Ready to stop sharing your revenue?
             </h2>

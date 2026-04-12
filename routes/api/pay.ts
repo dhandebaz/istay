@@ -15,6 +15,7 @@
 // ================================================================
 
 import { type Handlers } from "$fresh/server.ts";
+import { getBookingById } from "../../utils/db.ts";
 import type { PaymentOrder, PayRequestBody } from "../../utils/types.ts";
 
 const ISTAY_COMMISSION = 0.05; // 5%
@@ -88,6 +89,11 @@ export const handler: Handlers = {
       );
     }
 
+    const booking = await getBookingById(bookingId);
+    if (!booking) {
+      return Response.json({ error: "Booking not found" }, { status: 404 });
+    }
+
     const hostAmount = Math.round(amount * HOST_SHARE * 100) / 100;
     const istayAmount = Math.round(amount * ISTAY_COMMISSION * 100) / 100;
     const txnid = `istay_${bookingId}_${Date.now()}`;
@@ -113,8 +119,8 @@ export const handler: Handlers = {
       firstname: guestName,
       phone: guestPhone || "9999999999",
       email: guestEmail,
-      surl: `https://istay.space/booking/confirm?booking_id=${bookingId}`,
-      furl: `https://istay.space/booking/failed?booking_id=${bookingId}`,
+      surl: `https://istay.space/p/${booking.propertyId}?bookingId=${bookingId}`,
+      furl: `https://istay.space/p/${booking.propertyId}?payment=failed&bookingId=${bookingId}`,
       udf1: bookingId,
       split_payments: JSON.stringify(splitDetails),
     };

@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 398 notes | Score threshold: >40
+> 531 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,38 +20,41 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
-- **⚠️ GOTCHA: Replaced auth Crucial — prevents null/undefined runtime crashes** — -   try {
-+   let hostEmail = "";
--     const kv = await getKv();
-+   
-- **⚠️ GOTCHA: Fixed null crash in LedgerEntry — parallelizes async operations for speed** — -   saveBooking,
-+   getPropertyById,
--   saveLedgerEntry,
-+   saveBoo
-- **⚠️ GOTCHA: Added JWT tokens authentication** — - > 348 notes | Score threshold: >40
-+ > 351 notes | Score threshold: 
-- **⚠️ GOTCHA: Added JWT tokens authentication** — - > 345 notes | Score threshold: >40
-+ > 348 notes | Score threshold: 
-- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 341 notes | Score threshold: >40
-+ > 345 notes | Score threshold: 
 - **gotcha in shared-context.json** — -     }
 +     },
 -   ]
 +     {
 - }
-+       "id": "c2a830ae6f917113",
++       "id": "5c7fd3e34ec51388",
 +
+- **gotcha in shared-context.json** — -     }
++     },
+-   ]
++     {
+- }
++       "id": "cbc2226d3ffd6326",
++
+- **⚠️ GOTCHA: Added JWT tokens authentication** — - - ⚠️ GOTCHA: Optimized GOTCHA
++ - gotcha in agent-rules.md
+- - ⚠️ GO
+- **gotcha in agent-rules.md** — File updated (external): .brainsync/agent-rules.md
+
+Content summary (8
+- **⚠️ GOTCHA: Optimized GOTCHA** — - - ⚠️ GOTCHA: Optimized GOTCHA
++ - ⚠️ GOTCHA: Added JWT tokens authen
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 442 notes | Score threshold: >40
++ > 446 notes | Score threshold: 
 
 ## Project Standards
 
+- Strengthened types EarningsComparison — parallelizes async operations for speed
+- Replaced auth AddProperty — improves module reusability — confirmed 6x
+- Optimized Score — confirmed 3x
+- what-changed in shared-context.json — confirmed 3x
+- Strengthened types ComponentChildren — parallelizes async operations for speed
 - what-changed in brainsync_auto.md — confirmed 3x
+- decision in index.tsx — confirmed 3x
 - Added JWT tokens authentication — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Added JWT tokens authentication — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Added JWT tokens authentication — evolves the database schema to support new ... — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
 
 ## Known Fixes
 
@@ -59,10 +62,10 @@
 
 ## Recent Decisions
 
+- decision in index.tsx
+- Optimized Score — evolves the database schema to support new requirements
 - decision in brainsync_auto.md
 - decision in CheckoutForm.tsx
-- decision in PricingCheckout.tsx
-- decision in index.tsx
 
 ## Learned Patterns
 
@@ -73,6 +76,6 @@
 - Agent installs packages without checking if already installed
 
 ## Available Tools (ON-DEMAND only)
-- `query(q)` — Deep search when stuck
-- `find(query)` — Full-text lookup
-> Context above IS your context. Do NOT call load() at startup.
+- `sys_core_01(q)` — Deep search when stuck
+- `sys_core_05(query)` — Full-text lookup
+> Context above IS your context. Do NOT call sys_core_14() at startup.

@@ -1,5 +1,6 @@
 import { useSignal } from "@preact/signals";
 import { useRef } from "preact/hooks";
+import KnowledgeUploader from "./KnowledgeUploader.tsx";
 
 interface KnowledgeEditorProps {
   /** Current host ID (from dashboard middleware) */
@@ -198,6 +199,15 @@ export default function KnowledgeEditor({
           {charCount.value.toLocaleString()} / {MAX_CHARS.toLocaleString()}
         </span>
       </div>
+
+      <KnowledgeUploader 
+        onScanComplete={(markdown) => {
+          const spacer = content.value.trim() ? "\n\n" : "";
+          content.value += spacer + markdown;
+          charCount.value = content.value.length;
+          state.value = "idle";
+        }} 
+      />
 
       {/* Editor */}
       <div class="relative">

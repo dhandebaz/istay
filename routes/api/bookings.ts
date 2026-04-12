@@ -202,8 +202,8 @@ export const handler: Handlers = {
       firstname: guestName,
       phone: guestPhone || "9999999999",
       email: guestEmail,
-      surl: `${APP_BASE_URL}/p/checkout/confirm?txnid=${txnid}&booking_id=${bookingId}`,
-      furl: `${APP_BASE_URL}/p/checkout/failed?txnid=${txnid}&booking_id=${bookingId}`,
+      surl: `${APP_BASE_URL}/p/${propId}?bookingId=${bookingId}`,
+      furl: `${APP_BASE_URL}/p/${propId}?payment=failed&bookingId=${bookingId}`,
       udf1: bookingId,
       split_payments: JSON.stringify(splitDetails),
     };

@@ -3,91 +3,151 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import * as $_app from "./routes/_app.tsx";
-import * as $index from "./routes/index.tsx";
-import * as $contact from "./routes/contact.tsx";
-import * as $pricing from "./routes/pricing.tsx";
-import * as $legal_terms from "./routes/legal/terms.tsx";
-import * as $legal_privacy from "./routes/legal/privacy.tsx";
-import * as $legal_cancellation from "./routes/legal/cancellation.tsx";
-import * as $legal_shipping from "./routes/legal/shipping.tsx";
-import * as $api_contact from "./routes/api/contact.ts";
-import * as $api_scrape from "./routes/api/scrape.ts";
-import * as $api_properties from "./routes/api/properties.ts";
-import * as $api_pay from "./routes/api/pay.ts";
+import * as $api_auth_forgot from "./routes/api/auth/forgot.ts";
+import * as $api_auth_login from "./routes/api/auth/login.ts";
+import * as $api_auth_logout from "./routes/api/auth/logout.ts";
+import * as $api_auth_register from "./routes/api/auth/register.ts";
+import * as $api_auth_resend_verification from "./routes/api/auth/resend-verification.ts";
 import * as $api_bookings from "./routes/api/bookings.ts";
-import * as $api_verify from "./routes/api/verify.ts";
-import * as $api_chat from "./routes/api/chat.ts";
-import * as $api_knowledge from "./routes/api/knowledge.ts";
-import * as $api_cron_sync from "./routes/api/cron/sync.ts";
-import * as $api_webhooks_payment from "./routes/api/webhooks/payment.ts";
+import * as $api_caretaker_ready from "./routes/api/caretaker/ready.ts";
 import * as $api_caretaker_supply from "./routes/api/caretaker/supply.ts";
-import * as $dashboard_middleware from "./routes/dashboard/_middleware.ts";
+import * as $api_chat from "./routes/api/chat.ts";
+import * as $api_contact from "./routes/api/contact.ts";
+import * as $api_cron_sync from "./routes/api/cron/sync.ts";
+import * as $api_invoice_bookingId from "./routes/api/invoice/[bookingId].ts";
+import * as $api_knowledge from "./routes/api/knowledge.ts";
+import * as $api_knowledge_ocr from "./routes/api/knowledge/ocr.ts";
+import * as $api_onboard_pay from "./routes/api/onboard/pay.ts";
+import * as $api_onboard_verify from "./routes/api/onboard/verify.ts";
+import * as $api_pay from "./routes/api/pay.ts";
+import * as $api_properties from "./routes/api/properties.ts";
+import * as $api_scrape from "./routes/api/scrape.ts";
+import * as $api_verify from "./routes/api/verify.ts";
+import * as $blog_slug from "./routes/blog/[slug].tsx";
+import * as $blog_index from "./routes/blog/index.tsx";
+import * as $api_webhooks_payment from "./routes/api/webhooks/payment.ts";
+import * as $api_webhooks_whatsapp from "./routes/api/webhooks/whatsapp.ts";
+import * as $care_token_ from "./routes/care/[token].tsx";
+import * as $contact from "./routes/contact.tsx";
 import * as $dashboard_layout from "./routes/dashboard/_layout.tsx";
-import * as $dashboard_index from "./routes/dashboard/index.tsx";
-import * as $dashboard_properties from "./routes/dashboard/properties.tsx";
-import * as $dashboard_knowledge from "./routes/dashboard/knowledge.tsx";
+import * as $dashboard_middleware from "./routes/dashboard/_middleware.ts";
 import * as $dashboard_bookings from "./routes/dashboard/bookings.tsx";
 import * as $dashboard_guests from "./routes/dashboard/guests.tsx";
+import * as $dashboard_index from "./routes/dashboard/index.tsx";
+import * as $dashboard_knowledge from "./routes/dashboard/knowledge.tsx";
+import * as $dashboard_properties from "./routes/dashboard/properties.tsx";
 import * as $dashboard_settings from "./routes/dashboard/settings.tsx";
-import * as $p_propId from "./routes/p/[propId].tsx";
+import * as $forgot_password from "./routes/forgot-password.tsx";
+import * as $index from "./routes/index.tsx";
+import * as $legal_cancellation from "./routes/legal/cancellation.tsx";
+import * as $legal_privacy from "./routes/legal/privacy.tsx";
+import * as $legal_shipping from "./routes/legal/shipping.tsx";
+import * as $legal_terms from "./routes/legal/terms.tsx";
+import * as $login from "./routes/login.tsx";
+import * as $p_propId_ from "./routes/p/[propId].tsx";
 import * as $p_checkout from "./routes/p/checkout.tsx";
-import * as $care_token from "./routes/care/[token].tsx";
-import * as $EarningsCalculator from "./islands/EarningsCalculator.tsx";
-import * as $MobileMenu from "./islands/MobileMenu.tsx";
-import * as $DashboardSidebar from "./islands/DashboardSidebar.tsx";
+import * as $pricing from "./routes/pricing.tsx";
+import * as $register from "./routes/register.tsx";
+import * as $search from "./routes/search.tsx";
+import * as $verify from "./routes/verify.tsx";
 import * as $AddProperty from "./islands/AddProperty.tsx";
 import * as $BookingCalendar from "./islands/BookingCalendar.tsx";
+import * as $BookingFlow from "./islands/BookingFlow.tsx";
 import * as $CheckoutForm from "./islands/CheckoutForm.tsx";
-import * as $SupplyRequest from "./islands/SupplyRequest.tsx";
-import * as $IdVerification from "./islands/IdVerification.tsx";
+import * as $DashboardSidebar from "./islands/DashboardSidebar.tsx";
+import * as $EarningsCalculator from "./islands/EarningsCalculator.tsx";
+import * as $EarningsComparison from "./islands/EarningsComparison.tsx";
+import * as $ForgotPasswordForm from "./islands/ForgotPasswordForm.tsx";
 import * as $GuestChat from "./islands/GuestChat.tsx";
+import * as $IdVerification from "./islands/IdVerification.tsx";
 import * as $KnowledgeEditor from "./islands/KnowledgeEditor.tsx";
-import { type Manifest } from "$fresh/server.ts";
+import * as $KnowledgeUploader from "./islands/KnowledgeUploader.tsx";
+import * as $LinkPerformanceChart from "./islands/LinkPerformanceChart.tsx";
+import * as $LoginForm from "./islands/LoginForm.tsx";
+import * as $MagicScraperAnimation from "./islands/MagicScraperAnimation.tsx";
+import * as $MobileMenu from "./islands/MobileMenu.tsx";
+import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
+import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
+import * as $RegisterForm from "./islands/RegisterForm.tsx";
+import * as $ResendVerificationBtn from "./islands/ResendVerificationBtn.tsx";
+import * as $ScraperPreview from "./islands/ScraperPreview.tsx";
+import * as $SupplyRequest from "./islands/SupplyRequest.tsx";
+import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
     "./routes/_app.tsx": $_app,
-    "./routes/index.tsx": $index,
-    "./routes/contact.tsx": $contact,
-    "./routes/pricing.tsx": $pricing,
-    "./routes/legal/terms.tsx": $legal_terms,
-    "./routes/legal/privacy.tsx": $legal_privacy,
-    "./routes/legal/cancellation.tsx": $legal_cancellation,
-    "./routes/legal/shipping.tsx": $legal_shipping,
-    "./routes/api/contact.ts": $api_contact,
-    "./routes/api/scrape.ts": $api_scrape,
-    "./routes/api/properties.ts": $api_properties,
-    "./routes/api/pay.ts": $api_pay,
+    "./routes/api/auth/forgot.ts": $api_auth_forgot,
+    "./routes/api/auth/login.ts": $api_auth_login,
+    "./routes/api/auth/logout.ts": $api_auth_logout,
+    "./routes/api/auth/register.ts": $api_auth_register,
+    "./routes/api/auth/resend-verification.ts": $api_auth_resend_verification,
     "./routes/api/bookings.ts": $api_bookings,
-    "./routes/api/verify.ts": $api_verify,
-    "./routes/api/chat.ts": $api_chat,
-    "./routes/api/knowledge.ts": $api_knowledge,
-    "./routes/api/cron/sync.ts": $api_cron_sync,
-    "./routes/api/webhooks/payment.ts": $api_webhooks_payment,
+    "./routes/api/caretaker/ready.ts": $api_caretaker_ready,
     "./routes/api/caretaker/supply.ts": $api_caretaker_supply,
-    "./routes/dashboard/_middleware.ts": $dashboard_middleware,
+    "./routes/api/chat.ts": $api_chat,
+    "./routes/api/contact.ts": $api_contact,
+    "./routes/api/cron/sync.ts": $api_cron_sync,
+    "./routes/api/invoice/[bookingId].ts": $api_invoice_bookingId,
+    "./routes/api/knowledge.ts": $api_knowledge,
+    "./routes/api/knowledge/ocr.ts": $api_knowledge_ocr,
+    "./routes/api/onboard/pay.ts": $api_onboard_pay,
+    "./routes/api/onboard/verify.ts": $api_onboard_verify,
+    "./routes/api/pay.ts": $api_pay,
+    "./routes/api/properties.ts": $api_properties,
+    "./routes/api/scrape.ts": $api_scrape,
+    "./routes/api/verify.ts": $api_verify,
+    "./routes/blog/[slug].tsx": $blog_slug,
+    "./routes/blog/index.tsx": $blog_index,
+    "./routes/api/webhooks/payment.ts": $api_webhooks_payment,
+    "./routes/api/webhooks/whatsapp.ts": $api_webhooks_whatsapp,
+    "./routes/care/[token].tsx": $care_token_,
+    "./routes/contact.tsx": $contact,
     "./routes/dashboard/_layout.tsx": $dashboard_layout,
-    "./routes/dashboard/index.tsx": $dashboard_index,
-    "./routes/dashboard/properties.tsx": $dashboard_properties,
-    "./routes/dashboard/knowledge.tsx": $dashboard_knowledge,
+    "./routes/dashboard/_middleware.ts": $dashboard_middleware,
     "./routes/dashboard/bookings.tsx": $dashboard_bookings,
     "./routes/dashboard/guests.tsx": $dashboard_guests,
+    "./routes/dashboard/index.tsx": $dashboard_index,
+    "./routes/dashboard/knowledge.tsx": $dashboard_knowledge,
+    "./routes/dashboard/properties.tsx": $dashboard_properties,
     "./routes/dashboard/settings.tsx": $dashboard_settings,
-    "./routes/p/[propId].tsx": $p_propId,
+    "./routes/forgot-password.tsx": $forgot_password,
+    "./routes/index.tsx": $index,
+    "./routes/legal/cancellation.tsx": $legal_cancellation,
+    "./routes/legal/privacy.tsx": $legal_privacy,
+    "./routes/legal/shipping.tsx": $legal_shipping,
+    "./routes/legal/terms.tsx": $legal_terms,
+    "./routes/login.tsx": $login,
+    "./routes/p/[propId].tsx": $p_propId_,
     "./routes/p/checkout.tsx": $p_checkout,
-    "./routes/care/[token].tsx": $care_token,
+    "./routes/pricing.tsx": $pricing,
+    "./routes/register.tsx": $register,
+    "./routes/search.tsx": $search,
+    "./routes/verify.tsx": $verify,
   },
   islands: {
-    "./islands/EarningsCalculator.tsx": $EarningsCalculator,
-    "./islands/MobileMenu.tsx": $MobileMenu,
-    "./islands/DashboardSidebar.tsx": $DashboardSidebar,
     "./islands/AddProperty.tsx": $AddProperty,
     "./islands/BookingCalendar.tsx": $BookingCalendar,
+    "./islands/BookingFlow.tsx": $BookingFlow,
     "./islands/CheckoutForm.tsx": $CheckoutForm,
-    "./islands/SupplyRequest.tsx": $SupplyRequest,
-    "./islands/IdVerification.tsx": $IdVerification,
+    "./islands/DashboardSidebar.tsx": $DashboardSidebar,
+    "./islands/EarningsCalculator.tsx": $EarningsCalculator,
+    "./islands/EarningsComparison.tsx": $EarningsComparison,
+    "./islands/ForgotPasswordForm.tsx": $ForgotPasswordForm,
     "./islands/GuestChat.tsx": $GuestChat,
+    "./islands/IdVerification.tsx": $IdVerification,
     "./islands/KnowledgeEditor.tsx": $KnowledgeEditor,
+    "./islands/KnowledgeUploader.tsx": $KnowledgeUploader,
+    "./islands/LinkPerformanceChart.tsx": $LinkPerformanceChart,
+    "./islands/LoginForm.tsx": $LoginForm,
+    "./islands/MagicScraperAnimation.tsx": $MagicScraperAnimation,
+    "./islands/MobileMenu.tsx": $MobileMenu,
+    "./islands/PricingCheckout.tsx": $PricingCheckout,
+    "./islands/ProofOfCleanUploader.tsx": $ProofOfCleanUploader,
+    "./islands/RegisterForm.tsx": $RegisterForm,
+    "./islands/ResendVerificationBtn.tsx": $ResendVerificationBtn,
+    "./islands/ScraperPreview.tsx": $ScraperPreview,
+    "./islands/SupplyRequest.tsx": $SupplyRequest,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

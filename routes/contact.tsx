@@ -55,7 +55,7 @@ export default function Contact() {
       <main class="min-h-screen">
         {/* Page Header */}
         <section class="bg-white border-b border-gray-100 py-16">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="max-w-2xl">
               <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-istay-50 border border-istay-100 text-istay-800 text-xs font-600 uppercase tracking-wider mb-4">
                 Support
@@ -73,7 +73,7 @@ export default function Contact() {
 
         {/* Content Grid */}
         <section class="py-16">
-          <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8">
+          <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
               {/* Left Column — Contact Info */}
               <div class="lg:col-span-2 space-y-8">
@@ -245,7 +245,7 @@ export default function Contact() {
                         for="contact-property"
                         class="absolute left-4 top-2 text-xs text-gray-400 font-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-teal-600"
                       >
-                        Airbnb link (e.g. airbnb.com/rooms/123)
+                        Property URL (e.g., airbnb.com/rooms/12345678)
                       </label>
                     </div>
 

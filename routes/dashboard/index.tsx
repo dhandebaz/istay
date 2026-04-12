@@ -1,26 +1,70 @@
 import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
-import { getDashboardStats, listBookings } from "../../utils/db.ts";
+import { type ComponentChildren } from "preact";
+import {
+  getDashboardStats,
+  listBookings,
+  listProperties,
+  getPropertyViewsDaily,
+  getBookingsDaily,
+} from "../../utils/db.ts";
 import type { Booking, DashboardState, DashboardStats } from "../../utils/types.ts";
+import LinkPerformanceChart from "../../islands/LinkPerformanceChart.tsx";
+import EarningsComparison from "../../islands/EarningsComparison.tsx";
 
 interface OverviewData {
   stats: DashboardStats;
   recentBookings: Booking[];
   setupFeePaid: boolean;
+  chartData: Array<{ date: string; views: number; bookings: number }>;
+  chartTotalViews: number;
+  chartTotalBookings: number;
 }
-export const handler: Handlers<OverviewData> = {
+export const handler: Handlers<OverviewData, DashboardState> = {
   GET: async (_req, ctx) => {
-    const { hostId } = ctx.state;
+    const { hostId } = ctx.state as DashboardState;
     const kv = await Deno.openKv();
     const hostEntry = await kv.get(["host", hostId]);
     const setupFeePaid = (hostEntry.value as any)?.setupFeePaid ?? false;
 
-    const [stats, allBookings] = await Promise.all([
+    const [stats, allBookings, properties] = await Promise.all([
       getDashboardStats(hostId),
       listBookings(hostId),
+      listProperties(hostId),
     ]);
     const recentBookings = allBookings.slice(0, 5);
-    return ctx.render({ stats, recentBookings, setupFeePaid });
+
+    // ── Build daily chart data (aggregate across all properties) ──
+    const [bookingsDaily] = await Promise.all([
+      getBookingsDaily(hostId, 7),
+    ]);
+
+    // Aggregate views across all properties for each day
+    const viewsByDay = new Map<string, number>();
+    for (const prop of properties) {
+      const daily = await getPropertyViewsDaily(prop.id, 7);
+      for (const d of daily) {
+        viewsByDay.set(d.date, (viewsByDay.get(d.date) ?? 0) + d.views);
+      }
+    }
+
+    const chartData = bookingsDaily.map((b) => ({
+      date: b.date,
+      views: viewsByDay.get(b.date) ?? 0,
+      bookings: b.count,
+    }));
+
+    const chartTotalViews = chartData.reduce((s, d) => s + d.views, 0);
+    const chartTotalBookings = chartData.reduce((s, d) => s + d.bookings, 0);
+
+    return ctx.render({
+      stats,
+      recentBookings,
+      setupFeePaid,
+      chartData,
+      chartTotalViews,
+      chartTotalBookings,
+    });
   },
 };
 
@@ -45,7 +89,7 @@ interface StatCardProps {
   value: string;
   sub: string;
   gradient: string;
-  icon: JSX.Element;
+  icon: ComponentChildren;
 }
 
 function StatCard({ label, value, sub, gradient, icon }: StatCardProps) {
@@ -87,7 +131,7 @@ const STATUS_STYLES: Record<string, string> = {
 export default function DashboardOverview(
   { data }: PageProps<OverviewData>,
 ) {
-  const { stats, recentBookings } = data;
+  const { stats, recentBookings, chartData, chartTotalViews, chartTotalBookings } = data;
   const month = new Date().toLocaleString("en-IN", {
     month: "long",
     year: "numeric",
@@ -130,7 +174,7 @@ export default function DashboardOverview(
       </div>
 
       {/* ── Stats Grid ─────────────────────────────────────────── */}
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-8">
         <StatCard
           label="Active Bookings"
           value={String(stats.activeBookings)}
@@ -188,6 +232,18 @@ export default function DashboardOverview(
             </svg>
           }
         />
+        <StatCard
+          label="Link Performance"
+          value={String(stats.linkViews7Days)}
+          sub="Profile views (7 days)"
+          gradient="bg-gradient-to-br from-mint-500 to-teal-600"
+          icon={
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          }
+        />
       </div>
 
       {/* ── Quick Actions ──────────────────────────────────────── */}
@@ -227,6 +283,20 @@ export default function DashboardOverview(
             </div>
           </a>
         ))}
+      </div>
+
+      {/* ── Earnings Comparison ────────────────────────────────── */}
+      <div class="mb-8">
+        <EarningsComparison monthlyEarnings={stats.monthlyEarnings} />
+      </div>
+
+      {/* ── Link Performance Chart ────────────────────────────── */}
+      <div class="mb-8">
+        <LinkPerformanceChart
+          data={chartData}
+          totalViews={chartTotalViews}
+          totalBookings={chartTotalBookings}
+        />
       </div>
 
       {/* ── Recent Bookings ────────────────────────────────────── */}
@@ -293,10 +363,13 @@ export default function DashboardOverview(
                           {booking.nights} night{booking.nights > 1 ? "s" : ""}
                         </p>
                       </td>
-                      <td class="px-6 py-4 text-right">
-                        <p class="font-700 text-gray-900">
-                          {formatINR(booking.amount)}
-                        </p>
+                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-600">
+                        <div class="flex flex-col items-end gap-1">
+                          <span class="text-istay-900">{formatINR(booking.amount)}</span>
+                          <a href={`/api/invoice/${booking.id}`} target="_blank" class="text-xs text-mint-600 hover:text-mint-700 font-700 decoration-mint-600/30 hover:underline">
+                            Invoice ↗
+                          </a>
+                        </div>
                         <p class="text-xs text-istay-700">
                           {formatINR(booking.amount * 0.95)} yours
                         </p>
