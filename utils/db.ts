@@ -371,18 +371,20 @@ export async function saveNotification(notif: Notification): Promise<void> {
 export async function listNotifications(
   hostId: string,
   unreadOnly = false,
+  limit = 20,
 ): Promise<Notification[]> {
   const kv = await getKv();
-  const iter = kv.list<Notification>({ prefix: ["notification", hostId] });
+  const iter = kv.list<Notification>(
+    { prefix: ["notification", hostId] },
+    { reverse: true, limit: unreadOnly ? undefined : limit },
+  );
   const items: Notification[] = [];
   for await (const entry of iter) {
     if (unreadOnly && entry.value.read) continue;
     items.push(entry.value);
+    if (unreadOnly && items.length >= limit) break;
   }
-  return items.sort(
-    (a, b) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
+  return items;
 }
 
 export async function markNotificationRead(
@@ -621,31 +623,6 @@ export async function getBookingsDaily(
     date,
     count,
   }));
-}
-
-// ── NOTIFICATIONS ─────────────────────────────────────────────
-
-export async function saveNotification(
-  notification: Notification,
-): Promise<void> {
-  const kv = await getKv();
-  await kv.set(["notification", notification.hostId, notification.id], notification);
-}
-
-export async function listNotifications(
-  hostId: string,
-  limit = 20,
-): Promise<Notification[]> {
-  const kv = await getKv();
-  const iter = kv.list<Notification>(
-    { prefix: ["notification", hostId] },
-    { reverse: true, limit },
-  );
-  const results: Notification[] = [];
-  for await (const entry of iter) {
-    results.push(entry.value);
-  }
-  return results;
 }
 
 // ── REVIEWS & FEEDBACK ────────────────────────────────────────

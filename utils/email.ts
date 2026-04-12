@@ -51,6 +51,17 @@ async function sendBrevoEmail(
 }
 
 /**
+ * Generic email dispatcher used for automated communications.
+ */
+export async function sendEmail(params: {
+  to: string;
+  subject: string;
+  html: string;
+}) {
+  return sendBrevoEmail(params.to, params.to.split("@")[0], params.subject, params.html);
+}
+
+/**
  * Dispatches the Host Onboarding verification email.
  */
 export async function sendVerificationEmail(

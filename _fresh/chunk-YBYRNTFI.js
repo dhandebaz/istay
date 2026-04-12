@@ -1,0 +1,1 @@
+async function d(c,r=1200,g=.7){return new Promise((i,s)=>{let e=new Image;e.src=c,e.onload=()=>{let t=document.createElement("canvas"),a=t.getContext("2d");if(!a){s(new Error("Could not get canvas context"));return}let n=e.width,o=e.height;n>r&&(o=r/n*o,n=r),t.width=n,t.height=o,a.drawImage(e,0,0,n,o);let m=t.toDataURL("image/jpeg",g);i(m)},e.onerror=t=>s(t)})}export{d as a};

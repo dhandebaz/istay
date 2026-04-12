@@ -1,5 +1,5 @@
 import { Head } from "$fresh/runtime.ts";
-import Header from "../../components/Header.tsx";
+import Header from "../../islands/Header.tsx";
 import Footer from "../../components/Footer.tsx";
 
 const LAST_UPDATED = "April 11, 2026";

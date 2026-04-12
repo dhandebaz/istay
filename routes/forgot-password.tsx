@@ -1,5 +1,5 @@
 import { Head } from "$fresh/runtime.ts";
-import Header from "../components/Header.tsx";
+import Header from "../islands/Header.tsx";
 import ForgotPasswordForm from "../islands/ForgotPasswordForm.tsx";
 
 export default function ForgotPasswordPage() {
