@@ -1,4 +1,5 @@
-import MobileMenu from "../islands/MobileMenu.tsx";
+import { useEffect, useState } from "preact/hooks";
+import MobileMenu from "./MobileMenu.tsx";
 
 const NAV_LINKS = [
   { href: "/pricing", label: "Pricing" },
@@ -6,10 +7,24 @@ const NAV_LINKS = [
 ];
 
 export default function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header class="sticky top-0 z-[100] backdrop-blur-xl bg-white/95 border-b border-gray-100 shadow-sm">
+    <header 
+      class={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
+        scrolled 
+          ? "bg-white/98 shadow-md py-2 border-b border-gray-100" 
+          : "bg-white/95 backdrop-blur-md py-4"
+      }`}
+    >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
+        <div class="flex items-center justify-between h-12 sm:h-auto">
           {/* Logo */}
           <a
             href="/"
@@ -19,7 +34,7 @@ export default function Header() {
             <img 
               src="/logo.svg" 
               alt="istay logo" 
-              class="h-8 w-auto sm:h-10" 
+              class="h-8 w-auto sm:h-9" 
             />
           </a>
 
@@ -29,14 +44,14 @@ export default function Header() {
               <a
                 key={href}
                 href={href}
-                class="px-4 py-2 text-sm font-500 text-gray-600 rounded-xl hover:text-gray-900 hover:bg-gray-100 transition-all duration-200"
+                class="px-4 py-2 text-sm font-600 text-gray-600 rounded-xl hover:text-gray-900 hover:bg-gray-50 transition-all duration-200"
               >
                 {label}
               </a>
             ))}
             <a
               href="/login"
-              class="px-4 py-2 text-sm font-700 text-mint-600 rounded-xl hover:bg-mint-50 transition-all duration-200"
+              class="px-4 py-2 text-sm font-800 text-mint-600 rounded-xl hover:bg-mint-50 transition-all duration-200"
             >
               Login
             </a>
@@ -47,7 +62,7 @@ export default function Header() {
             <a
               href="/register"
               id="cta-start-hosting"
-              class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-mint-500 text-istay-900 text-sm font-800 shadow-sm hover:bg-mint-400 hover:shadow-md active:scale-95 transition-all duration-200"
+              class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-mint-500 text-istay-900 text-sm font-900 shadow-sm hover:bg-mint-400 hover:shadow-lg active:scale-95 transition-all duration-300"
             >
               Start Hosting
               <svg
@@ -61,7 +76,7 @@ export default function Header() {
                 <path
                   d="M1 7H13M7 1L13 7L7 13"
                   stroke="currentColor"
-                  stroke-width="1.5"
+                  stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />

@@ -180,6 +180,22 @@ export async function listAllPropertyIndices(): Promise<
   return results;
 }
 
+/**
+ * Returns all active properties across the entire platform.
+ * Used for the public homepage carousel to show real listings (no mocks).
+ */
+export async function listPublicProperties(): Promise<Property[]> {
+  const kv = await getKv();
+  const iter = kv.list<Property>({ prefix: ["property"] });
+  const results: Property[] = [];
+  for await (const entry of iter) {
+    if (entry.value.status === "active") {
+      results.push(entry.value);
+    }
+  }
+  return results.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
 // ── BOOKINGS ──────────────────────────────────────────────────
 
 export async function getBooking(
@@ -605,6 +621,31 @@ export async function getBookingsDaily(
     date,
     count,
   }));
+}
+
+// ── NOTIFICATIONS ─────────────────────────────────────────────
+
+export async function saveNotification(
+  notification: Notification,
+): Promise<void> {
+  const kv = await getKv();
+  await kv.set(["notification", notification.hostId, notification.id], notification);
+}
+
+export async function listNotifications(
+  hostId: string,
+  limit = 20,
+): Promise<Notification[]> {
+  const kv = await getKv();
+  const iter = kv.list<Notification>(
+    { prefix: ["notification", hostId] },
+    { reverse: true, limit },
+  );
+  const results: Notification[] = [];
+  for await (const entry of iter) {
+    results.push(entry.value);
+  }
+  return results;
 }
 
 // ── REVIEWS & FEEDBACK ────────────────────────────────────────

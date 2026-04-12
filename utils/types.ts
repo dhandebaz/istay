@@ -67,6 +67,7 @@ export interface Booking {
   checkIn: string;  // YYYY-MM-DD
   checkOut: string; // YYYY-MM-DD
   checkoutChecklist?: Record<string, boolean>;
+  cleanProofUrl?: string;
   nights: number;
   /** Total gross booking amount in INR */
   amount: number;
@@ -112,6 +113,7 @@ export interface Notification {
   hostId: string;
   type:
     | "supply_request"
+    | "housekeeping_ready"
     | "booking_confirmed"
     | "checkin_reminder"
     | "verification_complete"
@@ -248,6 +250,7 @@ export interface ScrapedListing {
   imageUrl: string;
   description: string;
   sourceUrl: string;
+  locationName?: string;
 }
 
 export interface CreatePropertyPayload {

@@ -23,6 +23,7 @@ import * as $api_ical_propId_ from "./routes/api/ical/[propId].ts";
 import * as $api_pay from "./routes/api/pay.ts";
 import * as $api_properties from "./routes/api/properties.ts";
 import * as $api_scrape from "./routes/api/scrape.ts";
+import * as $api_public_listings from "./routes/api/public/listings.ts";
 import * as $api_verify from "./routes/api/verify.ts";
 import * as $blog_slug from "./routes/blog/[slug].tsx";
 import * as $blog_index from "./routes/blog/index.tsx";
@@ -69,6 +70,8 @@ import * as $KnowledgeEditor from "./islands/KnowledgeEditor.tsx";
 import * as $KnowledgeUploader from "./islands/KnowledgeUploader.tsx";
 import * as $LinkPerformanceChart from "./islands/LinkPerformanceChart.tsx";
 import * as $LoginForm from "./islands/LoginForm.tsx";
+import * as $Header from "./islands/Header.tsx";
+import * as $ListingCarousel from "./islands/ListingCarousel.tsx";
 import * as $MagicScraperAnimation from "./islands/MagicScraperAnimation.tsx";
 import * as $MobileMenu from "./islands/MobileMenu.tsx";
 import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
@@ -101,6 +104,7 @@ const manifest = {
     "./routes/api/pay.ts": $api_pay,
     "./routes/api/properties.ts": $api_properties,
     "./routes/api/scrape.ts": $api_scrape,
+    "./routes/api/public/listings.ts": $api_public_listings,
     "./routes/api/ical/[propId].ts": $api_ical_propId_,
     "./routes/api/verify.ts": $api_verify,
     "./routes/blog/[slug].tsx": $blog_slug,
@@ -150,6 +154,8 @@ const manifest = {
     "./islands/KnowledgeUploader.tsx": $KnowledgeUploader,
     "./islands/LinkPerformanceChart.tsx": $LinkPerformanceChart,
     "./islands/LoginForm.tsx": $LoginForm,
+    "./islands/Header.tsx": $Header,
+    "./islands/ListingCarousel.tsx": $ListingCarousel,
     "./islands/MagicScraperAnimation.tsx": $MagicScraperAnimation,
     "./islands/MobileMenu.tsx": $MobileMenu,
     "./islands/PricingCheckout.tsx": $PricingCheckout,

@@ -1,20 +1,15 @@
 import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 import { type ComponentChildren } from "preact";
-import {
-  getDashboardStats,
-  listBookings,
-  listProperties,
-  getPropertyViewsDaily,
-  getBookingsDaily,
-} from "../../utils/db.ts";
-import type { Booking, DashboardState, DashboardStats } from "../../utils/types.ts";
+import { listNotifications, getDashboardStats, listBookings, listProperties, getPropertyViewsDaily, getBookingsDaily } from "../../utils/db.ts";
+import type { Booking, DashboardState, DashboardStats, Notification } from "../../utils/types.ts";
 import LinkPerformanceChart from "../../islands/LinkPerformanceChart.tsx";
 import EarningsComparison from "../../islands/EarningsComparison.tsx";
 
 interface OverviewData {
   stats: DashboardStats;
   recentBookings: Booking[];
+  notifications: Notification[];
   setupFeePaid: boolean;
   chartData: Array<{ date: string; views: number; bookings: number }>;
   chartTotalViews: number;
@@ -27,10 +22,11 @@ export const handler: Handlers<OverviewData, DashboardState> = {
     const hostEntry = await kv.get(["host", hostId]);
     const setupFeePaid = (hostEntry.value as any)?.setupFeePaid ?? false;
 
-    const [stats, allBookings, properties] = await Promise.all([
+    const [stats, allBookings, properties, notifications] = await Promise.all([
       getDashboardStats(hostId),
       listBookings(hostId),
       listProperties(hostId),
+      listNotifications(hostId),
     ]);
     const recentBookings = allBookings.slice(0, 5);
 
@@ -60,6 +56,7 @@ export const handler: Handlers<OverviewData, DashboardState> = {
     return ctx.render({
       stats,
       recentBookings,
+      notifications,
       setupFeePaid,
       chartData,
       chartTotalViews,
@@ -131,7 +128,7 @@ const STATUS_STYLES: Record<string, string> = {
 export default function DashboardOverview(
   { data }: PageProps<OverviewData>,
 ) {
-  const { stats, recentBookings, chartData, chartTotalViews, chartTotalBookings } = data;
+  const { stats, recentBookings, notifications, chartData, chartTotalViews, chartTotalBookings } = data;
   const month = new Date().toLocaleString("en-IN", {
     month: "long",
     year: "numeric",
@@ -313,13 +310,58 @@ export default function DashboardOverview(
         <EarningsComparison monthlyEarnings={stats.monthlyEarnings} />
       </div>
 
-      {/* ── Link Performance Chart ────────────────────────────── */}
-      <div class="mb-8">
-        <LinkPerformanceChart
-          data={chartData}
-          totalViews={chartTotalViews}
-          totalBookings={chartTotalBookings}
-        />
+      {/* ── Operations & Housekeeping Feed ── */}
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <div class="lg:col-span-2">
+          <LinkPerformanceChart
+            data={chartData}
+            totalViews={chartTotalViews}
+            totalBookings={chartTotalBookings}
+          />
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+          <div class="px-6 py-4 border-b border-gray-50 bg-gray-50/30 flex items-center justify-between">
+            <h2 class="text-sm font-800 text-gray-900 uppercase tracking-tight">Operational Feed</h2>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          </div>
+          
+          <div class="flex-1 overflow-y-auto max-h-[400px] p-4 space-y-4">
+            {notifications.length === 0 ? (
+              <div class="py-12 text-center">
+                <p class="text-2xl mb-2">📋</p>
+                <p class="text-xs text-gray-400 font-500">No recent activity</p>
+              </div>
+            ) : (
+              notifications.map((n) => (
+                <div key={n.id} class="p-4 rounded-xl bg-gray-50 border border-gray-100 transition-all hover:border-mint-200 group">
+                  <div class="flex items-start gap-3">
+                    <div class={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                      n.type === 'housekeeping_ready' ? 'bg-emerald-50 text-emerald-600' :
+                      n.type === 'supply_request' ? 'bg-orange-50 text-orange-600' : 'bg-blue-50 text-blue-600'
+                    }`}>
+                      {n.type === 'housekeeping_ready' ? '✨' : n.type === 'supply_request' ? '📦' : '🔔'}
+                    </div>
+                    <div>
+                      <p class="text-xs font-800 text-gray-900">{n.title}</p>
+                      <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">{n.message}</p>
+                      
+                      {n.meta?.imageUrl && (
+                        <div class="mt-3 relative w-full h-24 rounded-lg overflow-hidden border border-gray-200">
+                           <img src={n.meta.imageUrl} alt="Proof" class="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                        </div>
+                      )}
+                      
+                      <p class="text-[10px] text-gray-400 mt-2 font-500">
+                        {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} · {n.propertyName}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </div>
 
       {/* ── Recent Bookings ────────────────────────────────────── */}

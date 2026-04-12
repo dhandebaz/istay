@@ -1,7 +1,7 @@
 import { Head } from "$fresh/runtime.ts";
-import Header from "../components/Header.tsx";
+import Header from "../islands/Header.tsx";
 import Footer from "../components/Footer.tsx";
-import MagicScraperAnimation from "../islands/MagicScraperAnimation.tsx";
+import ListingCarousel from "../islands/ListingCarousel.tsx";
 import ScraperPreview from "../islands/ScraperPreview.tsx";
 
 const FEATURES = [
@@ -351,56 +351,16 @@ export default function Home() {
         <section class="py-24 bg-white overflow-hidden">
           <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-16">
-              <h2 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight">
-                Trusted by <span class="text-mint-500 underline decoration-mint-200">Local Hosts.</span>
+              <h2 class="text-3xl sm:text-4xl font-900 text-gray-900 tracking-tight leading-tight">
+                Featured Properties. <span class="text-mint-500 underline decoration-mint-200">Zero Commission.</span>
               </h2>
-              <p class="mt-4 text-gray-500 text-lg max-w-2xl mx-auto">
-                Join 50+ properties in Delhi & NCR that have already gone independent.
+              <p class="mt-4 text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
+                Browse properties that have already switched to direct bookings. 
+                Locations are verified but hidden for guest privacy until interaction.
               </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  name: "The Blue Door",
-                  location: "Okhla, New Delhi",
-                  image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=800&auto=format&fit=crop",
-                  desc: "Saved ₹12,000 in Airbnb commissions in their first month.",
-                },
-                {
-                  name: "Mint Studio",
-                  location: "Hauz Khas Village",
-                  image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=800&auto=format&fit=crop",
-                  desc: "Converted 80% of repeat guests to direct booking links.",
-                },
-                {
-                  name: "Skyline Penthouse",
-                  location: "Noida Sector 44",
-                  image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=800&auto=format&fit=crop",
-                  desc: "Uses istay's AI Concierge to manage 24/7 guest inquiries.",
-                },
-              ].map((host) => (
-                <div key={host.name} class="group rounded-[2rem] bg-gray-50 border border-transparent hover:border-mint-200 p-4 transition-all duration-300">
-                  <div class="aspect-video rounded-[1.5rem] overflow-hidden mb-6 relative">
-                    <img src={host.image} alt={host.name} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent" />
-                    <div class="absolute bottom-4 left-4">
-                      <p class="text-white font-800 text-lg">{host.name}</p>
-                      <p class="text-white/80 text-xs font-600">{host.location}</p>
-                    </div>
-                  </div>
-                  <p class="text-gray-600 text-sm leading-relaxed px-2 pb-2">
-                    {host.desc}
-                  </p>
-                  <div class="mt-4 px-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-gray-100 text-mint-700 text-[10px] font-800 uppercase tracking-widest shadow-sm">
-                       <span class="w-1.5 h-1.5 rounded-full bg-mint-500" />
-                       Active Host
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <ListingCarousel />
           </div>
         </section>
 
