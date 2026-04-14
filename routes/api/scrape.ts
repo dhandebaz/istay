@@ -13,6 +13,8 @@
 
 import { type Handlers } from "$fresh/server.ts";
 import type { ScrapedListing } from "../../utils/types.ts";
+import { callGemini } from "../../utils/gemini.ts";
+import { uploadToR2 } from "../../utils/storage.ts";
 
 const ALLOWED_HOSTNAMES = [
   "airbnb.com", "airbnb.in", "airbnb.co.uk", "airbnb.com.au", 
@@ -99,6 +101,54 @@ export const handler: Handlers = {
 
       if (!result.imageUrl) {
         return Response.json({ error: "Could not find listing photos. Airbnb might be blocking automated access." }, { status: 422 });
+      }
+
+      // 3. AI Enrichment Turn (Magic Scrape)
+      try {
+        const aiResponse = await callGemini({
+          prompt: `ORGANIZATION: istay.space
+TASK: Refine this scraped airbnb listing into a premium SaaS schema and draft a "Concierge Knowledge Base" markdown block.
+
+DATA:
+Title: ${result.name}
+Description: ${result.description}
+Location: ${result.locationName}
+
+REQUIREMENTS:
+1. Identify 5-8 premium amenities (as an array).
+2. Write a 2-paragraph "House Vibe & Rules" summary in Markdown for the AI Concierge.
+3. Keep the tone sophisticated and professional.
+
+RETURN JSON:
+{
+  "amenities": ["Amenity 1", "..."],
+  "aiKnowledge": "# House Highlights\\n...\\n# House Rules\\n..."
+}`,
+          systemPrompt: "You are the istay AI Onboarding Specialist. Return ONLY valid JSON.",
+          jsonMode: true,
+        });
+
+        const enrichment = JSON.parse(aiResponse.text);
+        result.amenities = enrichment.amenities;
+        result.aiKnowledge = enrichment.aiKnowledge;
+      } catch (e) {
+        console.warn("[scrape] AI Enrichment failed, returning raw data", e);
+      }
+
+      // 4. Permanize Image to R2
+      try {
+        const imgRes = await fetch(result.imageUrl, { headers: BROWSER_HEADERS });
+        if (imgRes.ok) {
+          const buffer = new Uint8Array(await imgRes.arrayBuffer());
+          const hash = crypto.randomUUID().slice(0, 8);
+          const r2Path = `properties/${hash}.jpg`;
+          
+          const publicUrl = await uploadToR2(buffer, r2Path, "image/jpeg", true);
+          result.imageUrl = publicUrl;
+          console.log(`[scrape] Permanized image to R2: ${publicUrl}`);
+        }
+      } catch (e) {
+        console.warn("[scrape] Failed to permanize image, falling back to original URL", e);
       }
 
       return Response.json(result);

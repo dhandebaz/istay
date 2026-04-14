@@ -46,9 +46,11 @@ export const handler: Handlers = {
         email: lowerEmail,
         passwordHash: hash,
         salt,
+        role: "owner",
         emailVerified: false,
         verifyToken,
       });
+
 
       // Dispatch Brevo email in background (no await blocking)
       sendVerificationEmail(lowerEmail, name.trim(), verifyToken).catch(console.error);

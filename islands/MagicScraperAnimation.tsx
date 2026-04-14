@@ -62,15 +62,18 @@ export default function MagicScraperAnimation() {
 
         {/* Step 2: Building */}
         <div class={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-out ${step === 2 ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
-          <div class="relative w-16 h-16 mb-6">
-            <div class="absolute inset-0 rounded-full border-4 border-gray-100" />
-            <div class="absolute inset-0 rounded-full border-4 border-t-mint-500 border-r-mint-500 border-b-transparent border-l-transparent animate-spin" />
-            <div class="absolute inset-0 flex items-center justify-center text-lg">✨</div>
+          <div class="relative w-20 h-20 mb-8">
+            <div class="absolute inset-0 rounded-full border-4 border-gray-100/20" />
+            <div class="absolute inset-0 rounded-full border-4 border-t-teal-400 border-r-teal-500 border-b-transparent border-l-transparent animate-spin" />
+            <div class="absolute inset-0 flex items-center justify-center text-2xl animate-pulse">🪄</div>
           </div>
-          <p class="text-base font-800 text-gray-900">Building your istay page...</p>
-          <div class="flex items-center gap-2 mt-3">
-             <span class="w-2 h-2 rounded-full bg-mint-500" />
-             <p class="text-xs font-600 text-gray-500">Syncing iCal availability</p>
+          <p class="text-base font-800 text-gray-900 tracking-tight">AI Mapping Vibe...</p>
+          <div class="flex flex-col items-center gap-2 mt-4">
+             <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-ping" />
+                <p class="text-[11px] font-700 uppercase tracking-widest text-teal-600">Drafting Knowledge Base</p>
+             </div>
+             <p class="text-[10px] font-500 text-gray-400">Time to value: ~2s remaining</p>
           </div>
         </div>
 

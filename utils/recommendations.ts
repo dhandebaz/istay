@@ -14,7 +14,9 @@ import {
   getPropertyById,
   listAllPropertyIndices,
   getProperty,
+  listBlockedDates,
 } from "./db.ts";
+
 import { callGemini, GeminiError } from "./gemini.ts";
 import type { Property, VibeMatch } from "./types.ts";
 
@@ -111,7 +113,10 @@ function extractCity(address: string | undefined): string | null {
 // Searches same-city properties across ALL hosts, not just the same host.
 export async function getVibeMatches(
   currentPropId: string,
+  checkIn?: string,
+  checkOut?: string,
 ): Promise<VibeMatch[]> {
+
   const currentProp = await getPropertyById(currentPropId);
   if (!currentProp) return [];
 
@@ -131,6 +136,12 @@ export async function getVibeMatches(
 
       const propCity = extractCity(prop.address);
       if (propCity && propCity === currentCity) {
+        // Availability Filter
+        if (checkIn && checkOut) {
+          const blocks = await listBlockedDates(propId);
+          const isBlocked = blocks.some(b => b.date >= checkIn && b.date < checkOut);
+          if (isBlocked) continue; // Skip if unavailable for requested range
+        }
         candidates.push(prop);
       }
     }
@@ -139,10 +150,19 @@ export async function getVibeMatches(
   // Strategy 2: Fallback to same-host properties if no city matches
   if (candidates.length === 0) {
     const allProps = await listProperties(currentProp.hostId);
-    candidates = allProps
-      .filter((p) => p.id !== currentPropId && p.status === "active")
-      .slice(0, MAX_CANDIDATES);
+    for (const p of allProps) {
+      if (p.id === currentPropId || p.status !== "active") continue;
+      if (candidates.length >= MAX_CANDIDATES) break;
+
+      if (checkIn && checkOut) {
+        const blocks = await listBlockedDates(p.id);
+        const isBlocked = blocks.some(b => b.date >= checkIn && b.date < checkOut);
+        if (isBlocked) continue;
+      }
+      candidates.push(p);
+    }
   }
+
 
   if (candidates.length === 0) return [];
 

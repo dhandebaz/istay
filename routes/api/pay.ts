@@ -80,7 +80,31 @@ export const handler: Handlers = {
       return Response.json({ error: "Invalid JSON body" }, { status: 400 });
     }
 
-    const { bookingId, amount, hostVendorId, guestEmail, guestName, guestPhone } = body;
+    const { bookingId, amount, hostVendorId, guestEmail, guestName, guestPhone, type } = body;
+
+    // ── ONBOARDING SETUP FEE FLOW ──
+    if (type === "setup_fee") {
+      const hostId = getHostId(req);
+      if (!hostId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+      const txnid = `setup_${hostId}_${Date.now()}`;
+      const params: any = {
+        key: EASEBUZZ_KEY,
+        txnid,
+        amount: "1000.00",
+        productinfo: "iStay Lifetime Setup Fee",
+        firstname: guestName || "Host",
+        email: guestEmail || "host@example.com",
+        phone: guestPhone || "9999999999",
+        surl: `https://istay.space/host/dashboard?onboard=success`,
+        furl: `https://istay.space/host/dashboard?onboard=failed`,
+        udf1: hostId,
+        udf2: "onboarding",
+      };
+
+      params.hash = await generateHash(params, EASEBUZZ_SALT);
+      return await initiateEasebuzz(params, txnid, "setup_fee", 1000, 0, 1000);
+    }
 
     if (!bookingId || !amount || !hostVendorId || !guestEmail || !guestName) {
       return Response.json(
@@ -176,3 +200,48 @@ export const handler: Handlers = {
     }
   },
 };
+
+/**
+ * Reusable Easebuzz initiation helper
+ */
+async function initiateEasebuzz(params: any, txnid: string, bookingId: string, amount: number, hostAmount: number, istayAmount: number) {
+  const formData = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    formData.append(key, value as string);
+  }
+
+  const ebRes = await fetch(`${EASEBUZZ_BASE_URL}/payment/initiate.php`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/ x-www-form-urlencoded",
+      "Accept": "application/json",
+    },
+    body: formData.toString(),
+  });
+
+  const ebData = await ebRes.json();
+  if (ebData.status !== 1) {
+    return Response.json({ error: "Easebuzz initiation failed", details: ebData.data }, { status: 502 });
+  }
+
+  return Response.json({
+    ok: true,
+    order: { orderId: txnid, bookingId, amount, hostAmount, istayAmount, status: "created", createdAt: new Date().toISOString() },
+    access_key: ebData.data,
+  });
+}
+
+function parseCookies(header: string | null): Record<string, string> {
+  const cookies: Record<string, string> = {};
+  if (!header) return cookies;
+  for (const part of header.split(";")) {
+    const [key, ...vals] = part.trim().split("=");
+    if (key) cookies[key.trim()] = vals.join("=").trim();
+  }
+  return cookies;
+}
+
+function getHostId(req: Request): string | null {
+  const cookies = parseCookies(req.headers.get("cookie"));
+  return cookies["host_session"] || null;
+}

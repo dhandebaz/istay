@@ -112,16 +112,16 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
   ];
 
   const SidebarContent = () => (
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full bg-slate-900/95 backdrop-blur-xl">
       {/* Logo */}
-      <div class="flex items-center px-4 h-16 border-b border-gray-100/80 flex-shrink-0">
+      <div class="flex items-center px-6 h-20 border-b border-white/5 flex-shrink-0">
         <a href="/" class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95">
-          <img src="/logo.svg" alt="istay logo" class="h-8 w-auto px-1" />
+          <img src="/logo.svg" alt="istay logo" class="h-8 w-auto brightness-0 invert" />
         </a>
       </div>
 
       {/* Navigation */}
-      <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5" aria-label="Dashboard navigation">
+      <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1" aria-label="Dashboard navigation">
         {NAV_ITEMS.map((item) => {
           const active = isActive(item);
           return (
@@ -134,51 +134,52 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
               }}
               aria-current={active ? "page" : undefined}
               class={`
-                flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-500 transition-all duration-150
-                cursor-pointer
+                flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-600 transition-all duration-200
+                cursor-pointer border border-transparent
                 ${
                 active
-                  ? "bg-istay-900 text-white shadow-md"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  ? "bg-gradient-to-r from-teal-500/20 to-teal-600/10 text-teal-400 border-teal-500/20 shadow-[0_0_20px_rgba(20,184,166,0.1)]"
+                  : "text-gray-400 hover:text-gray-100 hover:bg-white/5 active:bg-white/10"
               }
               `}
             >
-              <span class={active ? "text-white" : "text-gray-400"}>
+              <span class={active ? "text-teal-400" : "text-gray-500 transition-colors group-hover:text-gray-300"}>
                 {item.icon}
               </span>
               <span class="flex-1">{item.label}</span>
+              {active && <div class="w-1.5 h-1.5 rounded-full bg-teal-400 shadow-[0_0_10px_rgba(20,184,166,0.8)]" />}
             </a>
           );
         })}
       </nav>
 
       {/* Bottom Section */}
-      <div class="flex-shrink-0 border-t border-gray-100 px-3 py-4 space-y-1">
+      <div class="flex-shrink-0 border-t border-white/5 px-4 py-6 space-y-4 bg-black/20">
         {/* Legal links */}
-        <div class="px-3 pb-3">
-          <p class="text-xs font-600 uppercase tracking-wider text-gray-400 mb-2">
-            Legal
+        <div class="px-4">
+          <p class="text-[10px] font-800 uppercase tracking-widest text-gray-500 mb-3 ml-1">
+            Global Compliance
           </p>
-          {LEGAL_LINKS.map(({ href, label }) => (
-            <a
-              key={href}
-              href={href}
-              class="block text-xs text-gray-400 hover:text-gray-600 py-0.5 transition-colors duration-150"
-            >
-              {label}
-            </a>
-          ))}
+          <div class="flex flex-wrap gap-x-4 gap-y-1">
+            {LEGAL_LINKS.map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                class="text-[11px] text-gray-500 hover:text-teal-400 transition-colors duration-200"
+              >
+                {label}
+              </a>
+            ))}
+          </div>
         </div>
 
-        {/* Version badge */}
-        <div class="px-3 py-2 rounded-xl bg-gray-50 border border-gray-100">
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-gray-400">Lifetime Plan</span>
-            <span class="text-xs px-1.5 py-0.5 rounded-full bg-istay-50 text-istay-700 font-600">
-              Active
-            </span>
+        {/* Account state badge */}
+        <div class="px-4 mx-2 py-3 rounded-2xl bg-teal-500/5 border border-teal-500/10 group cursor-default">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs text-gray-500 font-500">Service Status</span>
+            <span class="flex h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
           </div>
-          <p class="text-xs text-gray-400 mt-0.5">5% per booking</p>
+          <p class="text-[11px] font-600 text-gray-400">All Systems Operational</p>
         </div>
       </div>
     </div>
@@ -188,7 +189,7 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
     <>
       {/* Desktop Sidebar */}
       <aside
-        class="hidden md:flex flex-shrink-0 w-60 flex-col bg-white border-r border-gray-100 shadow-sm"
+        class="hidden md:flex flex-shrink-0 w-64 flex-col bg-slate-900 border-r border-white/5 shadow-2xl z-30"
         aria-label="Sidebar"
       >
         <SidebarContent />

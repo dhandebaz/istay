@@ -2,6 +2,8 @@ import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 import { getBookingById, getGuestVerification, getKnowledgeByPropId, getPropertyById, listBlockedDates, recordPropertyView } from "../../utils/db.ts";
 import { getVibeMatches } from "../../utils/recommendations.ts";
+import { getDynamicPrice } from "../../utils/pricing.ts";
+
 import type { Booking, GuestVerification, Property, VibeMatch, HostKnowledge } from "../../utils/types.ts";
 import BookingCalendar from "../../islands/BookingCalendar.tsx";
 import BookingFlow from "../../islands/BookingFlow.tsx";
@@ -12,6 +14,10 @@ interface PropertyPageData {
   blockedDates: string[];
   vibeMatches: VibeMatch[];
   isHighlyBooked: boolean;
+  dynamicBasePrice: number;
+  yieldRules: string[];
+
+
   bookingData?: {
     booking: Booking;
     verification: GuestVerification | null;
@@ -46,15 +52,25 @@ export const handler: Handlers<PropertyPageData> = {
     const blockedNext30 = blockedDates.filter((d) => next30.has(d)).length;
     const isHighlyBooked = blockedNext30 >= 18; // 60% of 30
 
-    // If highly booked, fetch Vibe Match recommendations
+    // Dynamic Pricing (Yield Management)
+    const todayStr = today.toISOString().slice(0, 10);
+    const pricingRes = await getDynamicPrice(propId, property.basePrice, todayStr);
+    const dynamicBasePrice = pricingRes.finalPrice;
+    const yieldRules = pricingRes.appliedRules;
+
+
+    // If highly booked, fetch Vibe Match recommendations (availability-aware)
     let vibeMatches: VibeMatch[] = [];
     if (isHighlyBooked) {
       try {
-        vibeMatches = await getVibeMatches(propId);
+        const checkIn = url.searchParams.get("checkIn");
+        const checkOut = url.searchParams.get("checkOut");
+        vibeMatches = await getVibeMatches(propId, checkIn || undefined, checkOut || undefined);
       } catch (err) {
         console.error("[propPage] Vibe match error:", err);
       }
     }
+
 
     let bookingData;
     if (bookingId) {
@@ -68,7 +84,17 @@ export const handler: Handlers<PropertyPageData> = {
       }
     }
 
-    return ctx.render({ property, blockedDates, vibeMatches, isHighlyBooked, bookingData });
+    return ctx.render({ 
+      property, 
+      blockedDates, 
+      vibeMatches, 
+      isHighlyBooked, 
+      dynamicBasePrice,
+      yieldRules,
+      bookingData 
+    });
+
+
   },
 };
 
@@ -166,11 +192,17 @@ export default function PropertyPage(
               <div class="flex items-center justify-between pb-6 border-b border-gray-100">
                 <div>
                   <span class="text-4xl font-900 text-mint-600">
-                    {formatINR(property.basePrice)}
+                    {formatINR(data.dynamicBasePrice)}
                   </span>
+
                   <span class="text-gray-400 text-base ml-1 font-500">/ night</span>
                 </div>
                 <div class="flex items-center gap-3">
+                  {data.yieldRules.map(rule => (
+                    <span key={rule} class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-800 uppercase tracking-tight">
+                       ⚡ {rule}
+                    </span>
+                  ))}
                   <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-mint-50 text-mint-700 text-xs font-700">
                     ✨ 0% OTA Commission
                   </span>
@@ -328,13 +360,15 @@ export default function PropertyPage(
                     verificationStatus={bookingData.verification?.status || "pending"}
                     instructionsContent={bookingData.knowledge?.content}
                     propertyName={property.name}
+                    propertyImage={property.imageUrl}
                   />
                 ) : (
                   <BookingCalendar
                     blockedDates={blockedDates}
-                    basePrice={property.basePrice}
+                    basePrice={data.dynamicBasePrice}
                     propId={property.id}
                   />
+
                 )}
               </div>
             </div>
@@ -343,7 +377,7 @@ export default function PropertyPage(
       </div>
 
       {/* AI Concierge Chat Bubble */}
-      <GuestChat propId={property.id} propertyName={property.name} />
+      <GuestChat propId={property.id} propertyName={property.name} propertyImage={property.imageUrl} />
     </>
   );
 }

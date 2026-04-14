@@ -341,12 +341,18 @@ export default function BookingCalendar(
                 <p class="text-[11px] font-700 text-amber-900 leading-tight">Sold Out for these dates!</p>
                 <p class="text-[10px] text-amber-700 mt-1">This stay is fully booked. Want to see similar vibes nearby?</p>
                 <a 
-                  href="#vibe-match" 
+                  href={`#vibe-match?checkIn=${checkIn.value || ""}`} 
                   class="mt-2 block w-full py-2 rounded-lg bg-amber-200 text-amber-900 text-center text-[10px] font-800 hover:bg-amber-300 transition-colors"
-                  onClick={() => (showSoldOutAlert.value = false)}
+                  onClick={(e) => {
+                    if (checkIn.value) {
+                      e.preventDefault();
+                      globalThis.location.href = `?checkIn=${checkIn.value}#vibe-match`;
+                    }
+                  }}
                 >
                   See Similar Stays You'll Love →
                 </a>
+
               </div>
             )}
             <p class="text-xs text-gray-400 text-center py-2">

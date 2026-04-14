@@ -5,6 +5,10 @@ import { listNotifications, getDashboardStats, listBookings, listProperties, get
 import type { Booking, DashboardState, DashboardStats, Notification } from "../../utils/types.ts";
 import LinkPerformanceChart from "../../islands/LinkPerformanceChart.tsx";
 import EarningsComparison from "../../islands/EarningsComparison.tsx";
+import FinancialLedger from "../../islands/FinancialLedger.tsx";
+import { calculateMonthlyMetrics, getFinancialInsights, type MonthlyMetrics, type FinancialInsight } from "../../utils/analytics.ts";
+import { listLedgerEntriesByHost } from "../../utils/db.ts";
+import type { LedgerEntry } from "../../utils/types.ts";
 
 interface OverviewData {
   stats: DashboardStats;
@@ -14,6 +18,10 @@ interface OverviewData {
   chartData: Array<{ date: string; views: number; bookings: number }>;
   chartTotalViews: number;
   chartTotalBookings: number;
+  // Professional Analytics (Phase 10)
+  analytics: MonthlyMetrics;
+  insights: FinancialInsight;
+  ledgerEntries: LedgerEntry[];
 }
 export const handler: Handlers<OverviewData, DashboardState> = {
   GET: async (_req, ctx) => {
@@ -22,12 +30,20 @@ export const handler: Handlers<OverviewData, DashboardState> = {
     const hostEntry = await kv.get(["host", hostId]);
     const setupFeePaid = (hostEntry.value as any)?.setupFeePaid ?? false;
 
-    const [stats, allBookings, properties, notifications] = await Promise.all([
+    const [stats, allBookings, properties, notifications, ledgerEntries] = await Promise.all([
       getDashboardStats(hostId),
       listBookings(hostId),
       listProperties(hostId),
       listNotifications(hostId),
+      listLedgerEntriesByHost(hostId),
     ]);
+
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    const [analytics, insights] = await Promise.all([
+      calculateMonthlyMetrics(hostId, currentMonth),
+      getFinancialInsights(hostId),
+    ]);
+
     const recentBookings = allBookings.slice(0, 5);
 
     // ── Build daily chart data (aggregate across all properties) ──
@@ -61,6 +77,9 @@ export const handler: Handlers<OverviewData, DashboardState> = {
       chartData,
       chartTotalViews,
       chartTotalBookings,
+      analytics,
+      insights,
+      ledgerEntries,
     });
   },
 };
@@ -128,7 +147,10 @@ const STATUS_STYLES: Record<string, string> = {
 export default function DashboardOverview(
   { data }: PageProps<OverviewData>,
 ) {
-  const { stats, recentBookings, notifications, chartData, chartTotalViews, chartTotalBookings } = data;
+  const { 
+    stats, recentBookings, notifications, chartData, 
+    chartTotalViews, chartTotalBookings, analytics, insights, ledgerEntries 
+  } = data;
   const month = new Date().toLocaleString("en-IN", {
     month: "long",
     year: "numeric",
@@ -170,77 +192,36 @@ export default function DashboardOverview(
         </p>
       </div>
 
-      {/* ── Stats Grid ─────────────────────────────────────────── */}
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-8">
-        <StatCard
-          label="Active Bookings"
-          value={String(stats.activeBookings)}
-          sub="Upcoming confirmed stays"
-          gradient="bg-gradient-to-br from-istay-900 to-istay-700"
-          icon={
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <rect x="3" y="4" width="14" height="13" rx="2" stroke="white" stroke-width="1.5" />
-              <path d="M7 2V6M13 2V6M3 8.5H17" stroke="white" stroke-width="1.5" stroke-linecap="round" />
-            </svg>
-          }
-        />
-        <StatCard
-          label="Monthly Earnings"
-          value={formatINR(stats.monthlyEarnings)}
-          sub={`Net (95% share) · ${month}`}
-          gradient="bg-gradient-to-br from-violet-500 to-purple-600"
-          icon={
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path
-                d="M10 2V4M10 16V18M4.22 4.22L5.64 5.64M14.36 14.36L15.78 15.78M2 10H4M16 10H18M4.22 15.78L5.64 14.36M14.36 5.64L15.78 4.22"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-              <circle cx="10" cy="10" r="4" stroke="white" stroke-width="1.5" />
-            </svg>
-          }
-        />
-        <StatCard
-          label="Blocked Dates"
-          value={String(stats.blockedDates)}
-          sub="Future unavailable dates"
-          gradient="bg-gradient-to-br from-orange-400 to-rose-500"
-          icon={
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <circle cx="10" cy="10" r="7" stroke="white" stroke-width="1.5" />
-              <path d="M4.93 4.93L15.07 15.07" stroke="white" stroke-width="1.5" stroke-linecap="round" />
-            </svg>
-          }
-        />
-        <StatCard
-          label="Properties"
-          value={String(stats.totalProperties)}
-          sub="Listed in your dashboard"
-          gradient="bg-gradient-to-br from-sky-400 to-blue-600"
-          icon={
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path
-                d="M10 2L2 8V18H8V13H12V18H18V8L10 2Z"
-                stroke="white"
-                stroke-width="1.5"
-                stroke-linejoin="round"
-              />
-            </svg>
-          }
-        />
-        <StatCard
-          label="Link Performance"
-          value={String(stats.linkViews7Days)}
-          sub="Profile views (7 days)"
-          gradient="bg-gradient-to-br from-mint-500 to-teal-600"
-          icon={
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
-              <circle cx="12" cy="12" r="3"/>
-            </svg>
-          }
-        />
+
+      {/* ── Phase 10: Advanced Insight Grid ────────────────────── */}
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest mb-1">Occupancy Rate</p>
+            <p class="text-2xl font-900 text-gray-900">{analytics.occupancyRate}%</p>
+            <div class="mt-2 w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+              <div class="bg-mint-500 h-full rounded-full" style={`width: ${analytics.occupancyRate}%`} />
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest mb-1">ADR (Avg Daily Rate)</p>
+            <p class="text-2xl font-900 text-gray-900">{formatINR(analytics.adr)}</p>
+            <p class="text-[10px] text-emerald-600 font-700 mt-1">Direct Rev: {formatINR(analytics.grossRevenue)}</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-white bg-gradient-to-br from-istay-900 to-istay-700">
+            <p class="text-[10px] font-800 text-white/60 uppercase tracking-widest mb-1">RevPAR</p>
+            <p class="text-2xl font-900">{formatINR(analytics.revPar)}</p>
+            <p class="text-[10px] text-mint-400 font-700 mt-1">Growth: {insights.growth > 0 ? `+${insights.growth}%` : `${insights.growth}%`}</p>
+          </div>
+        </div>
+
+        <div class="bg-mint-50 rounded-2xl p-6 border border-mint-200 relative overflow-hidden flex flex-col justify-center">
+           <p class="text-[10px] font-800 text-mint-700 uppercase tracking-widest mb-1">Top Performer</p>
+           <p class="text-lg font-900 text-mint-900 truncate">{insights.topPropertyName}</p>
+           <p class="text-xs text-mint-600 font-600">{insights.growth >= 0 ? 'Trending Up 📈' : 'Requires Optimization 📉'}</p>
+           {/* Decorative bg icon */}
+           <span class="absolute -right-4 -bottom-4 text-6xl opacity-10">🏆</span>
+        </div>
       </div>
       
       {/* ── OTA Savings Module ✨ ─────────────────────────────── */}
@@ -454,9 +435,12 @@ export default function DashboardOverview(
               </table>
             </div>
           )}
-      </div>
-    </>
-  );
+        </div>
+        {/* ── Phase 10: Financial Audit Forensic Ledger ─────────── */}
+        <FinancialLedger entries={ledgerEntries} />
+
+      </>
+    );
 }
 
 function getGreeting(): string {

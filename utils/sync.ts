@@ -10,8 +10,12 @@ import {
   blockDate,
   getProperty,
   listAllPropertyIndices,
+  listBlockedDates,
+  unblockDate,
 } from "./db.ts";
 import { extractBlockedDates } from "./ical.ts";
+import { type CalendarBlock } from "./types.ts";
+
 
 const ICAL_FETCH_TIMEOUT_MS = 10_000;
 const USER_AGENT = "istay/1.0 Calendar Sync (+https://istay.space)";
@@ -64,16 +68,41 @@ export async function syncPropertyCalendar(
     const allDates = extractBlockedDates(icsText);
 
     const todayStr = new Date().toISOString().slice(0, 10);
-    let synced = 0;
+    
+    // ── Differential Sync Logic ──
+    // 1. Fetch current ical blocks from KV
+    const currentBlocks = (await listBlockedDates(propId))
+      .filter((b: any) => b.reason === "ical" && b.date >= todayStr);
+    
+    const currentDates = new Set(currentBlocks.map((b: any) => b.date));
 
-    for (const date of allDates) {
-      // Only store future (or today's) dates — saves KV space
-      if (date < todayStr) continue;
+    const newDates = new Set(allDates.filter((d) => d >= todayStr));
+
+    // 2. Identify dates to remove (in KV but not in fresh iCal)
+    const datesToDelete = [...currentDates].filter((d) => !newDates.has(d));
+    for (const date of datesToDelete) {
+      await unblockDate(propId, date);
+    }
+
+    // 3. Identify and upsert new dates
+    let synced = 0;
+    const existingBlocks = await listBlockedDates(propId);
+    
+    for (const date of newDates) {
+      const existing = existingBlocks.find((b: any) => b.date === date);
+
+      // Operational Precedence: Do NOT overwrite manual blocks or real bookings with iCal sync
+      if (existing && (existing.reason === "manual_block" || existing.reason === "booked")) {
+        continue;
+      }
+      
       await blockDate({ propertyId: propId, date, reason: "ical" });
       synced++;
     }
 
-    console.log(`[sync] prop=${propId}: synced ${synced} future dates`);
+    console.log(
+      `[sync] prop=${propId}: synced ${synced} dates, removed ${datesToDelete.length} orphaned blocks`,
+    );
     return { propId, icsUrl, synced, skipped: false };
   } catch (err) {
     clearTimeout(timer);

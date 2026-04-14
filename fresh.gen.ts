@@ -4,6 +4,7 @@
 
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
+import * as $_middleware from "./routes/_middleware.ts";
 import * as $api_auth_forgot from "./routes/api/auth/forgot.ts";
 import * as $api_auth_login from "./routes/api/auth/login.ts";
 import * as $api_auth_logout from "./routes/api/auth/logout.ts";
@@ -16,6 +17,10 @@ import * as $api_chat from "./routes/api/chat.ts";
 import * as $api_contact from "./routes/api/contact.ts";
 import * as $api_cron_reviews from "./routes/api/cron/reviews.ts";
 import * as $api_cron_sync from "./routes/api/cron/sync.ts";
+import * as $api_host_api_key_rotate from "./routes/api/host/api-key/rotate.ts";
+import * as $api_host_team from "./routes/api/host/team.ts";
+import * as $api_host_team_invite from "./routes/api/host/team/invite.ts";
+import * as $api_host_webhooks_add from "./routes/api/host/webhooks/add.ts";
 import * as $api_ical_propId_ from "./routes/api/ical/[propId].ts";
 import * as $api_invoice_bookingId_ from "./routes/api/invoice/[bookingId].ts";
 import * as $api_knowledge from "./routes/api/knowledge.ts";
@@ -62,6 +67,7 @@ import * as $BookingFlow from "./islands/BookingFlow.tsx";
 import * as $CaretakerChecklist from "./islands/CaretakerChecklist.tsx";
 import * as $CheckoutForm from "./islands/CheckoutForm.tsx";
 import * as $DashboardSidebar from "./islands/DashboardSidebar.tsx";
+import * as $DeveloperApi from "./islands/DeveloperApi.tsx";
 import * as $EarningsCalculator from "./islands/EarningsCalculator.tsx";
 import * as $EarningsComparison from "./islands/EarningsComparison.tsx";
 import * as $ForgotPasswordForm from "./islands/ForgotPasswordForm.tsx";
@@ -80,13 +86,16 @@ import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
 import * as $RegisterForm from "./islands/RegisterForm.tsx";
 import * as $ResendVerificationBtn from "./islands/ResendVerificationBtn.tsx";
 import * as $ScraperPreview from "./islands/ScraperPreview.tsx";
+import * as $SettingsTabs from "./islands/SettingsTabs.tsx";
 import * as $SupplyRequest from "./islands/SupplyRequest.tsx";
+import * as $TeamManagement from "./islands/TeamManagement.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
+    "./routes/_middleware.ts": $_middleware,
     "./routes/api/auth/forgot.ts": $api_auth_forgot,
     "./routes/api/auth/login.ts": $api_auth_login,
     "./routes/api/auth/logout.ts": $api_auth_logout,
@@ -99,6 +108,10 @@ const manifest = {
     "./routes/api/contact.ts": $api_contact,
     "./routes/api/cron/reviews.ts": $api_cron_reviews,
     "./routes/api/cron/sync.ts": $api_cron_sync,
+    "./routes/api/host/api-key/rotate.ts": $api_host_api_key_rotate,
+    "./routes/api/host/team.ts": $api_host_team,
+    "./routes/api/host/team/invite.ts": $api_host_team_invite,
+    "./routes/api/host/webhooks/add.ts": $api_host_webhooks_add,
     "./routes/api/ical/[propId].ts": $api_ical_propId_,
     "./routes/api/invoice/[bookingId].ts": $api_invoice_bookingId_,
     "./routes/api/knowledge.ts": $api_knowledge,
@@ -147,6 +160,7 @@ const manifest = {
     "./islands/CaretakerChecklist.tsx": $CaretakerChecklist,
     "./islands/CheckoutForm.tsx": $CheckoutForm,
     "./islands/DashboardSidebar.tsx": $DashboardSidebar,
+    "./islands/DeveloperApi.tsx": $DeveloperApi,
     "./islands/EarningsCalculator.tsx": $EarningsCalculator,
     "./islands/EarningsComparison.tsx": $EarningsComparison,
     "./islands/ForgotPasswordForm.tsx": $ForgotPasswordForm,
@@ -165,7 +179,9 @@ const manifest = {
     "./islands/RegisterForm.tsx": $RegisterForm,
     "./islands/ResendVerificationBtn.tsx": $ResendVerificationBtn,
     "./islands/ScraperPreview.tsx": $ScraperPreview,
+    "./islands/SettingsTabs.tsx": $SettingsTabs,
     "./islands/SupplyRequest.tsx": $SupplyRequest,
+    "./islands/TeamManagement.tsx": $TeamManagement,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

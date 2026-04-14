@@ -18,6 +18,19 @@ export interface Host {
   cashfreeVendorId?: string;
   createdAt: string; // ISO 8601
   updatedAt: string;
+  /** Encrypted Agency API key for Open API access */
+  apiKey?: string;
+  /** Active webhook subscriptions for this agency */
+  webhooks?: WebhookConfig[];
+}
+
+export interface WebhookConfig {
+  id: string;
+  url: string;
+  /** Webhook secret for HMAC signing (encrypted) */
+  secret: string;
+  event: "booking_confirmed" | "verification_complete" | "room_ready" | "all";
+  active: boolean;
 }
 
 export interface AuthRecord {
@@ -25,6 +38,8 @@ export interface AuthRecord {
   email: string;
   passwordHash: string;
   salt: string;
+  /** Role in the host organization */
+  role: "owner" | "manager" | "staff" | "accountant";
   emailVerified?: boolean;
   verifyToken?: string;
   resetToken?: string;
@@ -51,6 +66,8 @@ export interface Property {
    * Provides "unauthenticated-but-secure" access for staff.
    */
   caretakerToken?: string;
+  caretakerPhone?: string;
+  caretakerName?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -71,13 +88,15 @@ export interface Booking {
   nights: number;
   /** Total gross booking amount in INR */
   amount: number;
-  status: "pending" | "confirmed" | "room_ready" | "cancelled" | "refunded";
+  status: "pending" | "confirmed" | "room_ready" | "cancelled" | "refunded" | "needs_review";
   /** Gateway Order ID (txnid) */
   gatewayOrderId?: string;
   /** Gateway Payment Session / Access Key */
   paymentSessionId?: string;
   /** Whether guest ID has been verified */
   idVerified?: boolean;
+  caretakerPhone?: string;
+  caretakerName?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -114,7 +133,9 @@ export interface Notification {
   type:
     | "supply_request"
     | "housekeeping_ready"
+    | "housekeeping_issue"
     | "booking_confirmed"
+    | "confirmed"
     | "checkin_reminder"
     | "verification_complete"
     | "verification_failed"
@@ -142,8 +163,8 @@ export interface GuestVerification {
   bookingId: string;
   guestName: string;
   idType: "aadhaar" | "passport" | "driving_licence" | "voter_id" | "other";
-  /** Base64 preview of the uploaded ID (truncated to ~2KB for KV) */
-  idPreviewB64?: string;
+  /** R2 object key for the uploaded ID */
+  idObjectKey?: string;
   status: "pending" | "processing" | "verified" | "failed";
   /** Extracted data from OCR */
   extractedData?: {
@@ -173,6 +194,8 @@ export interface PrivateVerification {
   dob?: string;
   /** Full ID number (stored securely, host-only access) */
   idNumber?: string;
+  /** R2 object key for full resolution audit */
+  idObjectKey?: string;
   /** Full address from ID */
   address?: string;
   /** OCR match score (0-100) */
@@ -200,8 +223,10 @@ export interface HostKnowledge {
 
 /** A single message in a guest chat session */
 export interface ChatMessage {
-  role: "user" | "model";
+  role: "user" | "model" | "function";
   content: string;
+  /** Gemini-compatible parts (for tool calls/results) */
+  parts?: any[];
   timestamp: string;
 }
 
@@ -243,7 +268,34 @@ export interface VibeMatch {
   reason: string;
 }
 
+/**
+ * GuestProfile — Hyper-persistent global intelligence across the entire iStay ecosystem.
+ * Indexed by phone number. Enables cross-stay recognition and preference memory.
+ */
+export interface GuestProfile {
+  /** Primary identifier (WhatsApp Source Number) */
+  phone: string;
+  /** Recognized names (may vary across bookings) */
+  names: string[];
+  /** Email addresses associated with this guest */
+  emails: string[];
+  /** Unified preferences learned by AI (e.g. "prefers extra water", "high floor") */
+  preferences: string[];
+  /** Cumulative tracking of stays */
+  stayHistory: Array<{
+    propertyId: string;
+    propertyName: string;
+    checkIn: string;
+    checkOut: string;
+  }>;
+  /** Short AI-generated summary of guest type (e.g. "Business traveler, very quiet") */
+  summary?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // ── API CONTRACTS ─────────────────────────────────────────────
+
 
 export interface ScrapedListing {
   name: string;
@@ -251,6 +303,8 @@ export interface ScrapedListing {
   description: string;
   sourceUrl: string;
   locationName?: string;
+  amenities?: string[];
+  aiKnowledge?: string;
 }
 
 export interface CreatePropertyPayload {
@@ -260,6 +314,7 @@ export interface CreatePropertyPayload {
   basePrice: number;
   airbnbUrl?: string;
   address?: string;
+  amenities?: string[];
 }
 
 export interface CreateBookingPayload {
@@ -290,7 +345,9 @@ export interface PayRequestBody {
   guestEmail: string;
   guestName: string;
   guestPhone?: string;
+  type?: "setup_fee" | "booking";
 }
+
 
 // ── DASHBOARD ─────────────────────────────────────────────────
 
@@ -308,5 +365,6 @@ export interface DashboardState {
   hostId: string;
   hostName: string;
   hostEmail: string;
+  role: "owner" | "manager" | "staff" | "accountant";
   emailVerified: boolean;
 }

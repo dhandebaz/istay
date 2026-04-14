@@ -19,7 +19,28 @@ export interface GeminiTextOptions {
   // System instruction (injected as systemInstruction)
   systemPrompt?: string;
   // Conversation history (for multi-turn chat)
-  history?: Array<{ role: "user" | "model"; content: string }>;
+  history?: Array<{
+    role: "user" | "model" | "function" | "system";
+    content: string;
+    parts?: Array<{
+      text?: string;
+      inlineData?: { mimeType: string; data: string };
+      functionCall?: { name: string; args: Record<string, unknown> };
+      functionResponse?: { name: string; response: Record<string, unknown> };
+    }>;
+  }>;
+  // Tools for function calling
+  tools?: Array<{
+    function_declarations: Array<{
+      name: string;
+      description: string;
+      parameters: {
+        type: string;
+        properties: Record<string, unknown>;
+        required?: string[];
+      };
+    }>;
+  }>;
   // Controls randomness. 0=deterministic, 1=creative. Default: 0.3
   temperature?: number;
   // Max output tokens. Default: 1024
@@ -42,9 +63,16 @@ export interface GeminiVisionOptions {
   jsonMode?: boolean;
 }
 
+export interface GeminiToolCall {
+  name: string;
+  args: Record<string, unknown>;
+}
+
 export interface GeminiResponse {
   // The generated text
   text: string;
+  // Tool calls (if any)
+  toolCalls?: GeminiToolCall[];
   // Estimated input token count
   inputTokens?: number;
   // Estimated output token count
@@ -113,8 +141,16 @@ function parseResponse(data: Record<string, unknown>): GeminiResponse {
 
   const candidate = candidates[0];
   const content = candidate.content as Record<string, unknown> | undefined;
-  const parts = content?.parts as Array<{ text?: string }> | undefined;
+  const parts = content?.parts as Array<Record<string, any>> | undefined;
+  
   const text = parts?.map((p) => p.text ?? "").join("") ?? "";
+  
+  const toolCalls = parts
+    ?.filter((p) => p.functionCall)
+    .map((p) => ({
+      name: p.functionCall.name,
+      args: p.functionCall.args,
+    }));
 
   const finishReason = candidate.finishReason as string | undefined;
 
@@ -123,6 +159,7 @@ function parseResponse(data: Record<string, unknown>): GeminiResponse {
 
   return {
     text: text.trim(),
+    toolCalls: toolCalls && toolCalls.length > 0 ? toolCalls : undefined,
     inputTokens: usageMeta?.promptTokenCount,
     outputTokens: usageMeta?.candidatesTokenCount,
     truncated: finishReason === "MAX_TOKENS",
@@ -144,13 +181,13 @@ export async function callGemini(opts: GeminiTextOptions): Promise<GeminiRespons
   }
 
   // Build contents array (history + current message)
-  const contents: Array<{ role: string; parts: Array<{ text: string }> }> = [];
+  const contents: Array<{ role: string; parts: any[] }> = [];
 
   if (opts.history) {
     for (const msg of opts.history) {
       contents.push({
-        role: msg.role,
-        parts: [{ text: msg.content }],
+        role: msg.role === "function" ? "function" : msg.role,
+        parts: msg.parts || [{ text: msg.content }],
       });
     }
   }
@@ -165,6 +202,10 @@ export async function callGemini(opts: GeminiTextOptions): Promise<GeminiRespons
     generationConfig: buildGenerationConfig(opts),
     safetySettings: buildSafetySettings(),
   };
+
+  if (opts.tools) {
+    body.tools = opts.tools;
+  }
 
   if (opts.systemPrompt) {
     body.systemInstruction = {

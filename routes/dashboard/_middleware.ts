@@ -50,17 +50,17 @@ export async function handler(
     });
   }
 
-  // Parse session cookie: "hostId|hostName" (URL-encoded)
+  // Parse session cookie: "hostId|hostName|role" (URL-encoded)
   let hostId: string;
   let hostName = "Host";
+  let role: "owner" | "manager" | "staff" | "accountant" = "owner";
 
   try {
     const decoded = decodeURIComponent(session);
     const parts = decoded.split("|");
     hostId = parts[0]?.trim() ?? "";
-    if (parts[1]) {
-      hostName = parts[1].trim();
-    }
+    if (parts[1]) hostName = parts[1].trim();
+    if (parts[2]) role = parts[2].trim() as any;
   } catch {
     hostId = session.trim();
   }
@@ -72,43 +72,62 @@ export async function handler(
     });
   }
 
-  // Try to load host from KV to verify they exist and get latest name and setupFee status
-  // Also load AuthRecord to check email verification status
-  let emailVerified = true; // Default true if schema missing
+  // Path-based RBAC enforcement
+  const url = new URL(req.url);
+  const path = url.pathname;
+
+  // ── ROLE GATE LOGIC ──────────────────────────────────────────
+  if (role === "accountant") {
+    // Accountants only see Ledger and Financials
+    const allowed = ["/dashboard", "/dashboard/ledger", "/dashboard/settings"]; // Settings for their own profile
+    if (!allowed.includes(path) && !path.startsWith("/dashboard/api")) {
+      return new Response("Forbidden: Accountant role has restricted access.", { status: 403 });
+    }
+  } else if (role === "staff") {
+    // Staff see Operations, no Financials
+    const forbidden = ["/dashboard/ledger"];
+    if (forbidden.includes(path)) {
+      return new Response("Forbidden: Staff role cannot access financial data.", { status: 403 });
+    }
+  }
+
+  // Try to load host from KV to verify they exist and get latest state
+  let emailVerified = true;
   let hostEmail = "";
   try {
     const kv = await getKv();
     const hostEntry = await kv.get(["host", hostId]);
     if (hostEntry.value) {
-      const host = hostEntry.value as { email: string; name?: string; setupFeePaid?: boolean };
+      const host = hostEntry.value as any;
       hostName = host.name ?? hostName;
       hostEmail = host.email;
       
-      // Crucial part of Onboarding sync: if not paid, route them out of dashboard to pricing
       if (host.setupFeePaid === false) {
-          const redirectTo = new URL(req.url).pathname;
           return new Response(null, {
             status: 302,
-            headers: {
-              Location: `/pricing?auth=onboarding_incomplete&redirect=${encodeURIComponent(redirectTo)}`,
-            },
+            headers: { Location: `/pricing?auth=onboarding_incomplete` },
           });
       }
 
-      // Check Email Verification
-      const authEntry = await kv.get(["auth", host.email.toLowerCase()]);
+      // Final Role Verification (if cookie role is missing/suspect)
+      const authEntry = await kv.get(["auth", hostEmail.toLowerCase()]);
       if (authEntry.value) {
-        const authRecord = authEntry.value as { emailVerified?: boolean };
-        emailVerified = authRecord.emailVerified ?? true; // if missing, assume old account which is verified
+        const auth = authEntry.value as any;
+        emailVerified = auth.emailVerified ?? true;
+        // If the session matches the primary host email, ensure role is owner
+        if (auth.email.toLowerCase() === hostEmail.toLowerCase()) {
+          role = "owner";
+        }
       }
     }
   } catch (err) {
-    console.warn("[middleware] KV lookup failed, using cookie data:", err);
+    console.warn("[middleware] KV lookup failed:", err);
   }
 
   ctx.state.hostId = hostId;
   ctx.state.hostName = hostName;
   ctx.state.hostEmail = hostEmail;
+  ctx.state.role = role;
   ctx.state.emailVerified = emailVerified;
 
   return await ctx.next();

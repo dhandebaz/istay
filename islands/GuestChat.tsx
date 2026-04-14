@@ -2,18 +2,21 @@ import { useSignal, useComputed } from "@preact/signals";
 import { useRef, useEffect } from "preact/hooks";
 
 interface GuestChatProps {
-  /** Property ID — used to route chat to correct knowledge base */
+  /** Property ID — for session persistence */
   propId: string;
   /** Property name — displayed in chat header */
   propertyName: string;
+  /** Property image — used for branding */
+  propertyImage?: string;
 }
+
 
 interface ChatMsg {
   role: "user" | "model";
   content: string;
 }
 
-export default function GuestChat({ propId, propertyName }: GuestChatProps) {
+export default function GuestChat({ propId, propertyName, propertyImage }: GuestChatProps) {
   // ── State ─────────────────────────────────────────────────
   const isOpen = useSignal(false);
   const messages = useSignal<ChatMsg[]>([]);
@@ -205,9 +208,18 @@ export default function GuestChat({ propId, propertyName }: GuestChatProps) {
     <div class="fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-32px)] flex flex-col bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
       style="height: min(520px, calc(100vh - 80px));"
     >
-      {/* Header */}
-      <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-teal-500 to-teal-600 text-white flex-shrink-0">
-        <div class="flex items-center gap-2.5">
+      {/* Header with Bespoke Property Branding */}
+      <div class="relative flex items-center justify-between px-4 py-4 text-white flex-shrink-0 overflow-hidden">
+        {/* Blurred Property Background Layer */}
+        {propertyImage && (
+          <div class="absolute inset-0 z-0">
+            <img src={propertyImage} class="w-full h-full object-cover blur-[8px] scale-110 brightness-75" />
+            <div class="absolute inset-0 bg-teal-900/40 mix-blend-multiply" />
+          </div>
+        )}
+        <div class="absolute inset-0 bg-gradient-to-r from-teal-600/90 to-teal-500/80 z-0" />
+        
+        <div class="relative z-10 flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="white" aria-hidden="true">
               <path d="M8 1L1.5 6V14.5H5.5V10H10.5V14.5H14.5V6L8 1Z" stroke-width="0.3" stroke-linejoin="round" />

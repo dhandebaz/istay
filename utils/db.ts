@@ -17,7 +17,9 @@
 //   ["private_verification", bookingId]       → PrivateVerification (host-only)
 //   ["knowledge", hostId, propId]             → HostKnowledge
 //   ["chat_session", sessionId]               → ChatSession
+//   ["guest_profile", phone]                  → GuestProfile
 // ================================================================
+
 
 import type {
   AuthRecord,
@@ -26,7 +28,9 @@ import type {
   CaretakerToken,
   ChatSession,
   DashboardStats,
+  GuestProfile,
   GuestVerification,
+
   Host,
   HostKnowledge,
   LedgerEntry,
@@ -46,6 +50,72 @@ export async function getKv(): Promise<Deno.Kv> {
   return _kv;
 }
 
+// ── ENCRYPTION HELPERS ────────────────────────────────────────
+
+const ENCRYPTION_KEY = () => Deno.env.get("ENCRYPTION_KEY") || "";
+
+async function getCryptoKey(): Promise<CryptoKey> {
+  const keyStr = ENCRYPTION_KEY();
+  if (!keyStr) {
+    console.error("[db] ENCRYPTION_KEY not set. Using fallback (INSECURE).");
+  }
+  const enc = new TextEncoder();
+  // Pad or truncate to 32 bytes for AES-256
+  const keyData = enc.encode((keyStr || "istay-default-secret-key-32-chars").padEnd(32, "0").slice(0, 32));
+  return await crypto.subtle.importKey(
+    "raw",
+    keyData,
+    { name: "AES-GCM" },
+    false,
+    ["encrypt", "decrypt"],
+  );
+}
+
+async function encryptField(text: string | undefined): Promise<string | undefined> {
+  if (!text) return undefined;
+  try {
+    const key = await getCryptoKey();
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const enc = new TextEncoder();
+    const encrypted = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv },
+      key,
+      enc.encode(text),
+    );
+
+    const combined = new Uint8Array(iv.length + encrypted.byteLength);
+    combined.set(iv);
+    combined.set(new Uint8Array(encrypted), iv.length);
+
+    return btoa(String.fromCharCode(...combined));
+  } catch (err) {
+    console.error("[db] Encryption failed:", err);
+    return text; // Fallback to plaintext if encryption fails (better than crashing, but warned in logs)
+  }
+}
+
+async function decryptField(base64: string | undefined): Promise<string | undefined> {
+  if (!base64) return undefined;
+  try {
+    const key = await getCryptoKey();
+    const combined = new Uint8Array(
+      atob(base64).split("").map((c) => c.charCodeAt(0)),
+    );
+    const iv = combined.slice(0, 12);
+    const data = combined.slice(12);
+
+    const decrypted = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv },
+      key,
+      data,
+    );
+    return new TextDecoder().decode(decrypted);
+  } catch (err) {
+    // If decryption fails, it might be plaintext (legacy)
+    return base64;
+  }
+}
+
 // ── HOST ──────────────────────────────────────────────────────
 
 export async function getHost(id: string): Promise<Host | null> {
@@ -62,6 +132,16 @@ export async function saveHost(data: Host): Promise<void> {
     // Email index mapping email (lowercased) -> hostId
     .set(["host_email", data.email.toLowerCase()], data.id)
     .commit();
+}
+
+export async function listAllHosts(): Promise<Host[]> {
+  const kv = await getKv();
+  const iter = kv.list<Host>({ prefix: ["host"] });
+  const hosts: Host[] = [];
+  for await (const entry of iter) {
+    hosts.push(entry.value);
+  }
+  return hosts;
 }
 
 // ── AUTH & CRYPTO ─────────────────────────────────────────────
@@ -361,6 +441,22 @@ export async function getLedgerEntry(
   return entry.value;
 }
 
+export async function listLedgerEntriesByHost(
+  hostId: string,
+): Promise<LedgerEntry[]> {
+  const kv = await getKv();
+  // We don't have a secondary index for [ledger, hostId], so we'll scan by prefix [ledger]
+  // In a high-volume app, we would add ["ledger_host", hostId, bookingId] for efficiency.
+  const iter = kv.list<LedgerEntry>({ prefix: ["ledger"] });
+  const entries: LedgerEntry[] = [];
+  for await (const entry of iter) {
+    if (entry.value.hostId === hostId) {
+      entries.push(entry.value);
+    }
+  }
+  return entries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
 // ── NOTIFICATIONS ─────────────────────────────────────────────
 
 export async function saveNotification(notif: Notification): Promise<void> {
@@ -472,19 +568,39 @@ export async function getDashboardStats(
   };
 }
 
-// ── HOST KNOWLEDGE BASE ───────────────────────────────────────
+// ── PROPERTY KNOWLEDGE (AI CONTEXT) ──────────────────────────
+
+// Memory cache for Edge performance (5-minute TTL)
+const KNOWLEDGE_CACHE = new Map<string, { data: HostKnowledge; expiry: number }>();
+const KNOWLEDGE_TTL = 5 * 60 * 1000;
 
 export async function saveKnowledge(data: HostKnowledge): Promise<void> {
   const kv = await getKv();
-  await kv.set(["knowledge", data.hostId, data.propertyId], data);
+  await kv.set(["knowledge", data.propertyId], data);
+  // Invalidate cache
+  KNOWLEDGE_CACHE.delete(data.propertyId);
 }
 
 export async function getKnowledge(
-  hostId: string,
   propertyId: string,
 ): Promise<HostKnowledge | null> {
+  // Check memory cache first
+  const cached = KNOWLEDGE_CACHE.get(propertyId);
+  if (cached && cached.expiry > Date.now()) {
+    return cached.data;
+  }
+
   const kv = await getKv();
-  const entry = await kv.get<HostKnowledge>(["knowledge", hostId, propertyId]);
+  const entry = await kv.get<HostKnowledge>(["knowledge", propertyId]);
+  
+  if (entry.value) {
+    // Fill cache
+    KNOWLEDGE_CACHE.set(propertyId, {
+      data: entry.value,
+      expiry: Date.now() + KNOWLEDGE_TTL,
+    });
+  }
+  
   return entry.value;
 }
 
@@ -498,7 +614,8 @@ export async function getKnowledgeByPropId(
   const kv = await getKv();
   const idx = await kv.get<{ hostId: string }>(["prop_index", propertyId]);
   if (!idx.value) return null;
-  return getKnowledge(idx.value.hostId, propertyId);
+  return getKnowledge(propertyId);
+
 }
 
 // ── CHAT SESSIONS ─────────────────────────────────────────────
@@ -516,6 +633,22 @@ export async function getChatSession(
   return entry.value;
 }
 
+// ── GUEST PROFILES ────────────────────────────────────────────
+
+export async function saveGuestProfile(data: GuestProfile): Promise<void> {
+  const kv = await getKv();
+  await kv.set(["guest_profile", data.phone], data);
+}
+
+export async function getGuestProfile(
+  phone: string,
+): Promise<GuestProfile | null> {
+  const kv = await getKv();
+  const entry = await kv.get<GuestProfile>(["guest_profile", phone]);
+  return entry.value;
+}
+
+
 // ── PRIVATE VERIFICATION (HOST-ONLY) ──────────────────────────
 
 /**
@@ -526,7 +659,16 @@ export async function savePrivateVerification(
   data: PrivateVerification,
 ): Promise<void> {
   const kv = await getKv();
-  await kv.set(["private_verification", data.bookingId], data);
+  
+  // Encrypt sensitive fields before saving
+  const encrypted = {
+    ...data,
+    idNumber: await encryptField(data.idNumber),
+    address: await encryptField(data.address),
+    fullName: await encryptField(data.fullName),
+  };
+  
+  await kv.set(["private_verification", data.bookingId], encrypted);
 }
 
 export async function getPrivateVerification(
@@ -536,7 +678,111 @@ export async function getPrivateVerification(
   const entry = await kv.get<PrivateVerification>(
     ["private_verification", bookingId],
   );
-  return entry.value;
+  if (!entry.value) return null;
+
+  // Decrypt sensitive fields
+  return {
+    ...entry.value,
+    idNumber: await decryptField(entry.value.idNumber),
+    address: await decryptField(entry.value.address),
+    fullName: await decryptField(entry.value.fullName),
+  };
+}
+
+// ── COMPLIANCE: PII SCRUBBING (DPDP & GDPR) ──────────────────
+
+/**
+ * Autonomous scrubbing logic for guest PII.
+ * Targets bookings where checkOut < (Today - 30 Days).
+ */
+export async function scrubOldPii(): Promise<{ scrubbedCount: number }> {
+  const kv = await getKv();
+  const now = new Date();
+  const scrubThreshold = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const thresholdStr = scrubThreshold.toISOString().slice(0, 10);
+  
+  console.log(`[compliance] Starting PII scrub for records older than ${thresholdStr}...`);
+  console.log(`[compliance] Note: Global Guest Intelligence (Profiles) are preserved for loyalty recognition.`);
+
+  
+  let scrubbedCount = 0;
+  
+  // Scans all bookings across all hosts
+  // (In production with high volume, this should use a checkout_index for efficiency)
+  const iter = kv.list<Booking>({ prefix: ["booking"] });
+  
+  for await (const entry of iter) {
+    const booking = entry.value;
+    
+    // Only scrub confirmed/finished bookings older than 30 days
+    if (
+      (booking.status === "confirmed" || booking.status === "room_ready") &&
+      booking.checkOut < thresholdStr
+    ) {
+      console.log(`[compliance] Scrubbing PII for booking=${booking.id}`);
+      
+      const atomic = kv.atomic();
+      
+      // 1. Delete Private Verification (Raw OCR Data, ID Numbers, Addresses)
+      const privEntry = await kv.get<PrivateVerification>(["private_verification", booking.id]);
+      if (privEntry.value?.idObjectKey) {
+        try {
+          const { deleteFromR2 } = await import("./storage.ts");
+          await deleteFromR2(privEntry.value.idObjectKey);
+        } catch (err) {
+          console.warn(`[compliance] Failed to delete R2 ID for booking=${booking.id}`, err);
+        }
+      }
+      atomic.delete(["private_verification", booking.id]);
+      
+      // 2. Anonymize Guest Verification
+      const gvEntry = await kv.get<GuestVerification>(["verification", booking.id]);
+      if (gvEntry.value) {
+        atomic.set(["verification", booking.id], {
+          ...gvEntry.value,
+          idObjectKey: undefined,
+          extractedData: undefined, 
+        });
+      }
+      
+      // 3. Anonymize Booking Record and Delete Clean Proof
+      if (booking.cleanProofUrl) {
+         try {
+            const { deleteFromR2 } = await import("./storage.ts");
+            const urlPath = booking.cleanProofUrl.split(".com/").pop() || "";
+            if (urlPath) await deleteFromR2(urlPath);
+         } catch (err) {
+            console.warn(`[compliance] Failed to delete R2 Proof for booking=${booking.id}`, err);
+         }
+      }
+
+      atomic.set(["booking", booking.hostId, booking.id], {
+        ...booking,
+        guestName: "Guest (PII Scrubbed)",
+        guestEmail: "scrubbed@istay.space",
+        guestPhone: undefined,
+        guestIdRef: undefined,
+        cleanProofUrl: undefined,
+      });
+      
+      const result = await atomic.commit();
+      if (result.ok) scrubbedCount++;
+    }
+  }
+  
+  return { scrubbedCount };
+}
+
+// ── AGENCY API & WEBHOOK UTILS ────────────────────────────────
+
+export async function generateAgencyApiKey(): Promise<string> {
+  const rawKey = `istay_sk_${crypto.randomUUID().replace(/-/g, "")}`;
+  return await encryptField(rawKey) || rawKey;
+}
+
+export async function generateWebhookSecret(): Promise<string> {
+  const rawSecret = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
+  return await encryptField(rawSecret) || rawSecret;
 }
 
 // ── INSIGHTS & ANALYTICS ──────────────────────────────────────

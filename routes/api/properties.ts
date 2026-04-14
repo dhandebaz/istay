@@ -42,7 +42,7 @@ export const handler: Handlers = {
       return Response.json({ error: "Invalid JSON body" }, { status: 400 });
     }
 
-    const { name, description, imageUrl, basePrice, airbnbUrl, address } =
+    const { name, description, imageUrl, basePrice, airbnbUrl, address, amenities } =
       body;
 
     if (!name || typeof name !== "string" || name.trim().length < 3) {
@@ -81,6 +81,7 @@ export const handler: Handlers = {
       airbnbUrl: typeof airbnbUrl === "string" ? airbnbUrl.trim() : undefined,
       address: typeof address === "string" ? address.trim() : undefined,
       status: "active",
+      amenities: Array.isArray(amenities) ? amenities : [],
       createdAt: now,
       updatedAt: now,
     };

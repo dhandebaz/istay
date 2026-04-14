@@ -386,6 +386,7 @@ export default function AddProperty() {
           imageUrl: scraped.value.imageUrl,
           basePrice: Number(editPrice.value) || 0,
           airbnbUrl: scraped.value.sourceUrl,
+          amenities: scraped.value.amenities, // Pass AI extracted amenities
         }),
       });
 
@@ -395,6 +396,22 @@ export default function AddProperty() {
         step.value = "error";
         errorMsg.value = data.error ?? "Could not save property. Please try again.";
         return;
+      }
+
+      // ── AUTO-SAVE AI KNOWLEDGE base ──
+      if (scraped.value.aiKnowledge && data.property?.id) {
+        try {
+          await fetch("/api/knowledge", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              propertyId: data.property.id,
+              content: scraped.value.aiKnowledge,
+            }),
+          });
+        } catch (e) {
+          console.warn("[onboard] Failed to save AI knowledge summary", e);
+        }
       }
 
       step.value = "success";

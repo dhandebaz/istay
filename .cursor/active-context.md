@@ -1,544 +1,361 @@
 > **BrainSync Context Pumper** 🧠
-> Dynamically loaded for active file: `utils\db.ts` (Domain: **Generic Logic**)
+> Dynamically loaded for active file: `islands\SettingsTabs.tsx` (Domain: **Frontend (React/UI)**)
 
-### 🔴 Generic Logic Gotchas
-- **⚠️ GOTCHA: Replaced auth Crucial — prevents null/undefined runtime crashes**: -   try {
-+   let hostEmail = "";
--     const kv = await getKv();
-+   try {
--     const hostEntry = await kv.get(["host", hostId]);
-+     const kv = await getKv();
--     if (hostEntry.value) {
-+     const hostEntry = await kv.get(["host", hostId]);
--       const host = hostEntry.value as { email: string; name?: string; setupFeePaid?: boolean };
-+     if (hostEntry.value) {
--       hostName = host.name ?? hostName;
-+       const host = hostEntry.value as { email: string; name?: string; setupFeePaid?: boolean };
--       
-+       hostName = host.name ?? hostName;
--       // Crucial part of Onboarding sync: if not paid, route them out of dashboard to pricing
-+       hostEmail = host.email;
--       if (host.setupFeePaid === false) {
-+       
--           const redirectTo = new URL(req.url).pathname;
-+       // Crucial part of Onboarding sync: if not paid, route them out of dashboard to pricing
--           return new Response(null, {
-+       if (host.setupFeePaid === false) {
--             status: 302,
-+           const redirectTo = new URL(req.url).pathname;
--             headers: {
-+           return new Response(null, {
--               Location: `/pricing?auth=onboarding_incomplete&redirect=${encodeURIComponent(redirectTo)}`,
-+             status: 302,
--             },
-+             headers: {
--           });
-+               Location: `/pricing?auth=onboarding_incomplete&redirect=${encodeURIComponent(redirectTo)}`,
--       }
-+             },
-- 
-+           });
--       // Check Email Verification
-+       }
--       const authEntry = await kv.get(["auth", host.email.toLowerCase()]);
-+ 
--       if (authEntry.value) {
-+       // Check Email Verification
--         const authRecord = authEntry.value as { emailVerified?: boolean };
-+       const authEntry = await kv.get(["auth", host.email.toLowerCase()]);
--         emailVerified = authRecord.emailVerified ?? true; // if missing, assume old account which is verified
-+       if (authEntry.value) {
--       }
-+         const authR
-… [diff truncated]
+### 📐 Frontend (React/UI) Conventions & Fixes
+- **[decision] decision in IdVerification.tsx**: -             class="flex-1 py-3 rounded-xl bg-istay-900 text-white text-sm font-700 hover:bg-istay-800 active:scale-95 transition-all shadow-sm"
++             class="flex-1 py-3 rounded-xl bg-teal-600 text-white text-sm font-700 hover:bg-teal-700 active:scale-95 transition-all shadow-sm"
+-           class="w-full py-3 rounded-xl bg-istay-900 text-white text-sm font-700 hover:bg-istay-800 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2"
++           class="w-full py-3 rounded-xl bg-teal-600 text-white text-sm font-700 hover:bg-teal-700 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2"
 
-📌 IDE AST Context: Modified symbols likely include [getKv, parseCookies, handler]
-- **⚠️ GOTCHA: Fixed null crash in LedgerEntry — parallelizes async operations for speed**: -   saveBooking,
-+   getPropertyById,
--   saveLedgerEntry,
-+   saveBooking,
--   saveNotification,
-+   saveLedgerEntry,
-- } from "../../../utils/db.ts";
-+   saveNotification,
-- import type { LedgerEntry, Notification } from "../../../utils/types.ts";
-+ } from "../../../utils/db.ts";
-- 
-+ import { sendBookingConfirmation } from "../../../utils/email.ts";
-- const EASEBUZZ_SALT = Deno.env.get("EASEBUZZ_SALT");
-+ import type { LedgerEntry, Notification } from "../../../utils/types.ts";
-- const EASEBUZZ_KEY = Deno.env.get("EASEBUZZ_KEY");
-+ 
-- const ISTAY_COMMISSION = 0.05;
-+ const EASEBUZZ_SALT = Deno.env.get("EASEBUZZ_SALT");
-- 
-+ const EASEBUZZ_KEY = Deno.env.get("EASEBUZZ_KEY");
-- /**
-+ const ISTAY_COMMISSION = 0.05;
--  * Verifies Easebuzz response hash.
-+ 
--  * Hash Format: salt|status|udf10|udf9|udf8|udf7|udf6|udf5|udf4|udf3|udf2|udf1|email|firstname|productinfo|amount|txnid|key
-+ /**
--  */
-+  * Verifies Easebuzz response hash.
-- async function verifyResponseHash(params: Record<string, string>, salt: string) {
-+  * Hash Format: salt|status|udf10|udf9|udf8|udf7|udf6|udf5|udf4|udf3|udf2|udf1|email|firstname|productinfo|amount|txnid|key
--   const hashString = [
-+  */
--     salt,
-+ async function verifyResponseHash(params: Record<string, string>, salt: string) {
--     params.status,
-+   const hashString = [
--     params.udf10 || "",
-+     salt,
--     params.udf9 || "",
-+     params.status,
--     params.udf8 || "",
-+     params.udf10 || "",
--     params.udf7 || "",
-+     params.udf9 || "",
--     params.udf6 || "",
-+     params.udf8 || "",
--     params.udf5 || "",
-+     params.udf7 || "",
--     params.udf4 || "",
-+     params.udf6 || "",
--     params.udf3 || "",
-+     params.udf5 || "",
--     params.udf2 || "",
-+     params.udf4 || "",
--     params.udf1 || "",
-+     params.udf3 || "",
--     params.email,
-+     params.udf2 || "",
--     params.firstname,
-+     params.udf1 || "",
--     params.productinfo,
-+     params.email,
--     params.amount,
-+     params.firstname,
--    
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [EASEBUZZ_SALT, EASEBUZZ_KEY, ISTAY_COMMISSION, verifyResponseHash, enumerateDates]
-
-### 📐 Generic Logic Conventions & Fixes
-- **[discovery] discovery in db.ts**: File updated (external): utils/db.ts
-
-Content summary (593 lines):
-// ========================[REDACTED]
-// utils/db.ts — Deno KV database layer for istay.space
-//
-// KV Key Schema:
-//   ["host", hostId]                          → Host
-//   ["host_index", hostId]                    → true  (for full-scan)
-//   ["property", hostId, propId]              → Property
-//   ["prop_index", propId]                    → { hostId }  (secondary index)
-//   ["booking", hostId, bookingId]            → Booking
-//   ["booking_index", bookingId]   
-- **[convention] Added session cookies authentication — prevents null/undefined runtime crashes — confirmed 4x**: -   return {
-+   let linkViews7Days = 0;
--     activeBookings,
-+   for (const p of properties) {
--     monthlyEarnings,
-+     linkViews7Days += await getPropertyViewsLast7Days(p.id);
--     blockedDates,
-+   }
--     totalProperties: properties.length,
-+ 
+📌 IDE AST Context: Modified symbols likely include [IdVerificationProps, IdVerificationProps, VerifyStep, VerifyStep, ID_TYPES]
+- **[convention] Fixed null crash in Compression — prevents null/undefined runtime crashes — confirmed 6x**: -       reader.onload = (e) => setPreviewUrl(e.target?.result as string);
++       reader.onload = async (e) => {
+-       reader.readAsDataURL(selectedFile);
++         const rawB64 = (e.target?.result as string) ?? null;
+-     }
++         if (rawB64) {
 -   };
-+   return {
-- }
-+     activeBookings,
++           try {
 - 
-+     monthlyEarnings,
-- // ── HOST KNOWLEDGE BASE ───────────────────────────────────────
-+     blockedDates,
++             setPreviewUrl(await compressImage(rawB64));
+-   const handleUpload = async () => {
++           } catch (err) {
+-     if (!previewUrl) return;
++             console.error("Compression failed:", err);
 - 
-+     totalProperties: properties.length,
-- export async function saveKnowledge(data: HostKnowledge): Promise<void> {
-+     linkViews7Days,
--   const kv = await getKv();
++             setPreviewUrl(rawB64);
+-     setIsUploading(true);
++           }
+-     setError(null);
++         }
+- 
++       };
+-     try {
++       reader.readAsDataURL(selectedFile);
+-       const response = await fetch("/api/caretaker/ready", {
++     }
+-         method: "POST",
 +   };
--   await kv.set(["knowledge", data.hostId, data.propertyId], data);
-+ }
+-         headers: {
++ 
+-           "Content-Type": "application/json",
++   const handleUpload = async () => {
+-         },
++     if (!previewUrl) return;
+-         body: JSON.stringify({
++ 
+-           bookingId,
++     setIsUploading(true);
+-           guestName,
++     setError(null);
+-           photoBase64: previewUrl.split(",")[1], // Strip raw Data URL prefix
++ 
+-           checklist,
++     try {
+-         }),
++       const response = await fetch("/api/caretaker/ready", {
+-       });
++         method: "POST",
+- 
++         headers: {
+-       if (!response.ok) {
++           "Content-Type": "application/json",
+-         throw new Error("Failed to update status");
++         },
+-       }
++         body: JSON.stringify({
+- 
++           bookingId,
+-       setSuccess(true);
++           guestName,
+-       globalThis.setTimeout(() => {
++           photoBase64: previewUrl.split(",")[1], // Strip raw Data URL prefix
+-         globalThis.location.reload();
++           checklist,
+-       }, 1500);
++         }),
+-     } catch (err: any) {
++       });
+-       setError(err.message || "An error occurred during upload.");
++ 
+-     } finally {
++       if (!response.ok) {
+-       setIsUploading(false);
++         t
+… [diff truncated]
+
+📌 IDE AST Context: Modified symbols likely include [ProofOfCleanUploaderProps, ProofOfCleanUploaderProps, ProofOfCleanUploader, ProofOfCleanUploader]
+- **[problem-fix] problem-fix in IdVerification.tsx**: File updated (external): islands/IdVerification.tsx
+
+Content summary (452 lines):
+import { useRef } from "preact/hooks";
+import { compressImage } from "../utils/compression.ts";
+
+interface IdVerificationProps {
+  bookingId: string;
+  guestName: string;
+}
+
+type VerifyStep =
+  | "upload"    // initial: pick file
+  | "preview"   // file selected, ready to submit
+  | "scanning"  // POST in progress + animation
+  | "verified"  // matchScore >= 90, verified
+  | "review"    // matchScore < 90, needs manual review
+  | "error";    // failed
+
+const ID_TYPES = [
+  { value: "aadhaar", la
+- **[what-changed] Replaced dependency Savings — prevents null/undefined runtime crashes**: - 
++       
+-       {/* ── Quick Actions ──────────────────────────────────────── */}
++       {/* ── OTA Savings Module ✨ ─────────────────────────────── */}
+-       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
++       <div class="mb-8 p-8 rounded-[2rem] bg-istay-900 border border-gray-800 shadow-2xl relative overflow-hidden group">
+-         {[
++         <div class="absolute top-0 right-0 w-64 h-64 bg-mint-500/10 rounded-full blur-3xl -mr-20 -mt-20" />
+-           {
++         <div class="relative flex flex-col md:flex-row items-center justify-between gap-6">
+-             href: "/dashboard/properties",
++           <div class="text-center md:text-left">
+-             icon: "🏠",
++             <h2 class="text-sm font-800 text-mint-400 uppercase tracking-widest mb-2 flex items-center gap-2 justify-center md:justify-start">
+-             label: "Add Property",
++                <span class="w-2 h-2 rounded-full bg-mint-500 animate-pulse" />
+-             desc: "Import from Airbnb in seconds",
++                Revenue Protection
+-             color: "hover:border-istay-300",
++             </h2>
+-           },
++             <p class="text-3xl font-900 text-white tracking-tight">
+-           {
++                You've saved <span class="text-transparent bg-clip-text bg-gradient-to-r from-mint-300 to-mint-500">{formatINR(Math.round((stats.monthlyEarnings / 0.85) - stats.monthlyEarnings))}</span> in OTA commissions
+-             href: "#",
++             </p>
+-             icon: "📅",
++             <p class="text-gray-400 mt-2 text-sm font-500">
+-             label: "Sync Calendar",
++                *Assuming average 15% commission on Airbnb/MMT. You keep 95% with istay.
+-             desc: "Block dates from iCal",
++             </p>
+-             color: "hover:border-violet-300",
++           </div>
+-           },
++           <div class="flex-shrink-0 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm text-center">
+-           {
++             
+… [diff truncated]
+
+📌 IDE AST Context: Modified symbols likely include [OverviewData, OverviewData, handler, handler, formatINR]
+- **[what-changed] what-changed in [token].tsx**: -               <label class="block text-center text-sm font-700 text-gray-900 mb-8 uppercase tracking-widest">Your Rating</p>
++               <label class="block text-center text-sm font-700 text-gray-900 mb-8 uppercase tracking-widest">Your Rating</label>
+
+📌 IDE AST Context: Modified symbols likely include [FeedbackData, FeedbackData, handler, handler, FeedbackPage]
+- **[what-changed] what-changed in index.tsx**: File updated (external): routes/index.tsx
+
+Content summary (449 lines):
+import { Head } from "$fresh/runtime.ts";
+import Header from "../components/Header.tsx";
+import Footer from "../components/Footer.tsx";
+import MagicScraperAnimation from "../islands/MagicScraperAnimation.tsx";
+import ScraperPreview from "../islands/ScraperPreview.tsx";
+
+const FEATURES = [
+  {
+    icon: "💰",
+    title: "One-Time Setup. Forever.",
+    desc: "Pay ₹1,000 once. Own your booking channel forever. No monthly SaaS fees eating into your revenue.",
+  },
+  {
+    icon: "🤖",
+    title: "AI 
+- **[discovery] discovery in [propId].tsx**: File updated (external): routes/p/[propId].tsx
+
+Content summary (350 lines):
+import { type Handlers, type PageProps } from "$fresh/server.ts";
+import { Head } from "$fresh/runtime.ts";
+import { getBookingById, getGuestVerification, getKnowledgeByPropId, getPropertyById, listBlockedDates, recordPropertyView } from "../../utils/db.ts";
+import { getVibeMatches } from "../../utils/recommendations.ts";
+import type { Booking, GuestVerification, Property, VibeMatch, HostKnowledge } from "../../utils/types.ts";
+import BookingCalendar from "../../islands/BookingCalendar.tsx";
+imp
+- **[decision] decision in index.tsx**: -   icon: JSX.Element;
++   icon: ComponentChildren;
+
+📌 IDE AST Context: Modified symbols likely include [OverviewData, OverviewData, handler, handler, formatINR]
+- **[convention] decision in index.tsx — confirmed 3x**: - export const handler: Handlers<OverviewData> = {
++ export const handler: Handlers<OverviewData, DashboardState> = {
+-     const { hostId } = ctx.state;
++     const { hostId } = ctx.state as DashboardState;
+
+📌 IDE AST Context: Modified symbols likely include [OverviewData, OverviewData, handler, handler, formatINR]
+- **[discovery] discovery in index.tsx**: File updated (external): routes/dashboard/index.tsx
+
+Content summary (393 lines):
+import { type Handlers, type PageProps } from "$fresh/server.ts";
+import { Head } from "$fresh/runtime.ts";
+import {
+  getDashboardStats,
+  listBookings,
+  listProperties,
+  getPropertyViewsDaily,
+  getBookingsDaily,
+} from "../../utils/db.ts";
+import type { Booking, DashboardState, DashboardStats } from "../../utils/types.ts";
+import LinkPerformanceChart from "../../islands/LinkPerformanceChart.tsx";
+
+interface OverviewData {
+  stats: DashboardStats;
+  recentBookings: Booking[];
+  setupFeePaid:
+- **[what-changed] Replaced dependency StatCard — prevents null/undefined runtime crashes**: -       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
++       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-8">
+-       </div>
++         <StatCard
+- 
++           label="Link Performance"
+-       {/* ── Quick Actions ──────────────────────────────────────── */}
++           value={String(stats.linkViews7Days)}
+-       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
++           sub="Profile views (7 days)"
+-         {[
++           gradient="bg-gradient-to-br from-mint-500 to-teal-600"
+-           {
++           icon={
+-             href: "/dashboard/properties",
++             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+-             icon: "🏠",
++               <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+-             label: "Add Property",
++               <circle cx="12" cy="12" r="3"/>
+-             desc: "Import from Airbnb in seconds",
++             </svg>
+-             color: "hover:border-istay-300",
++           }
+-           },
++         />
+-           {
++       </div>
+-             href: "#",
++ 
+-             icon: "📅",
++       {/* ── Quick Actions ──────────────────────────────────────── */}
+-             label: "Sync Calendar",
++       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+-             desc: "Block dates from iCal",
++         {[
+-             color: "hover:border-violet-300",
++           {
+-           },
++             href: "/dashboard/properties",
+-           {
++             icon: "🏠",
+-             href: "/contact",
++             label: "Add Property",
+-             icon: "💬",
++             desc: "Import from Airbnb in seconds",
+-             label: "Get Support",
++             color: "hover:border-istay-300",
+-             desc: "We reply in 24–48 hours",
++           },
+-             color: "hover:border-blue-300",
++           {
+-           },
++         
+… [diff truncated]
+
+📌 IDE AST Context: Modified symbols likely include [OverviewData, handler, formatINR, formatDate, StatCardProps]
+- **[convention] what-changed in index.tsx — confirmed 3x**: -           <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 md:pt-32 md:pb-28 text-center">
++           <div class="relative max-w-7xl mx-auto px-6 lg:px-8 pt-24 pb-20 md:pt-32 md:pb-28 text-center">
+
+📌 IDE AST Context: Modified symbols likely include [FEATURES, PLATFORMS, SCHEMA, Home]
+- **[what-changed] what-changed in contact.tsx**: -           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
++           <div class="max-w-7xl mx-auto px-6 lg:px-8">
+-           <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8">
++           <div class="max-w-7xl mx-auto px-6 lg:px-8">
+-                         Airbnb link (e.g. airbnb.com/rooms/123)
++                         Property URL (e.g., airbnb.com/rooms/12345678)
+
+📌 IDE AST Context: Modified symbols likely include [SCHEMA, Contact]
+- **[convention] Fixed null crash in ResendVerificationBtn — prevents null/undefined runtime c... — confirmed 3x**: - 
++ import ResendVerificationBtn from "../../islands/ResendVerificationBtn.tsx";
+- const getKv = (() => {
++ 
+-   let kv: Deno.Kv | null = null;
++ const getKv = (() => {
+-   return async () => {
++   let kv: Deno.Kv | null = null;
+-     if (!kv) kv = await Deno.openKv();
++   return async () => {
+-     return kv;
++     if (!kv) kv = await Deno.openKv();
+-   };
++     return kv;
+- })();
++   };
+- 
++ })();
+- interface LayoutData {
++ 
+-   unreadCount: number;
++ interface LayoutData {
 - }
-+ 
-- 
-+ // ── HOST KNOWLEDGE BASE ───────────────────────────────────────
-- export async function getKnowledge(
-+ 
--   hostId: string,
-+ export async function saveKnowledge(data: HostKnowledge): Promise<void> {
--   propertyId: string,
-+   const kv = await getKv();
-- ): Promise<HostKnowledge | null> {
-+   await kv.set(["knowledge", data.hostId, data.propertyId], data);
--   const kv = await getKv();
-+ }
--   const entry = await kv.get<HostKnowledge>(["knowledge", hostId, propertyId]);
-+ 
--   return entry.value;
-+ export async function getKnowledge(
-- }
-+   hostId: string,
-- 
-+   propertyId: string,
-- /**
-+ ): Promise<HostKnowledge | null> {
--  * Looks up knowledge base for a property without needing hostId.
-+   const kv = await getKv();
--  * Uses prop_index to resolve hostId first.
-+   const entry = await kv.get<HostKnowledge>(["knowledge", hostId, propertyId]);
--  */
-+   return entry.value;
-- export async function getKnowledgeByPropId(
-+ }
--   propertyId: string,
-+ 
-- ): Promise<HostKnowledge | null> {
-+ /**
--   const kv = await getKv();
-+  * Looks up knowledge base for a property without needing hostId.
--   const idx = await kv.get<{ hostId: string }>(["prop_index", propertyId]);
-+  * Uses prop_index to resolve hostId first.
--   if (!idx.value) return null;
-+  */
--   return getKnowledge(idx.value.hostId, prop
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [_kv, getKv, getHost, saveHost, hashPassword]
-- **[discovery] discovery in email.ts**: File updated (external): utils/email.ts
-
-Content summary (185 lines):
-// ========================[REDACTED]
-// utils/email.ts — Centralized Email Dispatcher (Brevo API)
-// ========================[REDACTED]
-
-const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
-const BREVO_EMAIL = Deno.env.get("BREVO_EMAIL") || "no-reply@istay.space";
-const APP_BASE_URL = Deno.env.get("APP_BASE_URL") || "https://istay.space";
-
-/**
- * Core send routine for Brevo REST API.
- */
-async function sendBrevoEmail(
-  toEmail: string
-- **[discovery] discovery in types.ts**: File updated (external): utils/types.ts
-
-Content summary (309 lines):
-// ========================[REDACTED]
-// utils/types.ts — Shared type definitions for istay.space
-// ========================[REDACTED]
-
-// ── CORE ENTITIES ─────────────────────────────────────────────
-
-export interface Host {
-  id: string;
-  email: string;
-  name: string;
-  phone: string;
-  /** Always "lifetime" — one-time ₹1,000 setup */
-  plan: "lifetime";
-  setupFeePaid: boolean;
-  /** Payment gateway vendor/sub-merchant ID (Easebu
-- **[convention] what-changed in types.ts — confirmed 3x**: - }
-+   linkViews7Days: number;
++   unreadCount: number;
 - 
 + }
-- // ── MIDDLEWARE STATE ───────────────────────────────────────────
+- export const handler: Handlers<LayoutData, DashboardState> = {
 + 
+-   GET: async (_req, ctx) => {
++ export const handler: Handlers<LayoutData, DashboardState> = {
+-     // Load unread notification count from KV
++   GET: async (_req, ctx) => {
+-     let unreadCount = 0;
++     // Load unread notification count from KV
+-     try {
++     let unreadCount = 0;
+-       const kv = await getKv();
++     try {
+-       const iter = kv.list<Notification>({
++       const kv = await getKv();
+-         prefix: ["notification", ctx.state.hostId],
++       const iter = kv.list<Notification>({
+-       });
++         prefix: ["notification", ctx.state.hostId],
+-       for await (const entry of iter) {
++       });
+-         if (entry.value && !entry.value.read) {
++       for await (const entry of iter) {
+-           unreadCount++;
++         if (entry.value && !entry.value.read) {
+-         }
++           unreadCount++;
+-       }
++         }
+-     } catch {
++       }
+-       // KV not available — show 0
++     } catch {
+-     }
++       // KV not available — show 0
 - 
-+ // ── MIDDLEWARE STATE ───────────────────────────────────────────
-- export interface DashboardState {
++     }
+-     ctx.state = { ...ctx.state };
 + 
--   hostId: string;
-+ export interface DashboardState {
--   hostName: string;
-+   hostId: string;
--   hostEmail: string;
-+   hostName: string;
--   emailVerified: boolean;
-+   hostEmail: string;
-- }
-+   emailVerified: boolean;
+-     const resp = await ctx.render({ unreadCount });
++     ctx.state = { ...ctx.state };
+-     return resp;
++     const resp = await ctx.render({ unreadCount });
+-   },
++     return resp;
+- };
++   },
 - 
-+ }
++ };
+- export default function DashboardLayout(
 + 
-
-📌 IDE AST Context: Modified symbols likely include [Host, AuthRecord, Property, Booking, CalendarBlock]
-- **[what-changed] Replaced auth AddProperty — improves module reusability**: - import * as $api_pay from "./routes/api/pay.ts";
-+ import * as $api_ical_propId_ from "./routes/api/ical/[propId].ts";
-- import * as $api_properties from "./routes/api/properties.ts";
-+ import * as $api_pay from "./routes/api/pay.ts";
-- import * as $api_scrape from "./routes/api/scrape.ts";
-+ import * as $api_properties from "./routes/api/properties.ts";
-- import * as $api_verify from "./routes/api/verify.ts";
-+ import * as $api_scrape from "./routes/api/scrape.ts";
-- import * as $blog_slug from "./routes/blog/[slug].tsx";
-+ import * as $api_verify from "./routes/api/verify.ts";
-- import * as $blog_index from "./routes/blog/index.tsx";
-+ import * as $blog_slug from "./routes/blog/[slug].tsx";
-- import * as $api_webhooks_payment from "./routes/api/webhooks/payment.ts";
-+ import * as $blog_index from "./routes/blog/index.tsx";
-- import * as $api_webhooks_whatsapp from "./routes/api/webhooks/whatsapp.ts";
-+ import * as $api_webhooks_payment from "./routes/api/webhooks/payment.ts";
-- import * as $care_token_ from "./routes/care/[token].tsx";
-+ import * as $api_webhooks_whatsapp from "./routes/api/webhooks/whatsapp.ts";
-- import * as $feedback_token_ from "./routes/feedback/[token].tsx";
-+ import * as $care_token_ from "./routes/care/[token].tsx";
-- import * as $contact from "./routes/contact.tsx";
-+ import * as $feedback_token_ from "./routes/feedback/[token].tsx";
-- import * as $dashboard_layout from "./routes/dashboard/_layout.tsx";
-+ import * as $contact from "./routes/contact.tsx";
-- import * as $dashboard_middleware from "./routes/dashboard/_middleware.ts";
-+ import * as $dashboard_layout from "./routes/dashboard/_layout.tsx";
-- import * as $dashboard_bookings from "./routes/dashboard/bookings.tsx";
-+ import * as $dashboard_middleware from "./routes/dashboard/_middleware.ts";
-- import * as $dashboard_guests from "./routes/dashboard/guests.tsx";
-+ import * as $dashboard_bookings from "./routes/dashboard/bookings.tsx";
-- import * as $dashboard_index from "./routes/
+-   { Component, url, state, data }: PageProps<LayoutData, DashboardState>,
++ export default function DashboardLayout(
+-
 … [diff truncated]
 
-📌 IDE AST Context: Modified symbols likely include [manifest, manifest, default, default]
-- **[convention] Replaced auth AddProperty — improves module reusability — confirmed 3x**: - import * as $contact from "./routes/contact.tsx";
-+ import * as $feedback_token_ from "./routes/feedback/[token].tsx";
-- import * as $dashboard_layout from "./routes/dashboard/_layout.tsx";
-+ import * as $contact from "./routes/contact.tsx";
-- import * as $dashboard_middleware from "./routes/dashboard/_middleware.ts";
-+ import * as $dashboard_layout from "./routes/dashboard/_layout.tsx";
-- import * as $dashboard_bookings from "./routes/dashboard/bookings.tsx";
-+ import * as $dashboard_middleware from "./routes/dashboard/_middleware.ts";
-- import * as $dashboard_guests from "./routes/dashboard/guests.tsx";
-+ import * as $dashboard_bookings from "./routes/dashboard/bookings.tsx";
-- import * as $dashboard_index from "./routes/dashboard/index.tsx";
-+ import * as $dashboard_guests from "./routes/dashboard/guests.tsx";
-- import * as $dashboard_knowledge from "./routes/dashboard/knowledge.tsx";
-+ import * as $dashboard_index from "./routes/dashboard/index.tsx";
-- import * as $dashboard_properties from "./routes/dashboard/properties.tsx";
-+ import * as $dashboard_knowledge from "./routes/dashboard/knowledge.tsx";
-- import * as $dashboard_settings from "./routes/dashboard/settings.tsx";
-+ import * as $dashboard_properties from "./routes/dashboard/properties.tsx";
-- import * as $forgot_password from "./routes/forgot-password.tsx";
-+ import * as $dashboard_settings from "./routes/dashboard/settings.tsx";
-- import * as $index from "./routes/index.tsx";
-+ import * as $forgot_password from "./routes/forgot-password.tsx";
-- import * as $legal_cancellation from "./routes/legal/cancellation.tsx";
-+ import * as $index from "./routes/index.tsx";
-- import * as $legal_privacy from "./routes/legal/privacy.tsx";
-+ import * as $legal_cancellation from "./routes/legal/cancellation.tsx";
-- import * as $legal_shipping from "./routes/legal/shipping.tsx";
-+ import * as $legal_privacy from "./routes/legal/privacy.tsx";
-- import * as $legal_terms from "./routes/legal/terms.tsx";
-+ import * as $
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [manifest, manifest, default, default]
-- **[what-changed] Replaced auth CaretakerChecklist — improves module reusability**: - import * as $CheckoutForm from "./islands/CheckoutForm.tsx";
-+ import * as $CaretakerChecklist from "./islands/CaretakerChecklist.tsx";
-- import * as $DashboardSidebar from "./islands/DashboardSidebar.tsx";
-+ import * as $CheckoutForm from "./islands/CheckoutForm.tsx";
-- import * as $EarningsCalculator from "./islands/EarningsCalculator.tsx";
-+ import * as $DashboardSidebar from "./islands/DashboardSidebar.tsx";
-- import * as $EarningsComparison from "./islands/EarningsComparison.tsx";
-+ import * as $EarningsCalculator from "./islands/EarningsCalculator.tsx";
-- import * as $ForgotPasswordForm from "./islands/ForgotPasswordForm.tsx";
-+ import * as $EarningsComparison from "./islands/EarningsComparison.tsx";
-- import * as $GuestChat from "./islands/GuestChat.tsx";
-+ import * as $ForgotPasswordForm from "./islands/ForgotPasswordForm.tsx";
-- import * as $IdVerification from "./islands/IdVerification.tsx";
-+ import * as $GuestChat from "./islands/GuestChat.tsx";
-- import * as $KnowledgeEditor from "./islands/KnowledgeEditor.tsx";
-+ import * as $IdVerification from "./islands/IdVerification.tsx";
-- import * as $KnowledgeUploader from "./islands/KnowledgeUploader.tsx";
-+ import * as $KnowledgeEditor from "./islands/KnowledgeEditor.tsx";
-- import * as $LinkPerformanceChart from "./islands/LinkPerformanceChart.tsx";
-+ import * as $KnowledgeUploader from "./islands/KnowledgeUploader.tsx";
-- import * as $LoginForm from "./islands/LoginForm.tsx";
-+ import * as $LinkPerformanceChart from "./islands/LinkPerformanceChart.tsx";
-- import * as $MagicScraperAnimation from "./islands/MagicScraperAnimation.tsx";
-+ import * as $LoginForm from "./islands/LoginForm.tsx";
-- import * as $MobileMenu from "./islands/MobileMenu.tsx";
-+ import * as $MagicScraperAnimation from "./islands/MagicScraperAnimation.tsx";
-- import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
-+ import * as $MobileMenu from "./islands/MobileMenu.tsx";
-- import * as $ProofOfCleanUploader from "./islands/Pr
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [manifest, manifest, default, default]
-- **[what-changed] Replaced auth EarningsComparison — improves module reusability**: - import * as $ForgotPasswordForm from "./islands/ForgotPasswordForm.tsx";
-+ import * as $EarningsComparison from "./islands/EarningsComparison.tsx";
-- import * as $GuestChat from "./islands/GuestChat.tsx";
-+ import * as $ForgotPasswordForm from "./islands/ForgotPasswordForm.tsx";
-- import * as $IdVerification from "./islands/IdVerification.tsx";
-+ import * as $GuestChat from "./islands/GuestChat.tsx";
-- import * as $KnowledgeEditor from "./islands/KnowledgeEditor.tsx";
-+ import * as $IdVerification from "./islands/IdVerification.tsx";
-- import * as $KnowledgeUploader from "./islands/KnowledgeUploader.tsx";
-+ import * as $KnowledgeEditor from "./islands/KnowledgeEditor.tsx";
-- import * as $LinkPerformanceChart from "./islands/LinkPerformanceChart.tsx";
-+ import * as $KnowledgeUploader from "./islands/KnowledgeUploader.tsx";
-- import * as $LoginForm from "./islands/LoginForm.tsx";
-+ import * as $LinkPerformanceChart from "./islands/LinkPerformanceChart.tsx";
-- import * as $MagicScraperAnimation from "./islands/MagicScraperAnimation.tsx";
-+ import * as $LoginForm from "./islands/LoginForm.tsx";
-- import * as $MobileMenu from "./islands/MobileMenu.tsx";
-+ import * as $MagicScraperAnimation from "./islands/MagicScraperAnimation.tsx";
-- import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
-+ import * as $MobileMenu from "./islands/MobileMenu.tsx";
-- import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
-+ import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
-- import * as $RegisterForm from "./islands/RegisterForm.tsx";
-+ import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
-- import * as $ResendVerificationBtn from "./islands/ResendVerificationBtn.tsx";
-+ import * as $RegisterForm from "./islands/RegisterForm.tsx";
-- import * as $ScraperPreview from "./islands/ScraperPreview.tsx";
-+ import * as $ResendVerificationBtn from "./islands/ResendVerificationBtn.tsx";
-- import * as $SupplyRequest from "./isl
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [manifest, manifest, default, default]
-- **[what-changed] what-changed in payment.ts**: File updated (external): routes/api/webhooks/payment.ts
-
-Content summary (206 lines):
-// ========================[REDACTED]
-// routes/api/webhooks/payment.ts — Easebuzz Payment Webhook
-//
-// POST /api/webhooks/payment
-// Called by Easebuzz after a payment attempt.
-//
-// Logic:
-//   1. Verify SHA-512 Response Hash
-//   2. If status === "success":
-//      a. Update Booking status → "confirmed"
-//      b. Block booked dates in KV
-//      c. Create LedgerEntry (95/5 split logic)
-//      d. Notify host
-// ==========[REDACTED]
-- **[what-changed] Replaced auth ScraperPreview — improves module reusability**: - import * as $SupplyRequest from "./islands/SupplyRequest.tsx";
-+ import * as $ScraperPreview from "./islands/ScraperPreview.tsx";
-- import type { Manifest } from "$fresh/server.ts";
-+ import * as $SupplyRequest from "./islands/SupplyRequest.tsx";
-- 
-+ import type { Manifest } from "$fresh/server.ts";
-- const manifest = {
-+ 
--   routes: {
-+ const manifest = {
--     "./routes/_app.tsx": $_app,
-+   routes: {
--     "./routes/api/auth/forgot.ts": $api_auth_forgot,
-+     "./routes/_app.tsx": $_app,
--     "./routes/api/auth/login.ts": $api_auth_login,
-+     "./routes/api/auth/forgot.ts": $api_auth_forgot,
--     "./routes/api/auth/logout.ts": $api_auth_logout,
-+     "./routes/api/auth/login.ts": $api_auth_login,
--     "./routes/api/auth/register.ts": $api_auth_register,
-+     "./routes/api/auth/logout.ts": $api_auth_logout,
--     "./routes/api/auth/resend-verification.ts": $api_auth_resend_verification,
-+     "./routes/api/auth/register.ts": $api_auth_register,
--     "./routes/api/bookings.ts": $api_bookings,
-+     "./routes/api/auth/resend-verification.ts": $api_auth_resend_verification,
--     "./routes/api/caretaker/ready.ts": $api_caretaker_ready,
-+     "./routes/api/bookings.ts": $api_bookings,
--     "./routes/api/caretaker/supply.ts": $api_caretaker_supply,
-+     "./routes/api/caretaker/ready.ts": $api_caretaker_ready,
--     "./routes/api/chat.ts": $api_chat,
-+     "./routes/api/caretaker/supply.ts": $api_caretaker_supply,
--     "./routes/api/contact.ts": $api_contact,
-+     "./routes/api/chat.ts": $api_chat,
--     "./routes/api/cron/sync.ts": $api_cron_sync,
-+     "./routes/api/contact.ts": $api_contact,
--     "./routes/api/invoice/[bookingId].ts": $api_invoice_bookingId,
-+     "./routes/api/cron/sync.ts": $api_cron_sync,
--     "./routes/api/knowledge.ts": $api_knowledge,
-+     "./routes/api/invoice/[bookingId].ts": $api_invoice_bookingId,
--     "./routes/api/knowledge/ocr.ts": $api_knowledge_ocr,
-+     "./routes/api/knowledge.ts": $api_knowledge,
--     "./routes/ap
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [manifest, manifest, default, default]
-- **[convention] Replaced auth AddProperty — improves module reusability — confirmed 6x**: -     "./routes/api/auth/verify.ts": $api_auth_verify,
-+     "./routes/api/bookings.ts": $api_bookings,
--     "./routes/api/bookings.ts": $api_bookings,
-+     "./routes/api/caretaker/ready.ts": $api_caretaker_ready,
--     "./routes/api/caretaker/ready.ts": $api_caretaker_ready,
-+     "./routes/api/caretaker/supply.ts": $api_caretaker_supply,
--     "./routes/api/caretaker/supply.ts": $api_caretaker_supply,
-+     "./routes/api/chat.ts": $api_chat,
--     "./routes/api/chat.ts": $api_chat,
-+     "./routes/api/contact.ts": $api_contact,
--     "./routes/api/contact.ts": $api_contact,
-+     "./routes/api/cron/sync.ts": $api_cron_sync,
--     "./routes/api/cron/sync.ts": $api_cron_sync,
-+     "./routes/api/invoice/[bookingId].ts": $api_invoice_bookingId,
--     "./routes/api/invoice/[bookingId].ts": $api_invoice_bookingId,
-+     "./routes/api/knowledge.ts": $api_knowledge,
--     "./routes/api/knowledge.ts": $api_knowledge,
-+     "./routes/api/knowledge/ocr.ts": $api_knowledge_ocr,
--     "./routes/api/knowledge/ocr.ts": $api_knowledge_ocr,
-+     "./routes/api/onboard/pay.ts": $api_onboard_pay,
--     "./routes/api/onboard/pay.ts": $api_onboard_pay,
-+     "./routes/api/onboard/verify.ts": $api_onboard_verify,
--     "./routes/api/onboard/verify.ts": $api_onboard_verify,
-+     "./routes/api/pay.ts": $api_pay,
--     "./routes/api/pay.ts": $api_pay,
-+     "./routes/api/properties.ts": $api_properties,
--     "./routes/api/properties.ts": $api_properties,
-+     "./routes/api/scrape.ts": $api_scrape,
--     "./routes/api/scrape.ts": $api_scrape,
-+     "./routes/api/verify.ts": $api_verify,
--     "./routes/api/verify.ts": $api_verify,
-+     "./routes/api/webhooks/payment.ts": $api_webhooks_payment,
--     "./routes/api/webhooks/payment.ts": $api_webhooks_payment,
-+     "./routes/api/webhooks/whatsapp.ts": $api_webhooks_whatsapp,
--     "./routes/api/webhooks/whatsapp.ts": $api_webhooks_whatsapp,
-+     "./routes/care/[token].tsx": $care_token_,
--     "./routes/care/[token].tsx": $care_token
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [manifest, manifest, default, default]
-- **[what-changed] Replaced auth ProofOfCleanUploader — improves module reusability**: - import * as $RegisterForm from "./islands/RegisterForm.tsx";
-+ import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
-- import * as $ResendVerificationBtn from "./islands/ResendVerificationBtn.tsx";
-+ import * as $RegisterForm from "./islands/RegisterForm.tsx";
-- import * as $SupplyRequest from "./islands/SupplyRequest.tsx";
-+ import * as $ResendVerificationBtn from "./islands/ResendVerificationBtn.tsx";
-- import type { Manifest } from "$fresh/server.ts";
-+ import * as $SupplyRequest from "./islands/SupplyRequest.tsx";
-- 
-+ import type { Manifest } from "$fresh/server.ts";
-- const manifest = {
-+ 
--   routes: {
-+ const manifest = {
--     "./routes/_app.tsx": $_app,
-+   routes: {
--     "./routes/api/auth/forgot.ts": $api_auth_forgot,
-+     "./routes/_app.tsx": $_app,
--     "./routes/api/auth/login.ts": $api_auth_login,
-+     "./routes/api/auth/forgot.ts": $api_auth_forgot,
--     "./routes/api/auth/logout.ts": $api_auth_logout,
-+     "./routes/api/auth/login.ts": $api_auth_login,
--     "./routes/api/auth/register.ts": $api_auth_register,
-+     "./routes/api/auth/logout.ts": $api_auth_logout,
--     "./routes/api/auth/resend-verification.ts": $api_auth_resend_verification,
-+     "./routes/api/auth/register.ts": $api_auth_register,
--     "./routes/api/bookings.ts": $api_bookings,
-+     "./routes/api/auth/resend-verification.ts": $api_auth_resend_verification,
--     "./routes/api/caretaker/supply.ts": $api_caretaker_supply,
-+     "./routes/api/bookings.ts": $api_bookings,
--     "./routes/api/chat.ts": $api_chat,
-+     "./routes/api/caretaker/supply.ts": $api_caretaker_supply,
--     "./routes/api/contact.ts": $api_contact,
-+     "./routes/api/chat.ts": $api_chat,
--     "./routes/api/cron/sync.ts": $api_cron_sync,
-+     "./routes/api/contact.ts": $api_contact,
--     "./routes/api/knowledge.ts": $api_knowledge,
-+     "./routes/api/cron/sync.ts": $api_cron_sync,
--     "./routes/api/knowledge/ocr.ts": $api_knowledge_ocr,
-+     "./routes/api/knowledge.ts"
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [manifest, manifest, default, default]
+📌 IDE AST Context: Modified symbols likely include [getKv, LayoutData, handler, DashboardLayout]

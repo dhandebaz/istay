@@ -17,8 +17,10 @@ import {
   saveNotification,
   savePrivateVerification,
 } from "../../utils/db.ts";
-import { callGeminiVision, GeminiError } from "../../utils/gemini.ts";
+import { callGeminiVision, GeminiError, stripDataUri } from "../../utils/gemini.ts";
 import type { GuestVerification, Notification, OcrResult, PrivateVerification } from "../../utils/types.ts";
+import { dispatchWebhook } from "../../utils/events.ts";
+import { uploadToR2 } from "../../utils/storage.ts";
 
 const ALLOWED_ID_TYPES = [
   "aadhaar",
@@ -119,15 +121,24 @@ export const handler: Handlers = {
     }
 
     // ── Store initial "processing" state ────────────────────────
-    const MAX_B64_PREVIEW = 2048;
-    const idPreviewB64 = imageB64.slice(0, MAX_B64_PREVIEW);
     const now = new Date().toISOString();
+    let idObjectKey = "";
+
+    try {
+      // Decode base64 to Uint8Array for R2 upload
+      const { data: imageData } = stripDataUri(imageB64);
+      const binaryData = Uint8Array.from(atob(imageData), c => c.charCodeAt(0));
+      idObjectKey = `ids/${bookingId}_${Date.now()}.jpg`;
+      await uploadToR2(binaryData, idObjectKey, "image/jpeg", false);
+    } catch (err) {
+      console.error("[verify] R2 upload failed:", err);
+    }
 
     const verification: GuestVerification = {
       bookingId,
       guestName: guestName.trim(),
       idType: idType as IdType,
-      idPreviewB64,
+      idObjectKey,
       status: "processing",
       createdAt: now,
     };
@@ -226,6 +237,7 @@ export const handler: Handlers = {
       fullName: ocrResult.name || undefined,
       dob: ocrResult.dob !== "not visible" ? ocrResult.dob : undefined,
       idNumber: ocrResult.id_number || undefined,
+      idObjectKey,
       address: ocrResult.address !== "not visible" ? ocrResult.address : undefined,
       matchScore,
       flags,
@@ -260,6 +272,16 @@ export const handler: Handlers = {
       };
       await saveNotification(reviewNotification);
     }
+
+    // ── Phase 8: Dispatch Webhook Event ──────────────────────
+    await dispatchWebhook(booking.hostId, "verification_complete", {
+      bookingId,
+      guestName,
+      isVerified,
+      matchScore,
+      flags,
+      extractedName: ocrResult.name,
+    });
 
     return Response.json({
       ok: true,

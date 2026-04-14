@@ -10,6 +10,7 @@ interface BookingFlowProps {
   verificationStatus: string; // "pending" | "processing" | "verified" | "failed"
   instructionsContent?: string; // Markdown or raw text from HostKnowledge
   propertyName: string;
+  propertyImage?: string;
 }
 
 export default function BookingFlow({
@@ -21,6 +22,7 @@ export default function BookingFlow({
   verificationStatus,
   instructionsContent,
   propertyName,
+  propertyImage,
 }: BookingFlowProps) {
   const isConfirmed = status === "confirmed" || status === "room_ready";
   const isVerified = verificationStatus === "verified";
@@ -37,10 +39,17 @@ export default function BookingFlow({
 
   return (
     <div class="max-w-2xl mx-auto w-full space-y-6">
-      {/* Soft Tech Header Card */}
-      <div class="bg-white/80 backdrop-blur-md rounded-[2rem] border border-gray-100 shadow-xl overflow-hidden p-8 relative">
+      {/* Bespoke Header Card */}
+      <div class="relative bg-white/80 backdrop-blur-md rounded-[2rem] border border-gray-100 shadow-xl overflow-hidden p-8">
+        {/* Property Branding Layer */}
+        {propertyImage && (
+          <div class="absolute top-0 left-0 w-full h-32 opacity-10 overflow-hidden pointer-events-none">
+            <img src={propertyImage} class="w-full h-full object-cover blur-sm" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-white/80" />
+          </div>
+        )}
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 to-teal-500"></div>
-        <div class="flex items-start justify-between">
+        <div class="relative z-10 flex items-start justify-between">
           <div>
             <h1 class="text-2xl font-800 text-gray-900 tracking-tight">Your Stay</h1>
             <p class="text-gray-500 mt-1">{propertyName}</p>

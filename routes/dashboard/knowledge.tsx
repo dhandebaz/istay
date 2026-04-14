@@ -31,7 +31,8 @@ export const handler: Handlers<KnowledgePageData, DashboardState> = {
     const knowledgeMap: Record<string, string> = {};
     await Promise.all(
       properties.map(async (prop) => {
-        const kb = await getKnowledge(hostId, prop.id);
+        const kb = await getKnowledge(prop.id);
+
         if (kb?.content) {
           knowledgeMap[prop.id] = kb.content;
         }

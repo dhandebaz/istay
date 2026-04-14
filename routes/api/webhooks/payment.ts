@@ -21,11 +21,18 @@ import {
   getLedgerEntry,
   getPropertyById,
   saveBooking,
+  saveHost,
   saveLedgerEntry,
   saveNotification,
+  getGuestProfile,
+  saveGuestProfile,
 } from "../../../utils/db.ts";
 import { sendBookingConfirmation, sendHostNewBookingAlert } from "../../../utils/email.ts";
-import type { LedgerEntry, Notification } from "../../../utils/types.ts";
+import { sendWhatsAppMessage } from "../../../utils/whatsapp.ts";
+import { dispatchCaretakerMission } from "../../../utils/staff.ts";
+import { dispatchWebhook } from "../../../utils/events.ts";
+import type { LedgerEntry, Notification, GuestProfile } from "../../../utils/types.ts";
+
 
 const EASEBUZZ_SALT = Deno.env.get("EASEBUZZ_SALT");
 const EASEBUZZ_KEY = Deno.env.get("EASEBUZZ_KEY");
@@ -96,7 +103,7 @@ export const handler: Handlers = {
       console.warn("[webhook] Easebuzz credentials missing — skipping verification (dev only)");
     }
 
-    const { status, txnid, udf1: bookingId, amount: amountStr } = params;
+    const { status, txnid, udf1, udf2, amount: amountStr } = params;
     const amount = parseFloat(amountStr);
 
     if (status !== "success") {
@@ -104,6 +111,22 @@ export const handler: Handlers = {
       return Response.json({ ok: true, status });
     }
 
+    // ── ONBOARDING FLOW ───────────────────────────────────────
+    if (udf2 === "onboarding") {
+      const hostId = udf1;
+      const host = await getHost(hostId);
+      if (host) {
+        await saveHost({ ...host, setupFeePaid: true });
+        console.log(`[webhook] Host ${hostId} verified — Setup Fee Paid.`);
+        
+        // WhatsApp Welcome Dispatch
+        const welcomeMsg = `Welcome to iStay, ${host.name}! 🚀 Your lifetime account is now verified. Next step: Sync your first property iCal in the dashboard to go live.`;
+        await sendWhatsAppMessage(host.phone, welcomeMsg);
+      }
+      return Response.json({ ok: true, type: "onboarding" });
+    }
+
+    const bookingId = udf1;
     if (!bookingId) {
       console.error("[webhook] Missing udf1 (bookingId) in payload");
       return Response.json({ error: "Missing bookingId" }, { status: 400 });
@@ -127,7 +150,19 @@ export const handler: Handlers = {
       gatewayOrderId: txnid,
       updatedAt: new Date().toISOString(),
     };
+
+    // ── Phase 8: Dispatch Webhook Event ──────────────────────
+    await dispatchWebhook(booking.hostId, "booking_confirmed", {
+      bookingId: booking.id,
+      amount: booking.amount,
+      guestName: booking.guestName,
+      checkIn: booking.checkIn,
+      checkOut: booking.checkOut,
+    });
     await saveBooking(confirmedBooking);
+    
+    // ── Dispatch Caretaker ─────────────────────────────────────
+    dispatchCaretakerMission(confirmedBooking).catch(e => console.error("[webhook] Staff dispatch error:", e));
 
     // ── Block Calendar ─────────────────────────────────────────
     const datesToBlock = enumerateDates(booking.checkIn, booking.checkOut);
