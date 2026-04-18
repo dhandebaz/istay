@@ -65,7 +65,9 @@ export const handler: Handlers = {
     // ── Validate content length ────────────────────────────────
     if (content.length > MAX_CONTENT_LENGTH) {
       return Response.json(
-        { error: `Content too long. Maximum ${MAX_CONTENT_LENGTH} characters.` },
+        {
+          error: `Content too long. Maximum ${MAX_CONTENT_LENGTH} characters.`,
+        },
         { status: 400 },
       );
     }

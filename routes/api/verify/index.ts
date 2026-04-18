@@ -18,7 +18,12 @@ import {
   savePrivateVerification,
 } from "../../../utils/db.ts";
 import { callGeminiVision, stripDataUri } from "../../../utils/gemini.ts";
-import type { GuestVerification, Notification, OcrResult, PrivateVerification } from "../../../utils/types.ts";
+import type {
+  GuestVerification,
+  Notification,
+  OcrResult,
+  PrivateVerification,
+} from "../../../utils/types.ts";
 import { dispatchWebhook } from "../../../utils/events.ts";
 import { uploadToR2 } from "../../../utils/storage.ts";
 
@@ -38,7 +43,9 @@ const MATCH_THRESHOLD = 90; // matchScore above this → auto-verified
  * Builds the one-shot OCR + KYC verification prompt for Gemini Vision.
  */
 function buildOcrPrompt(guestName: string, idType: string): string {
-  return `Act as an Indian KYC verification expert. You are analyzing a ${idType.replace("_", " ")} document.
+  return `Act as an Indian KYC verification expert. You are analyzing a ${
+    idType.replace("_", " ")
+  } document.
 
 TASK:
 1. Extract the following fields from this ID document image:
@@ -127,7 +134,10 @@ export const handler: Handlers = {
     try {
       // Decode base64 to Uint8Array for R2 upload
       const { data: imageData } = stripDataUri(imageB64);
-      const binaryData = Uint8Array.from(atob(imageData), c => c.charCodeAt(0));
+      const binaryData = Uint8Array.from(
+        atob(imageData),
+        (c) => c.charCodeAt(0),
+      );
       idObjectKey = `ids/${bookingId}_${Date.now()}.jpg`;
       await uploadToR2(binaryData, idObjectKey, "image/jpeg", false);
     } catch (err) {
@@ -186,7 +196,9 @@ export const handler: Handlers = {
         hostId: booking.hostId,
         type: "verification_failed" as Notification["type"],
         title: "ID Verification Failed",
-        message: `Guest ${guestName.trim()} uploaded an ID for booking #${bookingId.slice(0, 8).toUpperCase()} but OCR processing failed. Manual review is required.`,
+        message: `Guest ${guestName.trim()} uploaded an ID for booking #${
+          bookingId.slice(0, 8).toUpperCase()
+        } but OCR processing failed. Manual review is required.`,
         propertyName: "",
         meta: { bookingId, guestName: guestName.trim() },
         read: false,
@@ -197,7 +209,8 @@ export const handler: Handlers = {
       return Response.json({
         ok: true,
         status: "review_needed",
-        message: "ID verification encountered an error. Our team will review manually.",
+        message:
+          "ID verification encountered an error. Our team will review manually.",
         bookingId,
         matchScore: 0,
         verified: false,
@@ -208,8 +221,7 @@ export const handler: Handlers = {
     // ── Determine verification outcome ─────────────────────────
     const matchScore = Math.min(100, Math.max(0, ocrResult.match_score ?? 0));
     const flags = Array.isArray(ocrResult.flags) ? ocrResult.flags : [];
-    const isVerified =
-      matchScore >= MATCH_THRESHOLD &&
+    const isVerified = matchScore >= MATCH_THRESHOLD &&
       !flags.includes("not_an_id_document") &&
       !flags.includes("edited");
 
@@ -238,7 +250,9 @@ export const handler: Handlers = {
       dob: ocrResult.dob !== "not visible" ? ocrResult.dob : undefined,
       idNumber: ocrResult.id_number || undefined,
       idObjectKey,
-      address: ocrResult.address !== "not visible" ? ocrResult.address : undefined,
+      address: ocrResult.address !== "not visible"
+        ? ocrResult.address
+        : undefined,
       matchScore,
       flags,
       rawResponse: JSON.stringify(ocrResult),
@@ -254,7 +268,6 @@ export const handler: Handlers = {
         idVerified: true,
         updatedAt: now,
       });
-
     }
 
     // If not verified, notify the host to review manually
@@ -264,9 +277,19 @@ export const handler: Handlers = {
         hostId: booking.hostId,
         type: "verification_complete" as Notification["type"],
         title: matchScore >= 70 ? "ID Partial Match" : "ID Verification Failed",
-        message: `Guest ${guestName.trim()} (booking #${bookingId.slice(0, 8).toUpperCase()}) scored ${matchScore}/100 on ID verification. ${flags.length > 0 ? `Flags: ${flags.join(", ")}` : "Manual review recommended."}`,
+        message: `Guest ${guestName.trim()} (booking #${
+          bookingId.slice(0, 8).toUpperCase()
+        }) scored ${matchScore}/100 on ID verification. ${
+          flags.length > 0
+            ? `Flags: ${flags.join(", ")}`
+            : "Manual review recommended."
+        }`,
         propertyName: "",
-        meta: { bookingId, matchScore: String(matchScore), guestName: guestName.trim() },
+        meta: {
+          bookingId,
+          matchScore: String(matchScore),
+          guestName: guestName.trim(),
+        },
         read: false,
         createdAt: now,
       };

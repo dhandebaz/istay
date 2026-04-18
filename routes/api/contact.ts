@@ -7,13 +7,7 @@
 
 import { type Handlers } from "$fresh/server.ts";
 
-const getKv = (() => {
-  let kv: Deno.Kv | null = null;
-  return async () => {
-    if (!kv) kv = await Deno.openKv();
-    return kv;
-  };
-})();
+import { getKv } from "../../utils/db.ts";
 
 interface ContactInquiry {
   id: string;

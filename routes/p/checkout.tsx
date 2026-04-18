@@ -68,13 +68,36 @@ export default function CheckoutPage({ data }: PageProps<CheckoutData>) {
         {/* Top Bar */}
         <header class="bg-white border-b border-gray-100 py-4 px-4 sm:px-6">
           <div class="max-w-3xl mx-auto flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95">
+            <a
+              href="/"
+              class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95"
+            >
               <img src="/logo.svg" alt="istay logo" class="h-6 w-auto" />
             </a>
             <div class="flex items-center gap-1.5 text-xs text-gray-400">
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-                <rect x="1" y="1" width="11" height="11" rx="2" stroke="#d1d5db" stroke-width="1.25" />
-                <path d="M4 6.5L5.5 8L9 4.5" stroke="#00E676" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 13 13"
+                fill="none"
+                aria-hidden="true"
+              >
+                <rect
+                  x="1"
+                  y="1"
+                  width="11"
+                  height="11"
+                  rx="2"
+                  stroke="#d1d5db"
+                  stroke-width="1.25"
+                />
+                <path
+                  d="M4 6.5L5.5 8L9 4.5"
+                  stroke="#00E676"
+                  stroke-width="1.25"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
               </svg>
               Secure Checkout
             </div>

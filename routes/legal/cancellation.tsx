@@ -44,8 +44,9 @@ export default function Cancellation() {
           <div class="prose-legal">
             <p>
               This Cancellation & Refund Policy applies to all transactions
-              processed through the istay platform, operated by Sheikh Arsalan Ullah Chishti (istay). Please read this policy carefully before making any
-              payment.
+              processed through the istay platform, operated by Sheikh Arsalan
+              Ullah Chishti (istay). Please read this policy carefully before
+              making any payment.
             </p>
 
             {/* Section A */}
@@ -54,34 +55,36 @@ export default function Cancellation() {
                 A. Host SaaS Subscription Fees
               </h2>
               <p class="!text-teal-700">
-                This section applies to fees paid by property owners and managers
-                ("Hosts") for access to the istay platform.
+                This section applies to fees paid by property owners and
+                managers ("Hosts") for access to the istay platform.
               </p>
             </div>
 
             <h2>A1. One-Time Setup Fee (₹1,000)</h2>
             <p>
               The ₹1,000 one-time platform setup fee is{" "}
-              <strong>strictly non-refundable</strong> once your account has been
-              activated and your booking page has been made live. This fee covers
-              the cost of account provisioning, system configuration, onboarding
-              support, and lifetime access to the platform.
+              <strong>strictly non-refundable</strong>{" "}
+              once your account has been activated and your booking page has
+              been made live. This fee covers the cost of account provisioning,
+              system configuration, onboarding support, and lifetime access to
+              the platform.
             </p>
             <p>
-              <strong>Exception:</strong> If istay fails to activate your account
-              within 3 business days of payment and no technical issues are
-              attributable to the Host, you may request a full refund within 7
-              days of payment by emailing{" "}
-              <a href="mailto:support@istay.space">support@istay.space</a> with
-              your payment reference number.
+              <strong>Exception:</strong>{" "}
+              If istay fails to activate your account within 3 business days of
+              payment and no technical issues are attributable to the Host, you
+              may request a full refund within 7 days of payment by emailing
+              {" "}
+              <a href="mailto:support@istay.space">support@istay.space</a>{" "}
+              with your payment reference number.
             </p>
 
             <h2>A2. Transaction Commission (5%)</h2>
             <p>
               The 5% per-booking commission is deducted automatically at
               settlement and is non-refundable once a booking has been confirmed
-              and funds have been settled. If a booking is cancelled and the Guest
-              receives a refund per the Host's cancellation policy, the 5%
+              and funds have been settled. If a booking is cancelled and the
+              Guest receives a refund per the Host's cancellation policy, the 5%
               commission will also be refunded to the Host's settlement account.
             </p>
 
@@ -132,7 +135,8 @@ export default function Cancellation() {
               <li>
                 If the Host is unresponsive within 48 hours or a dispute arises,
                 Guests may escalate to{" "}
-                <a href="mailto:support@istay.space">support@istay.space</a>{" "}
+                <a href="mailto:support@istay.space">support@istay.space</a>
+                {" "}
                 with their booking reference number and details of the issue.
               </li>
             </ul>
@@ -145,33 +149,49 @@ export default function Cancellation() {
             <h2>B3. Refund Processing Timeline</h2>
             <p>
               Approved refunds are processed within{" "}
-              <strong>5–7 business days</strong> of confirmation. Refunds are
-              credited to the original payment method used at the time of booking.
-              Processing timelines may vary depending on the Guest's bank.
+              <strong>5–7 business days</strong>{" "}
+              of confirmation. Refunds are credited to the original payment
+              method used at the time of booking. Processing timelines may vary
+              depending on the Guest's bank.
             </p>
 
             <h2>C. Chargebacks & Disputes</h2>
             <p>
               Unauthorised chargebacks initiated without first attempting
               resolution through istay support may result in account suspension
-              and recovery of disputed amounts plus processing fees. We encourage
-              all parties to resolve disputes amicably through our support channel
-              first.
+              and recovery of disputed amounts plus processing fees. We
+              encourage all parties to resolve disputes amicably through our
+              support channel first.
             </p>
 
             <h2>D. Contact</h2>
             <p>
               For cancellation or refund requests, please email{" "}
-              <a href="mailto:support@istay.space">support@istay.space</a> with
-              your order/booking reference number. Our team responds within 24–48
-              business hours.
+              <a href="mailto:support@istay.space">support@istay.space</a>{" "}
+              with your order/booking reference number. Our team responds within
+              24–48 business hours.
             </p>
           </div>
 
           <div class="mt-12 pt-6 border-t border-gray-100 flex flex-wrap gap-4 text-xs text-gray-400">
-            <a href="/legal/terms" class="hover:text-teal-600 transition-colors">Terms & Conditions</a>
-            <a href="/legal/privacy" class="hover:text-teal-600 transition-colors">Privacy Policy</a>
-            <a href="/legal/shipping" class="hover:text-teal-600 transition-colors">Shipping Policy</a>
+            <a
+              href="/legal/terms"
+              class="hover:text-teal-600 transition-colors"
+            >
+              Terms & Conditions
+            </a>
+            <a
+              href="/legal/privacy"
+              class="hover:text-teal-600 transition-colors"
+            >
+              Privacy Policy
+            </a>
+            <a
+              href="/legal/shipping"
+              class="hover:text-teal-600 transition-colors"
+            >
+              Shipping Policy
+            </a>
           </div>
         </div>
       </main>

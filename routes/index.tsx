@@ -8,40 +8,62 @@ const FEATURES = [
   {
     icon: "💰",
     title: "One-Time Setup. Forever.",
-    desc: "Pay ₹1,000 once. Own your booking channel forever. No monthly SaaS fees eating into your revenue.",
+    desc:
+      "Pay ₹1,000 once. Own your booking channel forever. No monthly SaaS fees eating into your revenue.",
   },
   {
     icon: "🤖",
     title: "AI Concierge",
-    desc: "Automated guest messaging, check-in instructions, and reviews — running 24/7 without lifting a finger.",
+    desc:
+      "Automated guest messaging, check-in instructions, and reviews — running 24/7 without lifting a finger.",
   },
   {
     icon: "📊",
     title: "Real-Time Dashboard",
-    desc: "Track revenue, occupancy, and guest history across all your properties in one clean interface.",
+    desc:
+      "Track revenue, occupancy, and guest history across all your properties in one clean interface.",
   },
   {
     icon: "🔒",
     title: "Smart ID Verification",
-    desc: "OCR-powered guest ID scanning at check-in. Legally compliant, instant, and fully secure.",
+    desc:
+      "OCR-powered guest ID scanning at check-in. Legally compliant, instant, and fully secure.",
   },
   {
     icon: "📣",
     title: "Direct Booking Links",
-    desc: "Share your branded booking page on WhatsApp, Instagram, or anywhere. Zero OTA dependency.",
+    desc:
+      "Share your branded booking page on WhatsApp, Instagram, or anywhere. Zero OTA dependency.",
   },
   {
     icon: "⚡",
     title: "Instant Payouts",
-    desc: "Payments hit your account the moment a guest books — no 30-day holds or 15% platform cuts.",
+    desc:
+      "Payments hit your account the moment a guest books — no 30-day holds or 15% platform cuts.",
   },
 ];
 
 const PLATFORMS = [
   { name: "Airbnb", fee: "15%", color: "text-rose-500", bg: "bg-rose-50" },
-  { name: "MakeMyTrip", fee: "18%", color: "text-orange-500", bg: "bg-orange-50" },
-  { name: "Booking.com", fee: "15–20%", color: "text-blue-500", bg: "bg-blue-50" },
-  { name: "istay", fee: "5%", color: "text-teal-600", bg: "bg-teal-50", highlight: true },
+  {
+    name: "MakeMyTrip",
+    fee: "18%",
+    color: "text-orange-500",
+    bg: "bg-orange-50",
+  },
+  {
+    name: "Booking.com",
+    fee: "15–20%",
+    color: "text-blue-500",
+    bg: "bg-blue-50",
+  },
+  {
+    name: "istay",
+    fee: "5%",
+    color: "text-teal-600",
+    bg: "bg-teal-50",
+    highlight: true,
+  },
 ];
 
 const SCHEMA = JSON.stringify({
@@ -155,10 +177,10 @@ export default function Home() {
             </h1>
 
             <p class="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              istay is a direct booking platform for Airbnb and hotel hosts. Accept
-              bookings through your own channel with a flat{" "}
-              <span class="font-600 text-gray-700">5% fee</span> — no monthly
-              subscriptions, no vendor lock-in.
+              istay is a direct booking platform for Airbnb and hotel hosts.
+              Accept bookings through your own channel with a flat{" "}
+              <span class="font-600 text-gray-700">5% fee</span>{" "}
+              — no monthly subscriptions, no vendor lock-in.
             </p>
 
             <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -266,9 +288,10 @@ export default function Home() {
                   <span class="text-mint-600">Import in 3 seconds.</span>
                 </h2>
                 <p class="mt-6 text-lg text-gray-500 leading-relaxed">
-                  Don't waste hours copy-pasting descriptions and uploading photos. 
-                  Paste your Airbnb link, and our "Magic Scraper" automatically builds 
-                  your istay booking page, import reviews, and syncs your calendar.
+                  Don't waste hours copy-pasting descriptions and uploading
+                  photos. Paste your Property URL, and our "Magic Scraper"
+                  automatically builds your istay booking page, import reviews,
+                  and syncs your calendar.
                 </p>
                 <div class="mt-8 space-y-4">
                   {[
@@ -278,8 +301,19 @@ export default function Home() {
                   ].map((item) => (
                     <div key={item} class="flex items-center gap-3">
                       <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-100 flex items-center justify-center text-mint-600">
-                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-                          <path d="M3 8L6 11L13 4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            d="M3 8L6 11L13 4"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
                         </svg>
                       </div>
                       <span class="text-gray-700 font-500">{item}</span>
@@ -305,7 +339,8 @@ export default function Home() {
                 Up and running in minutes
               </h2>
               <p class="mt-3 text-gray-500 text-lg max-w-xl mx-auto">
-                No tech skills needed. Just three steps to your own booking channel.
+                No tech skills needed. Just three steps to your own booking
+                channel.
               </p>
             </div>
 
@@ -321,22 +356,27 @@ export default function Home() {
                   {
                     step: "01",
                     title: "Pay once & onboard",
-                    desc: "Pay the ₹1,000 setup fee. We activate your account and branded booking page instantly.",
+                    desc:
+                      "Pay the ₹1,000 setup fee. We activate your account and branded booking page instantly.",
                   },
                   {
                     step: "02",
                     title: "Share your link",
-                    desc: "Send your booking page to past guests via WhatsApp, add it to your Instagram bio, anywhere.",
+                    desc:
+                      "Send your booking page to past guests via WhatsApp, add it to your Instagram bio, anywhere.",
                   },
                   {
                     step: "03",
                     title: "Get paid directly",
-                    desc: "Guests pay via UPI/Card. You receive 95% instantly. No holds, no disputes with OTAs.",
+                    desc:
+                      "Guests pay via UPI/Card. You receive 95% instantly. No holds, no disputes with OTAs.",
                   },
                 ].map(({ step, title, desc }) => (
                   <div key={step} class="text-center">
                     <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-istay-50 border-2 border-istay-100 mb-5">
-                      <span class="text-2xl font-800 text-istay-900">{step}</span>
+                      <span class="text-2xl font-800 text-istay-900">
+                        {step}
+                      </span>
                     </div>
                     <h3 class="text-lg font-700 text-gray-900 mb-2">{title}</h3>
                     <p class="text-gray-500 text-sm leading-relaxed">{desc}</p>
@@ -352,11 +392,15 @@ export default function Home() {
           <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-16">
               <h2 class="text-3xl sm:text-4xl font-900 text-gray-900 tracking-tight leading-tight">
-                Featured Properties. <span class="text-mint-500 underline decoration-mint-200">Zero Commission.</span>
+                Featured Properties.{" "}
+                <span class="text-mint-500 underline decoration-mint-200">
+                  Zero Commission.
+                </span>
               </h2>
               <p class="mt-4 text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed">
-                Browse properties that have already switched to direct bookings. 
-                Locations are verified but hidden for guest privacy until interaction.
+                Browse properties that have already switched to direct bookings.
+                Locations are verified but hidden for guest privacy until
+                interaction.
               </p>
             </div>
 
@@ -398,7 +442,8 @@ export default function Home() {
               Ready to stop sharing your revenue?
             </h2>
             <p class="mt-4 text-istay-100 text-lg">
-              Join hundreds of hosts across India who have switched to direct bookings.
+              Join hundreds of hosts across India who have switched to direct
+              bookings.
             </p>
             <a
               href="/pricing"

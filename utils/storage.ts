@@ -37,9 +37,11 @@ export async function uploadToR2(
 /**
  * Generates a presigned GET URL for a private object.
  */
-export async function getSignedUrl(path: string, seconds = 3600): Promise<string> {
+export async function getSignedUrl(
+  path: string,
+  seconds = 3600,
+): Promise<string> {
   return await s3Client.presignedGetObject(path, { expirySeconds: seconds });
-
 }
 
 /**

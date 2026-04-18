@@ -80,12 +80,22 @@ export const handler: Handlers = {
       return Response.json({ error: "Invalid JSON body" }, { status: 400 });
     }
 
-    const { bookingId, amount, hostVendorId, guestEmail, guestName, guestPhone, type } = body;
+    const {
+      bookingId,
+      amount,
+      hostVendorId,
+      guestEmail,
+      guestName,
+      guestPhone,
+      type,
+    } = body;
 
     // ── ONBOARDING SETUP FEE FLOW ──
     if (type === "setup_fee") {
       const hostId = getHostId(req);
-      if (!hostId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+      if (!hostId) {
+        return Response.json({ error: "Unauthorized" }, { status: 401 });
+      }
 
       const txnid = `setup_${hostId}_${Date.now()}`;
       const params: any = {
@@ -143,8 +153,10 @@ export const handler: Handlers = {
       firstname: guestName,
       phone: guestPhone || "9999999999",
       email: guestEmail,
-      surl: `https://istay.space/p/${booking.propertyId}?bookingId=${bookingId}`,
-      furl: `https://istay.space/p/${booking.propertyId}?payment=failed&bookingId=${bookingId}`,
+      surl:
+        `https://istay.space/p/${booking.propertyId}?bookingId=${bookingId}`,
+      furl:
+        `https://istay.space/p/${booking.propertyId}?payment=failed&bookingId=${bookingId}`,
       udf1: bookingId,
       split_payments: JSON.stringify(splitDetails),
     };
@@ -196,7 +208,9 @@ export const handler: Handlers = {
       });
     } catch (err) {
       console.error("[pay] Easebuzz initiation exception:", err);
-      return Response.json({ error: "Internal payment error" }, { status: 500 });
+      return Response.json({ error: "Internal payment error" }, {
+        status: 500,
+      });
     }
   },
 };
@@ -204,7 +218,14 @@ export const handler: Handlers = {
 /**
  * Reusable Easebuzz initiation helper
  */
-async function initiateEasebuzz(params: any, txnid: string, bookingId: string, amount: number, hostAmount: number, istayAmount: number) {
+async function initiateEasebuzz(
+  params: any,
+  txnid: string,
+  bookingId: string,
+  amount: number,
+  hostAmount: number,
+  istayAmount: number,
+) {
   const formData = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
     formData.append(key, value as string);
@@ -221,12 +242,23 @@ async function initiateEasebuzz(params: any, txnid: string, bookingId: string, a
 
   const ebData = await ebRes.json();
   if (ebData.status !== 1) {
-    return Response.json({ error: "Easebuzz initiation failed", details: ebData.data }, { status: 502 });
+    return Response.json({
+      error: "Easebuzz initiation failed",
+      details: ebData.data,
+    }, { status: 502 });
   }
 
   return Response.json({
     ok: true,
-    order: { orderId: txnid, bookingId, amount, hostAmount, istayAmount, status: "created", createdAt: new Date().toISOString() },
+    order: {
+      orderId: txnid,
+      bookingId,
+      amount,
+      hostAmount,
+      istayAmount,
+      status: "created",
+      createdAt: new Date().toISOString(),
+    },
     access_key: ebData.data,
   });
 }

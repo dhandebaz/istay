@@ -37,17 +37,31 @@ const HOST_SHARE = 1 - ISTAY_COMMISSION; // 95%
 /** Easy hash encoder for Easebuzz */
 async function generateHash(params: Record<string, string>, salt: string) {
   const hashString = [
-    params.key, params.txnid, params.amount, params.productinfo,
-    params.firstname, params.email, params.udf1 || "", params.udf2 || "",
-    params.udf3 || "", params.udf4 || "", params.udf5 || "", params.udf6 || "",
-    params.udf7 || "", params.udf8 || "", params.udf9 || "", params.udf10 || "",
+    params.key,
+    params.txnid,
+    params.amount,
+    params.productinfo,
+    params.firstname,
+    params.email,
+    params.udf1 || "",
+    params.udf2 || "",
+    params.udf3 || "",
+    params.udf4 || "",
+    params.udf5 || "",
+    params.udf6 || "",
+    params.udf7 || "",
+    params.udf8 || "",
+    params.udf9 || "",
+    params.udf10 || "",
     salt,
   ].join("|");
 
   const encoder = new TextEncoder();
   const data = encoder.encode(hashString);
   const hashBuffer = await crypto.subtle.digest("SHA-512", data);
-  return Array.from(new Uint8Array(hashBuffer)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  return Array.from(new Uint8Array(hashBuffer)).map((b) =>
+    b.toString(16).padStart(2, "0")
+  ).join("");
 }
 
 function daysBetween(start: string, end: string): number {
@@ -80,9 +94,15 @@ export const handler: Handlers = {
       body;
 
     // ── Input Validation ───────────────────────────────────────
-    if (!propId || !checkIn || !checkOut || !guestName || !guestEmail || !guestPhone) {
+    if (
+      !propId || !checkIn || !checkOut || !guestName || !guestEmail ||
+      !guestPhone
+    ) {
       return Response.json(
-        { error: "Required: propId, checkIn, checkOut, guestName, guestEmail, guestPhone" },
+        {
+          error:
+            "Required: propId, checkIn, checkOut, guestName, guestEmail, guestPhone",
+        },
         { status: 400 },
       );
     }
@@ -97,7 +117,9 @@ export const handler: Handlers = {
 
     const today = new Date().toISOString().slice(0, 10);
     if (checkIn < today) {
-      return Response.json({ error: "Check-in date cannot be in the past" }, { status: 400 });
+      return Response.json({ error: "Check-in date cannot be in the past" }, {
+        status: 400,
+      });
     }
     if (checkOut <= checkIn) {
       return Response.json(
@@ -136,7 +158,8 @@ export const handler: Handlers = {
     if (conflictDate) {
       return Response.json(
         {
-          error: `Date ${conflictDate} is unavailable. Please choose different dates.`,
+          error:
+            `Date ${conflictDate} is unavailable. Please choose different dates.`,
           conflictDate,
         },
         { status: 409 },
@@ -170,7 +193,8 @@ export const handler: Handlers = {
     if (!EASEBUZZ_KEY || !EASEBUZZ_SALT) {
       return Response.json(
         {
-          error: "Payment gateway not configured. Set EASEBUZZ_KEY and EASEBUZZ_SALT.",
+          error:
+            "Payment gateway not configured. Set EASEBUZZ_KEY and EASEBUZZ_SALT.",
           bookingId,
           amount,
           nights,
@@ -181,7 +205,7 @@ export const handler: Handlers = {
 
     const txnid = `istay_${bookingId}_${Date.now()}`;
     const hostAmount = Math.round(amount * HOST_SHARE * 100) / 100;
-    
+
     // Easebuzz Slices Payload
     const splitDetails = {
       label: `split_istay_${bookingId}`,
@@ -230,7 +254,11 @@ export const handler: Handlers = {
       if (ebData.status !== 1) {
         console.error("[bookings] Easebuzz error:", ebData.data);
         return Response.json(
-          { error: "Payment gateway error — booking saved, please contact support", bookingId },
+          {
+            error:
+              "Payment gateway error — booking saved, please contact support",
+            bookingId,
+          },
           { status: 502 },
         );
       }

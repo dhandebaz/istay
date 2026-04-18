@@ -6,13 +6,7 @@ import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 import type { Booking, DashboardState } from "../../utils/types.ts";
 
-const getKv = (() => {
-  let kv: Deno.Kv | null = null;
-  return async () => {
-    if (!kv) kv = await Deno.openKv();
-    return kv;
-  };
-})();
+import { getKv } from "../../utils/db.ts";
 
 interface GuestRecord {
   name: string;
@@ -30,7 +24,8 @@ interface GuestsPageData {
 
 export const handler: Handlers<GuestsPageData, DashboardState> = {
   GET: async (_req, ctx) => {
-    const { hostId } = ctx.state;
+    const state = ctx.state as DashboardState;
+    const { hostId } = state;
     const kv = await getKv();
 
     // Load all bookings and aggregate by guest email
@@ -131,8 +126,20 @@ export default function GuestsPage(
                   </div>
                   {g.verified && (
                     <span class="flex-shrink-0 inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[10px] font-700">
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                        <path d="M2 5L4.5 7.5L8 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                      <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 10 10"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M2 5L4.5 7.5L8 3"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
                       </svg>
                       ID Verified
                     </span>
@@ -143,11 +150,15 @@ export default function GuestsPage(
                 <div class="grid grid-cols-3 gap-2">
                   <div class="text-center p-2 rounded-xl bg-gray-50">
                     <p class="text-xs text-gray-400 font-500">Stays</p>
-                    <p class="text-sm font-800 text-gray-900">{g.bookingCount}</p>
+                    <p class="text-sm font-800 text-gray-900">
+                      {g.bookingCount}
+                    </p>
                   </div>
                   <div class="text-center p-2 rounded-xl bg-gray-50">
                     <p class="text-xs text-gray-400 font-500">Spent</p>
-                    <p class="text-sm font-800 text-gray-900">{formatINR(g.totalSpent)}</p>
+                    <p class="text-sm font-800 text-gray-900">
+                      {formatINR(g.totalSpent)}
+                    </p>
                   </div>
                   <div class="text-center p-2 rounded-xl bg-gray-50">
                     <p class="text-xs text-gray-400 font-500">Last Stay</p>

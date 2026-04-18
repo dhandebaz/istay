@@ -92,7 +92,8 @@ function IdleState({ url, onUrlChange, onFetch, isLoading }: IdleStateProps) {
           Add New Property
         </h3>
         <p class="text-xs text-gray-400 leading-relaxed">
-          Paste your Airbnb listing link below and we'll import everything automatically.
+          Paste your Airbnb listing link below and we'll import everything
+          automatically.
         </p>
       </div>
 
@@ -199,7 +200,8 @@ function PreviewState({
             id="prop-desc"
             rows={3}
             value={editDesc}
-            onInput={(e) => onDescChange((e.target as HTMLTextAreaElement).value)}
+            onInput={(e) =>
+              onDescChange((e.target as HTMLTextAreaElement).value)}
             class="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-gray-50 text-xs text-gray-600 leading-relaxed resize-none focus:border-teal-400 focus:bg-white focus:outline-none transition-all"
           />
         </div>
@@ -253,7 +255,9 @@ function PreviewState({
 }
 
 // ── Success State ─────────────────────────────────────────────
-function SuccessState({ name, onAddAnother }: { name: string; onAddAnother: () => void }) {
+function SuccessState(
+  { name, onAddAnother }: { name: string; onAddAnother: () => void },
+) {
   return (
     <div class="flex flex-col items-center justify-center h-full px-6 py-8 text-center gap-4">
       <div class="w-16 h-16 rounded-full bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center">
@@ -276,7 +280,9 @@ function SuccessState({ name, onAddAnother }: { name: string; onAddAnother: () =
       <div>
         <h3 class="text-base font-800 text-gray-900">Property Added! 🎉</h3>
         <p class="text-xs text-gray-400 mt-1 leading-relaxed max-w-xs">
-          <span class="font-600 text-gray-700">"{name}"</span> is now live in your dashboard. Share your booking link to start accepting reservations.
+          <span class="font-600 text-gray-700">"{name}"</span>{" "}
+          is now live in your dashboard. Share your booking link to start
+          accepting reservations.
         </p>
       </div>
       <div class="flex flex-col w-full gap-2 mt-2">
@@ -298,14 +304,18 @@ function SuccessState({ name, onAddAnother }: { name: string; onAddAnother: () =
 }
 
 // ── Error State ───────────────────────────────────────────────
-function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
+function ErrorState(
+  { message, onRetry }: { message: string; onRetry: () => void },
+) {
   return (
     <div class="flex flex-col items-center justify-center h-full px-6 py-8 text-center gap-4">
       <div class="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center">
         <span class="text-2xl">⚠️</span>
       </div>
       <div>
-        <h3 class="text-sm font-700 text-gray-900 mb-1">Couldn't fetch listing</h3>
+        <h3 class="text-sm font-700 text-gray-900 mb-1">
+          Couldn't fetch listing
+        </h3>
         <p class="text-xs text-gray-400 leading-relaxed">{message}</p>
       </div>
       <button
@@ -394,7 +404,8 @@ export default function AddProperty() {
 
       if (!res.ok) {
         step.value = "error";
-        errorMsg.value = data.error ?? "Could not save property. Please try again.";
+        errorMsg.value = data.error ??
+          "Could not save property. Please try again.";
         return;
       }
 

@@ -22,10 +22,10 @@ export default function Footer() {
           {/* Column 1 — Brand */}
           <div class="md:col-span-1 space-y-6">
             <a href="/" class="group flex items-center gap-2">
-              <img 
-                src="/logo.svg" 
-                alt="istay logo" 
-                class="h-10 w-auto opacity-90 group-hover:opacity-100 transition-opacity" 
+              <img
+                src="/logo.svg"
+                alt="istay logo"
+                class="h-10 w-auto opacity-90 group-hover:opacity-100 transition-opacity"
               />
             </a>
             <p class="text-sm text-gray-400 leading-relaxed max-w-xs">

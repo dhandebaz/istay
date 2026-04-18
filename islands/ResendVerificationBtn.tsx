@@ -5,7 +5,9 @@ interface ResendVerificationBtnProps {
   name: string;
 }
 
-export default function ResendVerificationBtn({ email, name }: ResendVerificationBtnProps) {
+export default function ResendVerificationBtn(
+  { email, name }: ResendVerificationBtnProps,
+) {
   const status = useSignal<"idle" | "sending" | "sent" | "error">("idle");
   const errorMsg = useSignal("");
 

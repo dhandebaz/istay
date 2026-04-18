@@ -162,7 +162,11 @@ No custom knowledge base has been set up by the host yet. Only basic property in
       if (session) {
         const age = Date.now() - new Date(session.lastActivity).getTime();
         if (age > SESSION_TTL_MS) {
-          console.log(`[chat] Session ${sessionId} expired (${Math.round(age / 3600000)}h old)`);
+          console.log(
+            `[chat] Session ${sessionId} expired (${
+              Math.round(age / 3600000)
+            }h old)`,
+          );
           session = null; // Force new session
         }
       }
@@ -245,7 +249,9 @@ No custom knowledge base has been set up by the host yet. Only basic property in
     );
 
     console.log(
-      `[chat] prop=${propId} session=${sessionId} msgs=${session.messages.length}${testMode ? " [TEST]" : ""}`,
+      `[chat] prop=${propId} session=${sessionId} msgs=${session.messages.length}${
+        testMode ? " [TEST]" : ""
+      }`,
     );
 
     return Response.json({

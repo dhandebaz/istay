@@ -20,7 +20,6 @@ import {
 import { extractBlockedDates } from "./ical.ts";
 import { type CalendarBlock } from "./types.ts";
 
-
 const ICAL_FETCH_TIMEOUT_MS = 10_000;
 const USER_AGENT = "istay/1.0 Calendar Sync (+https://istay.space)";
 
@@ -97,7 +96,10 @@ export async function syncPropertyCalendar(
     const datesToAdd: string[] = [];
     for (const date of newDates) {
       const existing = existingByDate.get(date);
-      if (existing && (existing.reason === "manual_block" || existing.reason === "booked")) {
+      if (
+        existing &&
+        (existing.reason === "manual_block" || existing.reason === "booked")
+      ) {
         continue;
       }
       datesToAdd.push(date);
@@ -121,7 +123,11 @@ export async function syncPropertyCalendar(
       const batch = datesToAdd.slice(i, i + KV_ATOMIC_BATCH_SIZE);
       const atomic = kv.atomic();
       for (const date of batch) {
-        const block: CalendarBlock = { propertyId: propId, date, reason: "ical" };
+        const block: CalendarBlock = {
+          propertyId: propId,
+          date,
+          reason: "ical",
+        };
         atomic.set(["calendar", propId, date], block);
       }
       await atomic.commit();

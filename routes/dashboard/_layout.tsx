@@ -3,14 +3,9 @@ import { type Handlers } from "$fresh/server.ts";
 import type { DashboardState, Notification } from "../../utils/types.ts";
 import DashboardSidebar from "../../islands/DashboardSidebar.tsx";
 import ResendVerificationBtn from "../../islands/ResendVerificationBtn.tsx";
+import ErrorBoundary from "../../islands/ErrorBoundary.tsx";
 
-const getKv = (() => {
-  let kv: Deno.Kv | null = null;
-  return async () => {
-    if (!kv) kv = await Deno.openKv();
-    return kv;
-  };
-})();
+import { getKv } from "../../utils/db.ts";
 
 interface LayoutData {
   unreadCount: number;
@@ -23,7 +18,7 @@ export const handler: Handlers<LayoutData, DashboardState> = {
     try {
       const kv = await getKv();
       const iter = kv.list<Notification>({
-        prefix: ["notification", ctx.state.hostId],
+        prefix: ["notification", (ctx.state as DashboardState).hostId],
       });
       for await (const entry of iter) {
         if (entry.value && !entry.value.read) {
@@ -55,21 +50,35 @@ export default function DashboardLayout(
 
       {/* ── Main Panel ───────────────────────────────────────── */}
       <div class="flex flex-col flex-1 overflow-hidden">
-        
         {/* Email Verification Banner */}
         {state?.emailVerified === false && (
           <div class="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center justify-between shadow-sm z-10 transition-all">
             <div class="flex items-center gap-3">
               <span class="flex-shrink-0 text-amber-500">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                  </path>
                   <line x1="12" y1="9" x2="12" y2="13"></line>
                   <line x1="12" y1="17" x2="12.01" y2="17"></line>
                 </svg>
               </span>
               <div>
-                <p class="text-sm font-700 text-amber-900">Email Verification Required</p>
-                <p class="text-xs text-amber-700 mt-0.5">Please check your inbox and verify your email to fully activate your live booking links.</p>
+                <p class="text-sm font-700 text-amber-900">
+                  Email Verification Required
+                </p>
+                <p class="text-xs text-amber-700 mt-0.5">
+                  Please check your inbox and verify your email to fully
+                  activate your live booking links.
+                </p>
               </div>
             </div>
             {/* Resend button */}
@@ -97,7 +106,9 @@ export default function DashboardLayout(
             <a
               href="/dashboard/bookings"
               class="relative p-2 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-              aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
+              aria-label={`Notifications${
+                unreadCount > 0 ? ` (${unreadCount} unread)` : ""
+              }`}
             >
               <svg
                 width="18"
@@ -165,7 +176,9 @@ export default function DashboardLayout(
         {/* Main Content Area */}
         <main class="flex-1 overflow-y-auto">
           <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-8">
-            <Component />
+            <ErrorBoundary>
+              <Component />
+            </ErrorBoundary>
           </div>
         </main>
       </div>

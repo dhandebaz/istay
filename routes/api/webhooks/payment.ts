@@ -17,22 +17,28 @@ import { type Handlers } from "$fresh/server.ts";
 import {
   blockDate,
   getBookingById,
+  getGuestProfile,
   getHost,
   getLedgerEntry,
   getPropertyById,
   saveBooking,
+  saveGuestProfile,
   saveHost,
   saveLedgerEntry,
   saveNotification,
-  getGuestProfile,
-  saveGuestProfile,
 } from "../../../utils/db.ts";
-import { sendBookingConfirmation, sendHostNewBookingAlert } from "../../../utils/email.ts";
+import {
+  sendBookingConfirmation,
+  sendHostNewBookingAlert,
+} from "../../../utils/email.ts";
 import { sendWhatsAppMessage } from "../../../utils/whatsapp.ts";
 import { dispatchCaretakerMission } from "../../../utils/staff.ts";
 import { dispatchWebhook } from "../../../utils/events.ts";
-import type { LedgerEntry, Notification, GuestProfile } from "../../../utils/types.ts";
-
+import type {
+  GuestProfile,
+  LedgerEntry,
+  Notification,
+} from "../../../utils/types.ts";
 
 const EASEBUZZ_SALT = Deno.env.get("EASEBUZZ_SALT");
 const EASEBUZZ_KEY = Deno.env.get("EASEBUZZ_KEY");
@@ -42,7 +48,10 @@ const ISTAY_COMMISSION = 0.05;
  * Verifies Easebuzz response hash.
  * Hash Format: salt|status|udf10|udf9|udf8|udf7|udf6|udf5|udf4|udf3|udf2|udf1|email|firstname|productinfo|amount|txnid|key
  */
-async function verifyResponseHash(params: Record<string, string>, salt: string) {
+async function verifyResponseHash(
+  params: Record<string, string>,
+  salt: string,
+) {
   const hashString = [
     salt,
     params.status,
@@ -68,8 +77,9 @@ async function verifyResponseHash(params: Record<string, string>, salt: string) 
   const data = encoder.encode(hashString);
   const hashBuffer = await crypto.subtle.digest("SHA-512", data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const calculatedHash = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-  
+  const calculatedHash = hashArray.map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+
   return calculatedHash === params.hash;
 }
 
@@ -100,7 +110,9 @@ export const handler: Handlers = {
         return Response.json({ error: "Invalid hash" }, { status: 401 });
       }
     } else {
-      console.warn("[webhook] Easebuzz credentials missing — skipping verification (dev only)");
+      console.warn(
+        "[webhook] Easebuzz credentials missing — skipping verification (dev only)",
+      );
     }
 
     const { status, txnid, udf1, udf2, amount: amountStr } = params;
@@ -118,9 +130,10 @@ export const handler: Handlers = {
       if (host) {
         await saveHost({ ...host, setupFeePaid: true });
         console.log(`[webhook] Host ${hostId} verified — Setup Fee Paid.`);
-        
+
         // WhatsApp Welcome Dispatch
-        const welcomeMsg = `Welcome to iStay, ${host.name}! 🚀 Your lifetime account is now verified. Next step: Sync your first property iCal in the dashboard to go live.`;
+        const welcomeMsg =
+          `Welcome to iStay, ${host.name}! 🚀 Your lifetime account is now verified. Next step: Sync your first property iCal in the dashboard to go live.`;
         await sendWhatsAppMessage(host.phone, welcomeMsg);
       }
       return Response.json({ ok: true, type: "onboarding" });
@@ -160,9 +173,11 @@ export const handler: Handlers = {
       checkOut: booking.checkOut,
     });
     await saveBooking(confirmedBooking);
-    
+
     // ── Dispatch Caretaker ─────────────────────────────────────
-    dispatchCaretakerMission(confirmedBooking).catch(e => console.error("[webhook] Staff dispatch error:", e));
+    dispatchCaretakerMission(confirmedBooking).catch((e) =>
+      console.error("[webhook] Staff dispatch error:", e)
+    );
 
     // ── Block Calendar ─────────────────────────────────────────
     const datesToBlock = enumerateDates(booking.checkIn, booking.checkOut);
@@ -180,7 +195,8 @@ export const handler: Handlers = {
     // ── Ledger Entry ───────────────────────────────────────────
     const existingLedger = await getLedgerEntry(bookingId);
     if (!existingLedger) {
-      const hostAmount = Math.round(amount * (1 - ISTAY_COMMISSION) * 100) / 100;
+      const hostAmount = Math.round(amount * (1 - ISTAY_COMMISSION) * 100) /
+        100;
       const istayAmount = Math.round(amount * ISTAY_COMMISSION * 100) / 100;
 
       const ledgerEntry: LedgerEntry = {
@@ -206,7 +222,9 @@ export const handler: Handlers = {
       hostId: booking.hostId,
       type: "booking_confirmed",
       title: "New Booking Confirmed! 🎉",
-      message: `${booking.guestName} booked ${booking.nights} nights for ₹${amount.toLocaleString("en-IN")}.`,
+      message: `${booking.guestName} booked ${booking.nights} nights for ₹${
+        amount.toLocaleString("en-IN")
+      }.`,
       propertyName: booking.propertyId,
       meta: { bookingId, txnid },
       read: false,
@@ -218,7 +236,7 @@ export const handler: Handlers = {
     try {
       const property = await getPropertyById(booking.propertyId);
       const propName = property?.name || "istay Property";
-      
+
       // Dispatch securely (non-blocking)
       sendBookingConfirmation(
         booking.guestEmail,
@@ -228,7 +246,7 @@ export const handler: Handlers = {
         booking.checkOut,
         amount,
         bookingId,
-        booking.propertyId
+        booking.propertyId,
       ).catch((err) => console.error("[webhook] Guest email error:", err));
 
       // ── Host New Booking Alert ─────────────────────────────────
@@ -242,15 +260,16 @@ export const handler: Handlers = {
           booking.checkIn,
           booking.checkOut,
           amount,
-          bookingId
+          bookingId,
         ).catch((err) => console.error("[webhook] Host email error:", err));
       }
-      
     } catch (e) {
       console.error("[webhook] Error preparing confirmation email", e);
     }
 
-    console.log(`[webhook] Booking ${bookingId} confirmed via Easebuzz (txnid: ${txnid})`);
+    console.log(
+      `[webhook] Booking ${bookingId} confirmed via Easebuzz (txnid: ${txnid})`,
+    );
     return Response.json({ ok: true, bookingId });
   },
 };

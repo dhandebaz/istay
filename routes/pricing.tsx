@@ -96,12 +96,17 @@ export default function Pricing({ data }: PageProps<PricingData>) {
               Transparent Pricing
             </div>
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-800 text-gray-900 tracking-tight leading-tight max-w-4xl mx-auto">
-              Stop paying <span class="text-rose-500 underline decoration-rose-200 decoration-4 underline-offset-4">15%</span> just to get booked.
+              Stop paying{" "}
+              <span class="text-rose-500 underline decoration-rose-200 decoration-4 underline-offset-4">
+                15%
+              </span>{" "}
+              just to get booked.
               <br />
               <span class="text-mint-500">Own your audience.</span>
             </h1>
             <p class="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              One lifetime fee. One flat transaction rate. No monthly bills, no OTA dependency.
+              One lifetime fee. One flat transaction rate. No monthly bills, no
+              OTA dependency.
             </p>
           </div>
         </section>
@@ -118,12 +123,20 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                     </div>
                     <div class="mb-8">
                       <div class="flex items-baseline gap-2 mb-1">
-                        <span class="text-5xl font-900 text-gray-900">₹1,000</span>
-                        <span class="text-gray-400 text-sm font-500 uppercase tracking-wide">one-time</span>
+                        <span class="text-5xl font-900 text-gray-900">
+                          ₹1,000
+                        </span>
+                        <span class="text-gray-400 text-sm font-500 uppercase tracking-wide">
+                          one-time
+                        </span>
                       </div>
                       <div class="flex items-baseline gap-2">
-                        <span class="text-3xl font-800 text-mint-500">+ 5%</span>
-                        <span class="text-gray-400 text-sm font-500 uppercase tracking-wide">per booking</span>
+                        <span class="text-3xl font-800 text-mint-500">
+                          + 5%
+                        </span>
+                        <span class="text-gray-400 text-sm font-500 uppercase tracking-wide">
+                          per booking
+                        </span>
                       </div>
                     </div>
 
@@ -137,10 +150,24 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                         "WhatsApp booking notifications",
                         "Unlimited properties",
                       ].map((item) => (
-                        <li key={item} class="flex items-start gap-3 text-sm text-gray-600 font-500">
+                        <li
+                          key={item}
+                          class="flex items-start gap-3 text-sm text-gray-600 font-500"
+                        >
                           <span class="flex-shrink-0 mt-0.5 w-5 h-5 rounded-full bg-mint-50 flex items-center justify-center">
-                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                              <path d="M2 5L4 7L8 3" stroke="#0C4D4D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <svg
+                              width="10"
+                              height="10"
+                              viewBox="0 0 10 10"
+                              fill="none"
+                            >
+                              <path
+                                d="M2 5L4 7L8 3"
+                                stroke="#0C4D4D"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
                             </svg>
                           </span>
                           {item}
@@ -148,16 +175,25 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                       ))}
                     </ul>
 
-                    {data.hostId ? (
-                      <PricingCheckout hostId={data.hostId} />
-                    ) : (
+                    {data.hostId ? <PricingCheckout hostId={data.hostId} /> : (
                       <a
                         href="/contact"
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-mint-500 text-istay-900 font-800 shadow-md hover:bg-mint-400 hover:shadow-lg active:scale-95 transition-all duration-200"
                       >
                         Register to Start Hosting
-                        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-                          <path d="M2 8H14M8 2L14 8L8 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            d="M2 8H14M8 2L14 8L8 14"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
                         </svg>
                       </a>
                     )}
@@ -168,25 +204,57 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                     <table class="w-full text-sm">
                       <thead>
                         <tr>
-                          <th class="text-left px-4 py-4 text-xs font-700 text-gray-400 uppercase tracking-widest">Platform</th>
-                          <th class="text-right px-4 py-4 text-xs font-700 text-gray-400 uppercase tracking-widest">Fee</th>
-                          <th class="text-right px-4 py-4 text-xs font-700 text-gray-400 uppercase tracking-widest">Take Home</th>
+                          <th class="text-left px-4 py-4 text-xs font-700 text-gray-400 uppercase tracking-widest">
+                            Platform
+                          </th>
+                          <th class="text-right px-4 py-4 text-xs font-700 text-gray-400 uppercase tracking-widest">
+                            Fee
+                          </th>
+                          <th class="text-right px-4 py-4 text-xs font-700 text-gray-400 uppercase tracking-widest">
+                            Take Home
+                          </th>
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-gray-100">
                         {[
-                          { name: "istay", pct: "5%", home: "₹95,000", highlight: true },
+                          {
+                            name: "istay",
+                            pct: "5%",
+                            home: "₹95,000",
+                            highlight: true,
+                          },
                           { name: "Airbnb", pct: "15%", home: "₹85,000" },
                           { name: "MakeMyTrip", pct: "18%", home: "₹82,000" },
                           { name: "Booking.com", pct: "≈17%", home: "₹83,000" },
                         ].map(({ name, pct, home, highlight }) => (
-                          <tr key={name} class={`${highlight ? "bg-white shadow-sm rounded-xl" : ""}`}>
-                            <td class={`px-4 py-4 font-700 ${highlight ? "text-istay-900" : "text-gray-700"}`}>
+                          <tr
+                            key={name}
+                            class={`${
+                              highlight ? "bg-white shadow-sm rounded-xl" : ""
+                            }`}
+                          >
+                            <td
+                              class={`px-4 py-4 font-700 ${
+                                highlight ? "text-istay-900" : "text-gray-700"
+                              }`}
+                            >
                               {name}
-                              {highlight && <span class="ml-2 text-[10px] bg-mint-500 text-istay-900 font-900 px-1.5 py-0.5 rounded-full">RECOMMENDED</span>}
+                              {highlight && (
+                                <span class="ml-2 text-[10px] bg-mint-500 text-istay-900 font-900 px-1.5 py-0.5 rounded-full">
+                                  RECOMMENDED
+                                </span>
+                              )}
                             </td>
-                            <td class={`px-4 py-4 text-right font-600 ${highlight ? "text-mint-500" : "text-rose-400"}`}>{pct}</td>
-                            <td class="px-4 py-4 text-right font-800 text-gray-900">{home}</td>
+                            <td
+                              class={`px-4 py-4 text-right font-600 ${
+                                highlight ? "text-mint-500" : "text-rose-400"
+                              }`}
+                            >
+                              {pct}
+                            </td>
+                            <td class="px-4 py-4 text-right font-800 text-gray-900">
+                              {home}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -201,8 +269,13 @@ export default function Pricing({ data }: PageProps<PricingData>) {
         {/* ── EARNINGS CALCULATOR ──────────────────────────── */}
         <section class="py-24 bg-gray-50">
           <div class="max-w-4xl mx-auto px-4 text-center mb-12">
-            <h2 class="text-3xl sm:text-4xl font-900 text-gray-900 tracking-tight">Calculate your freedom</h2>
-            <p class="mt-4 text-gray-500 text-lg">See exactly how much more you earn compared to high-commission platforms.</p>
+            <h2 class="text-3xl sm:text-4xl font-900 text-gray-900 tracking-tight">
+              Calculate your freedom
+            </h2>
+            <p class="mt-4 text-gray-500 text-lg">
+              See exactly how much more you earn compared to high-commission
+              platforms.
+            </p>
           </div>
           <div class="max-w-4xl mx-auto px-4">
             <EarningsCalculator />
@@ -212,17 +285,34 @@ export default function Pricing({ data }: PageProps<PricingData>) {
         {/* ── FAQ ───────────────────────────────────────────── */}
         <section class="py-24 bg-white">
           <div class="max-w-3xl mx-auto px-4">
-            <h2 class="text-3xl font-900 text-gray-900 text-center mb-16 underline decoration-istay-100 decoration-8 underline-offset-8">Common Questions</h2>
+            <h2 class="text-3xl font-900 text-gray-900 text-center mb-16 underline decoration-istay-100 decoration-8 underline-offset-8">
+              Common Questions
+            </h2>
             <div class="space-y-4">
               {FAQS.map(({ q, a }, i) => (
-                <details key={i} class="group rounded-2xl border border-gray-100 hover:border-mint-200 transition-colors duration-200">
+                <details
+                  key={i}
+                  class="group rounded-2xl border border-gray-100 hover:border-mint-200 transition-colors duration-200"
+                >
                   <summary class="flex items-center justify-between px-6 py-5 cursor-pointer list-none font-700 text-gray-900">
                     {q}
-                    <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    <svg
+                      class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </summary>
-                  <div class="px-6 pb-6 text-gray-500 text-sm leading-relaxed">{a}</div>
+                  <div class="px-6 pb-6 text-gray-500 text-sm leading-relaxed">
+                    {a}
+                  </div>
                 </details>
               ))}
             </div>

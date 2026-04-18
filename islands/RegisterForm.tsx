@@ -69,7 +69,9 @@ export default function RegisterForm() {
     <form onSubmit={handleSubmit} class="space-y-5" novalidate>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
-          <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">Full Name</label>
+          <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">
+            Full Name
+          </label>
           <input
             type="text"
             value={name.value}
@@ -80,11 +82,15 @@ export default function RegisterForm() {
           />
         </div>
         <div>
-          <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">Mobile Number</label>
+          <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">
+            Mobile Number
+          </label>
           <input
             type="tel"
             value={phone.value}
-            onInput={(e) => (phone.value = (e.target as HTMLInputElement).value)}
+            onInput={(
+              e,
+            ) => (phone.value = (e.target as HTMLInputElement).value)}
             required
             class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"
             placeholder="9876543210"
@@ -93,7 +99,9 @@ export default function RegisterForm() {
       </div>
 
       <div>
-        <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">Email Address</label>
+        <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">
+          Email Address
+        </label>
         <input
           type="email"
           value={email.value}
@@ -105,11 +113,15 @@ export default function RegisterForm() {
       </div>
 
       <div>
-        <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">Password</label>
+        <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">
+          Password
+        </label>
         <input
           type="password"
           value={password.value}
-          onInput={(e) => (password.value = (e.target as HTMLInputElement).value)}
+          onInput={(
+            e,
+          ) => (password.value = (e.target as HTMLInputElement).value)}
           required
           minlength={8}
           class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"

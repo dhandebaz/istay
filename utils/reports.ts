@@ -15,8 +15,9 @@ export async function generateMonthlyStatement(
   const host = await getHost(hostId);
   const metrics = await calculateMonthlyMetrics(hostId, month);
 
-  const formatINR = (amt: number) => 
-    new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(amt);
+  const formatINR = (amt: number) =>
+    new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" })
+      .format(amt);
 
   return `
 # iStay Performance Statement — ${month}

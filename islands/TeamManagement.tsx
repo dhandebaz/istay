@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 
 // ── Toast Notification System (shared pattern) ───────────────
 
@@ -13,7 +13,12 @@ interface ToastItem {
 
 let toastId = 0;
 
-function ToastContainer({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss: (id: number) => void }) {
+function ToastContainer(
+  { toasts, onDismiss }: {
+    toasts: ToastItem[];
+    onDismiss: (id: number) => void;
+  },
+) {
   const colorMap: Record<ToastType, string> = {
     success: "bg-emerald-500",
     error: "bg-rose-500",
@@ -28,14 +33,27 @@ function ToastContainer({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss:
 
   return (
     <div
-      style={{ position: "fixed", top: 16, right: 16, zIndex: 9999, display: "flex", flexDirection: "column", gap: "8px", maxWidth: "380px" }}
+      style={{
+        position: "fixed",
+        top: 16,
+        right: 16,
+        zIndex: 9999,
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
+        maxWidth: "380px",
+      }}
     >
       {toasts.map((t) => (
         <div
           key={t.id}
-          class={`${colorMap[t.type]} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-600`}
+          class={`${
+            colorMap[t.type]
+          } text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-600`}
           style={{
-            animation: t.exiting ? "toast-exit 0.3s ease-in forwards" : "toast-enter 0.35s ease-out",
+            animation: t.exiting
+              ? "toast-exit 0.3s ease-in forwards"
+              : "toast-enter 0.35s ease-out",
             cursor: "pointer",
           }}
           onClick={() => onDismiss(t.id)}
@@ -44,10 +62,12 @@ function ToastContainer({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss:
           <span class="flex-1">{t.message}</span>
         </div>
       ))}
-      <style>{`
+      <style>
+        {`
         @keyframes toast-enter { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-exit { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(80px); } }
-      `}</style>
+      `}
+      </style>
     </div>
   );
 }
@@ -63,14 +83,40 @@ function ConfirmModal({
 }) {
   return (
     <div
-      style={{ position: "fixed", inset: 0, zIndex: 9998, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
-      onClick={(e) => { if (e.target === e.currentTarget) onCancel(); }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 9998,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(0,0,0,0.4)",
+        backdropFilter: "blur(4px)",
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onCancel();
+      }}
     >
-      <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4" style={{ animation: "toast-enter 0.25s ease-out" }}>
+      <div
+        class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4"
+        style={{ animation: "toast-enter 0.25s ease-out" }}
+      >
         <p class="text-sm text-gray-700 mb-5 leading-relaxed">{message}</p>
         <div class="flex gap-3 justify-end">
-          <button type="button" onClick={onCancel} class="px-4 py-2 rounded-xl text-sm font-600 text-gray-600 hover:bg-gray-100 transition-colors">Cancel</button>
-          <button type="button" onClick={onConfirm} class="px-4 py-2 rounded-xl text-sm font-700 text-white bg-rose-500 hover:bg-rose-600 transition-colors">Confirm</button>
+          <button
+            type="button"
+            onClick={onCancel}
+            class="px-4 py-2 rounded-xl text-sm font-600 text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            class="px-4 py-2 rounded-xl text-sm font-700 text-white bg-rose-500 hover:bg-rose-600 transition-colors"
+          >
+            Confirm
+          </button>
         </div>
       </div>
     </div>
@@ -91,24 +137,34 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
   const [loading, setLoading] = useState(true);
   const [inviting, setInviting] = useState(false);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
-  const [confirmState, setConfirmState] = useState<{
-    message: string;
-    onConfirm: () => void;
-  } | null>(null);
+  const [confirmState, setConfirmState] = useState<
+    {
+      message: string;
+      onConfirm: () => void;
+    } | null
+  >(null);
 
   // ── Toast helpers ─────────────────────────────────────────
   const showToast = useCallback((message: string, type: ToastType = "info") => {
     const id = ++toastId;
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
-      setToasts((prev) => prev.map((t) => t.id === id ? { ...t, exiting: true } : t));
-      setTimeout(() => { setToasts((prev) => prev.filter((t) => t.id !== id)); }, 300);
+      setToasts((prev) =>
+        prev.map((t) => t.id === id ? { ...t, exiting: true } : t)
+      );
+      setTimeout(() => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+      }, 300);
     }, 3000);
   }, []);
 
   const dismissToast = useCallback((id: number) => {
-    setToasts((prev) => prev.map((t) => t.id === id ? { ...t, exiting: true } : t));
-    setTimeout(() => { setToasts((prev) => prev.filter((t) => t.id !== id)); }, 300);
+    setToasts((prev) =>
+      prev.map((t) => t.id === id ? { ...t, exiting: true } : t)
+    );
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 300);
   }, []);
 
   const showConfirm = useCallback(
@@ -116,7 +172,10 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
       new Promise((resolve) => {
         setConfirmState({
           message,
-          onConfirm: () => { setConfirmState(null); resolve(true); },
+          onConfirm: () => {
+            setConfirmState(null);
+            resolve(true);
+          },
         });
       }),
     [],
@@ -142,10 +201,10 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
   const handleInvite = async (e: Event) => {
     e.preventDefault();
     setInviting(true);
-    
+
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    
+
     try {
       const res = await fetch("/api/host/team/invite", {
         method: "POST",
@@ -155,9 +214,9 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
           role: formData.get("role"),
           name: formData.get("name"),
         }),
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
-      
+
       const data = await res.json();
       if (data.ok) {
         form.reset();
@@ -174,14 +233,16 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
   };
 
   const handleRemove = async (email: string) => {
-    const confirmed = await showConfirm(`Remove ${email} from the team? They will lose access to all properties.`);
+    const confirmed = await showConfirm(
+      `Remove ${email} from the team? They will lose access to all properties.`,
+    );
     if (!confirmed) return;
-    
+
     try {
       const res = await fetch("/api/host/team/remove", {
         method: "POST",
         body: JSON.stringify({ hostId, email }),
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       });
       if (res.ok) {
         await fetchTeam();
@@ -212,7 +273,9 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
         <div class="p-6 border-b border-gray-50 flex items-center justify-between">
           <div>
             <h2 class="text-base font-700 text-gray-900">Team Members</h2>
-            <p class="text-xs text-gray-400">Manage who has access to your properties and earnings</p>
+            <p class="text-xs text-gray-400">
+              Manage who has access to your properties and earnings
+            </p>
           </div>
           <span class="px-3 py-1 rounded-full bg-gray-50 border border-gray-100 text-[10px] font-700 text-gray-500 uppercase tracking-wider">
             {members.length} Members
@@ -220,69 +283,100 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
         </div>
 
         <div class="divide-y divide-gray-50">
-          {loading ? (
-            <div class="p-12 text-center text-gray-400 text-sm italic">Loading team...</div>
-          ) : members.length === 0 ? (
-            <div class="p-12 text-center text-gray-400 text-sm italic">No team members found</div>
-          ) : (
-            members.map((member) => (
-              <div key={member.email} class="p-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-istay-50 border border-istay-100 flex items-center justify-center text-istay-600 font-800 text-xs">
-                    {(member.name || member.email).slice(0, 2).toUpperCase()}
-                  </div>
-                  <div>
-                    <div class="flex items-center gap-2">
-                       <p class="text-sm font-700 text-gray-900">{member.name || "Unnamed User"}</p>
-                       <span class={`px-2 py-0.5 rounded-md text-[9px] font-800 uppercase tracking-tight ${
-                         member.role === 'owner' ? 'bg-amber-100 text-amber-700' :
-                         member.role === 'manager' ? 'bg-blue-100 text-blue-700' :
-                         'bg-gray-100 text-gray-600'
-                       }`}>
-                         {member.role}
-                       </span>
-                    </div>
-                    <p class="text-xs text-gray-400">{member.email}</p>
-                  </div>
-                </div>
-                
-                {member.role !== "owner" && (
-                  <button 
-                    type="button"
-                    onClick={() => handleRemove(member.email)}
-                    class="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
-                    title="Remove Member"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                    </svg>
-                  </button>
-                )}
+          {loading
+            ? (
+              <div class="p-12 text-center text-gray-400 text-sm italic">
+                Loading team...
               </div>
-            ))
-          )}
+            )
+            : members.length === 0
+            ? (
+              <div class="p-12 text-center text-gray-400 text-sm italic">
+                No team members found
+              </div>
+            )
+            : (
+              members.map((member) => (
+                <div
+                  key={member.email}
+                  class="p-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
+                >
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-istay-50 border border-istay-100 flex items-center justify-center text-istay-600 font-800 text-xs">
+                      {(member.name || member.email).slice(0, 2).toUpperCase()}
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <p class="text-sm font-700 text-gray-900">
+                          {member.name || "Unnamed User"}
+                        </p>
+                        <span
+                          class={`px-2 py-0.5 rounded-md text-[9px] font-800 uppercase tracking-tight ${
+                            member.role === "owner"
+                              ? "bg-amber-100 text-amber-700"
+                              : member.role === "manager"
+                              ? "bg-blue-100 text-blue-700"
+                              : "bg-gray-100 text-gray-600"
+                          }`}
+                        >
+                          {member.role}
+                        </span>
+                      </div>
+                      <p class="text-xs text-gray-400">{member.email}</p>
+                    </div>
+                  </div>
+
+                  {member.role !== "owner" && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemove(member.email)}
+                      class="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                      title="Remove Member"
+                    >
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+              ))
+            )}
         </div>
       </div>
 
       {/* Invite Form */}
       <div class="bg-gray-50 rounded-2xl border border-gray-100 p-6">
         <h3 class="text-sm font-800 text-gray-900 mb-1">Invite Team Member</h3>
-        <p class="text-xs text-gray-400 mb-4">New members will be able to log in with their email.</p>
+        <p class="text-xs text-gray-400 mb-4">
+          New members will be able to log in with their email.
+        </p>
 
-        <form onSubmit={handleInvite} class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <form
+          onSubmit={handleInvite}
+          class="grid grid-cols-1 sm:grid-cols-4 gap-4"
+        >
           <div class="sm:col-span-2">
-            <input 
-              name="email" 
-              type="email" 
-              placeholder="Email address" 
-              required 
+            <input
+              name="email"
+              type="email"
+              placeholder="Email address"
+              required
               class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:ring-2 focus:ring-istay-500/10 focus:border-istay-500 transition-all outline-none"
             />
           </div>
           <div>
-            <select 
-              name="role" 
-              required 
+            <select
+              name="role"
+              required
               class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:ring-2 focus:ring-istay-500/10 focus:border-istay-500 transition-all outline-none appearance-none"
             >
               <option value="staff">Staff</option>
@@ -290,7 +384,7 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
               <option value="accountant">Accountant</option>
             </select>
           </div>
-          <button 
+          <button
             type="submit"
             disabled={inviting}
             class="px-4 py-2.5 rounded-xl bg-istay-900 text-white text-sm font-800 hover:bg-istay-800 active:scale-95 transition-all disabled:opacity-50"

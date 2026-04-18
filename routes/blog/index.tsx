@@ -22,11 +22,14 @@ export const handler: Handlers<BlogData> = {
         if (entry.isFile && entry.name.endsWith(".md")) {
           const slug = entry.name.replace(".md", "");
           // In a real app we'd parse frontmatter, but we'll simulate for now
-          const title = slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+          const title = slug.split("-").map((w) =>
+            w.charAt(0).toUpperCase() + w.slice(1)
+          ).join(" ");
           posts.push({
             slug,
             title,
-            excerpt: "Discover why direct bookings are the future of the hospitality industry...",
+            excerpt:
+              "Discover why direct bookings are the future of the hospitality industry...",
             date: "April 12, 2026",
           });
         }
@@ -44,7 +47,10 @@ export default function BlogIndex({ data }: PageProps<BlogData>) {
     <>
       <Head>
         <title>Blog | istay Authority Content</title>
-        <meta name="description" content="Insights, guides, and strategy for independent property hosts. Learn how to grow your direct booking channel." />
+        <meta
+          name="description"
+          content="Insights, guides, and strategy for independent property hosts. Learn how to grow your direct booking channel."
+        />
       </Head>
 
       <Header />
@@ -78,9 +84,21 @@ export default function BlogIndex({ data }: PageProps<BlogData>) {
                     {post.excerpt}
                   </p>
                   <div class="mt-6 flex items-center gap-2 text-sm font-800 text-gray-900">
-                    Read Article 
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="group-hover:translate-x-1 transition-transform">
-                      <path d="M2 8H14M8 2L14 8L8 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    Read Article
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      class="group-hover:translate-x-1 transition-transform"
+                    >
+                      <path
+                        d="M2 8H14M8 2L14 8L8 14"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
                     </svg>
                   </div>
                 </div>

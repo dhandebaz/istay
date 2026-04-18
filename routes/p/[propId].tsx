@@ -1,10 +1,23 @@
 import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
-import { getBookingById, getGuestVerification, getKnowledgeByPropId, getPropertyById, listBlockedDates, recordPropertyView } from "../../utils/db.ts";
+import {
+  getBookingById,
+  getGuestVerification,
+  getKnowledgeByPropId,
+  getPropertyById,
+  listBlockedDates,
+  recordPropertyView,
+} from "../../utils/db.ts";
 import { getVibeMatches } from "../../utils/recommendations.ts";
 import { getDynamicPrice } from "../../utils/pricing.ts";
 
-import type { Booking, GuestVerification, Property, VibeMatch, HostKnowledge } from "../../utils/types.ts";
+import type {
+  Booking,
+  GuestVerification,
+  HostKnowledge,
+  Property,
+  VibeMatch,
+} from "../../utils/types.ts";
 import BookingCalendar from "../../islands/BookingCalendar.tsx";
 import BookingFlow from "../../islands/BookingFlow.tsx";
 import GuestChat from "../../islands/GuestChat.tsx";
@@ -16,7 +29,6 @@ interface PropertyPageData {
   isHighlyBooked: boolean;
   dynamicBasePrice: number;
   yieldRules: string[];
-
 
   bookingData?: {
     booking: Booking;
@@ -54,10 +66,13 @@ export const handler: Handlers<PropertyPageData> = {
 
     // Dynamic Pricing (Yield Management)
     const todayStr = today.toISOString().slice(0, 10);
-    const pricingRes = await getDynamicPrice(propId, property.basePrice, todayStr);
+    const pricingRes = await getDynamicPrice(
+      propId,
+      property.basePrice,
+      todayStr,
+    );
     const dynamicBasePrice = pricingRes.finalPrice;
     const yieldRules = pricingRes.appliedRules;
-
 
     // If highly booked, fetch Vibe Match recommendations (availability-aware)
     let vibeMatches: VibeMatch[] = [];
@@ -65,12 +80,15 @@ export const handler: Handlers<PropertyPageData> = {
       try {
         const checkIn = url.searchParams.get("checkIn");
         const checkOut = url.searchParams.get("checkOut");
-        vibeMatches = await getVibeMatches(propId, checkIn || undefined, checkOut || undefined);
+        vibeMatches = await getVibeMatches(
+          propId,
+          checkIn || undefined,
+          checkOut || undefined,
+        );
       } catch (err) {
         console.error("[propPage] Vibe match error:", err);
       }
     }
-
 
     let bookingData;
     if (bookingId) {
@@ -84,24 +102,23 @@ export const handler: Handlers<PropertyPageData> = {
       }
     }
 
-    return ctx.render({ 
-      property, 
-      blockedDates, 
-      vibeMatches, 
-      isHighlyBooked, 
+    return ctx.render({
+      property,
+      blockedDates,
+      vibeMatches,
+      isHighlyBooked,
       dynamicBasePrice,
       yieldRules,
-      bookingData 
+      bookingData,
     });
-
-
   },
 };
 
 export default function PropertyPage(
   { data }: PageProps<PropertyPageData>,
 ) {
-  const { property, blockedDates, vibeMatches, isHighlyBooked, bookingData } = data;
+  const { property, blockedDates, vibeMatches, isHighlyBooked, bookingData } =
+    data;
 
   const formatINR = (n: number) =>
     new Intl.NumberFormat("en-IN", {
@@ -151,7 +168,11 @@ export default function PropertyPage(
             >
               <span class="w-5 h-5 rounded bg-mint-500 flex items-center justify-center">
                 <svg width="12" height="12" viewBox="0 0 10 10" fill="white">
-                  <path d="M5 0.5L0.5 4V9.5H3.5V6.5H6.5V9.5H9.5V4L5 0.5Z" stroke-width="0.3" stroke-linejoin="round" />
+                  <path
+                    d="M5 0.5L0.5 4V9.5H3.5V6.5H6.5V9.5H9.5V4L5 0.5Z"
+                    stroke-width="0.3"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </span>
               Direct Booking via istay
@@ -174,7 +195,12 @@ export default function PropertyPage(
             </h1>
             {property.address && (
               <p class="mt-2 text-base text-white/90 flex items-center gap-2 font-500">
-                <svg width="16" height="16" viewBox="0 0 12 12" fill="currentColor">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 12 12"
+                  fill="currentColor"
+                >
                   <path d="M6 0.5C4.07 0.5 2.5 2.07 2.5 4C2.5 6.75 6 11.5 6 11.5C6 11.5 9.5 6.75 9.5 4C9.5 2.07 7.93 0.5 6 0.5ZM6 5.5C5.17 5.5 4.5 4.83 4.5 4C4.5 3.17 5.17 2.5 6 2.5C6.83 2.5 7.5 3.17 7.5 4C7.5 4.83 6.83 5.5 6 5.5Z" />
                 </svg>
                 {property.address}
@@ -195,12 +221,17 @@ export default function PropertyPage(
                     {formatINR(data.dynamicBasePrice)}
                   </span>
 
-                  <span class="text-gray-400 text-base ml-1 font-500">/ night</span>
+                  <span class="text-gray-400 text-base ml-1 font-500">
+                    / night
+                  </span>
                 </div>
                 <div class="flex items-center gap-3">
-                  {data.yieldRules.map(rule => (
-                    <span key={rule} class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-800 uppercase tracking-tight">
-                       ⚡ {rule}
+                  {data.yieldRules.map((rule) => (
+                    <span
+                      key={rule}
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-800 uppercase tracking-tight"
+                    >
+                      ⚡ {rule}
                     </span>
                   ))}
                   <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-mint-50 text-mint-700 text-xs font-700">
@@ -220,7 +251,9 @@ export default function PropertyPage(
                     The Smart Way to Stay
                   </p>
                   <p class="text-sm text-mint-700 mt-1 leading-relaxed font-500">
-                    By booking through istay, you avoid platform fees and help the host earn 100% of their nightly rate. Better service, lower prices.
+                    By booking through istay, you avoid platform fees and help
+                    the host earn 100% of their nightly rate. Better service,
+                    lower prices.
                   </p>
                 </div>
               </div>
@@ -277,17 +310,19 @@ export default function PropertyPage(
                       >
                         {/* Image */}
                         <div class="relative h-44 bg-gray-100 overflow-hidden">
-                          {match.imageUrl ? (
-                            <img
-                              src={match.imageUrl}
-                              alt={match.propertyName}
-                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            />
-                          ) : (
-                            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-mint-50 to-emerald-100">
-                              <span class="text-5xl opacity-40">🏠</span>
-                            </div>
-                          )}
+                          {match.imageUrl
+                            ? (
+                              <img
+                                src={match.imageUrl}
+                                alt={match.propertyName}
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              />
+                            )
+                            : (
+                              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-mint-50 to-emerald-100">
+                                <span class="text-5xl opacity-40">🏠</span>
+                              </div>
+                            )}
                           {/* Match score badge */}
                           <div class="absolute top-3 right-3">
                             <span class="px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-xs font-900 text-mint-600 shadow-md">
@@ -307,11 +342,24 @@ export default function PropertyPage(
                           <div class="flex items-center justify-between mt-5 pt-4 border-t border-gray-50">
                             <span class="text-xl font-900 text-mint-600">
                               {formatINR(match.basePrice)}
-                              <span class="text-xs font-500 text-gray-400 ml-1">/NIGHT</span>
+                              <span class="text-xs font-500 text-gray-400 ml-1">
+                                /NIGHT
+                              </span>
                             </span>
                             <div class="w-10 h-10 rounded-full bg-mint-50 flex items-center justify-center group-hover:bg-mint-500 group-hover:text-white transition-all">
-                              <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor">
-                                <path d="M6 12L10 8L6 4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                              <svg
+                                width="18"
+                                height="18"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  d="M6 12L10 8L6 4"
+                                  stroke-width="2.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
                               </svg>
                             </div>
                           </div>
@@ -328,21 +376,36 @@ export default function PropertyPage(
                   <div class="p-4 rounded-2xl bg-gray-50 flex items-center gap-3">
                     <span class="text-xl">💳</span>
                     <div>
-                      <p class="text-xs font-800 text-gray-900">Secure Payments</p>
-                      <p class="text-[10px] text-gray-500">Processed via Easebuzz Slices API</p>
+                      <p class="text-xs font-800 text-gray-900">
+                        Secure Payments
+                      </p>
+                      <p class="text-[10px] text-gray-500">
+                        Processed via Easebuzz Slices API
+                      </p>
                     </div>
                   </div>
                   <div class="p-4 rounded-2xl bg-gray-50 flex items-center gap-3">
                     <span class="text-xl">⚖️</span>
                     <div>
-                      <p class="text-xs font-800 text-gray-900">Refund Policy</p>
-                      <p class="text-[10px] text-gray-500">Standard istay Cancellation Rules</p>
+                      <p class="text-xs font-800 text-gray-900">
+                        Refund Policy
+                      </p>
+                      <p class="text-[10px] text-gray-500">
+                        Standard istay Cancellation Rules
+                      </p>
                     </div>
                   </div>
                 </div>
                 <p class="text-[11px] text-gray-400 text-center px-4 leading-relaxed">
                   istay | Ghaffar Manzil, Okhla, New Delhi, India.<br />
-                  All payments are processed securely. By booking, you agree to our <a href="/legal/terms" class="underline hover:text-mint-600 transition-colors">Terms of Service</a>.
+                  All payments are processed securely. By booking, you agree to
+                  our{" "}
+                  <a
+                    href="/legal/terms"
+                    class="underline hover:text-mint-600 transition-colors"
+                  >
+                    Terms of Service
+                  </a>.
                 </p>
               </div>
             </div>
@@ -350,26 +413,28 @@ export default function PropertyPage(
             {/* Right column: calendar sticky OR Booking Flow */}
             <div class="lg:col-span-2">
               <div class="lg:sticky lg:top-10">
-                {bookingData ? (
-                  <BookingFlow
-                    bookingId={bookingData.booking.id}
-                    guestName={bookingData.booking.guestName}
-                    checkIn={bookingData.booking.checkIn}
-                    checkOut={bookingData.booking.checkOut}
-                    status={bookingData.booking.status}
-                    verificationStatus={bookingData.verification?.status || "pending"}
-                    instructionsContent={bookingData.knowledge?.content}
-                    propertyName={property.name}
-                    propertyImage={property.imageUrl}
-                  />
-                ) : (
-                  <BookingCalendar
-                    blockedDates={blockedDates}
-                    basePrice={data.dynamicBasePrice}
-                    propId={property.id}
-                  />
-
-                )}
+                {bookingData
+                  ? (
+                    <BookingFlow
+                      bookingId={bookingData.booking.id}
+                      guestName={bookingData.booking.guestName}
+                      checkIn={bookingData.booking.checkIn}
+                      checkOut={bookingData.booking.checkOut}
+                      status={bookingData.booking.status}
+                      verificationStatus={bookingData.verification?.status ||
+                        "pending"}
+                      instructionsContent={bookingData.knowledge?.content}
+                      propertyName={property.name}
+                      propertyImage={property.imageUrl}
+                    />
+                  )
+                  : (
+                    <BookingCalendar
+                      blockedDates={blockedDates}
+                      basePrice={data.dynamicBasePrice}
+                      propId={property.id}
+                    />
+                  )}
               </div>
             </div>
           </div>
@@ -377,7 +442,11 @@ export default function PropertyPage(
       </div>
 
       {/* AI Concierge Chat Bubble */}
-      <GuestChat propId={property.id} propertyName={property.name} propertyImage={property.imageUrl} />
+      <GuestChat
+        propId={property.id}
+        propertyName={property.name}
+        propertyImage={property.imageUrl}
+      />
     </>
   );
 }

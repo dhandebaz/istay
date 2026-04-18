@@ -1,5 +1,9 @@
 import { type Handlers } from "$fresh/server.ts";
-import { getKv, listBookingsByProperty, listBlockedDates } from "../../../utils/db.ts";
+import {
+  getKv,
+  listBlockedDates,
+  listBookingsByProperty,
+} from "../../../utils/db.ts";
 
 export const handler: Handlers = {
   GET: async (_req, ctx) => {
@@ -23,17 +27,19 @@ export const handler: Handlers = {
     const events: string[] = [];
 
     // Confirmed Bookings
-    bookings.filter(b => b.status === "confirmed" || b.status === "room_ready").forEach(b => {
+    bookings.filter((b) =>
+      b.status === "confirmed" || b.status === "room_ready"
+    ).forEach((b) => {
       events.push(formatEvent(
         `istay-B-${b.id}`,
         b.checkIn,
         b.checkOut,
-        "istay Booking"
+        "istay Booking",
       ));
     });
 
     // Manual Blocks
-    manualBlocks.forEach(block => {
+    manualBlocks.forEach((block) => {
       // Manual blocks are stored per day, but iCal prefers ranges.
       // For simplicity/safety, we emit single-day events.
       const end = new Date(block.date + "T00:00:00Z");
@@ -44,7 +50,7 @@ export const handler: Handlers = {
         `istay-M-${block.date}-${propId}`,
         block.date,
         nextDay,
-        "ISTAY: Blocked"
+        "ISTAY: Blocked",
       ));
     });
 
@@ -56,7 +62,7 @@ export const handler: Handlers = {
       "CALSCALE:GREGORIAN",
       "METHOD:PUBLISH",
       ...events,
-      "END:VCALENDAR"
+      "END:VCALENDAR",
     ].join("\r\n");
 
     return new Response(ical, {
@@ -78,6 +84,6 @@ function formatEvent(uid: string, start: string, end: string, summary: string) {
     `DTSTART;VALUE=DATE:${format(start)}`,
     `DTEND;VALUE=DATE:${format(end)}`,
     `SUMMARY:${summary}`,
-    "END:VEVENT"
+    "END:VEVENT",
   ].join("\r\n");
 }

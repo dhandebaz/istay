@@ -78,9 +78,8 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
     `Hello! I'm the caretaker at "${property.name}". I wanted to update you about today's guests:` +
       (todayCheckIns.length > 0
         ? `\n\nToday's check-ins:\n` +
-          todayCheckIns.map((b) =>
-            `• ${b.guestName} (${b.nights} nights)`
-          ).join("\n")
+          todayCheckIns.map((b) => `• ${b.guestName} (${b.nights} nights)`)
+            .join("\n")
         : "\n\nNo check-ins today."),
   );
 
@@ -94,7 +93,10 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
       <Head>
         <title>Caretaker — {property.name}</title>
         <meta name="robots" content="noindex, nofollow" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        />
       </Head>
 
       <div
@@ -124,7 +126,9 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
               <h1 class="text-base font-700 text-white leading-tight">
                 {property.name}
               </h1>
-              <p class="text-xs text-istay-400 font-600 uppercase tracking-tight">Caretaker Access</p>
+              <p class="text-xs text-istay-400 font-600 uppercase tracking-tight">
+                Caretaker Access
+              </p>
             </div>
           </div>
 
@@ -162,7 +166,9 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
                 <div class="flex items-center gap-3 p-4 rounded-2xl bg-gray-900 border border-gray-800">
                   <span class="text-2xl">📭</span>
                   <div>
-                    <p class="text-sm font-600 text-gray-300">No arrivals today</p>
+                    <p class="text-sm font-600 text-gray-300">
+                      No arrivals today
+                    </p>
                     <p class="text-xs text-gray-500">
                       Enjoy a quiet day!
                     </p>
@@ -182,8 +188,10 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
                             {booking.guestName}
                           </p>
                           <p class="text-xs text-gray-500 mt-0.5">
-                            {booking.nights} night{booking.nights > 1 ? "s" : ""}{" "}
-                            · Checks out {booking.checkOut}
+                            {booking.nights}{" "}
+                            night{booking.nights > 1 ? "s" : ""} · Checks out
+                            {" "}
+                            {booking.checkOut}
                           </p>
                         </div>
                         <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-600 border border-emerald-500/20">
@@ -218,7 +226,13 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
                         )}
                         {booking.guestPhone && (
                           <a
-                            href={`https://wa.me/91${booking.guestPhone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hi ${booking.guestName}! Your room at "${property.name}" is ready. Welcome!`)}`}
+                            href={`https://wa.me/91${
+                              booking.guestPhone.replace(/[^0-9]/g, "")
+                            }?text=${
+                              encodeURIComponent(
+                                `Hi ${booking.guestName}! Your room at "${property.name}" is ready. Welcome!`,
+                              )
+                            }`}
                             target="_blank"
                             rel="noopener noreferrer"
                             class="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#25d366]/10 border border-[#25d366]/20 text-xs font-600 text-[#25d366] hover:bg-[#25d366]/20 transition-colors active:scale-95"
@@ -227,8 +241,11 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
                           </a>
                         )}
                       </div>
-                      
-                      <ProofOfCleanUploader bookingId={booking.id} guestName={booking.guestName} />
+
+                      <ProofOfCleanUploader
+                        bookingId={booking.id}
+                        guestName={booking.guestName}
+                      />
                     </div>
                   ))}
                 </div>

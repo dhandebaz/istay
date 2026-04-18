@@ -32,8 +32,8 @@ export async function reflectOnGuestSession(
 
   // 1. Prepare history for Gemini
   const conversation = messages
-    .filter(m => m.role !== "function")
-    .map(m => `${m.role.toUpperCase()}: ${m.content}`)
+    .filter((m) => m.role !== "function")
+    .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
     .join("\n");
 
   const existingProfile = await getGuestProfile(phone);
@@ -65,7 +65,8 @@ Return ONLY a JSON object:
   try {
     const res = await callGemini({
       prompt,
-      systemPrompt: "You are a hospitality data scientist. Return only valid JSON.",
+      systemPrompt:
+        "You are a hospitality data scientist. Return only valid JSON.",
       temperature: 0.2,
       jsonMode: true,
     });

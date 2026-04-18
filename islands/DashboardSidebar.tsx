@@ -37,11 +37,49 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
       label: "Overview",
       exact: true,
       icon: (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <rect x="2" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5" />
-          <rect x="10" y="2" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5" />
-          <rect x="2" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5" />
-          <rect x="10" y="10" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5" />
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="2"
+            y="2"
+            width="6"
+            height="6"
+            rx="1.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <rect
+            x="10"
+            y="2"
+            width="6"
+            height="6"
+            rx="1.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <rect
+            x="2"
+            y="10"
+            width="6"
+            height="6"
+            rx="1.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <rect
+            x="10"
+            y="10"
+            width="6"
+            height="6"
+            rx="1.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
         </svg>
       ),
     },
@@ -49,7 +87,13 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
       href: "/dashboard/properties",
       label: "Properties",
       icon: (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          aria-hidden="true"
+        >
           <path
             d="M9 2L2 7.5V16H7V11H11V16H16V7.5L9 2Z"
             stroke="currentColor"
@@ -63,14 +107,25 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
       href: "/dashboard/knowledge",
       label: "AI Knowledge",
       icon: (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          aria-hidden="true"
+        >
           <path
             d="M9 2C6.24 2 4 4.24 4 7C4 8.96 5.08 10.66 6.69 11.52V13.5C6.69 14.05 7.14 14.5 7.69 14.5H10.31C10.86 14.5 11.31 14.05 11.31 13.5V11.52C12.92 10.66 14 8.96 14 7C14 4.24 11.76 2 9 2Z"
             stroke="currentColor"
             stroke-width="1.5"
             stroke-linejoin="round"
           />
-          <path d="M7.5 16.5H10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <path
+            d="M7.5 16.5H10.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
         </svg>
       ),
     },
@@ -78,9 +133,28 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
       href: "/dashboard/bookings",
       label: "Bookings",
       icon: (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <rect x="2.5" y="3.5" width="13" height="12" rx="1.5" stroke="currentColor" stroke-width="1.5" />
-          <path d="M6 2V5M12 2V5M2.5 7.5H15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="2.5"
+            y="3.5"
+            width="13"
+            height="12"
+            rx="1.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <path
+            d="M6 2V5M12 2V5M2.5 7.5H15.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
         </svg>
       ),
     },
@@ -88,9 +162,26 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
       href: "/dashboard/guests",
       label: "Guests",
       icon: (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.5" />
-          <path d="M3 16C3 13.2386 5.68629 11 9 11C12.3137 11 15 13.2386 15 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="9"
+            cy="6"
+            r="3"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <path
+            d="M3 16C3 13.2386 5.68629 11 9 11C12.3137 11 15 13.2386 15 16"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
         </svg>
       ),
     },
@@ -98,8 +189,20 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
       href: "/dashboard/settings",
       label: "Settings",
       icon: (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <circle cx="9" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5" />
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          aria-hidden="true"
+        >
+          <circle
+            cx="9"
+            cy="9"
+            r="2.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
           <path
             d="M9 1.5V3M9 15V16.5M16.5 9H15M3 9H1.5M14.364 3.636L13.243 4.757M4.757 13.243L3.636 14.364M14.364 14.364L13.243 13.243M4.757 4.757L3.636 3.636"
             stroke="currentColor"
@@ -115,13 +218,23 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
     <div class="flex flex-col h-full bg-slate-900/95 backdrop-blur-xl">
       {/* Logo */}
       <div class="flex items-center px-6 h-20 border-b border-white/5 flex-shrink-0">
-        <a href="/" class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95">
-          <img src="/logo.svg" alt="istay logo" class="h-8 w-auto brightness-0 invert" />
+        <a
+          href="/"
+          class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95"
+        >
+          <img
+            src="/logo.svg"
+            alt="istay logo"
+            class="h-8 w-auto brightness-0 invert"
+          />
         </a>
       </div>
 
       {/* Navigation */}
-      <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1" aria-label="Dashboard navigation">
+      <nav
+        class="flex-1 overflow-y-auto px-4 py-6 space-y-1"
+        aria-label="Dashboard navigation"
+      >
         {NAV_ITEMS.map((item) => {
           const active = isActive(item);
           return (
@@ -143,11 +256,17 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
               }
               `}
             >
-              <span class={active ? "text-teal-400" : "text-gray-500 transition-colors group-hover:text-gray-300"}>
+              <span
+                class={active
+                  ? "text-teal-400"
+                  : "text-gray-500 transition-colors group-hover:text-gray-300"}
+              >
                 {item.icon}
               </span>
               <span class="flex-1">{item.label}</span>
-              {active && <div class="w-1.5 h-1.5 rounded-full bg-teal-400 shadow-[0_0_10px_rgba(20,184,166,0.8)]" />}
+              {active && (
+                <div class="w-1.5 h-1.5 rounded-full bg-teal-400 shadow-[0_0_10px_rgba(20,184,166,0.8)]" />
+              )}
             </a>
           );
         })}
@@ -179,7 +298,9 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
             <span class="text-xs text-gray-500 font-500">Service Status</span>
             <span class="flex h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
           </div>
-          <p class="text-[11px] font-600 text-gray-400">All Systems Operational</p>
+          <p class="text-[11px] font-600 text-gray-400">
+            All Systems Operational
+          </p>
         </div>
       </div>
     </div>
@@ -204,13 +325,35 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
         >
           {mobileOpen
             ? (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3 3L13 13M13 3L3 13"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
               </svg>
             )
             : (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M2 4H14M2 8H14M2 12H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 4H14M2 8H14M2 12H14"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
               </svg>
             )}
         </button>

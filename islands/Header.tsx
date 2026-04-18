@@ -16,10 +16,10 @@ export default function Header() {
   }, []);
 
   return (
-    <header 
+    <header
       class={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
-        scrolled 
-          ? "bg-white/98 shadow-md py-2 border-b border-gray-100" 
+        scrolled
+          ? "bg-white/98 shadow-md py-2 border-b border-gray-100"
           : "bg-white/95 backdrop-blur-md py-4"
       }`}
     >
@@ -31,15 +31,19 @@ export default function Header() {
             class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95"
             aria-label="istay — Home"
           >
-            <img 
-              src="/logo.svg" 
-              alt="istay logo" 
-              class="h-8 w-auto sm:h-9" 
+            <img
+              src="/logo.svg"
+              alt="istay logo"
+              class="h-8 w-auto sm:h-9"
             />
           </a>
 
           {/* Desktop Nav */}
-          <nav class="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
+          <nav
+            class="hidden md:flex items-center gap-1"
+            role="navigation"
+            aria-label="Main navigation"
+          >
             {NAV_LINKS.map(({ href, label }) => (
               <a
                 key={href}

@@ -10,7 +10,8 @@ interface PropertiesData {
 
 export const handler: Handlers<PropertiesData, DashboardState> = {
   GET: async (_req, ctx) => {
-    const properties = await listProperties(ctx.state.hostId);
+    const state = ctx.state as DashboardState;
+    const properties = await listProperties(state.hostId);
     return ctx.render({ properties });
   },
 };
@@ -50,7 +51,9 @@ export default function PropertiesPage({ data }: PageProps<PropertiesData>) {
           <p class="mt-1 text-sm text-gray-400">
             {properties.length === 0
               ? "Add your first property to start accepting direct bookings."
-              : `${properties.length} propert${properties.length === 1 ? "y" : "ies"} in your portfolio.`}
+              : `${properties.length} propert${
+                properties.length === 1 ? "y" : "ies"
+              } in your portfolio.`}
           </p>
         </div>
       </div>
@@ -179,7 +182,8 @@ export default function PropertiesPage({ data }: PageProps<PropertiesData>) {
       {properties.length === 0 && (
         <div class="mt-2 text-center">
           <p class="text-sm text-gray-400">
-            ↑ Paste your Airbnb link in the card above to import your listing instantly.
+            ↑ Paste your Property URL in the card above to import your listing
+            instantly.
           </p>
         </div>
       )}

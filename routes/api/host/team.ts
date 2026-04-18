@@ -7,11 +7,13 @@ export const handler: Handlers = {
   GET: async (req) => {
     const url = new URL(req.url);
     const hostId = url.searchParams.get("hostId");
-    if (!hostId) return Response.json({ error: "Missing hostId" }, { status: 400 });
+    if (!hostId) {
+      return Response.json({ error: "Missing hostId" }, { status: 400 });
+    }
 
     const kv = await getKv();
     const members: any[] = [];
-    
+
     // Auth records are segmented by email, so we need to iterate or use an index
     // For now, we list all auth records (this would be indexed in production)
     const iter = kv.list<AuthRecord>({ prefix: ["auth"] });
@@ -23,5 +25,5 @@ export const handler: Handlers = {
     }
 
     return Response.json({ members });
-  }
+  },
 };

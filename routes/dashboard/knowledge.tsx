@@ -7,11 +7,12 @@
 
 import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
-import {
-  getKnowledge,
-  listProperties,
-} from "../../utils/db.ts";
-import type { DashboardState, HostKnowledge, Property } from "../../utils/types.ts";
+import { getKnowledge, listProperties } from "../../utils/db.ts";
+import type {
+  DashboardState,
+  HostKnowledge,
+  Property,
+} from "../../utils/types.ts";
 import KnowledgeEditor from "../../islands/KnowledgeEditor.tsx";
 
 interface KnowledgePageData {
@@ -23,7 +24,8 @@ interface KnowledgePageData {
 
 export const handler: Handlers<KnowledgePageData, DashboardState> = {
   GET: async (_req, ctx) => {
-    const { hostId, hostName } = ctx.state;
+    const state = ctx.state as DashboardState;
+    const { hostId, hostName } = state;
 
     const properties = await listProperties(hostId);
 
@@ -60,15 +62,31 @@ export default function KnowledgePage(
         <div>
           <div class="flex items-center gap-3 mb-1">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white shadow-sm">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                aria-hidden="true"
+              >
                 <path
                   d="M10 2C6.68629 2 4 4.68629 4 8C4 10.22 5.21 12.16 7 13.2V15C7 15.55 7.45 16 8 16H12C12.55 16 13 15.55 13 15V13.2C14.79 12.16 16 10.22 16 8C16 4.68629 13.3137 2 10 2Z"
                   stroke="currentColor"
                   stroke-width="1.5"
                   stroke-linejoin="round"
                 />
-                <path d="M8 18H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                <path d="M10 2V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path
+                  d="M8 18H12"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M10 2V4"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
               </svg>
             </div>
             <div>
@@ -90,10 +108,11 @@ export default function KnowledgePage(
               How the AI Concierge works
             </p>
             <p class="text-xs text-purple-600 mt-1 leading-relaxed">
-              Write your property details below — WiFi passwords, check-in instructions,
-              house rules, nearby restaurants, caretaker number. Your guests will see a
-              chat bubble on the booking page and can ask questions 24/7. The AI will
-              <strong> only</strong> use the info you provide. No hallucinations.
+              Write your property details below — WiFi passwords, check-in
+              instructions, house rules, nearby restaurants, caretaker number.
+              Your guests will see a chat bubble on the booking page and can ask
+              questions 24/7. The AI will
+              <strong>only</strong> use the info you provide. No hallucinations.
             </p>
           </div>
         </div>

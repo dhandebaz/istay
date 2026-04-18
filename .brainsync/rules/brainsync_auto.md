@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 605 notes | Score threshold: >40
+> 774 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -25,25 +25,46 @@
 -   ]
 +     {
 - }
-+       "id": "c7723138a56026e7",
-+
++       "id": "a4e75c09947ed7de",
+-
+- **⚠️ GOTCHA: Fixed null crash in Record — prevents null/undefined runtime crashes** — - export function parseCookies(cookieHeader: string | null): Record<st
+- **⚠️ GOTCHA: Fixed null crash in ProofOfCleanUploader — avoids unnecessary re-renders in R...** — - import { useState, useRef, useMemo } from "preact/hooks";
++ import {
+- **gotcha in privacy.tsx** — File updated (external): routes/legal/privacy.tsx
+
+Content summary (27
+- **gotcha in launching-istay.md** — File updated (external): content/blog/launching-istay.md
+
+Content summ
+- **gotcha in ip_rules.md** — File updated (external): .brainsync/ip_rules.md
+
+Content summary (11 l
 
 ## Project Standards
 
-- what-changed in shared-context.json — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Strengthened types Added
-- Strengthened types Added
-- Added JWT tokens authentication — confirmed 3x
-- Patched security issue LUrGen — confirmed 3x
-- Strengthened types Added
-- what-changed in brainsync_auto.md — confirmed 3x
+- Strengthened types OtaSavingsChart
+- Strengthened types Team — prevents null/undefined runtime crashes
+- Strengthened types Booking — parallelizes async operations for speed
+- Strengthened types Math — prevents null/undefined runtime crashes
+- convention in deno.json
+- convention in fresh.gen.ts
+- Added JWT tokens authentication — confirmed 4x
+- what-changed in shared-context.json — confirmed 6x
 
 ## Known Fixes
 
+- ❌ -   const [error, setError] = useState<string | null>(null); → ✅ problem-fix in PricingCheckout.tsx
+- ❌ - - Fixed null crash in CryptoKey — uses a proper password hashing algorithm → ✅ problem-fix in agent-rules.md
+- ❌ -         return Response.json({ error: "All fields are required" }, { status: 400 }); → ✅ problem-fix in register.ts
 - ❌ - - Fixed null crash in CaretakerChecklist — avoids unnecessary re-renders in React → ✅ problem-fix in agent-rules.md
-- ❌ -         return Response.json({ error: "All fields are required" }, { status: 400 }); → ✅ Fixed null crash in Handlers
-- ❌ -   const [error, setError] = useState<string | null>(null); → ✅ Fixed null crash in ProofOfCleanUploaderProps — avoids unnecessary re-renders...
+- ❌ const step = useSignal<"details" | "submitting" | "success" | "error">( → ✅ problem-fix in RegisterForm.tsx
+
+## Recent Decisions
+
+- decision in index.tsx
+- decision in index.tsx
+- Optimized DashboardState — parallelizes async operations for speed
+- Optimized Record — avoids unnecessary re-renders in React
 
 ## Learned Patterns
 

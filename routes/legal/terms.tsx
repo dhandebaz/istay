@@ -62,17 +62,19 @@ export default function Terms() {
               istay (accessible at{" "}
               <a href="https://istay.space">https://istay.space</a>) is a
               Software-as-a-Service (SaaS) platform operated by{" "}
-              <strong>Sheikh Arsalan Ullah Chishti (istay)</strong> (hereinafter "istay",
-              "we", "us", or "our"). Our registered office is at Ghaffar Manzil,
-              Okhla, New Delhi, Delhi 110025, India.
+              <strong>Sheikh Arsalan Ullah Chishti (istay)</strong>{" "}
+              (hereinafter "istay", "we", "us", or "our"). Our registered office
+              is at Ghaffar Manzil, Okhla, New Delhi, Delhi 110025, India.
             </p>
             <p>
               istay provides a technology platform that enables property hosts
               ("Hosts") to create branded direct booking channels and receive
               payments from their guests ("Guests") without relying solely on
-              Online Travel Agencies (OTAs). istay is a <strong>technology
-              intermediary only</strong> — we do not own, operate, or manage any
-              accommodation property.
+              Online Travel Agencies (OTAs). istay is a{" "}
+              <strong>
+                technology intermediary only
+              </strong>{" "}
+              — we do not own, operate, or manage any accommodation property.
             </p>
 
             <h2>2. Acceptance of Terms</h2>
@@ -80,10 +82,10 @@ export default function Terms() {
               By registering for, accessing, or using the istay platform, you
               agree to be bound by these Terms & Conditions, our{" "}
               <a href="/legal/privacy">Privacy Policy</a>, our{" "}
-              <a href="/legal/cancellation">Cancellation & Refund Policy</a>, and
-              our{" "}
-              <a href="/legal/shipping">Shipping & Delivery Policy</a>. If you do
-              not agree to all of these terms, you must not use our services.
+              <a href="/legal/cancellation">Cancellation & Refund Policy</a>,
+              and our{" "}
+              <a href="/legal/shipping">Shipping & Delivery Policy</a>. If you
+              do not agree to all of these terms, you must not use our services.
             </p>
 
             <h2>3. Host Obligations & Legal Compliance</h2>
@@ -94,13 +96,13 @@ export default function Terms() {
             </p>
             <ul>
               <li>
-                Short-term rental regulations and licensing requirements in their
-                city or municipality.
+                Short-term rental regulations and licensing requirements in
+                their city or municipality.
               </li>
               <li>
-                Guest registration obligations under the Foreigners Act, 1946 and
-                applicable state police regulations (including Form C requirements
-                for foreign nationals).
+                Guest registration obligations under the Foreigners Act, 1946
+                and applicable state police regulations (including Form C
+                requirements for foreign nationals).
               </li>
               <li>
                 GST registration and proper tax collection/remittance on
@@ -115,10 +117,10 @@ export default function Terms() {
               </li>
             </ul>
             <p>
-              istay provides tools (including OCR-based guest ID verification) as
-              a courtesy feature. The use of these tools does not guarantee
-              compliance with any legal requirement, and Hosts must independently
-              verify compliance obligations in their jurisdiction.
+              istay provides tools (including OCR-based guest ID verification)
+              as a courtesy feature. The use of these tools does not guarantee
+              compliance with any legal requirement, and Hosts must
+              independently verify compliance obligations in their jurisdiction.
             </p>
             <p>
               istay shall not be liable for any fines, penalties, legal action,
@@ -132,21 +134,25 @@ export default function Terms() {
             </p>
             <ul>
               <li>
-                <strong>One-Time Setup Fee: ₹1,000 (inclusive of applicable taxes).</strong>{" "}
+                <strong>
+                  One-Time Setup Fee: ₹1,000 (inclusive of applicable taxes).
+                </strong>{" "}
                 This fee is charged upon account activation and is
                 non-refundable as described in our Cancellation & Refund Policy.
               </li>
               <li>
-                <strong>Transaction Commission: 5% (five percent) of the gross
-                booking amount</strong>, deducted at the time of each booking
-                settlement. This fee covers payment processing, platform hosting,
-                support, and AI-powered features.
+                <strong>
+                  Transaction Commission: 5% (five percent) of the gross booking
+                  amount
+                </strong>, deducted at the time of each booking settlement. This
+                fee covers payment processing, platform hosting, support, and
+                AI-powered features.
               </li>
             </ul>
             <p>
               istay reserves the right to modify its fee structure with 30 days'
-              notice to Hosts via email. Continued use of the platform after such
-              notice constitutes acceptance of the new fees.
+              notice to Hosts via email. Continued use of the platform after
+              such notice constitutes acceptance of the new fees.
             </p>
 
             <h2>5. Payment Processing</h2>
@@ -167,9 +173,10 @@ export default function Terms() {
             <h2>6. Intellectual Property</h2>
             <p>
               All content, trademarks, software, and designs on the istay
-              platform are the exclusive property of Sheikh Arsalan Ullah Chishti (istay)
-              or its licensors. You may not reproduce, distribute, or create
-              derivative works without our express written consent.
+              platform are the exclusive property of Sheikh Arsalan Ullah
+              Chishti (istay) or its licensors. You may not reproduce,
+              distribute, or create derivative works without our express written
+              consent.
             </p>
 
             <h2>7. Limitation of Liability</h2>
@@ -192,17 +199,32 @@ export default function Terms() {
             <h2>9. Contact</h2>
             <p>
               For questions about these Terms, please contact us at{" "}
-              <a href="mailto:support@istay.space">support@istay.space</a> or
-              write to istay, Ghaffar Manzil, Okhla, New
-              Delhi, Delhi 110025, India.
+              <a href="mailto:support@istay.space">support@istay.space</a>{" "}
+              or write to istay, Ghaffar Manzil, Okhla, New Delhi, Delhi 110025,
+              India.
             </p>
           </div>
 
           {/* Legal links */}
           <div class="mt-12 pt-6 border-t border-gray-100 flex flex-wrap gap-4 text-xs text-gray-400">
-            <a href="/legal/privacy" class="hover:text-teal-600 transition-colors">Privacy Policy</a>
-            <a href="/legal/cancellation" class="hover:text-teal-600 transition-colors">Cancellation Policy</a>
-            <a href="/legal/shipping" class="hover:text-teal-600 transition-colors">Shipping Policy</a>
+            <a
+              href="/legal/privacy"
+              class="hover:text-teal-600 transition-colors"
+            >
+              Privacy Policy
+            </a>
+            <a
+              href="/legal/cancellation"
+              class="hover:text-teal-600 transition-colors"
+            >
+              Cancellation Policy
+            </a>
+            <a
+              href="/legal/shipping"
+              class="hover:text-teal-600 transition-colors"
+            >
+              Shipping Policy
+            </a>
           </div>
         </div>
       </main>

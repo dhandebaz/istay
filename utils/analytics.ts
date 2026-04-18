@@ -40,8 +40,8 @@ export async function calculateMonthlyMetrics(
   ]);
 
   // Filter confirmed bookings for the target month (by check-in date)
-  const monthlyBookings = allBookings.filter((b) => 
-    (b.status === "confirmed" || b.status === "room_ready") && 
+  const monthlyBookings = allBookings.filter((b) =>
+    (b.status === "confirmed" || b.status === "room_ready") &&
     b.checkIn.startsWith(month)
   );
 
@@ -56,13 +56,13 @@ export async function calculateMonthlyMetrics(
   const monthIdx = parseInt(month.split("-")[1]) - 1;
   const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
   const potentialNights = properties.length * daysInMonth;
-  
-  const occupancyRate = potentialNights > 0 
-    ? Math.round((nightsCount / potentialNights) * 10000) / 100 
+
+  const occupancyRate = potentialNights > 0
+    ? Math.round((nightsCount / potentialNights) * 10000) / 100
     : 0;
 
-  const adr = nightsCount > 0 
-    ? Math.round((grossRevenue / nightsCount) * 100) / 100 
+  const adr = nightsCount > 0
+    ? Math.round((grossRevenue / nightsCount) * 100) / 100
     : 0;
 
   const revPar = Math.round((adr * (occupancyRate / 100)) * 100) / 100;
@@ -88,7 +88,7 @@ export async function getFinancialInsights(
 ): Promise<FinancialInsight> {
   const now = new Date();
   const currentMonth = now.toISOString().slice(0, 7);
-  
+
   const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const prevMonth = prevDate.toISOString().slice(0, 7);
 
@@ -98,16 +98,24 @@ export async function getFinancialInsights(
     listProperties(hostId),
   ]);
 
-  const growth = previous.grossRevenue > 0 
-    ? Math.round(((current.grossRevenue - previous.grossRevenue) / previous.grossRevenue) * 100)
+  const growth = previous.grossRevenue > 0
+    ? Math.round(
+      ((current.grossRevenue - previous.grossRevenue) / previous.grossRevenue) *
+        100,
+    )
     : 0;
 
   // Find top performing property by revenue (this month)
   const allBookings = await listBookings(hostId);
   const propRevenue = new Map<string, number>();
-  
-  allBookings.filter(b => b.checkIn.startsWith(currentMonth) && b.status === "confirmed").forEach(b => {
-    propRevenue.set(b.propertyId, (propRevenue.get(b.propertyId) ?? 0) + b.amount);
+
+  allBookings.filter((b) =>
+    b.checkIn.startsWith(currentMonth) && b.status === "confirmed"
+  ).forEach((b) => {
+    propRevenue.set(
+      b.propertyId,
+      (propRevenue.get(b.propertyId) ?? 0) + b.amount,
+    );
   });
 
   let topPropId = "";
@@ -119,7 +127,7 @@ export async function getFinancialInsights(
     }
   }
 
-  const topProp = properties.find(p => p.id === topPropId);
+  const topProp = properties.find((p) => p.id === topPropId);
 
   return {
     totalRevenue: current.grossRevenue,

@@ -56,10 +56,8 @@ export default function EarningsCalculator() {
     takehome: grossRevenue * (1 - p.commission),
   }));
 
-  const istaySavingsVsAirbnb =
-    grossRevenue * (0.15 - 0.05); // 10% difference
-  const istaySavingsVsMMT =
-    grossRevenue * (0.18 - 0.05); // 13% difference
+  const istaySavingsVsAirbnb = grossRevenue * (0.15 - 0.05); // 10% difference
+  const istaySavingsVsMMT = grossRevenue * (0.18 - 0.05); // 13% difference
 
   return (
     <div
@@ -140,7 +138,9 @@ export default function EarningsCalculator() {
 
       {/* ── GROSS REVENUE BADGE ─────────────────────────── */}
       <div class="flex items-center justify-between bg-gray-50 rounded-2xl px-5 py-4 mb-7">
-        <span class="text-sm text-gray-500 font-500">Gross Monthly Revenue</span>
+        <span class="text-sm text-gray-500 font-500">
+          Gross Monthly Revenue
+        </span>
         <span class="text-2xl font-800 text-gray-900">
           {formatINR(grossRevenue)}
         </span>
@@ -148,7 +148,9 @@ export default function EarningsCalculator() {
 
       {/* ── PLATFORM CARDS ──────────────────────────────── */}
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        {results.map(({ name, commission, fee, takehome, color, bg, border, badge }) => (
+        {results.map((
+          { name, commission, fee, takehome, color, bg, border, badge },
+        ) => (
           <div
             key={name}
             class={`relative rounded-2xl border-2 p-5 transition-transform hover:-translate-y-1 duration-200 ${bg} ${border}`}
@@ -158,7 +160,9 @@ export default function EarningsCalculator() {
                 {badge}
               </div>
             )}
-            <div class={`text-xs font-700 uppercase tracking-wider ${color} mb-3`}>
+            <div
+              class={`text-xs font-700 uppercase tracking-wider ${color} mb-3`}
+            >
               {name}
             </div>
 
@@ -206,7 +210,10 @@ export default function EarningsCalculator() {
           </div>
         </div>
         <p class="mt-4 text-xs text-istay-900/80 font-500">
-          * Calculation based on gross revenue of {formatINR(grossRevenue)}/month. istay's one-time ₹{SETUP_FEE.toLocaleString("en-IN")} setup fee breaks even in your first booking.
+          * Calculation based on gross revenue of{" "}
+          {formatINR(grossRevenue)}/month. istay's one-time ₹{SETUP_FEE
+            .toLocaleString("en-IN")}{" "}
+          setup fee breaks even in your first booking.
         </p>
       </div>
     </div>

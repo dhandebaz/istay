@@ -129,10 +129,14 @@ function buildSafetySettings() {
 
 // Parse the Gemini API response into our clean GeminiResponse.
 function parseResponse(data: Record<string, unknown>): GeminiResponse {
-  const candidates = data.candidates as Array<Record<string, unknown>> | undefined;
+  const candidates = data.candidates as
+    | Array<Record<string, unknown>>
+    | undefined;
   if (!candidates || candidates.length === 0) {
     // Check for prompt feedback (blocked)
-    const promptFeedback = data.promptFeedback as Record<string, unknown> | undefined;
+    const promptFeedback = data.promptFeedback as
+      | Record<string, unknown>
+      | undefined;
     if (promptFeedback?.blockReason) {
       return {
         text: `[Blocked: ${promptFeedback.blockReason}]`,
@@ -140,15 +144,19 @@ function parseResponse(data: Record<string, unknown>): GeminiResponse {
         finishReason: "BLOCKED",
       };
     }
-    return { text: "[No response generated]", truncated: false, finishReason: "UNKNOWN" };
+    return {
+      text: "[No response generated]",
+      truncated: false,
+      finishReason: "UNKNOWN",
+    };
   }
 
   const candidate = candidates[0];
   const content = candidate.content as Record<string, unknown> | undefined;
   const parts = content?.parts as Array<Record<string, any>> | undefined;
-  
+
   const text = parts?.map((p) => p.text ?? "").join("") ?? "";
-  
+
   const toolCalls = parts
     ?.filter((p) => p.functionCall)
     .map((p) => ({
@@ -209,7 +217,9 @@ function trimHistory(
 
 // Call Gemini Flash-Lite with a text-only prompt.
 // Supports multi-turn conversation via `history`.
-export async function callGemini(opts: GeminiTextOptions): Promise<GeminiResponse> {
+export async function callGemini(
+  opts: GeminiTextOptions,
+): Promise<GeminiResponse> {
   const apiKey = GEMINI_API_KEY();
   if (!apiKey) {
     throw new GeminiError(
@@ -271,7 +281,9 @@ export async function callGemini(opts: GeminiTextOptions): Promise<GeminiRespons
   const result = parseResponse(data);
 
   console.log(
-    `[gemini] Text call (${selectedModel}): in=${result.inputTokens ?? "?"} out=${result.outputTokens ?? "?"} finish=${result.finishReason}`,
+    `[gemini] Text call (${selectedModel}): in=${
+      result.inputTokens ?? "?"
+    } out=${result.outputTokens ?? "?"} finish=${result.finishReason}`,
   );
 
   return result;
@@ -279,7 +291,9 @@ export async function callGemini(opts: GeminiTextOptions): Promise<GeminiRespons
 
 // Call Gemini Flash-Lite with an image (multimodal / vision).
 // Used for OCR / ID verification.
-export async function callGeminiVision(opts: GeminiVisionOptions): Promise<GeminiResponse> {
+export async function callGeminiVision(
+  opts: GeminiVisionOptions,
+): Promise<GeminiResponse> {
   const apiKey = GEMINI_API_KEY();
   if (!apiKey) {
     throw new GeminiError(
@@ -288,7 +302,9 @@ export async function callGeminiVision(opts: GeminiVisionOptions): Promise<Gemin
     );
   }
 
-  const { data: imageData, mime: detectedMime } = stripDataUri(opts.imageBase64);
+  const { data: imageData, mime: detectedMime } = stripDataUri(
+    opts.imageBase64,
+  );
   const mimeType = opts.imageMimeType ?? detectedMime;
 
   const body: Record<string, unknown> = {
@@ -335,7 +351,9 @@ export async function callGeminiVision(opts: GeminiVisionOptions): Promise<Gemin
   const result = parseResponse(data);
 
   console.log(
-    `[gemini-vision] Vision call (${selectedModel}): in=${result.inputTokens ?? "?"} out=${result.outputTokens ?? "?"} finish=${result.finishReason}`,
+    `[gemini-vision] Vision call (${selectedModel}): in=${
+      result.inputTokens ?? "?"
+    } out=${result.outputTokens ?? "?"} finish=${result.finishReason}`,
   );
 
   return result;
@@ -359,7 +377,9 @@ async function fetchWithRetry(url: string, body: unknown): Promise<Response> {
       if ((res.status === 429 || res.status >= 500) && attempt < MAX_RETRIES) {
         const delay = RETRY_DELAYS[attempt] ?? 3000;
         console.warn(
-          `[gemini] HTTP ${res.status}, retrying in ${delay}ms (attempt ${attempt + 1}/${MAX_RETRIES})`,
+          `[gemini] HTTP ${res.status}, retrying in ${delay}ms (attempt ${
+            attempt + 1
+          }/${MAX_RETRIES})`,
         );
         await new Promise((r) => setTimeout(r, delay));
         continue;

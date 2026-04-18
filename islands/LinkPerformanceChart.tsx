@@ -29,8 +29,9 @@ export default function LinkPerformanceChart({
     1, // prevent division by zero
   );
 
-  const conversionRate =
-    totalViews > 0 ? ((totalBookings / totalViews) * 100).toFixed(1) : "0.0";
+  const conversionRate = totalViews > 0
+    ? ((totalBookings / totalViews) * 100).toFixed(1)
+    : "0.0";
 
   // Format date to short day name
   const formatDay = (iso: string) => {
@@ -49,7 +50,9 @@ export default function LinkPerformanceChart({
       <div class="flex items-center justify-between mb-6">
         <div>
           <h3 class="text-base font-700 text-gray-900">Link Performance</h3>
-          <p class="text-xs text-gray-400 mt-0.5">Views vs Bookings — Last 7 days</p>
+          <p class="text-xs text-gray-400 mt-0.5">
+            Views vs Bookings — Last 7 days
+          </p>
         </div>
 
         {/* Summary pills */}
@@ -81,10 +84,10 @@ export default function LinkPerformanceChart({
         {/* Bars */}
         <div class="relative flex items-end justify-between gap-2 sm:gap-4 h-44">
           {data.map((day) => {
-            const viewsHeight =
-              maxVal > 0 ? (day.views / maxVal) * 100 : 0;
-            const bookingsHeight =
-              maxVal > 0 ? (day.bookings / maxVal) * 100 : 0;
+            const viewsHeight = maxVal > 0 ? (day.views / maxVal) * 100 : 0;
+            const bookingsHeight = maxVal > 0
+              ? (day.bookings / maxVal) * 100
+              : 0;
 
             return (
               <div

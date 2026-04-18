@@ -41,12 +41,13 @@ export default function Privacy() {
           <div class="prose-legal">
             <h2>1. Introduction</h2>
             <p>
-              Sheikh Arsalan Ullah Chishti (istay) ("istay", "we", "us") is committed to
-              protecting the privacy of our users. This Privacy Policy explains
-              what information we collect, why we collect it, how we use it, and
-              your rights in relation to your data. This policy applies to Hosts
-              (property owners using our SaaS platform) and Guests (individuals
-              making bookings through a Host's istay-powered booking page).
+              Sheikh Arsalan Ullah Chishti (istay) ("istay", "we", "us") is
+              committed to protecting the privacy of our users. This Privacy
+              Policy explains what information we collect, why we collect it,
+              how we use it, and your rights in relation to your data. This
+              policy applies to Hosts (property owners using our SaaS platform)
+              and Guests (individuals making bookings through a Host's
+              istay-powered booking page).
             </p>
 
             <h2>2. Information We Collect</h2>
@@ -76,8 +77,8 @@ export default function Privacy() {
             </p>
             <ul>
               <li>
-                Booking information: name, email, phone number, check-in/check-out
-                dates, and number of guests.
+                Booking information: name, email, phone number,
+                check-in/check-out dates, and number of guests.
               </li>
               <li>
                 Payment information: processed securely by Razorpay. istay
@@ -126,23 +127,30 @@ export default function Privacy() {
             </p>
             <ul>
               <li>
-                <strong>Encrypted Transmission:</strong> ID images are transmitted over TLS 1.3-encrypted connections.
+                <strong>Encrypted Transmission:</strong>{" "}
+                ID images are transmitted over TLS 1.3-encrypted connections.
               </li>
               <li>
-                <strong>Ephemeral Processing:</strong> OCR processing is performed in-memory and the raw image is not
-                permanently stored on istay servers after extraction is complete.
+                <strong>Ephemeral Processing:</strong>{" "}
+                OCR processing is performed in-memory and the raw image is not
+                permanently stored on istay servers after extraction is
+                complete.
               </li>
               <li>
-                <strong>Secure ID Storage:</strong> Extracted data (name, ID number, date of birth) is stored in
-                encrypted form within the Host's account. This data is processed by our secure AI engine locally to verify identity and is never shared with third-party tracking services.
+                <strong>Secure ID Storage:</strong>{" "}
+                Extracted data (name, ID number, date of birth) is stored in
+                encrypted form within the Host's account. This data is processed
+                by our secure AI engine locally to verify identity and is never
+                shared with third-party tracking services.
               </li>
               <li>
-                <strong>Privacy-First AI:</strong> We do not use guest ID data for profiling, advertising, or any
+                <strong>Privacy-First AI:</strong>{" "}
+                We do not use guest ID data for profiling, advertising, or any
                 purpose beyond the specific check-in compliance purpose.
               </li>
               <li>
-                Hosts are responsible for obtaining guest consent before scanning
-                any identity document.
+                Hosts are responsible for obtaining guest consent before
+                scanning any identity document.
               </li>
             </ul>
 
@@ -156,47 +164,55 @@ export default function Privacy() {
             </p>
             <ul>
               <li>
-                <strong>Razorpay:</strong> for payment processing. Their privacy
-                policy governs such data.
+                <strong>Razorpay:</strong>{" "}
+                for payment processing. Their privacy policy governs such data.
               </li>
               <li>
-                <strong>Infrastructure providers</strong> (cloud hosting, CDN)
-                under strict data processing agreements.
+                <strong>Infrastructure providers</strong>{" "}
+                (cloud hosting, CDN) under strict data processing agreements.
               </li>
               <li>
-                <strong>Law enforcement or regulators</strong> where we are
-                legally compelled to do so.
+                <strong>Law enforcement or regulators</strong>{" "}
+                where we are legally compelled to do so.
               </li>
               <li>
-                <strong>Between Hosts and Guests</strong> only to the extent
-                necessary to fulfil a booking (e.g., Host receives Guest's name
-                and contact).
+                <strong>Between Hosts and Guests</strong>{" "}
+                only to the extent necessary to fulfil a booking (e.g., Host
+                receives Guest's name and contact).
               </li>
             </ul>
 
             <h2>6. Data Retention</h2>
             <p>
               We retain Host account data for as long as the account is active
-              and for 7 years after closure for tax and audit compliance purposes.
-              Guest booking data is retained for 5 years. Guest ID records are
-              retained for as long as legally required (minimum 1 year as per
-              applicable police regulations) and may be deleted upon verified
-              legal request.
+              and for 7 years after closure for tax and audit compliance
+              purposes. Guest booking data is retained for 5 years. Guest ID
+              records are retained for as long as legally required (minimum 1
+              year as per applicable police regulations) and may be deleted upon
+              verified legal request.
             </p>
 
             <h2>7. Your Rights</h2>
-            <p>Under applicable Indian data protection laws, you have the right to:</p>
+            <p>
+              Under applicable Indian data protection laws, you have the right
+              to:
+            </p>
             <ul>
               <li>Access the personal data we hold about you.</li>
               <li>Request correction of inaccurate data.</li>
-              <li>Request erasure of data (subject to legal retention obligations).</li>
+              <li>
+                Request erasure of data (subject to legal retention
+                obligations).
+              </li>
               <li>Object to certain processing activities.</li>
-              <li>Lodge a complaint with the relevant data protection authority.</li>
+              <li>
+                Lodge a complaint with the relevant data protection authority.
+              </li>
             </ul>
             <p>
               To exercise these rights, email us at{" "}
-              <a href="mailto:support@istay.space">support@istay.space</a> with
-              the subject line "Privacy Request".
+              <a href="mailto:support@istay.space">support@istay.space</a>{" "}
+              with the subject line "Privacy Request".
             </p>
 
             <h2>8. Cookies</h2>
@@ -216,17 +232,33 @@ export default function Privacy() {
 
             <h2>10. Contact</h2>
             <p>
-              For privacy-related queries, contact our Data Protection Officer at{" "}
-              <a href="mailto:support@istay.space">support@istay.space</a> or
-              write to istay, Ghaffar Manzil, Okhla, New
-              Delhi, Delhi 110025, India.
+              For privacy-related queries, contact our Data Protection Officer
+              at <a href="mailto:support@istay.space">support@istay.space</a>
+              {" "}
+              or write to istay, Ghaffar Manzil, Okhla, New Delhi, Delhi 110025,
+              India.
             </p>
           </div>
 
           <div class="mt-12 pt-6 border-t border-gray-100 flex flex-wrap gap-4 text-xs text-gray-400">
-            <a href="/legal/terms" class="hover:text-teal-600 transition-colors">Terms & Conditions</a>
-            <a href="/legal/cancellation" class="hover:text-teal-600 transition-colors">Cancellation Policy</a>
-            <a href="/legal/shipping" class="hover:text-teal-600 transition-colors">Shipping Policy</a>
+            <a
+              href="/legal/terms"
+              class="hover:text-teal-600 transition-colors"
+            >
+              Terms & Conditions
+            </a>
+            <a
+              href="/legal/cancellation"
+              class="hover:text-teal-600 transition-colors"
+            >
+              Cancellation Policy
+            </a>
+            <a
+              href="/legal/shipping"
+              class="hover:text-teal-600 transition-colors"
+            >
+              Shipping Policy
+            </a>
           </div>
         </div>
       </main>

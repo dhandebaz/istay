@@ -21,12 +21,15 @@ export const handler: Handlers = {
 
       // Generate a reset token (simple secure hex for now)
       const tokenBytes = crypto.getRandomValues(new Uint8Array(24));
-      const token = Array.from(tokenBytes).map(b => b.toString(16).padStart(2, '0')).join('');
-      
+      const token = Array.from(tokenBytes).map((b) =>
+        b.toString(16).padStart(2, "0")
+      ).join("");
+
       authRecord.resetToken = token;
       // Expires in 1 hour
-      authRecord.resetTokenExpires = new Date(Date.now() + 60 * 60 * 1000).toISOString();
-      
+      authRecord.resetTokenExpires = new Date(Date.now() + 60 * 60 * 1000)
+        .toISOString();
+
       await saveAuthRecord(authRecord);
 
       // Dispatch physical email via Brevo
@@ -34,7 +37,6 @@ export const handler: Handlers = {
       sendPasswordResetEmail(lowerEmail, hostName, token).catch(console.error);
 
       return Response.json({ ok: true });
-
     } catch (err) {
       console.error("[auth/forgot]", err);
       return Response.json({ error: "Internal server error" }, { status: 500 });

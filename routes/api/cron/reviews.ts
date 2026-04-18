@@ -1,4 +1,7 @@
-import { getBookingsCheckingOutIn, saveSurveyToken } from "../../../utils/db.ts";
+import {
+  getBookingsCheckingOutIn,
+  saveSurveyToken,
+} from "../../../utils/db.ts";
 import { sendEmail } from "../../../utils/email.ts";
 
 export const handler = async (_req: Request) => {
@@ -6,7 +9,9 @@ export const handler = async (_req: Request) => {
     const today = new Date().toISOString().slice(0, 10);
     const checkouts = await getBookingsCheckingOutIn(today);
 
-    console.log(`[cron/reviews] Found ${checkouts.length} checkouts for ${today}`);
+    console.log(
+      `[cron/reviews] Found ${checkouts.length} checkouts for ${today}`,
+    );
 
     for (const booking of checkouts) {
       // 1. Generate unique survey token
@@ -15,14 +20,14 @@ export const handler = async (_req: Request) => {
 
       // 2. Send Post-Stay Survey Email
       const surveyUrl = `https://istay.space/feedback/${surveyToken}`;
-      
+
       await sendEmail({
         to: booking.guestEmail,
         subject: `How was your stay at ${booking.guestName}'s property?`,
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 12px;">
             <h1 style="color: #0d9488;">Hope you had a great stay!</h1>
-            <p>Hi ${booking.guestName.split(' ')[0]},</p>
+            <p>Hi ${booking.guestName.split(" ")[0]},</p>
             <p>Thank you for choosing to stay with us. We'd love to hear about your experience to help us improve.</p>
             
             <div style="margin: 30px 0;">

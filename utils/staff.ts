@@ -16,12 +16,15 @@ export async function dispatchCaretakerMission(booking: Booking) {
   // Generate a mission token for this specific booking/caretaker session if not present
   // For simplicity, we use the property's caretaker token if it exists, or generate a fresh one
   const token = property.caretakerToken || crypto.randomUUID().slice(0, 8);
-  
+
   const protocol = "https://"; // In production, this is istay.space
-  const missionUrl = `${protocol}istay.space/care/${token}?booking=${booking.id}`;
-  
+  const missionUrl =
+    `${protocol}istay.space/care/${token}?booking=${booking.id}`;
+
   const message = `🚨 *ISTAY MISSION ALERT* 🚨
-Hi ${property.caretakerName || "Caretaker"}, a new booking has been confirmed for *${property.name}*.
+Hi ${
+    property.caretakerName || "Caretaker"
+  }, a new booking has been confirmed for *${property.name}*.
 
 Check-in: ${booking.checkIn}
 Guest: ${booking.guestName}
@@ -33,6 +36,8 @@ Thank you! 🧹✨`;
 
   const success = await sendWhatsAppMessage(property.caretakerPhone, message);
   if (success) {
-    console.log(`[staff] Mission dispatched to ${property.caretakerPhone} for booking=${booking.id}`);
+    console.log(
+      `[staff] Mission dispatched to ${property.caretakerPhone} for booking=${booking.id}`,
+    );
   }
 }

@@ -10,11 +10,11 @@
 // ================================================================
 
 import {
-  listProperties,
+  getProperty,
   getPropertyById,
   listAllPropertyIndices,
-  getProperty,
   listBlockedDates,
+  listProperties,
 } from "./db.ts";
 
 import { callGemini, GeminiError } from "./gemini.ts";
@@ -38,7 +38,8 @@ CURRENT PROPERTY (the one the guest wanted):
 `.trim();
 
   const candidateDescs = candidates.map(
-    (p, i) => `
+    (p, i) =>
+      `
 CANDIDATE ${i + 1} (ID: ${p.id}):
 - Name: ${p.name}
 - Price: ₹${p.basePrice}/night
@@ -86,14 +87,48 @@ function extractCity(address: string | undefined): string | null {
 
   // Common Indian cities to match against
   const cities = [
-    "mumbai", "delhi", "bangalore", "bengaluru", "hyderabad",
-    "chennai", "kolkata", "pune", "goa", "jaipur", "udaipur",
-    "shimla", "manali", "gurgaon", "gurugram", "noida", "lucknow",
-    "ahmedabad", "chandigarh", "kochi", "pondicherry", "ooty",
-    "mussoorie", "nainital", "rishikesh", "varanasi", "agra",
-    "jodhpur", "coorg", "lonavala", "mahabaleshwar", "alibaug",
-    "kodaikanal", "darjeeling", "gangtok", "leh", "ladakh",
-    "kasol", "mcleodganj", "amritsar", "mysore", "mysuru",
+    "mumbai",
+    "delhi",
+    "bangalore",
+    "bengaluru",
+    "hyderabad",
+    "chennai",
+    "kolkata",
+    "pune",
+    "goa",
+    "jaipur",
+    "udaipur",
+    "shimla",
+    "manali",
+    "gurgaon",
+    "gurugram",
+    "noida",
+    "lucknow",
+    "ahmedabad",
+    "chandigarh",
+    "kochi",
+    "pondicherry",
+    "ooty",
+    "mussoorie",
+    "nainital",
+    "rishikesh",
+    "varanasi",
+    "agra",
+    "jodhpur",
+    "coorg",
+    "lonavala",
+    "mahabaleshwar",
+    "alibaug",
+    "kodaikanal",
+    "darjeeling",
+    "gangtok",
+    "leh",
+    "ladakh",
+    "kasol",
+    "mcleodganj",
+    "amritsar",
+    "mysore",
+    "mysuru",
   ];
 
   for (const city of cities) {
@@ -116,7 +151,6 @@ export async function getVibeMatches(
   checkIn?: string,
   checkOut?: string,
 ): Promise<VibeMatch[]> {
-
   const currentProp = await getPropertyById(currentPropId);
   if (!currentProp) return [];
 
@@ -139,7 +173,9 @@ export async function getVibeMatches(
         // Availability Filter
         if (checkIn && checkOut) {
           const blocks = await listBlockedDates(propId);
-          const isBlocked = blocks.some(b => b.date >= checkIn && b.date < checkOut);
+          const isBlocked = blocks.some((b) =>
+            b.date >= checkIn && b.date < checkOut
+          );
           if (isBlocked) continue; // Skip if unavailable for requested range
         }
         candidates.push(prop);
@@ -156,13 +192,14 @@ export async function getVibeMatches(
 
       if (checkIn && checkOut) {
         const blocks = await listBlockedDates(p.id);
-        const isBlocked = blocks.some(b => b.date >= checkIn && b.date < checkOut);
+        const isBlocked = blocks.some((b) =>
+          b.date >= checkIn && b.date < checkOut
+        );
         if (isBlocked) continue;
       }
       candidates.push(p);
     }
   }
-
 
   if (candidates.length === 0) return [];
 
@@ -174,7 +211,8 @@ export async function getVibeMatches(
       imageUrl: p.imageUrl,
       basePrice: p.basePrice,
       score: 70,
-      reason: `✨ Another lovely stay in the same area at ₹${p.basePrice}/night`,
+      reason:
+        `✨ Another lovely stay in the same area at ₹${p.basePrice}/night`,
     }));
   }
 
@@ -218,7 +256,8 @@ export async function getVibeMatches(
           imageUrl: prop.imageUrl,
           basePrice: prop.basePrice,
           score: Math.min(100, Math.max(0, rank.score ?? 0)),
-          reason: rank.reason || `🏡 Great alternative at ₹${prop.basePrice}/night`,
+          reason: rank.reason ||
+            `🏡 Great alternative at ₹${prop.basePrice}/night`,
         });
       }
     }

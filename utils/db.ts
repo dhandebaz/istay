@@ -23,7 +23,6 @@
 //   ["rate_limit", ip, windowMinute]           → number  (auto-expiring)
 // ================================================================
 
-
 import type {
   AuthRecord,
   Booking,
@@ -71,7 +70,12 @@ async function getCryptoKey(): Promise<CryptoKey> {
   }
   const enc = new TextEncoder();
   // Pad or truncate to 32 bytes for AES-256
-  const keyData = enc.encode((keyStr || "istay-default-secret-key-32-chars").padEnd(32, "0").slice(0, 32));
+  const keyData = enc.encode(
+    (keyStr || "istay-default-secret-key-32-chars").padEnd(32, "0").slice(
+      0,
+      32,
+    ),
+  );
   _cryptoKey = await crypto.subtle.importKey(
     "raw",
     keyData,
@@ -82,7 +86,9 @@ async function getCryptoKey(): Promise<CryptoKey> {
   return _cryptoKey;
 }
 
-async function encryptField(text: string | undefined): Promise<string | undefined> {
+async function encryptField(
+  text: string | undefined,
+): Promise<string | undefined> {
   if (!text) return undefined;
   try {
     const key = await getCryptoKey();
@@ -105,7 +111,9 @@ async function encryptField(text: string | undefined): Promise<string | undefine
   }
 }
 
-async function decryptField(base64: string | undefined): Promise<string | undefined> {
+async function decryptField(
+  base64: string | undefined,
+): Promise<string | undefined> {
   if (!base64) return undefined;
   try {
     const key = await getCryptoKey();
@@ -159,34 +167,44 @@ export async function listAllHosts(): Promise<Host[]> {
 
 export async function hashPassword(password: string, saltHex?: string) {
   // Generate a salt if not provided
-  const salt = saltHex 
-    ? new Uint8Array(saltHex.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)))
+  const salt = saltHex
+    ? new Uint8Array(
+      saltHex.match(/.{1,2}/g)!.map((byte) => parseInt(byte, 16)),
+    )
     : crypto.getRandomValues(new Uint8Array(16));
-  
+
   const enc = new TextEncoder();
   const keyMaterial = await crypto.subtle.importKey(
-    "raw", enc.encode(password), { name: "PBKDF2" }, false, ["deriveBits", "deriveKey"]
+    "raw",
+    enc.encode(password),
+    { name: "PBKDF2" },
+    false,
+    ["deriveBits", "deriveKey"],
   );
-  
+
   const key = await crypto.subtle.deriveKey(
     {
       name: "PBKDF2",
       salt: salt,
       iterations: 100000,
-      hash: "SHA-256"
+      hash: "SHA-256",
     },
     keyMaterial,
     { name: "AES-GCM", length: 256 },
     true,
-    ["encrypt", "decrypt"]
+    ["encrypt", "decrypt"],
   );
-  
+
   const exportedKey = await crypto.subtle.exportKey("raw", key);
   const hashBuffer = new Uint8Array(exportedKey);
   const hashArray = Array.from(hashBuffer);
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  const thisSaltHex = Array.from(salt).map(b => b.toString(16).padStart(2, '0')).join('');
-  
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join(
+    "",
+  );
+  const thisSaltHex = Array.from(salt).map((b) =>
+    b.toString(16).padStart(2, "0")
+  ).join("");
+
   return { hash: hashHex, salt: thisSaltHex };
 }
 
@@ -216,7 +234,9 @@ export async function getProperty(
  * Looks up a property using only its ID (no hostId required).
  * Uses the ["prop_index", propId] secondary index.
  */
-export async function getPropertyById(propId: string): Promise<Property | null> {
+export async function getPropertyById(
+  propId: string,
+): Promise<Property | null> {
   const kv = await getKv();
   const idx = await kv.get<{ hostId: string }>(["prop_index", propId]);
   if (!idx.value) return null;
@@ -239,8 +259,7 @@ export async function listProperties(hostId: string): Promise<Property[]> {
     properties.push(entry.value);
   }
   return properties.sort(
-    (a, b) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 }
 
@@ -266,7 +285,10 @@ export async function listAllPropertyIndices(): Promise<
   const iter = kv.list<{ hostId: string }>({ prefix: ["prop_index"] });
   const results: Array<{ propId: string; hostId: string }> = [];
   for await (const entry of iter) {
-    results.push({ propId: entry.key[1] as string, hostId: entry.value.hostId });
+    results.push({
+      propId: entry.key[1] as string,
+      hostId: entry.value.hostId,
+    });
   }
   return results;
 }
@@ -284,7 +306,9 @@ export async function listPublicProperties(): Promise<Property[]> {
       results.push(entry.value);
     }
   }
-  return results.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return results.sort((a, b) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 }
 
 // ── BOOKINGS ──────────────────────────────────────────────────
@@ -302,7 +326,9 @@ export async function getBooking(
  * Looks up a booking using only its ID (no hostId needed).
  * Used by payment webhooks which only receive the bookingId.
  */
-export async function getBookingById(bookingId: string): Promise<Booking | null> {
+export async function getBookingById(
+  bookingId: string,
+): Promise<Booking | null> {
   const kv = await getKv();
   const idx = await kv.get<{ hostId: string; propertyId: string }>(
     ["booking_index", bookingId],
@@ -352,7 +378,9 @@ export async function saveBooking(data: Booking): Promise<void> {
  * Looks up the latest booking by guest phone number.
  * Used by WhatsApp Concierge webhook to route messages to properties.
  */
-export async function getBookingByPhone(phone: string): Promise<Booking | null> {
+export async function getBookingByPhone(
+  phone: string,
+): Promise<Booking | null> {
   const kv = await getKv();
   const idx = await kv.get<string>(["booking_phone", phone]);
   if (!idx.value) return null;
@@ -367,8 +395,7 @@ export async function listBookings(hostId: string): Promise<Booking[]> {
     bookings.push(entry.value);
   }
   return bookings.sort(
-    (a, b) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 }
 
@@ -472,7 +499,9 @@ export async function listLedgerEntriesByHost(
   for await (const entry of iter) {
     entries.push(entry.value);
   }
-  return entries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return entries.sort((a, b) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 }
 
 // ── NOTIFICATIONS ─────────────────────────────────────────────
@@ -589,7 +618,10 @@ export async function getDashboardStats(
 // ── PROPERTY KNOWLEDGE (AI CONTEXT) ──────────────────────────
 
 // Memory cache for Edge performance (5-minute TTL)
-const KNOWLEDGE_CACHE = new Map<string, { data: HostKnowledge; expiry: number }>();
+const KNOWLEDGE_CACHE = new Map<
+  string,
+  { data: HostKnowledge; expiry: number }
+>();
 const KNOWLEDGE_TTL = 5 * 60 * 1000;
 
 export async function saveKnowledge(data: HostKnowledge): Promise<void> {
@@ -610,7 +642,7 @@ export async function getKnowledge(
 
   const kv = await getKv();
   const entry = await kv.get<HostKnowledge>(["knowledge", propertyId]);
-  
+
   if (entry.value) {
     // Fill cache
     KNOWLEDGE_CACHE.set(propertyId, {
@@ -618,7 +650,7 @@ export async function getKnowledge(
       expiry: Date.now() + KNOWLEDGE_TTL,
     });
   }
-  
+
   return entry.value;
 }
 
@@ -633,7 +665,6 @@ export async function getKnowledgeByPropId(
   const idx = await kv.get<{ hostId: string }>(["prop_index", propertyId]);
   if (!idx.value) return null;
   return getKnowledge(propertyId);
-
 }
 
 // ── CHAT SESSIONS ─────────────────────────────────────────────
@@ -666,7 +697,6 @@ export async function getGuestProfile(
   return entry.value;
 }
 
-
 // ── PRIVATE VERIFICATION (HOST-ONLY) ──────────────────────────
 
 /**
@@ -677,7 +707,7 @@ export async function savePrivateVerification(
   data: PrivateVerification,
 ): Promise<void> {
   const kv = await getKv();
-  
+
   // Encrypt sensitive fields before saving
   const encrypted = {
     ...data,
@@ -685,7 +715,7 @@ export async function savePrivateVerification(
     address: await encryptField(data.address),
     fullName: await encryptField(data.fullName),
   };
-  
+
   await kv.set(["private_verification", data.bookingId], encrypted);
 }
 
@@ -720,12 +750,16 @@ export async function scrubOldPii(): Promise<{ scrubbedCount: number }> {
   const now = new Date();
   const scrubThreshold = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
   const thresholdStr = scrubThreshold.toISOString().slice(0, 10);
-  
-  console.log(`[compliance] Starting PII scrub for records older than ${thresholdStr}...`);
-  console.log(`[compliance] Note: Global Guest Intelligence (Profiles) are preserved for loyalty recognition.`);
+
+  console.log(
+    `[compliance] Starting PII scrub for records older than ${thresholdStr}...`,
+  );
+  console.log(
+    `[compliance] Note: Global Guest Intelligence (Profiles) are preserved for loyalty recognition.`,
+  );
 
   let scrubbedCount = 0;
-  
+
   // Scan the chronological checkout index from the beginning up to the threshold date.
   // KV list is lexicographically ordered, so ["booking_checkout", "2024-01-01", ...]
   // naturally comes before ["booking_checkout", "2025-12-31", ...].
@@ -733,11 +767,11 @@ export async function scrubOldPii(): Promise<{ scrubbedCount: number }> {
     prefix: ["booking_checkout"],
     end: ["booking_checkout", thresholdStr],
   });
-  
+
   for await (const entry of iter) {
     const bookingId = entry.key[2] as string;
     const { hostId } = entry.value;
-    
+
     // Load the actual booking to verify status and run scrub
     const booking = await getBooking(hostId, bookingId);
     if (!booking) {
@@ -745,47 +779,59 @@ export async function scrubOldPii(): Promise<{ scrubbedCount: number }> {
       await kv.delete(entry.key);
       continue;
     }
-    
+
     // Only scrub confirmed/finished bookings
     if (booking.status !== "confirmed" && booking.status !== "room_ready") {
       continue;
     }
 
     console.log(`[compliance] Scrubbing PII for booking=${booking.id}`);
-    
+
     const atomic = kv.atomic();
-    
+
     // 1. Delete Private Verification (Raw OCR Data, ID Numbers, Addresses)
-    const privEntry = await kv.get<PrivateVerification>(["private_verification", booking.id]);
+    const privEntry = await kv.get<PrivateVerification>([
+      "private_verification",
+      booking.id,
+    ]);
     if (privEntry.value?.idObjectKey) {
       try {
         const { deleteFromR2 } = await import("./storage.ts");
         await deleteFromR2(privEntry.value.idObjectKey);
       } catch (err) {
-        console.warn(`[compliance] Failed to delete R2 ID for booking=${booking.id}`, err);
+        console.warn(
+          `[compliance] Failed to delete R2 ID for booking=${booking.id}`,
+          err,
+        );
       }
     }
     atomic.delete(["private_verification", booking.id]);
-    
+
     // 2. Anonymize Guest Verification
-    const gvEntry = await kv.get<GuestVerification>(["verification", booking.id]);
+    const gvEntry = await kv.get<GuestVerification>([
+      "verification",
+      booking.id,
+    ]);
     if (gvEntry.value) {
       atomic.set(["verification", booking.id], {
         ...gvEntry.value,
         idObjectKey: undefined,
-        extractedData: undefined, 
+        extractedData: undefined,
       });
     }
-    
+
     // 3. Anonymize Booking Record and Delete Clean Proof
     if (booking.cleanProofUrl) {
-       try {
-          const { deleteFromR2 } = await import("./storage.ts");
-          const urlPath = booking.cleanProofUrl.split(".com/").pop() || "";
-          if (urlPath) await deleteFromR2(urlPath);
-       } catch (err) {
-          console.warn(`[compliance] Failed to delete R2 Proof for booking=${booking.id}`, err);
-       }
+      try {
+        const { deleteFromR2 } = await import("./storage.ts");
+        const urlPath = booking.cleanProofUrl.split(".com/").pop() || "";
+        if (urlPath) await deleteFromR2(urlPath);
+      } catch (err) {
+        console.warn(
+          `[compliance] Failed to delete R2 Proof for booking=${booking.id}`,
+          err,
+        );
+      }
     }
 
     atomic.set(["booking", booking.hostId, booking.id], {
@@ -796,14 +842,14 @@ export async function scrubOldPii(): Promise<{ scrubbedCount: number }> {
       guestIdRef: undefined,
       cleanProofUrl: undefined,
     });
-    
+
     // 4. Remove the checkout index entry (already processed)
     atomic.delete(entry.key);
-    
+
     const result = await atomic.commit();
     if (result.ok) scrubbedCount++;
   }
-  
+
   return { scrubbedCount };
 }
 
@@ -877,18 +923,20 @@ export async function recordPropertyView(propId: string): Promise<void> {
   const kv = await getKv();
   const dateStr = new Date().toISOString().slice(0, 10);
   const key = ["prop_view", propId, dateStr];
-  
+
   const entry = await kv.get<number>(key);
   const current = entry.value ?? 0;
-  
+
   await kv.set(key, current + 1);
 }
 
-export async function getPropertyViewsLast7Days(propId: string): Promise<number> {
+export async function getPropertyViewsLast7Days(
+  propId: string,
+): Promise<number> {
   const kv = await getKv();
   let total = 0;
   const today = new Date();
-  
+
   for (let i = 0; i < 7; i++) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
@@ -898,7 +946,7 @@ export async function getPropertyViewsLast7Days(propId: string): Promise<number>
       total += entry.value;
     }
   }
-  
+
   return total;
 }
 
@@ -983,23 +1031,37 @@ export async function listReviews(propertyId: string): Promise<Review[]> {
   return reviews;
 }
 
-export async function saveSurveyToken(token: string, bookingId: string): Promise<void> {
+export async function saveSurveyToken(
+  token: string,
+  bookingId: string,
+): Promise<void> {
   const kv = await getKv();
-  await kv.set(["survey_tokens", token], { bookingId, createdAt: new Date().toISOString() }, { expireIn: 7 * 24 * 60 * 60 * 1000 }); // 7 days
+  await kv.set(["survey_tokens", token], {
+    bookingId,
+    createdAt: new Date().toISOString(),
+  }, { expireIn: 7 * 24 * 60 * 60 * 1000 }); // 7 days
 }
 
-export async function getSurveyToken(token: string): Promise<{ bookingId: string } | null> {
+export async function getSurveyToken(
+  token: string,
+): Promise<{ bookingId: string } | null> {
   const kv = await getKv();
   const res = await kv.get<{ bookingId: string }>(["survey_tokens", token]);
   return res.value;
 }
 
-export async function getBookingsCheckingOutIn(date: string): Promise<Booking[]> {
+export async function getBookingsCheckingOutIn(
+  date: string,
+): Promise<Booking[]> {
   const kv = await getKv();
   const iter = kv.list<Booking>({ prefix: ["booking"] });
   const matches: Booking[] = [];
   for await (const entry of iter) {
-    if ((entry.value.checkOut === date) && (entry.value.status === "confirmed" || entry.value.status === "room_ready")) {
+    if (
+      (entry.value.checkOut === date) &&
+      (entry.value.status === "confirmed" ||
+        entry.value.status === "room_ready")
+    ) {
       matches.push(entry.value);
     }
   }

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "preact/hooks";
+import { useCallback, useState } from "preact/hooks";
 import type { ComponentChildren } from "preact";
 
 interface Tab {
@@ -13,7 +13,9 @@ interface SettingsTabsProps {
   children: ComponentChildren;
 }
 
-export default function SettingsTabs({ initialTab = "general", tabs, children }: SettingsTabsProps) {
+export default function SettingsTabs(
+  { initialTab = "general", tabs, children }: SettingsTabsProps,
+) {
   const [activeTab, setActiveTab] = useState(initialTab);
 
   // Update URL without refresh

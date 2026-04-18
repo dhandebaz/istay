@@ -13,10 +13,12 @@ async function sendBrevoEmail(
   toEmail: string,
   toName: string,
   subject: string,
-  htmlContent: string
+  htmlContent: string,
 ): Promise<boolean> {
   if (!BREVO_API_KEY) {
-    console.warn("\n[email] BREVO_API_KEY missing explicitly. Attempted to send:");
+    console.warn(
+      "\n[email] BREVO_API_KEY missing explicitly. Attempted to send:",
+    );
     console.warn(`To: ${toEmail}\nSubject: ${subject}\n`);
     return false;
   }
@@ -58,7 +60,12 @@ export async function sendEmail(params: {
   subject: string;
   html: string;
 }) {
-  return sendBrevoEmail(params.to, params.to.split("@")[0], params.subject, params.html);
+  return sendBrevoEmail(
+    params.to,
+    params.to.split("@")[0],
+    params.subject,
+    params.html,
+  );
 }
 
 /**
@@ -67,10 +74,12 @@ export async function sendEmail(params: {
 export async function sendVerificationEmail(
   email: string,
   name: string,
-  verifyToken: string
+  verifyToken: string,
 ): Promise<boolean> {
-  const verifyLink = `${APP_BASE_URL}/verify?token=${verifyToken}&email=${encodeURIComponent(email)}`;
-  
+  const verifyLink = `${APP_BASE_URL}/verify?token=${verifyToken}&email=${
+    encodeURIComponent(email)
+  }`;
+
   const subject = "Verify your istay account";
   const html = `
     <div style="font-family: sans-serif; max-w-xl mx-auto; p-6 text-gray-800">
@@ -97,10 +106,12 @@ export async function sendVerificationEmail(
 export async function sendPasswordResetEmail(
   email: string,
   name: string,
-  resetToken: string
+  resetToken: string,
 ): Promise<boolean> {
-  const resetLink = `${APP_BASE_URL}/reset/${resetToken}?email=${encodeURIComponent(email)}`;
-  
+  const resetLink = `${APP_BASE_URL}/reset/${resetToken}?email=${
+    encodeURIComponent(email)
+  }`;
+
   const subject = "Reset your istay password";
   const html = `
     <div style="font-family: sans-serif; max-w-xl mx-auto; p-6 text-gray-800">
@@ -134,11 +145,11 @@ export async function sendBookingConfirmation(
   checkOut: string,
   amount: number,
   bookingId: string,
-  propertyId: string
+  propertyId: string,
 ): Promise<boolean> {
   const portalUrl = `${APP_BASE_URL}/p/${propertyId}?bookingId=${bookingId}`;
   const invoiceUrl = `${APP_BASE_URL}/invoice/${bookingId}?download=1`;
-  
+
   const subject = `Confirmed: Your stay at ${propertyName}`;
   const html = `
     <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #111827; background-color: #ffffff;">
@@ -164,7 +175,9 @@ export async function sendBookingConfirmation(
           </tr>
           <tr>
             <td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Total Paid</td>
-            <td style="padding: 8px 0; text-align: right; font-weight: 700; color: #0d9488;">₹${amount.toLocaleString("en-IN")}</td>
+            <td style="padding: 8px 0; text-align: right; font-weight: 700; color: #0d9488;">₹${
+    amount.toLocaleString("en-IN")
+  }</td>
           </tr>
         </table>
         
@@ -204,11 +217,11 @@ export async function sendHostNewBookingAlert(
   checkIn: string,
   checkOut: string,
   amount: number,
-  bookingId: string
+  bookingId: string,
 ): Promise<boolean> {
   const dashboardUrl = `${APP_BASE_URL}/dashboard`;
   const hostEarnings = Math.round(amount * 0.95 * 100) / 100;
-  
+
   const subject = `New Booking: ${guestName} — ${propertyName}`;
   const html = `
     <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #111827;">
@@ -233,7 +246,9 @@ export async function sendHostNewBookingAlert(
           </tr>
           <tr style="border-top: 1px solid #bbf7d0; margin-top: 12px;">
             <td style="padding: 12px 0 0 0; color: #166534; font-size: 14px; font-weight: 800;">Your Earnings</td>
-            <td style="padding: 12px 0 0 0; text-align: right; font-weight: 900; color: #166534; font-size: 18px;">₹${hostEarnings.toLocaleString("en-IN")}</td>
+            <td style="padding: 12px 0 0 0; text-align: right; font-weight: 900; color: #166534; font-size: 18px;">₹${
+    hostEarnings.toLocaleString("en-IN")
+  }</td>
           </tr>
         </table>
       </div>
@@ -250,4 +265,3 @@ export async function sendHostNewBookingAlert(
 
   return sendBrevoEmail(hostEmail, hostName, subject, html);
 }
-

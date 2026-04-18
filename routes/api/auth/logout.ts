@@ -6,7 +6,7 @@ export const handler: Handlers = {
     // Overwrite the cookie with an expired date to clear it
     headers.set(
       "Set-Cookie",
-      `host_session=; Path=/; HttpOnly; SameSite=Lax; Expires=Thu, 01 Jan 1970 00:00:00 GMT`
+      `host_session=; Path=/; HttpOnly; SameSite=Lax; Expires=Thu, 01 Jan 1970 00:00:00 GMT`,
     );
     headers.set("Location", "/");
 

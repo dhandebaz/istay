@@ -23,7 +23,9 @@ const SUPPLY_ITEMS: SupplyItem[] = [
   { id: "Drinking Water", emoji: "💧", label: "Water" },
 ];
 
-export default function SupplyRequest({ token, propertyName }: SupplyRequestProps) {
+export default function SupplyRequest(
+  { token, propertyName }: SupplyRequestProps,
+) {
   // Track state per item: null | "loading" | "done" | "error"
   const itemStates = useSignal<Record<string, "loading" | "done" | "error">>(
     {},
@@ -86,14 +88,15 @@ export default function SupplyRequest({ token, propertyName }: SupplyRequestProp
               class={`
                 relative flex flex-col items-center justify-center gap-1.5
                 p-3 rounded-2xl border-2 transition-all duration-200
-                ${isDone
+                ${
+                isDone
                   ? "bg-emerald-500/10 border-emerald-500/30 scale-95"
                   : isError
                   ? "bg-rose-500/10 border-rose-500/30"
                   : isLoading
                   ? "bg-gray-900 border-gray-700 opacity-70"
                   : "bg-gray-900 border-gray-800 active:scale-95 hover:border-teal-500/40 hover:bg-gray-800"
-                }
+              }
               `}
               aria-label={`Request ${item.label}`}
               aria-pressed={isDone}
@@ -116,7 +119,13 @@ export default function SupplyRequest({ token, propertyName }: SupplyRequestProp
                         fill="none"
                         aria-hidden="true"
                       >
-                        <circle cx="10" cy="10" r="9" stroke="#10b981" stroke-width="1.5" />
+                        <circle
+                          cx="10"
+                          cy="10"
+                          r="9"
+                          stroke="#10b981"
+                          stroke-width="1.5"
+                        />
                         <path
                           d="M6 10L9 13L14 7"
                           stroke="#10b981"
@@ -135,7 +144,11 @@ export default function SupplyRequest({ token, propertyName }: SupplyRequestProp
               {/* Label */}
               <span
                 class={`text-xs font-600 leading-tight text-center ${
-                  isDone ? "text-emerald-400" : isError ? "text-rose-400" : "text-gray-400"
+                  isDone
+                    ? "text-emerald-400"
+                    : isError
+                    ? "text-rose-400"
+                    : "text-gray-400"
                 }`}
               >
                 {isDone ? "Sent!" : isError ? "Failed" : item.label}

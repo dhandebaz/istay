@@ -56,7 +56,8 @@ function FloatingInput({
 }
 
 export default function CheckoutForm(
-  { propId, checkIn, checkOut, nights, amount, propertyName }: CheckoutFormProps,
+  { propId, checkIn, checkOut, nights, amount, propertyName }:
+    CheckoutFormProps,
 ) {
   const step = useSignal<FormStep>("details");
   const errorMsg = useSignal("");
@@ -76,7 +77,10 @@ export default function CheckoutForm(
   async function handleSubmit(e: Event) {
     e.preventDefault();
 
-    if (!guestName.value.trim() || !guestEmail.value.trim() || !guestPhone.value.trim()) {
+    if (
+      !guestName.value.trim() || !guestEmail.value.trim() ||
+      !guestPhone.value.trim()
+    ) {
       errorMsg.value = "Please fill in all required fields.";
       return;
     }
@@ -131,7 +135,8 @@ export default function CheckoutForm(
       }
     } catch {
       step.value = "error";
-      errorMsg.value = "Network error. Please check your connection and try again.";
+      errorMsg.value =
+        "Network error. Please check your connection and try again.";
     }
   }
 
@@ -257,11 +262,19 @@ export default function CheckoutForm(
       {/* Terms notice */}
       <p class="text-xs text-gray-400 leading-relaxed">
         By clicking "Confirm Booking", you agree to our{" "}
-        <a href="/legal/terms" class="text-teal-600 hover:underline" target="_blank">
+        <a
+          href="/legal/terms"
+          class="text-teal-600 hover:underline"
+          target="_blank"
+        >
           Terms
-        </a>
-        {" "}and{" "}
-        <a href="/legal/cancellation" class="text-teal-600 hover:underline" target="_blank">
+        </a>{" "}
+        and{" "}
+        <a
+          href="/legal/cancellation"
+          class="text-teal-600 hover:underline"
+          target="_blank"
+        >
           Cancellation Policy
         </a>. Your ID may be verified after payment.
       </p>
@@ -279,8 +292,20 @@ export default function CheckoutForm(
           fill="none"
           aria-hidden="true"
         >
-          <rect x="1" y="4" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.25" />
-          <path d="M5 4V3C5 1.89543 5.89543 1 7 1H9C10.1046 1 11 1.89543 11 3V4" stroke="currentColor" stroke-width="1.25" />
+          <rect
+            x="1"
+            y="4"
+            width="14"
+            height="10"
+            rx="1.5"
+            stroke="currentColor"
+            stroke-width="1.25"
+          />
+          <path
+            d="M5 4V3C5 1.89543 5.89543 1 7 1H9C10.1046 1 11 1.89543 11 3V4"
+            stroke="currentColor"
+            stroke-width="1.25"
+          />
           <circle cx="8" cy="9" r="1.5" fill="currentColor" />
         </svg>
         Confirm Booking — {formatINR(amount)}

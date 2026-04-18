@@ -11,7 +11,12 @@ import type { Notification } from "../../../utils/types.ts";
 
 const KEY_SECRET = Deno.env.get("RAZORPAY_KEY_SECRET");
 
-async function verifySignature(orderId: string, paymentId: string, signature: string, secret: string) {
+async function verifySignature(
+  orderId: string,
+  paymentId: string,
+  signature: string,
+  secret: string,
+) {
   const text = orderId + "|" + paymentId;
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
@@ -23,14 +28,18 @@ async function verifySignature(orderId: string, paymentId: string, signature: st
   );
   const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(text));
   const hashArray = Array.from(new Uint8Array(sig));
-  const calculatedSignature = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  const calculatedSignature = hashArray.map((b) =>
+    b.toString(16).padStart(2, "0")
+  ).join("");
   return calculatedSignature === signature;
 }
 
 export const handler: Handlers = {
   POST: async (req) => {
     if (!KEY_SECRET) {
-      return Response.json({ error: "Razorpay secret not set" }, { status: 503 });
+      return Response.json({ error: "Razorpay secret not set" }, {
+        status: 503,
+      });
     }
 
     let body: any = {};
@@ -40,16 +49,33 @@ export const handler: Handlers = {
       return Response.json({ error: "Invalid JSON" }, { status: 400 });
     }
 
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, hostId } = body;
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      hostId,
+    } = body;
 
-    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !hostId) {
-      return Response.json({ error: "Missing required fields" }, { status: 400 });
+    if (
+      !razorpay_order_id || !razorpay_payment_id || !razorpay_signature ||
+      !hostId
+    ) {
+      return Response.json({ error: "Missing required fields" }, {
+        status: 400,
+      });
     }
 
     // ── Signature Verification ─────────────────────────────────
-    const isValid = await verifySignature(razorpay_order_id, razorpay_payment_id, razorpay_signature, KEY_SECRET);
+    const isValid = await verifySignature(
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      KEY_SECRET,
+    );
     if (!isValid) {
-      return Response.json({ error: "Invalid payment signature" }, { status: 400 });
+      return Response.json({ error: "Invalid payment signature" }, {
+        status: 400,
+      });
     }
 
     // ── Update Host Status ─────────────────────────────────────
@@ -75,14 +101,17 @@ export const handler: Handlers = {
       hostId,
       type: "booking_confirmed", // Reusing type for UI highlight
       title: "Welcome to istay Premium! 🚀",
-      message: "Subscription activated. You can now create unlimited properties and accept direct bookings.",
+      message:
+        "Subscription activated. You can now create unlimited properties and accept direct bookings.",
       propertyName: "System",
       read: false,
       createdAt: new Date().toISOString(),
     };
     await saveNotification(notification);
 
-    console.log(`[onboard/verify] Host ${hostId} successfully onboarded via Razorpay.`);
+    console.log(
+      `[onboard/verify] Host ${hostId} successfully onboarded via Razorpay.`,
+    );
     return Response.json({ ok: true });
   },
 };

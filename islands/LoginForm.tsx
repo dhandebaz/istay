@@ -56,7 +56,9 @@ export default function LoginForm() {
   return (
     <form onSubmit={handleSubmit} class="space-y-5" novalidate>
       <div>
-        <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">Email Address</label>
+        <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">
+          Email Address
+        </label>
         <input
           type="email"
           value={email.value}
@@ -70,14 +72,19 @@ export default function LoginForm() {
       <div>
         <div class="flex items-center justify-between mb-1.5 px-1">
           <label class="text-xs font-700 text-gray-700">Password</label>
-          <a href="/forgot-password" class="text-xs font-600 text-mint-600 hover:text-mint-500 transition-colors">
+          <a
+            href="/forgot-password"
+            class="text-xs font-600 text-mint-600 hover:text-mint-500 transition-colors"
+          >
             Forgot?
           </a>
         </div>
         <input
           type="password"
           value={password.value}
-          onInput={(e) => (password.value = (e.target as HTMLInputElement).value)}
+          onInput={(
+            e,
+          ) => (password.value = (e.target as HTMLInputElement).value)}
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"
           placeholder="••••••••"

@@ -21,6 +21,7 @@ import * as $api_host_api_key_rotate from "./routes/api/host/api-key/rotate.ts";
 import * as $api_host_team from "./routes/api/host/team.ts";
 import * as $api_host_team_invite from "./routes/api/host/team/invite.ts";
 import * as $api_host_webhooks_add from "./routes/api/host/webhooks/add.ts";
+import * as $api_host_webhooks_remove from "./routes/api/host/webhooks/remove.ts";
 import * as $api_ical_propId_ from "./routes/api/ical/[propId].ts";
 import * as $api_invoice_bookingId_ from "./routes/api/invoice/[bookingId].ts";
 import * as $api_knowledge from "./routes/api/knowledge.ts";
@@ -31,7 +32,8 @@ import * as $api_pay from "./routes/api/pay.ts";
 import * as $api_properties from "./routes/api/properties.ts";
 import * as $api_public_listings from "./routes/api/public/listings.ts";
 import * as $api_scrape from "./routes/api/scrape.ts";
-import * as $api_verify from "./routes/api/verify.ts";
+import * as $api_verify_index from "./routes/api/verify/index.ts";
+import * as $api_verify_status from "./routes/api/verify/status.ts";
 import * as $api_webhooks_payment from "./routes/api/webhooks/payment.ts";
 import * as $api_webhooks_whatsapp from "./routes/api/webhooks/whatsapp.ts";
 import * as $blog_slug_ from "./routes/blog/[slug].tsx";
@@ -70,6 +72,7 @@ import * as $DashboardSidebar from "./islands/DashboardSidebar.tsx";
 import * as $DeveloperApi from "./islands/DeveloperApi.tsx";
 import * as $EarningsCalculator from "./islands/EarningsCalculator.tsx";
 import * as $EarningsComparison from "./islands/EarningsComparison.tsx";
+import * as $FinancialLedger from "./islands/FinancialLedger.tsx";
 import * as $ForgotPasswordForm from "./islands/ForgotPasswordForm.tsx";
 import * as $GuestChat from "./islands/GuestChat.tsx";
 import * as $Header from "./islands/Header.tsx";
@@ -112,6 +115,7 @@ const manifest = {
     "./routes/api/host/team.ts": $api_host_team,
     "./routes/api/host/team/invite.ts": $api_host_team_invite,
     "./routes/api/host/webhooks/add.ts": $api_host_webhooks_add,
+    "./routes/api/host/webhooks/remove.ts": $api_host_webhooks_remove,
     "./routes/api/ical/[propId].ts": $api_ical_propId_,
     "./routes/api/invoice/[bookingId].ts": $api_invoice_bookingId_,
     "./routes/api/knowledge.ts": $api_knowledge,
@@ -122,7 +126,8 @@ const manifest = {
     "./routes/api/properties.ts": $api_properties,
     "./routes/api/public/listings.ts": $api_public_listings,
     "./routes/api/scrape.ts": $api_scrape,
-    "./routes/api/verify.ts": $api_verify,
+    "./routes/api/verify/index.ts": $api_verify_index,
+    "./routes/api/verify/status.ts": $api_verify_status,
     "./routes/api/webhooks/payment.ts": $api_webhooks_payment,
     "./routes/api/webhooks/whatsapp.ts": $api_webhooks_whatsapp,
     "./routes/blog/[slug].tsx": $blog_slug_,
@@ -163,6 +168,7 @@ const manifest = {
     "./islands/DeveloperApi.tsx": $DeveloperApi,
     "./islands/EarningsCalculator.tsx": $EarningsCalculator,
     "./islands/EarningsComparison.tsx": $EarningsComparison,
+    "./islands/FinancialLedger.tsx": $FinancialLedger,
     "./islands/ForgotPasswordForm.tsx": $ForgotPasswordForm,
     "./islands/GuestChat.tsx": $GuestChat,
     "./islands/Header.tsx": $Header,

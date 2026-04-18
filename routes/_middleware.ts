@@ -10,7 +10,7 @@ const SECURITY_HEADERS: Record<string, string> = {
 };
 
 // ── Rate Limiting Config ──────────────────────────────────────
-const RATE_LIMIT_MAX = 60;       // max requests per window
+const RATE_LIMIT_MAX = 60; // max requests per window
 const RATE_LIMIT_WINDOW_MS = 60_000; // 1-minute sliding window
 
 /**
@@ -45,7 +45,8 @@ export async function handler(
       const { getKv } = await import("../utils/db.ts");
       const kv = await getKv();
       const ip = getClientIp(req, ctx);
-      const windowKey = Math.floor(Date.now() / RATE_LIMIT_WINDOW_MS).toString();
+      const windowKey = Math.floor(Date.now() / RATE_LIMIT_WINDOW_MS)
+        .toString();
       const kvKey: Deno.KvKey = ["rate_limit", ip, windowKey];
 
       const current = await kv.get<number>(kvKey);

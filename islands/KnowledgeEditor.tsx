@@ -200,13 +200,13 @@ export default function KnowledgeEditor({
         </span>
       </div>
 
-      <KnowledgeUploader 
+      <KnowledgeUploader
         onScanComplete={(markdown) => {
           const spacer = content.value.trim() ? "\n\n" : "";
           content.value += spacer + markdown;
           charCount.value = content.value.length;
           state.value = "idle";
-        }} 
+        }}
       />
 
       {/* Editor */}
@@ -258,8 +258,20 @@ Your AI concierge will use ONLY this information to answer guests."
             <span class="w-4 h-4 border-2 border-white/60 border-t-white rounded-full animate-spin" />
           )}
           {state.value === "saved" && (
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path d="M2 7L5.5 10.5L12 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M2 7L5.5 10.5L12 3.5"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           )}
           {state.value === "saved"
@@ -276,9 +288,28 @@ Your AI concierge will use ONLY this information to answer guests."
           onClick={handleUseTemplate}
           class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-600 text-gray-600 hover:bg-gray-50 transition-colors active:scale-95"
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.25" />
-            <path d="M5 4H9M5 7H9M5 10H7" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" />
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <rect
+              x="2"
+              y="1"
+              width="10"
+              height="12"
+              rx="1.5"
+              stroke="currentColor"
+              stroke-width="1.25"
+            />
+            <path
+              d="M5 4H9M5 7H9M5 10H7"
+              stroke="currentColor"
+              stroke-width="1.25"
+              stroke-linecap="round"
+            />
           </svg>
           Use Template
         </button>
@@ -301,9 +332,26 @@ Your AI concierge will use ONLY this information to answer guests."
               : "border border-purple-200 text-purple-600 hover:bg-purple-50"
           }`}
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.25" />
-            <path d="M5 5.5C5 4.67 5.67 4 6.5 4H7.5C8.33 4 9 4.67 9 5.5C9 6.33 8.33 7 7.5 7H7V8.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" />
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="7"
+              cy="7"
+              r="5.5"
+              stroke="currentColor"
+              stroke-width="1.25"
+            />
+            <path
+              d="M5 5.5C5 4.67 5.67 4 6.5 4H7.5C8.33 4 9 4.67 9 5.5C9 6.33 8.33 7 7.5 7H7V8.5"
+              stroke="currentColor"
+              stroke-width="1.25"
+              stroke-linecap="round"
+            />
             <circle cx="7" cy="10" r="0.75" fill="currentColor" />
           </svg>
           {showTestChat.value ? "Close Test" : "Test AI"}
@@ -342,7 +390,12 @@ Your AI concierge will use ONLY this information to answer guests."
                 class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-all"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  <path
+                    d="M15 5L5 15M5 5L15 15"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
                 </svg>
               </button>
             </div>
@@ -354,7 +407,9 @@ Your AI concierge will use ONLY this information to answer guests."
                   <span>⚠️ AI Not Configured</span>
                 </div>
                 <p class="text-[11px] text-amber-700 leading-relaxed">
-                  GEMINI_API_KEY is missing. AI concierge functions are disabled. Please set the key in your environment to enable chat.
+                  GEMINI_API_KEY is missing. AI concierge functions are
+                  disabled. Please set the key in your environment to enable
+                  chat.
                 </p>
               </div>
             )}
@@ -367,9 +422,12 @@ Your AI concierge will use ONLY this information to answer guests."
                     🤖
                   </div>
                   <div>
-                    <h4 class="text-sm font-700 text-gray-900">Ask your Concierge</h4>
+                    <h4 class="text-sm font-700 text-gray-900">
+                      Ask your Concierge
+                    </h4>
                     <p class="text-[11px] text-gray-400 mt-1 max-w-[180px]">
-                      Type a question or pick a suggestion below to see how the AI answers.
+                      Type a question or pick a suggestion below to see how the
+                      AI answers.
                     </p>
                   </div>
                 </div>
@@ -378,7 +436,9 @@ Your AI concierge will use ONLY this information to answer guests."
               {testMessages.value.map((msg, i) => (
                 <div
                   key={i}
-                  class={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                  class={`flex ${
+                    msg.role === "user" ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
                     class={`max-w-[85%] px-4 py-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
@@ -432,7 +492,9 @@ Your AI concierge will use ONLY this information to answer guests."
                 <input
                   type="text"
                   value={testInput.value}
-                  onInput={(e) => (testInput.value = (e.target as HTMLInputElement).value)}
+                  onInput={(
+                    e,
+                  ) => (testInput.value = (e.target as HTMLInputElement).value)}
                   placeholder="Ask a guest question..."
                   disabled={!isApiConfigured.value}
                   class="w-full pl-4 pr-12 py-3.5 rounded-2xl bg-gray-100 text-xs text-gray-900 placeholder:text-gray-400 focus:bg-white focus:ring-2 focus:ring-purple-100 focus:outline-none transition-all border-none disabled:opacity-50"
@@ -440,7 +502,8 @@ Your AI concierge will use ONLY this information to answer guests."
                 />
                 <button
                   type="submit"
-                  disabled={!testInput.value.trim() || testLoading.value || !isApiConfigured.value}
+                  disabled={!testInput.value.trim() || testLoading.value ||
+                    !isApiConfigured.value}
                   class="absolute right-2 top-2 w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center hover:bg-purple-700 active:scale-90 transition-all disabled:opacity-40 shadow-sm"
                 >
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -460,12 +523,17 @@ Your AI concierge will use ONLY this information to answer guests."
       <div class="p-5 rounded-2xl bg-gray-50 border border-gray-100">
         <div class="flex items-center gap-2 mb-2">
           <span class="text-lg">📖</span>
-          <h4 class="text-xs font-800 text-gray-700">Writing Great Knowledge</h4>
+          <h4 class="text-xs font-800 text-gray-700">
+            Writing Great Knowledge
+          </h4>
         </div>
         <p class="text-[11px] text-gray-500 leading-relaxed">
-          Use clear bullet points. Include <span class="text-gray-900 font-600">WiFi password</span>, 
-          <span class="text-gray-900 font-600">caretaker name</span>, and <span class="text-gray-900 font-600">emergency spots</span>. 
-          Markdown is supported. The AI only knows what you write here — it has no access to your Airbnb account once imported.
+          Use clear bullet points. Include{" "}
+          <span class="text-gray-900 font-600">WiFi password</span>,
+          <span class="text-gray-900 font-600">caretaker name</span>, and{" "}
+          <span class="text-gray-900 font-600">emergency spots</span>. Markdown
+          is supported. The AI only knows what you write here — it has no access
+          to your Airbnb account once imported.
         </p>
       </div>
     </div>

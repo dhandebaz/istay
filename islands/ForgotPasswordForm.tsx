@@ -1,7 +1,9 @@
 import { useSignal } from "@preact/signals";
 
 export default function ForgotPasswordForm() {
-  const step = useSignal<"details" | "submitting" | "success" | "error">("details");
+  const step = useSignal<"details" | "submitting" | "success" | "error">(
+    "details",
+  );
   const errorMsg = useSignal("");
   const email = useSignal("");
 
@@ -50,21 +52,39 @@ export default function ForgotPasswordForm() {
     return (
       <div class="flex flex-col items-center justify-center py-6 gap-4 text-center">
         <div class="w-16 h-16 rounded-full bg-mint-50 flex items-center justify-center text-mint-500 mb-2 border border-mint-100">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-             <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
           </svg>
         </div>
         <h3 class="text-lg font-900 text-gray-900">Check Your Email</h3>
-        <p class="text-sm text-gray-500">If an account exists for {email.value}, we have sent a secure password reset link.</p>
-        
+        <p class="text-sm text-gray-500">
+          If an account exists for{" "}
+          {email.value}, we have sent a secure password reset link.
+        </p>
+
         {/* DEV HINT NOTE */}
         <div class="mt-4 p-3 bg-blue-50 border border-blue-100 rounded-xl max-w-sm text-left">
           <p class="text-xs font-700 text-blue-700 mb-1">Developer Notice</p>
-          <p class="text-[10px] text-blue-600">Since no email API is configured yet, check the terminal/console to click the local generated reset link!</p>
+          <p class="text-[10px] text-blue-600">
+            Since no email API is configured yet, check the terminal/console to
+            click the local generated reset link!
+          </p>
         </div>
 
-        <a href="/login" class="mt-6 text-sm font-700 text-mint-600 hover:text-mint-500">
+        <a
+          href="/login"
+          class="mt-6 text-sm font-700 text-mint-600 hover:text-mint-500"
+        >
           Return to Login
         </a>
       </div>
@@ -74,7 +94,9 @@ export default function ForgotPasswordForm() {
   return (
     <form onSubmit={handleSubmit} class="space-y-5" novalidate>
       <div>
-        <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">Email Address</label>
+        <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">
+          Email Address
+        </label>
         <input
           type="email"
           value={email.value}

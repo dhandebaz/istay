@@ -40,10 +40,16 @@ export default function Contact() {
           property="og:description"
           content="Get in touch with our team at support@istay.space. Average response time: 24–48 hours."
         />
-        <meta property="og:image" content="https://istay.space/og-contact.png" />
+        <meta
+          property="og:image"
+          content="https://istay.space/og-contact.png"
+        />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="Contact istay" />
-        <meta name="twitter:description" content="Reach us at support@istay.space" />
+        <meta
+          name="twitter:description"
+          content="Reach us at support@istay.space"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: SCHEMA }}
@@ -277,7 +283,10 @@ export default function Contact() {
 
                     <p class="text-xs text-gray-400 text-center">
                       By submitting, you agree to our{" "}
-                      <a href="/legal/privacy" class="text-teal-600 hover:underline">
+                      <a
+                        href="/legal/privacy"
+                        class="text-teal-600 hover:underline"
+                      >
                         Privacy Policy
                       </a>
                       .

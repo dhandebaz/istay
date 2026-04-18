@@ -59,7 +59,7 @@ export async function sendWhatsAppTemplate(
   to: string,
   templateName: string,
   languageCode = "en_US",
-  components: any[] = []
+  components: any[] = [],
 ) {
   return await sendWhatsApp(to, {
     type: "template",
@@ -86,5 +86,3 @@ export async function sendWhatsAppMessage(to: string, text: string) {
   const result = await sendWhatsAppText(to, text);
   return result.ok;
 }
-
-

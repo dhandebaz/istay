@@ -5,7 +5,7 @@
 import { getHost } from "./db.ts";
 import { sendWhatsAppTemplate, sendWhatsAppText } from "./whatsapp.ts";
 
-export type istayEvent = 
+export type istayEvent =
   | "booking_confirmed"
   | "verification_complete"
   | "room_ready"
@@ -18,12 +18,14 @@ export type istayEvent =
 export async function dispatchWebhook(
   hostId: string,
   event: istayEvent,
-  payload: any
+  payload: any,
 ) {
   const host = await getHost(hostId);
   if (!host || !host.webhooks || host.webhooks.length === 0) return;
 
-  const activeWebhooks = host.webhooks.filter(w => w.active && (w.event === event || w.event === "all"));
+  const activeWebhooks = host.webhooks.filter((w) =>
+    w.active && (w.event === event || w.event === "all")
+  );
   if (activeWebhooks.length === 0) return;
 
   const timestamp = Date.now().toString();
@@ -31,17 +33,20 @@ export async function dispatchWebhook(
     event,
     timestamp,
     payload,
-    istay_version: "2026-04-01"
+    istay_version: "2026-04-01",
   });
 
   for (const webhook of activeWebhooks) {
     try {
       // Generate HMAC signature (optional for receivers, but recommended)
       // istay_signature = hmac_sha256(webhook_secret, timestamp + "." + body)
-      const signature = await generateSignature(webhook.secret, `${timestamp}.${body}`);
+      const signature = await generateSignature(
+        webhook.secret,
+        `${timestamp}.${body}`,
+      );
 
       console.log(`[events] Dispatching ${event} to ${webhook.url}`);
-      
+
       const res = await fetch(webhook.url, {
         method: "POST",
         headers: {
@@ -50,11 +55,13 @@ export async function dispatchWebhook(
           "X-iStay-Signature": signature,
           "User-Agent": "iStay-Event-Bus/1.0",
         },
-        body
+        body,
       });
 
       if (!res.ok) {
-        console.error(`[events] Webhook delivery failed (${res.status}) for host=${hostId}`);
+        console.error(
+          `[events] Webhook delivery failed (${res.status}) for host=${hostId}`,
+        );
       }
     } catch (err) {
       console.error(`[events] Webhook exception for host=${hostId}:`, err);
@@ -71,7 +78,7 @@ export async function dispatchWebhook(
 export async function dispatchWhatsApp(
   hostId: string,
   event: istayEvent,
-  payload: any
+  payload: any,
 ) {
   const host = await getHost(hostId);
   if (!host || !host.phone) return;
@@ -82,15 +89,20 @@ export async function dispatchWhatsApp(
     switch (event) {
       case "room_ready": {
         // Notify host that the room is ready
-        await sendWhatsAppTemplate(host.phone, "room_ready_notification", "en_US", [
-          {
-            type: "body",
-            parameters: [
-              { type: "text", text: payload.propertyName || "Your Property" },
-              { type: "text", text: payload.bookingId || "N/A" },
-            ],
-          },
-        ]);
+        await sendWhatsAppTemplate(
+          host.phone,
+          "room_ready_notification",
+          "en_US",
+          [
+            {
+              type: "body",
+              parameters: [
+                { type: "text", text: payload.propertyName || "Your Property" },
+                { type: "text", text: payload.bookingId || "N/A" },
+              ],
+            },
+          ],
+        );
         break;
       }
 
@@ -98,7 +110,7 @@ export async function dispatchWhatsApp(
         // Notify host that guest ID is verified
         await sendWhatsAppText(
           host.phone,
-          `✅ ID Verified: Guest for booking ${payload.bookingId} has been verified.`
+          `✅ ID Verified: Guest for booking ${payload.bookingId} has been verified.`,
         );
         break;
       }
@@ -107,7 +119,7 @@ export async function dispatchWhatsApp(
         // Welcome notification to host
         await sendWhatsAppText(
           host.phone,
-          `💰 New Booking! ${payload.guestName} has booked ${payload.propertyName}.`
+          `💰 New Booking! ${payload.guestName} has booked ${payload.propertyName}.`,
         );
         break;
       }
@@ -117,23 +129,25 @@ export async function dispatchWhatsApp(
   }
 }
 
-
 /**
  * Generates an HMAC-SHA256 signature for webhook security.
  */
-async function generateSignature(secret: string, data: string): Promise<string> {
+async function generateSignature(
+  secret: string,
+  data: string,
+): Promise<string> {
   const enc = new TextEncoder();
   const keyMatch = await crypto.subtle.importKey(
     "raw",
     enc.encode(secret),
     { name: "HMAC", hash: "SHA-256" },
     false,
-    ["sign"]
+    ["sign"],
   );
   const signature = await crypto.subtle.sign(
     "HMAC",
     keyMatch,
-    enc.encode(data)
+    enc.encode(data),
   );
   return btoa(String.fromCharCode(...new Uint8Array(signature)));
 }

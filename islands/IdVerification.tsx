@@ -8,12 +8,12 @@ interface IdVerificationProps {
 }
 
 type VerifyStep =
-  | "upload"    // initial: pick file
-  | "preview"   // file selected, ready to submit
-  | "scanning"  // POST in progress + animation
-  | "verified"  // matchScore >= 90, verified
-  | "review"    // matchScore < 90, needs manual review
-  | "error";    // failed
+  | "upload" // initial: pick file
+  | "preview" // file selected, ready to submit
+  | "scanning" // POST in progress + animation
+  | "verified" // matchScore >= 90, verified
+  | "review" // matchScore < 90, needs manual review
+  | "error"; // failed
 
 const ID_TYPES = [
   { value: "aadhaar", label: "Aadhaar Card" },
@@ -60,7 +60,13 @@ function ScanningAnimation() {
               stroke="#00E676"
               stroke-width="1.5"
             />
-            <circle cx="7" cy="10" r="2.5" stroke="#00E676" stroke-width="1.5" />
+            <circle
+              cx="7"
+              cy="10"
+              r="2.5"
+              stroke="#00E676"
+              stroke-width="1.5"
+            />
             <path
               d="M12 8H18M12 11H16"
               stroke="#00E676"
@@ -77,14 +83,16 @@ function ScanningAnimation() {
         style="animation: scanBeam 2s ease-in-out infinite;"
       />
 
-      <style>{`
+      <style>
+        {`
         @keyframes scanBeam {
           0% { top: 20%; opacity: 0; }
           10% { opacity: 1; }
           90% { opacity: 1; }
           100% { top: 80%; opacity: 0; }
         }
-      `}</style>
+      `}
+      </style>
     </div>
   );
 }
@@ -194,7 +202,8 @@ export default function IdVerification(
             Verify your identity, {guestName.split(" ")[0]}
           </p>
           <p class="text-xs text-gray-400">
-            Upload a photo of your government-issued ID. Your data is encrypted and used only for verification.
+            Upload a photo of your government-issued ID. Your data is encrypted
+            and used only for verification.
           </p>
         </div>
 
@@ -373,20 +382,31 @@ export default function IdVerification(
             Verified ✅
           </h3>
           <p class="text-xs text-gray-400 mt-1.5 leading-relaxed max-w-xs">
-            {verifyMessage.value || "Your identity has been verified successfully!"}
+            {verifyMessage.value ||
+              "Your identity has been verified successfully!"}
           </p>
         </div>
         <div class="mt-2 p-3 rounded-xl bg-emerald-50 border border-emerald-100 w-full">
           <p class="text-xs text-emerald-700 font-600 text-center">
-            ✓ Booking #{bookingId.slice(0, 8).toUpperCase()} — ID Verified (Score: {matchScore.value}%)
+            ✓ Booking #{bookingId.slice(0, 8).toUpperCase()}{" "}
+            — ID Verified (Score: {matchScore.value}%)
           </p>
         </div>
         <a
           href="#checkin-instructions"
           class="w-full py-3 rounded-xl bg-teal-600 text-white text-sm font-700 hover:bg-teal-700 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2"
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M8 1L1.5 5.5V14.5H6V10H10V14.5H14.5V5.5L8 1Z" fill="white" />
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M8 1L1.5 5.5V14.5H6V10H10V14.5H14.5V5.5L8 1Z"
+              fill="white"
+            />
           </svg>
           View Check-in Instructions
         </a>
@@ -409,16 +429,19 @@ export default function IdVerification(
             Under Review
           </h3>
           <p class="text-xs text-gray-400 mt-1.5 leading-relaxed max-w-xs">
-            {verifyMessage.value || "Your ID is being reviewed by our team. You'll receive a confirmation email shortly."}
+            {verifyMessage.value ||
+              "Your ID is being reviewed by our team. You'll receive a confirmation email shortly."}
           </p>
         </div>
         <div class="mt-2 p-3 rounded-xl bg-amber-50 border border-amber-100 w-full">
           <p class="text-xs text-amber-700 font-600 text-center">
-            ⏳ Booking #{bookingId.slice(0, 8).toUpperCase()} — Manual Review (Score: {matchScore.value}%)
+            ⏳ Booking #{bookingId.slice(0, 8).toUpperCase()}{" "}
+            — Manual Review (Score: {matchScore.value}%)
           </p>
         </div>
         <p class="text-xs text-gray-400">
-          Your stay is still confirmed. Check-in instructions will be sent via email after review.
+          Your stay is still confirmed. Check-in instructions will be sent via
+          email after review.
         </p>
       </div>
     );

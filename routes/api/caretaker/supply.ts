@@ -8,10 +8,7 @@
 // ================================================================
 
 import { type Handlers } from "$fresh/server.ts";
-import {
-  getCaretakerToken,
-  saveNotification,
-} from "../../../utils/db.ts";
+import { getCaretakerToken, saveNotification } from "../../../utils/db.ts";
 import type { Notification } from "../../../utils/types.ts";
 
 const ALLOWED_ITEMS = [

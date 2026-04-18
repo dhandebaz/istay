@@ -36,20 +36,22 @@ export async function getDynamicPrice(
 
   // 1. Fetch blocks to calculate occupancy
   const blocks = await listBlockedDates(propertyId);
-  
+
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
-  
+
   const next30Days = new Array(30).fill(0).map((_, i) => {
     const d = new Date(today);
     d.setUTCDate(d.getUTCDate() + i);
     return d.toISOString().slice(0, 10);
   });
-  
-  const occupiedNext30Count = blocks.filter(b => 
-    next30Days.includes(b.date) && (b.reason === "booked" || b.reason === "manual_block")
-  ).length;
-  
+
+  const occupiedNext30Count =
+    blocks.filter((b) =>
+      next30Days.includes(b.date) &&
+      (b.reason === "booked" || b.reason === "manual_block")
+    ).length;
+
   const occupancyRate = occupiedNext30Count / 30;
 
   // ── Rules ──
@@ -70,13 +72,17 @@ export async function getDynamicPrice(
   }
 
   // Rule C: Last-Minute Recovery (within 3 days -> -10%)
-  const diffDays = Math.ceil((targetDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  const diffDays = Math.ceil(
+    (targetDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+  );
   if (diffDays >= 0 && diffDays <= 3) {
     discountMultiplier -= 0.1;
     appliedRules.push("Last Minute Deal (<3 days)");
   }
 
-  const finalPrice = Math.round(basePrice * surgeMultiplier * discountMultiplier);
+  const finalPrice = Math.round(
+    basePrice * surgeMultiplier * discountMultiplier,
+  );
 
   return {
     finalPrice,
@@ -95,11 +101,13 @@ export async function getPriceForRange(
   basePrice: number,
   checkIn: string,
   checkOut: string,
-): Promise<{ total: number; average: number; breakdown: Record<string, number> }> {
+): Promise<
+  { total: number; average: number; breakdown: Record<string, number> }
+> {
   const dates: string[] = [];
   const cur = new Date(checkIn + "T00:00:00Z");
   const end = new Date(checkOut + "T00:00:00Z");
-  
+
   while (cur < end) {
     dates.push(cur.toISOString().slice(0, 10));
     cur.setUTCDate(cur.getUTCDate() + 1);
@@ -107,9 +115,11 @@ export async function getPriceForRange(
 
   let total = 0;
   const breakdown: Record<string, number> = {};
-  
-  const prices = await Promise.all(dates.map(d => getDynamicPrice(propertyId, basePrice, d)));
-  
+
+  const prices = await Promise.all(
+    dates.map((d) => getDynamicPrice(propertyId, basePrice, d)),
+  );
+
   prices.forEach((res, i) => {
     total += res.finalPrice;
     breakdown[dates[i]] = res.finalPrice;

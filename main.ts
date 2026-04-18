@@ -43,7 +43,7 @@ Deno.cron("Monthly Performance Statements", "30 2 * 1 *", async () => {
   console.log("[cron] Starting monthly reporting run...");
   const { listAllHosts, saveNotification } = await import("./utils/db.ts");
   const { generateMonthlyStatement } = await import("./utils/reports.ts");
-  
+
   const now = new Date();
   const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const month = prevDate.toISOString().slice(0, 7);
@@ -57,7 +57,8 @@ Deno.cron("Monthly Performance Statements", "30 2 * 1 *", async () => {
         hostId: host.id,
         type: "booking_confirmed", // Reusing established type for critical finance
         title: `Monthly Growth Statement — ${month}`,
-        message: `Your performance statement for ${month} is ready. Total Revenue: 95% share credited.`,
+        message:
+          `Your performance statement for ${month} is ready. Total Revenue: 95% share credited.`,
         propertyName: "Platform Analytics",
         meta: { statement, month },
         read: false,

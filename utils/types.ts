@@ -85,14 +85,20 @@ export interface Booking {
   guestPhone?: string;
   /** Government ID reference (last 4 digits, from OCR) */
   guestIdRef?: string;
-  checkIn: string;  // YYYY-MM-DD
+  checkIn: string; // YYYY-MM-DD
   checkOut: string; // YYYY-MM-DD
   checkoutChecklist?: Record<string, boolean>;
   cleanProofUrl?: string;
   nights: number;
   /** Total gross booking amount in INR */
   amount: number;
-  status: "pending" | "confirmed" | "room_ready" | "cancelled" | "refunded" | "needs_review";
+  status:
+    | "pending"
+    | "confirmed"
+    | "room_ready"
+    | "cancelled"
+    | "refunded"
+    | "needs_review";
   /** Gateway Order ID (txnid) */
   gatewayOrderId?: string;
   /** Gateway Payment Session / Access Key */
@@ -300,7 +306,6 @@ export interface GuestProfile {
 
 // ── API CONTRACTS ─────────────────────────────────────────────
 
-
 export interface ScrapedListing {
   name: string;
   imageUrl: string;
@@ -351,7 +356,6 @@ export interface PayRequestBody {
   guestPhone?: string;
   type?: "setup_fee" | "booking";
 }
-
 
 // ── DASHBOARD ─────────────────────────────────────────────────
 

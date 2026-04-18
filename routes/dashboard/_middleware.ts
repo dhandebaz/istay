@@ -13,15 +13,11 @@
 import { type MiddlewareHandlerContext } from "$fresh/server.ts";
 import type { DashboardState } from "../../utils/types.ts";
 
-const getKv = (() => {
-  let kv: Deno.Kv | null = null;
-  return async () => {
-    if (!kv) kv = await Deno.openKv();
-    return kv;
-  };
-})();
+import { getKv } from "../../utils/db.ts";
 
-export function parseCookies(cookieHeader: string | null): Record<string, string> {
+export function parseCookies(
+  cookieHeader: string | null,
+): Record<string, string> {
   const result: Record<string, string> = {};
   if (!cookieHeader) return result;
   for (const pair of cookieHeader.split(";")) {
@@ -81,13 +77,18 @@ export async function handler(
     // Accountants only see Ledger and Financials
     const allowed = ["/dashboard", "/dashboard/ledger", "/dashboard/settings"]; // Settings for their own profile
     if (!allowed.includes(path) && !path.startsWith("/dashboard/api")) {
-      return new Response("Forbidden: Accountant role has restricted access.", { status: 403 });
+      return new Response("Forbidden: Accountant role has restricted access.", {
+        status: 403,
+      });
     }
   } else if (role === "staff") {
     // Staff see Operations, no Financials
     const forbidden = ["/dashboard/ledger"];
     if (forbidden.includes(path)) {
-      return new Response("Forbidden: Staff role cannot access financial data.", { status: 403 });
+      return new Response(
+        "Forbidden: Staff role cannot access financial data.",
+        { status: 403 },
+      );
     }
   }
 
@@ -101,12 +102,12 @@ export async function handler(
       const host = hostEntry.value as any;
       hostName = host.name ?? hostName;
       hostEmail = host.email;
-      
+
       if (host.setupFeePaid === false) {
-          return new Response(null, {
-            status: 302,
-            headers: { Location: `/pricing?auth=onboarding_incomplete` },
-          });
+        return new Response(null, {
+          status: 302,
+          headers: { Location: `/pricing?auth=onboarding_incomplete` },
+        });
       }
 
       // Final Role Verification (if cookie role is missing/suspect)

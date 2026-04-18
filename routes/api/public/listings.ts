@@ -8,7 +8,9 @@ export const handler: Handlers = {
       return Response.json(properties);
     } catch (err) {
       console.error("[listings] fetch error:", err);
-      return Response.json({ error: "Failed to fetch listings" }, { status: 500 });
+      return Response.json({ error: "Failed to fetch listings" }, {
+        status: 500,
+      });
     }
   },
 };

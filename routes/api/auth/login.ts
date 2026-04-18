@@ -8,7 +8,9 @@ export const handler: Handlers = {
       const { email, password } = body;
 
       if (!email || !password) {
-        return Response.json({ error: "Email and password are required" }, { status: 400 });
+        return Response.json({ error: "Email and password are required" }, {
+          status: 400,
+        });
       }
 
       const lowerEmail = email.toLowerCase();
@@ -27,17 +29,19 @@ export const handler: Handlers = {
 
       const host = await getHost(authRecord.hostId);
       if (!host) {
-        return Response.json({ error: "Host profile not found" }, { status: 404 });
+        return Response.json({ error: "Host profile not found" }, {
+          status: 404,
+        });
       }
 
       // Generate Session cookie
       const sessionValue = encodeURIComponent(`${host.id}|${host.name}`);
-      
+
       const headers = new Headers();
       headers.set("Content-Type", "application/json");
       headers.set(
         "Set-Cookie",
-        `host_session=${sessionValue}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000` // 30 days
+        `host_session=${sessionValue}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`, // 30 days
       );
 
       // Tell frontend where to route (if they haven't paid logic)
@@ -47,7 +51,6 @@ export const handler: Handlers = {
         status: 200,
         headers,
       });
-
     } catch (err) {
       console.error("[auth/login]", err);
       return Response.json({ error: "Internal server error" }, { status: 500 });

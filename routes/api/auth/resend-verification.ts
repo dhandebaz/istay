@@ -30,7 +30,9 @@ export const handler: Handlers = {
       const { email, name } = await req.json();
 
       if (!email || !name) {
-        return Response.json({ error: "Email and name required" }, { status: 400 });
+        return Response.json({ error: "Email and name required" }, {
+          status: 400,
+        });
       }
 
       const lowerEmail = email.toLowerCase();
@@ -45,12 +47,16 @@ export const handler: Handlers = {
       }
 
       if (authRecord.emailVerified) {
-        return Response.json({ error: "Email is already verified" }, { status: 400 });
+        return Response.json({ error: "Email is already verified" }, {
+          status: 400,
+        });
       }
 
       // Generate a fresh 32-byte Verification Token
       const tokenBytes = crypto.getRandomValues(new Uint8Array(24));
-      const verifyToken = Array.from(tokenBytes).map(b => b.toString(16).padStart(2, '0')).join('');
+      const verifyToken = Array.from(tokenBytes).map((b) =>
+        b.toString(16).padStart(2, "0")
+      ).join("");
 
       authRecord.verifyToken = verifyToken;
       await saveAuthRecord(authRecord);

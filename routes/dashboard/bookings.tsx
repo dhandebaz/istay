@@ -4,15 +4,14 @@
 
 import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
-import type { Booking, DashboardState, Notification, GuestVerification } from "../../utils/types.ts";
+import type {
+  Booking,
+  DashboardState,
+  GuestVerification,
+  Notification,
+} from "../../utils/types.ts";
 
-const getKv = (() => {
-  let kv: Deno.Kv | null = null;
-  return async () => {
-    if (!kv) kv = await Deno.openKv();
-    return kv;
-  };
-})();
+import { getKv } from "../../utils/db.ts";
 
 interface ExtendedBooking extends Booking {
   kycScore?: number;
@@ -25,7 +24,8 @@ interface BookingsPageData {
 
 export const handler: Handlers<BookingsPageData, DashboardState> = {
   GET: async (_req, ctx) => {
-    const { hostId } = ctx.state;
+    const state = ctx.state as DashboardState;
+    const { hostId } = state;
     const kv = await getKv();
 
     // Load all bookings for this host
@@ -34,10 +34,13 @@ export const handler: Handlers<BookingsPageData, DashboardState> = {
     for await (const entry of iter) {
       if (!entry.value) continue;
       const b: ExtendedBooking = entry.value;
-      
+
       // Load KYC details if verification was attempted
       try {
-        const kycEntry = await kv.get<GuestVerification>(["verification", b.id]);
+        const kycEntry = await kv.get<GuestVerification>([
+          "verification",
+          b.id,
+        ]);
         if (kycEntry.value) {
           b.kycScore = kycEntry.value.matchScore;
           b.kycFlags = kycEntry.value.flags;
@@ -45,7 +48,7 @@ export const handler: Handlers<BookingsPageData, DashboardState> = {
       } catch (e) {
         console.error("KYC load error:", e);
       }
-      
+
       bookings.push(b);
     }
 
@@ -54,7 +57,9 @@ export const handler: Handlers<BookingsPageData, DashboardState> = {
 
     // Mark all notifications for this host as read
     try {
-      const iterNotif = kv.list<Notification>({ prefix: ["notification", hostId] });
+      const iterNotif = kv.list<Notification>({
+        prefix: ["notification", hostId],
+      });
       for await (const entry of iterNotif) {
         if (entry.value && !entry.value.read) {
           const updated = { ...entry.value, read: true };
@@ -199,32 +204,49 @@ export default function BookingsPage(
                         <StatusBadge status={b.status} />
                       </td>
                       <td class="px-5 py-4">
-                        {b.idVerified ? (
-                          <span class="inline-flex items-center gap-1 text-xs font-600 text-emerald-600">
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                              <path d="M2 6L5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            Verified
-                          </span>
-                        ) : b.kycScore !== undefined ? (
-                          <div class="flex flex-col gap-1">
-                            {b.kycScore < 90 && (
-                              <span class="inline-flex items-center gap-1 text-[10px] font-700 bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full animate-pulse">
-                                Review: Score {b.kycScore}%
-                              </span>
-                            )}
-                            {b.kycFlags && b.kycFlags.length > 0 && (
-                              <span class="inline-flex items-center gap-1 text-[10px] font-700 bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded-full">
-                                Flag: {b.kycFlags[0]}
-                              </span>
-                            )}
-                            {b.kycScore >= 90 && (!b.kycFlags || b.kycFlags.length === 0) && (
-                              <span class="text-xs text-gray-500 font-500">Processing...</span>
-                            )}
-                          </div>
-                        ) : (
-                          <span class="text-xs text-gray-400">—</span>
-                        )}
+                        {b.idVerified
+                          ? (
+                            <span class="inline-flex items-center gap-1 text-xs font-600 text-emerald-600">
+                              <svg
+                                width="12"
+                                height="12"
+                                viewBox="0 0 12 12"
+                                fill="none"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  d="M2 6L5 9L10 3"
+                                  stroke="currentColor"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                              Verified
+                            </span>
+                          )
+                          : b.kycScore !== undefined
+                          ? (
+                            <div class="flex flex-col gap-1">
+                              {b.kycScore < 90 && (
+                                <span class="inline-flex items-center gap-1 text-[10px] font-700 bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full animate-pulse">
+                                  Review: Score {b.kycScore}%
+                                </span>
+                              )}
+                              {b.kycFlags && b.kycFlags.length > 0 && (
+                                <span class="inline-flex items-center gap-1 text-[10px] font-700 bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded-full">
+                                  Flag: {b.kycFlags[0]}
+                                </span>
+                              )}
+                              {b.kycScore >= 90 &&
+                                (!b.kycFlags || b.kycFlags.length === 0) && (
+                                <span class="text-xs text-gray-500 font-500">
+                                  Processing...
+                                </span>
+                              )}
+                            </div>
+                          )
+                          : <span class="text-xs text-gray-400">—</span>}
                       </td>
                       <td class="px-5 py-4 text-xs text-gray-400">
                         {formatDate(b.createdAt)}

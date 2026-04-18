@@ -1,10 +1,14 @@
 import { type Handlers } from "$fresh/server.ts";
-import { getBookingById, getLedgerEntry, getPropertyById } from "../../../utils/db.ts";
+import {
+  getBookingById,
+  getLedgerEntry,
+  getPropertyById,
+} from "../../../utils/db.ts";
 
 export const handler: Handlers = {
   GET: async (req, ctx) => {
     const { bookingId } = ctx.params;
-    
+
     if (!bookingId) return new Response("Missing bookingId", { status: 400 });
 
     const booking = await getBookingById(bookingId);
@@ -22,7 +26,9 @@ export const handler: Handlers = {
     const gstAmount = Math.round(grossAmount * 0.18);
     const totalWithGst = grossAmount + gstAmount;
 
-    const invoiceNumber = `INV-${new Date(booking.createdAt).toISOString().slice(0, 10).replace(/-/g, "")}-${booking.id.slice(0, 6).toUpperCase()}`;
+    const invoiceNumber = `INV-${
+      new Date(booking.createdAt).toISOString().slice(0, 10).replace(/-/g, "")
+    }-${booking.id.slice(0, 6).toUpperCase()}`;
 
     // ── JSON Export ──────────────────────────────────────
     if (format === "json") {
@@ -55,8 +61,9 @@ export const handler: Handlers = {
       });
     }
 
-    const formatINR = (n: number) => 
-      new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(n);
+    const formatINR = (n: number) =>
+      new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" })
+        .format(n);
 
     // ── HTML Invoice ────────────────────────────────────
     const html = `<!DOCTYPE html>
@@ -211,7 +218,13 @@ export const handler: Handlers = {
         <div class="label">Invoice Number</div>
         <div class="value">${invoiceNumber}</div>
         <div class="label" style="margin-top: 8px;">Date</div>
-        <div class="value">${new Date(booking.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</div>
+        <div class="value">${
+      new Date(booking.createdAt).toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      })
+    }</div>
       </div>
     </div>
 
@@ -220,7 +233,9 @@ export const handler: Handlers = {
         <h3>Billed To</h3>
         <p class="name">${booking.guestName}</p>
         <p class="detail">${booking.guestEmail}</p>
-        ${booking.guestPhone ? `<p class="detail">${booking.guestPhone}</p>` : ""}
+        ${
+      booking.guestPhone ? `<p class="detail">${booking.guestPhone}</p>` : ""
+    }
       </div>
       <div class="address-block" style="text-align: right;">
         <h3>Property Host</h3>

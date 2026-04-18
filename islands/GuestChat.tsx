@@ -1,5 +1,5 @@
-import { useSignal, useComputed } from "@preact/signals";
-import { useRef, useEffect } from "preact/hooks";
+import { useComputed, useSignal } from "@preact/signals";
+import { useEffect, useRef } from "preact/hooks";
 
 interface GuestChatProps {
   /** Property ID — for session persistence */
@@ -12,13 +12,14 @@ interface GuestChatProps {
   amenities?: string[];
 }
 
-
 interface ChatMsg {
   role: "user" | "model";
   content: string;
 }
 
-export default function GuestChat({ propId, propertyName, propertyImage, amenities }: GuestChatProps) {
+export default function GuestChat(
+  { propId, propertyName, propertyImage, amenities }: GuestChatProps,
+) {
   // ── State ─────────────────────────────────────────────────
   const isOpen = useSignal(false);
   const messages = useSignal<ChatMsg[]>([]);
@@ -33,11 +34,12 @@ export default function GuestChat({ propId, propertyName, propertyImage, ameniti
     "Nearby restaurants? 🍽️",
   ];
   // Seed from amenities if provided
-  const amenitySuggestions = amenities?.slice(0, 3).map((a) => `Tell me about the ${a}?`) || [];
+  const amenitySuggestions =
+    amenities?.slice(0, 3).map((a) => `Tell me about the ${a}?`) || [];
   const suggestions = useSignal<string[]>(
     amenitySuggestions.length > 0
       ? [...amenitySuggestions, ...defaultSuggestions.slice(0, 2)]
-      : defaultSuggestions
+      : defaultSuggestions,
   );
   const hasInteracted = useSignal(false);
   const unreadCount = useComputed(() =>
@@ -61,7 +63,10 @@ export default function GuestChat({ propId, propertyName, propertyImage, ameniti
   useEffect(() => {
     try {
       if (sessionId.value) {
-        globalThis.sessionStorage?.setItem(SESSION_STORAGE_KEY, sessionId.value);
+        globalThis.sessionStorage?.setItem(
+          SESSION_STORAGE_KEY,
+          sessionId.value,
+        );
       }
     } catch {
       // SSR or sessionStorage not available
@@ -121,7 +126,8 @@ export default function GuestChat({ propId, propertyName, propertyImage, ameniti
             ...messages.value,
             {
               role: "model",
-              content: "AI Concierge is currently undergoing maintenance. Please contact the host directly for assistance! 📱",
+              content:
+                "AI Concierge is currently undergoing maintenance. Please contact the host directly for assistance! 📱",
             },
           ];
         } else {
@@ -215,7 +221,8 @@ export default function GuestChat({ propId, propertyName, propertyImage, ameniti
 
   // ── Expanded Chat Panel ───────────────────────────────────
   return (
-    <div class="fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-32px)] flex flex-col bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+    <div
+      class="fixed bottom-6 right-6 z-50 w-[360px] max-w-[calc(100vw-32px)] flex flex-col bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
       style="height: min(520px, calc(100vh - 80px));"
     >
       {/* Header with Bespoke Property Branding */}
@@ -223,16 +230,29 @@ export default function GuestChat({ propId, propertyName, propertyImage, ameniti
         {/* Blurred Property Background Layer */}
         {propertyImage && (
           <div class="absolute inset-0 z-0">
-            <img src={propertyImage} class="w-full h-full object-cover blur-[8px] scale-110 brightness-75" />
+            <img
+              src={propertyImage}
+              class="w-full h-full object-cover blur-[8px] scale-110 brightness-75"
+            />
             <div class="absolute inset-0 bg-teal-900/40 mix-blend-multiply" />
           </div>
         )}
         <div class="absolute inset-0 bg-gradient-to-r from-teal-600/90 to-teal-500/80 z-0" />
-        
+
         <div class="relative z-10 flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="white" aria-hidden="true">
-              <path d="M8 1L1.5 6V14.5H5.5V10H10.5V14.5H14.5V6L8 1Z" stroke-width="0.3" stroke-linejoin="round" />
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="white"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 1L1.5 6V14.5H5.5V10H10.5V14.5H14.5V6L8 1Z"
+                stroke-width="0.3"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
           <div>
@@ -251,25 +271,46 @@ export default function GuestChat({ propId, propertyName, propertyImage, ameniti
           class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
           aria-label="Close chat"
         >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-            <path d="M2 2L10 10M10 2L2 10" stroke="white" stroke-width="1.5" stroke-linecap="round" />
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M2 2L10 10M10 2L2 10"
+              stroke="white"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
           </svg>
         </button>
       </div>
 
       {/* Messages Area */}
-      <div class="flex-1 overflow-y-auto px-4 py-3 space-y-3" style="scroll-behavior: smooth;">
+      <div
+        class="flex-1 overflow-y-auto px-4 py-3 space-y-3"
+        style="scroll-behavior: smooth;"
+      >
         {/* Welcome message if no history */}
         {messages.value.length === 0 && (
           <div class="flex gap-2">
             <div class="w-7 h-7 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                aria-hidden="true"
+              >
                 <path d="M6 1L1 4.5V11H4V8H8V11H11V4.5L6 1Z" fill="#14b8a6" />
               </svg>
             </div>
             <div class="bg-gray-50 rounded-2xl rounded-tl-md px-3 py-2 max-w-[80%]">
               <p class="text-sm text-gray-700 leading-relaxed">
-                Hi! 👋 I'm your AI assistant for this stay. Ask me anything about WiFi, check-in, house rules, or the neighbourhood!
+                Hi! 👋 I'm your AI assistant for this stay. Ask me anything
+                about WiFi, check-in, house rules, or the neighbourhood!
               </p>
             </div>
           </div>
@@ -283,7 +324,13 @@ export default function GuestChat({ propId, propertyName, propertyImage, ameniti
           >
             {msg.role === "model" && (
               <div class="w-7 h-7 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  aria-hidden="true"
+                >
                   <path d="M6 1L1 4.5V11H4V8H8V11H11V4.5L6 1Z" fill="#14b8a6" />
                 </svg>
               </div>
@@ -339,9 +386,9 @@ export default function GuestChat({ propId, propertyName, propertyImage, ameniti
           ref={inputRef}
           type="text"
           value={inputText.value}
-          onInput={(e) =>
-            (inputText.value = (e.target as HTMLInputElement).value)
-          }
+          onInput={(
+            e,
+          ) => (inputText.value = (e.target as HTMLInputElement).value)}
           placeholder="Ask me anything..."
           maxLength={500}
           class="flex-1 px-3 py-2.5 rounded-xl bg-gray-50 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:bg-gray-100 transition-colors"
@@ -354,7 +401,13 @@ export default function GuestChat({ propId, propertyName, propertyImage, ameniti
           class="w-9 h-9 rounded-xl bg-teal-500 text-white flex items-center justify-center hover:bg-teal-600 active:scale-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
           aria-label="Send message"
         >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
             <path
               d="M2 8L14 2L8 14L7 9L2 8Z"
               fill="currentColor"

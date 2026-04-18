@@ -26,5 +26,5 @@ export const handler: Handlers = {
       const status = message.includes("not found") ? 404 : 500;
       return Response.json({ error: message }, { status });
     }
-  }
+  },
 };

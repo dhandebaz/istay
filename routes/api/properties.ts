@@ -42,8 +42,15 @@ export const handler: Handlers = {
       return Response.json({ error: "Invalid JSON body" }, { status: 400 });
     }
 
-    const { name, description, imageUrl, basePrice, airbnbUrl, address, amenities } =
-      body;
+    const {
+      name,
+      description,
+      imageUrl,
+      basePrice,
+      airbnbUrl,
+      address,
+      amenities,
+    } = body;
 
     if (!name || typeof name !== "string" || name.trim().length < 3) {
       return Response.json(

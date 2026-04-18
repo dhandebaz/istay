@@ -7,12 +7,15 @@ export default function LoginPage() {
     <>
       <Head>
         <title>Login — istay</title>
-        <meta name="description" content="Sign in to your premium istay host account." />
+        <meta
+          name="description"
+          content="Sign in to your premium istay host account."
+        />
       </Head>
-      
+
       <div class="min-h-screen bg-gray-50 flex flex-col font-sans">
         <Header />
-        
+
         <main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6">
           <div class="max-w-md w-full space-y-8">
             <div class="text-center">
@@ -23,7 +26,7 @@ export default function LoginPage() {
                 Sign in to manage your premium properties.
               </p>
             </div>
-            
+
             <div class="bg-white/80 backdrop-blur-xl py-8 px-6 sm:px-10 rounded-3xl shadow-xl shadow-gray-200/50 border border-white">
               <LoginForm />
             </div>
@@ -31,7 +34,10 @@ export default function LoginPage() {
             <div class="text-center">
               <p class="text-xs text-gray-500 font-500">
                 Don't have an account?{" "}
-                <a href="/register" class="font-700 text-mint-600 hover:text-mint-500 transition-colors">
+                <a
+                  href="/register"
+                  class="font-700 text-mint-600 hover:text-mint-500 transition-colors"
+                >
                   Get Started
                 </a>
               </p>

@@ -13,8 +13,18 @@ interface BookingCalendarProps {
 // Days header (Monday-start)
 const DAY_LABELS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 /** Returns today's date in IST as YYYY-MM-DD */
@@ -26,7 +36,9 @@ function getTodayIST(): string {
 
 /** Returns YYYY-MM-DD string for a given year/month/day */
 function toDateStr(year: number, month: number, day: number): string {
-  return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  return `${year}-${String(month + 1).padStart(2, "0")}-${
+    String(day).padStart(2, "0")
+  }`;
 }
 
 /** Builds a 6-row × 7-col calendar grid of date strings or nulls */
@@ -206,8 +218,20 @@ export default function BookingCalendar(
           class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="Previous month"
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M9 2L4 7L9 12"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </button>
         <h3 class="text-sm font-700 text-gray-900">{monthLabel}</h3>
@@ -216,8 +240,20 @@ export default function BookingCalendar(
           class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-colors"
           aria-label="Next month"
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M5 2L10 7L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M5 2L10 7L5 12"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </button>
       </div>
@@ -260,9 +296,8 @@ export default function BookingCalendar(
                       class={getDayClasses(date)}
                       aria-label={date}
                       aria-disabled={date < today || blocked.has(date)}
-                      aria-pressed={
-                        date === checkIn.value || date === checkOut.value
-                      }
+                      aria-pressed={date === checkIn.value ||
+                        date === checkOut.value}
                     >
                       {Number(date.slice(8))}
                     </button>
@@ -300,7 +335,8 @@ export default function BookingCalendar(
             <div class="p-3 rounded-xl bg-gray-50 space-y-1.5">
               <div class="flex justify-between text-sm">
                 <span class="text-gray-500">
-                  {formatINR(basePrice)} × {nights} night{nights.value > 1 ? "s" : ""}
+                  {formatINR(basePrice)} × {nights}{" "}
+                  night{nights.value > 1 ? "s" : ""}
                 </span>
                 <span class="font-700 text-gray-900">
                   {formatINR(totalAmount.value)}
@@ -338,21 +374,25 @@ export default function BookingCalendar(
           <div class="space-y-3">
             {showSoldOutAlert.value && (
               <div class="p-3 rounded-xl bg-amber-50 border border-amber-100 animate-fade-in">
-                <p class="text-[11px] font-700 text-amber-900 leading-tight">Sold Out for these dates!</p>
-                <p class="text-[10px] text-amber-700 mt-1">This stay is fully booked. Want to see similar vibes nearby?</p>
-                <a 
-                  href={`#vibe-match?checkIn=${checkIn.value || ""}`} 
+                <p class="text-[11px] font-700 text-amber-900 leading-tight">
+                  Sold Out for these dates!
+                </p>
+                <p class="text-[10px] text-amber-700 mt-1">
+                  This stay is fully booked. Want to see similar vibes nearby?
+                </p>
+                <a
+                  href={`#vibe-match?checkIn=${checkIn.value || ""}`}
                   class="mt-2 block w-full py-2 rounded-lg bg-amber-200 text-amber-900 text-center text-[10px] font-800 hover:bg-amber-300 transition-colors"
                   onClick={(e) => {
                     if (checkIn.value) {
                       e.preventDefault();
-                      globalThis.location.href = `?checkIn=${checkIn.value}#vibe-match`;
+                      globalThis.location.href =
+                        `?checkIn=${checkIn.value}#vibe-match`;
                     }
                   }}
                 >
                   See Similar Stays You'll Love →
                 </a>
-
               </div>
             )}
             <p class="text-xs text-gray-400 text-center py-2">
