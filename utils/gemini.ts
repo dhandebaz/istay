@@ -18,6 +18,8 @@ export interface GeminiTextOptions {
   prompt: string;
   // System instruction (injected as systemInstruction)
   systemPrompt?: string;
+  // Gemini model to use (defaults to "gemini-2.0-flash-lite")
+  model?: string;
   // Conversation history (for multi-turn chat)
   history?: Array<{
     role: "user" | "model" | "function" | "system";
@@ -54,6 +56,8 @@ export interface GeminiVisionOptions {
   prompt: string;
   // System instruction
   systemPrompt?: string;
+  // Gemini model to use (defaults to "gemini-2.0-flash-lite")
+  model?: string;
   // Base64-encoded image data (without data:image/... prefix)
   imageBase64: string;
   // MIME type of the image. Default: "image/jpeg"
@@ -167,6 +171,40 @@ function parseResponse(data: Record<string, unknown>): GeminiResponse {
   };
 }
 
+// ── Context Window Management ─────────────────────────────────
+
+/** Maximum conversation turns to keep before trimming */
+const MAX_HISTORY_TURNS = 20;
+
+/**
+ * Trims conversation history to the last N turns to prevent
+ * long ChatSession objects from hitting Gemini's context limits.
+ * Preserves system messages at the start, if any.
+ */
+function trimHistory(
+  history: GeminiTextOptions["history"],
+  maxTurns = MAX_HISTORY_TURNS,
+): GeminiTextOptions["history"] {
+  if (!history || history.length <= maxTurns) return history;
+
+  // Separate leading system messages (always preserved)
+  const systemPrefix: typeof history = [];
+  let startIdx = 0;
+  for (let i = 0; i < history.length; i++) {
+    if (history[i].role === "system") {
+      systemPrefix.push(history[i]);
+      startIdx = i + 1;
+    } else {
+      break;
+    }
+  }
+
+  const conversational = history.slice(startIdx);
+  const trimmed = conversational.slice(-maxTurns);
+
+  return [...systemPrefix, ...trimmed];
+}
+
 // ── Main API Calls ────────────────────────────────────────────
 
 // Call Gemini Flash-Lite with a text-only prompt.
@@ -180,11 +218,14 @@ export async function callGemini(opts: GeminiTextOptions): Promise<GeminiRespons
     );
   }
 
+  // Trim history to prevent context window overflow
+  const safeHistory = trimHistory(opts.history);
+
   // Build contents array (history + current message)
   const contents: Array<{ role: string; parts: any[] }> = [];
 
-  if (opts.history) {
-    for (const msg of opts.history) {
+  if (safeHistory) {
+    for (const msg of safeHistory) {
       contents.push({
         role: msg.role === "function" ? "function" : msg.role,
         parts: msg.parts || [{ text: msg.content }],
@@ -213,7 +254,8 @@ export async function callGemini(opts: GeminiTextOptions): Promise<GeminiRespons
     };
   }
 
-  const url = `${BASE_URL}/${MODEL}:generateContent?key=${apiKey}`;
+  const selectedModel = opts.model ?? MODEL;
+  const url = `${BASE_URL}/${selectedModel}:generateContent?key=${apiKey}`;
 
   const res = await fetchWithRetry(url, body);
   const data = await res.json();
@@ -229,7 +271,7 @@ export async function callGemini(opts: GeminiTextOptions): Promise<GeminiRespons
   const result = parseResponse(data);
 
   console.log(
-    `[gemini] Text call: in=${result.inputTokens ?? "?"} out=${result.outputTokens ?? "?"} finish=${result.finishReason}`,
+    `[gemini] Text call (${selectedModel}): in=${result.inputTokens ?? "?"} out=${result.outputTokens ?? "?"} finish=${result.finishReason}`,
   );
 
   return result;
@@ -276,7 +318,8 @@ export async function callGeminiVision(opts: GeminiVisionOptions): Promise<Gemin
     };
   }
 
-  const url = `${BASE_URL}/${MODEL}:generateContent?key=${apiKey}`;
+  const selectedModel = opts.model ?? MODEL;
+  const url = `${BASE_URL}/${selectedModel}:generateContent?key=${apiKey}`;
 
   const res = await fetchWithRetry(url, body);
   const data = await res.json();
@@ -292,7 +335,7 @@ export async function callGeminiVision(opts: GeminiVisionOptions): Promise<Gemin
   const result = parseResponse(data);
 
   console.log(
-    `[gemini-vision] Vision call: in=${result.inputTokens ?? "?"} out=${result.outputTokens ?? "?"} finish=${result.finishReason}`,
+    `[gemini-vision] Vision call (${selectedModel}): in=${result.inputTokens ?? "?"} out=${result.outputTokens ?? "?"} finish=${result.finishReason}`,
   );
 
   return result;

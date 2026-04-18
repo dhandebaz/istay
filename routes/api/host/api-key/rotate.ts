@@ -10,11 +10,27 @@ export const handler: Handlers = {
       const host = await getHost(hostId);
       if (!host) return Response.json({ error: "Host not found" }, { status: 404 });
 
-      const newKey = await generateAgencyApiKey();
-      await saveHost({ ...host, apiKey: newKey });
+      // Preserve previous key with a 24-hour grace period
+      const legacyApiKey = host.apiKey;
+      const legacyApiKeyExpires = legacyApiKey
+        ? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+        : undefined;
 
-      return Response.json({ apiKey: newKey });
+      const newKey = await generateAgencyApiKey();
+
+      await saveHost({
+        ...host,
+        apiKey: newKey,
+        legacyApiKey,
+        legacyApiKeyExpires,
+      });
+
+      return Response.json({
+        apiKey: newKey,
+        legacyKeyValidUntil: legacyApiKeyExpires,
+      });
     } catch (err) {
+      console.error("[api-key/rotate] Error:", err);
       return Response.json({ error: "Internal error" }, { status: 500 });
     }
   }

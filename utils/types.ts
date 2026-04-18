@@ -20,6 +20,10 @@ export interface Host {
   updatedAt: string;
   /** Encrypted Agency API key for Open API access */
   apiKey?: string;
+  /** Previous API key kept valid during 24-hour grace period after rotation */
+  legacyApiKey?: string;
+  /** ISO 8601 expiry timestamp for the legacy API key */
+  legacyApiKeyExpires?: string;
   /** Active webhook subscriptions for this agency */
   webhooks?: WebhookConfig[];
 }

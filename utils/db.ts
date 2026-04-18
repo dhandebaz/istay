@@ -8,9 +8,11 @@
 //   ["prop_index", propId]                    → { hostId }  (secondary index)
 //   ["booking", hostId, bookingId]            → Booking
 //   ["booking_index", bookingId]              → { hostId, propertyId }
+//   ["booking_checkout", YYYY-MM-DD, bookId]  → { hostId, propertyId }
 //   ["calendar", propId, "YYYY-MM-DD"]        → CalendarBlock
 //   ["earnings_month", hostId, "YYYY-MM"]     → number (net earnings)
 //   ["ledger", bookingId]                     → LedgerEntry
+//   ["ledger_host", hostId, bookingId]        → LedgerEntry  (secondary index)
 //   ["notification", hostId, notifId]         → Notification
 //   ["caretaker_token", token]                → CaretakerToken
 //   ["verification", bookingId]               → GuestVerification
@@ -18,6 +20,7 @@
 //   ["knowledge", hostId, propId]             → HostKnowledge
 //   ["chat_session", sessionId]               → ChatSession
 //   ["guest_profile", phone]                  → GuestProfile
+//   ["rate_limit", ip, windowMinute]           → number  (auto-expiring)
 // ================================================================
 
 
@@ -30,13 +33,13 @@ import type {
   DashboardStats,
   GuestProfile,
   GuestVerification,
-
   Host,
   HostKnowledge,
   LedgerEntry,
   Notification,
   PrivateVerification,
   Property,
+  WebhookConfig,
 } from "./types.ts";
 
 // ── KV Singleton ──────────────────────────────────────────────
@@ -90,7 +93,7 @@ async function encryptField(text: string | undefined): Promise<string | undefine
     return btoa(String.fromCharCode(...combined));
   } catch (err) {
     console.error("[db] Encryption failed:", err);
-    return text; // Fallback to plaintext if encryption fails (better than crashing, but warned in logs)
+    throw new Error("Encryption failed");
   }
 }
 
@@ -110,7 +113,7 @@ async function decryptField(base64: string | undefined): Promise<string | undefi
       data,
     );
     return new TextDecoder().decode(decrypted);
-  } catch (err) {
+  } catch (_err) {
     // If decryption fails, it might be plaintext (legacy)
     return base64;
   }
@@ -310,6 +313,14 @@ export async function saveBooking(data: Booking): Promise<void> {
       propertyId: data.propertyId,
     });
 
+  // Chronological checkout index for efficient PII scrubbing
+  if (data.checkOut) {
+    atomic.set(["booking_checkout", data.checkOut, data.id], {
+      hostId: data.hostId,
+      propertyId: data.propertyId,
+    });
+  }
+
   if (data.guestPhone) {
     atomic.set(["booking_phone", data.guestPhone], data.id);
   }
@@ -430,7 +441,10 @@ export async function listBlockedDates(
 
 export async function saveLedgerEntry(entry: LedgerEntry): Promise<void> {
   const kv = await getKv();
-  await kv.set(["ledger", entry.bookingId], entry);
+  await kv.atomic()
+    .set(["ledger", entry.bookingId], entry)
+    .set(["ledger_host", entry.hostId, entry.bookingId], entry)
+    .commit();
 }
 
 export async function getLedgerEntry(
@@ -445,14 +459,10 @@ export async function listLedgerEntriesByHost(
   hostId: string,
 ): Promise<LedgerEntry[]> {
   const kv = await getKv();
-  // We don't have a secondary index for [ledger, hostId], so we'll scan by prefix [ledger]
-  // In a high-volume app, we would add ["ledger_host", hostId, bookingId] for efficiency.
-  const iter = kv.list<LedgerEntry>({ prefix: ["ledger"] });
+  const iter = kv.list<LedgerEntry>({ prefix: ["ledger_host", hostId] });
   const entries: LedgerEntry[] = [];
   for await (const entry of iter) {
-    if (entry.value.hostId === hostId) {
-      entries.push(entry.value);
-    }
+    entries.push(entry.value);
   }
   return entries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
@@ -694,6 +704,8 @@ export async function getPrivateVerification(
 /**
  * Autonomous scrubbing logic for guest PII.
  * Targets bookings where checkOut < (Today - 30 Days).
+ * Uses the ["booking_checkout", YYYY-MM-DD, bookingId] index for
+ * efficient date-range scanning instead of iterating every booking.
  */
 export async function scrubOldPii(): Promise<{ scrubbedCount: number }> {
   const kv = await getKv();
@@ -704,70 +716,84 @@ export async function scrubOldPii(): Promise<{ scrubbedCount: number }> {
   console.log(`[compliance] Starting PII scrub for records older than ${thresholdStr}...`);
   console.log(`[compliance] Note: Global Guest Intelligence (Profiles) are preserved for loyalty recognition.`);
 
-  
   let scrubbedCount = 0;
   
-  // Scans all bookings across all hosts
-  // (In production with high volume, this should use a checkout_index for efficiency)
-  const iter = kv.list<Booking>({ prefix: ["booking"] });
+  // Scan the chronological checkout index from the beginning up to the threshold date.
+  // KV list is lexicographically ordered, so ["booking_checkout", "2024-01-01", ...]
+  // naturally comes before ["booking_checkout", "2025-12-31", ...].
+  const iter = kv.list<{ hostId: string; propertyId: string }>({
+    prefix: ["booking_checkout"],
+    end: ["booking_checkout", thresholdStr],
+  });
   
   for await (const entry of iter) {
-    const booking = entry.value;
+    const bookingId = entry.key[2] as string;
+    const { hostId } = entry.value;
     
-    // Only scrub confirmed/finished bookings older than 30 days
-    if (
-      (booking.status === "confirmed" || booking.status === "room_ready") &&
-      booking.checkOut < thresholdStr
-    ) {
-      console.log(`[compliance] Scrubbing PII for booking=${booking.id}`);
-      
-      const atomic = kv.atomic();
-      
-      // 1. Delete Private Verification (Raw OCR Data, ID Numbers, Addresses)
-      const privEntry = await kv.get<PrivateVerification>(["private_verification", booking.id]);
-      if (privEntry.value?.idObjectKey) {
-        try {
-          const { deleteFromR2 } = await import("./storage.ts");
-          await deleteFromR2(privEntry.value.idObjectKey);
-        } catch (err) {
-          console.warn(`[compliance] Failed to delete R2 ID for booking=${booking.id}`, err);
-        }
-      }
-      atomic.delete(["private_verification", booking.id]);
-      
-      // 2. Anonymize Guest Verification
-      const gvEntry = await kv.get<GuestVerification>(["verification", booking.id]);
-      if (gvEntry.value) {
-        atomic.set(["verification", booking.id], {
-          ...gvEntry.value,
-          idObjectKey: undefined,
-          extractedData: undefined, 
-        });
-      }
-      
-      // 3. Anonymize Booking Record and Delete Clean Proof
-      if (booking.cleanProofUrl) {
-         try {
-            const { deleteFromR2 } = await import("./storage.ts");
-            const urlPath = booking.cleanProofUrl.split(".com/").pop() || "";
-            if (urlPath) await deleteFromR2(urlPath);
-         } catch (err) {
-            console.warn(`[compliance] Failed to delete R2 Proof for booking=${booking.id}`, err);
-         }
-      }
-
-      atomic.set(["booking", booking.hostId, booking.id], {
-        ...booking,
-        guestName: "Guest (PII Scrubbed)",
-        guestEmail: "scrubbed@istay.space",
-        guestPhone: undefined,
-        guestIdRef: undefined,
-        cleanProofUrl: undefined,
-      });
-      
-      const result = await atomic.commit();
-      if (result.ok) scrubbedCount++;
+    // Load the actual booking to verify status and run scrub
+    const booking = await getBooking(hostId, bookingId);
+    if (!booking) {
+      // Index orphan — cleanup
+      await kv.delete(entry.key);
+      continue;
     }
+    
+    // Only scrub confirmed/finished bookings
+    if (booking.status !== "confirmed" && booking.status !== "room_ready") {
+      continue;
+    }
+
+    console.log(`[compliance] Scrubbing PII for booking=${booking.id}`);
+    
+    const atomic = kv.atomic();
+    
+    // 1. Delete Private Verification (Raw OCR Data, ID Numbers, Addresses)
+    const privEntry = await kv.get<PrivateVerification>(["private_verification", booking.id]);
+    if (privEntry.value?.idObjectKey) {
+      try {
+        const { deleteFromR2 } = await import("./storage.ts");
+        await deleteFromR2(privEntry.value.idObjectKey);
+      } catch (err) {
+        console.warn(`[compliance] Failed to delete R2 ID for booking=${booking.id}`, err);
+      }
+    }
+    atomic.delete(["private_verification", booking.id]);
+    
+    // 2. Anonymize Guest Verification
+    const gvEntry = await kv.get<GuestVerification>(["verification", booking.id]);
+    if (gvEntry.value) {
+      atomic.set(["verification", booking.id], {
+        ...gvEntry.value,
+        idObjectKey: undefined,
+        extractedData: undefined, 
+      });
+    }
+    
+    // 3. Anonymize Booking Record and Delete Clean Proof
+    if (booking.cleanProofUrl) {
+       try {
+          const { deleteFromR2 } = await import("./storage.ts");
+          const urlPath = booking.cleanProofUrl.split(".com/").pop() || "";
+          if (urlPath) await deleteFromR2(urlPath);
+       } catch (err) {
+          console.warn(`[compliance] Failed to delete R2 Proof for booking=${booking.id}`, err);
+       }
+    }
+
+    atomic.set(["booking", booking.hostId, booking.id], {
+      ...booking,
+      guestName: "Guest (PII Scrubbed)",
+      guestEmail: "scrubbed@istay.space",
+      guestPhone: undefined,
+      guestIdRef: undefined,
+      cleanProofUrl: undefined,
+    });
+    
+    // 4. Remove the checkout index entry (already processed)
+    atomic.delete(entry.key);
+    
+    const result = await atomic.commit();
+    if (result.ok) scrubbedCount++;
   }
   
   return { scrubbedCount };
@@ -783,6 +809,58 @@ export async function generateAgencyApiKey(): Promise<string> {
 export async function generateWebhookSecret(): Promise<string> {
   const rawSecret = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
   return await encryptField(rawSecret) || rawSecret;
+}
+
+/**
+ * Atomically appends a webhook to the Host's webhooks array.
+ * Uses version check to prevent race conditions on concurrent writes.
+ */
+export async function addWebhook(
+  hostId: string,
+  webhook: WebhookConfig,
+): Promise<void> {
+  const kv = await getKv();
+  const entry = await kv.get<Host>(["host", hostId]);
+  if (!entry.value) throw new Error(`Host not found: ${hostId}`);
+
+  const host = entry.value;
+  const webhooks = [...(host.webhooks || []), webhook];
+  const updated: Host = { ...host, webhooks };
+
+  const result = await kv.atomic()
+    .check(entry) // version guard — fails if host was modified since read
+    .set(["host", hostId], updated)
+    .commit();
+
+  if (!result.ok) {
+    throw new Error("Concurrent modification detected. Please retry.");
+  }
+}
+
+/**
+ * Atomically removes a webhook by ID from the Host's webhooks array.
+ * Uses version check to prevent race conditions on concurrent writes.
+ */
+export async function removeWebhook(
+  hostId: string,
+  webhookId: string,
+): Promise<void> {
+  const kv = await getKv();
+  const entry = await kv.get<Host>(["host", hostId]);
+  if (!entry.value) throw new Error(`Host not found: ${hostId}`);
+
+  const host = entry.value;
+  const webhooks = (host.webhooks || []).filter((w) => w.id !== webhookId);
+  const updated: Host = { ...host, webhooks };
+
+  const result = await kv.atomic()
+    .check(entry)
+    .set(["host", hostId], updated)
+    .commit();
+
+  if (!result.ok) {
+    throw new Error("Concurrent modification detected. Please retry.");
+  }
 }
 
 // ── INSIGHTS & ANALYTICS ──────────────────────────────────────

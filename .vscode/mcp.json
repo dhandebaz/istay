@@ -3,7 +3,7 @@
     "brainsync": {
       "command": "node",
       "args": [
-        "c:\\Users\\hudav\\.antigravity\\extensions\\dawoodahmad.brainsync-3.0.7-universal\\dist\\mcp-server.js",
+        "c:\\Users\\hudav\\.antigravity\\extensions\\dawoodahmad.brainsync-3.0.11-universal\\dist\\mcp-server.js",
         "--db",
         "C:\\Users\\hudav\\.brainsync\\istay-f3720e71\\state.dat"
       ],
