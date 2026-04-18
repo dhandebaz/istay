@@ -8,6 +8,8 @@ interface GuestChatProps {
   propertyName: string;
   /** Property image — used for branding */
   propertyImage?: string;
+  /** Property amenities — seeds contextual suggestions */
+  amenities?: string[];
 }
 
 
@@ -16,20 +18,27 @@ interface ChatMsg {
   content: string;
 }
 
-export default function GuestChat({ propId, propertyName, propertyImage }: GuestChatProps) {
+export default function GuestChat({ propId, propertyName, propertyImage, amenities }: GuestChatProps) {
   // ── State ─────────────────────────────────────────────────
   const isOpen = useSignal(false);
   const messages = useSignal<ChatMsg[]>([]);
   const inputText = useSignal("");
   const sessionId = useSignal<string | null>(null);
   const isLoading = useSignal(false);
-  const suggestions = useSignal<string[]>([
+  const defaultSuggestions = [
     "What's the WiFi password? 📶",
     "Check-in time? 🕐",
     "Caretaker number? 📱",
     "House rules? 📋",
     "Nearby restaurants? 🍽️",
-  ]);
+  ];
+  // Seed from amenities if provided
+  const amenitySuggestions = amenities?.slice(0, 3).map((a) => `Tell me about the ${a}?`) || [];
+  const suggestions = useSignal<string[]>(
+    amenitySuggestions.length > 0
+      ? [...amenitySuggestions, ...defaultSuggestions.slice(0, 2)]
+      : defaultSuggestions
+  );
   const hasInteracted = useSignal(false);
   const unreadCount = useComputed(() =>
     !isOpen.value && messages.value.filter((m) => m.role === "model").length > 0
@@ -163,6 +172,7 @@ export default function GuestChat({ propId, propertyName, propertyImage }: Guest
         )}
 
         <button
+          type="button"
           id="chat-bubble-btn"
           onClick={() => (isOpen.value = true)}
           class="relative w-14 h-14 rounded-full bg-teal-500 text-white shadow-lg hover:bg-teal-600 active:scale-90 transition-all duration-200 flex items-center justify-center"
@@ -236,6 +246,7 @@ export default function GuestChat({ propId, propertyName, propertyImage }: Guest
         </div>
 
         <button
+          type="button"
           onClick={() => (isOpen.value = false)}
           class="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
           aria-label="Close chat"
@@ -308,6 +319,7 @@ export default function GuestChat({ propId, propertyName, propertyImage }: Guest
         <div class="flex-shrink-0 px-4 pb-2 flex gap-1.5 overflow-x-auto no-scrollbar">
           {suggestions.value.map((s, i) => (
             <button
+              type="button"
               key={i}
               onClick={() => handleSuggestionClick(s)}
               class="flex-shrink-0 px-3 py-1.5 rounded-full bg-teal-50 border border-teal-100 text-xs font-600 text-teal-700 hover:bg-teal-100 active:scale-95 transition-all whitespace-nowrap"

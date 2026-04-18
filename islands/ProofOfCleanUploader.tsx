@@ -7,13 +7,17 @@ interface ProofOfCleanUploaderProps {
   guestName: string;
 }
 
+const COMPRESS_TIMEOUT_MS = 15_000;
+
 export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCleanUploaderProps) {
-  const [file, setFile] = useState<File | null>(null);
+  const [_file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [checklist, setChecklist] = useState<Record<string, boolean>>({});
+  const [isCompressing, setIsCompressing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const checklistComplete = useMemo(() => {
@@ -25,16 +29,27 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
     if (input.files && input.files[0]) {
       const selectedFile = input.files[0];
       setFile(selectedFile);
+      setError(null);
 
       const reader = new FileReader();
-      reader.onload = async (e) => {
-        const rawB64 = (e.target?.result as string) ?? null;
+      reader.onload = async (ev) => {
+        const rawB64 = (ev.target?.result as string) ?? null;
         if (rawB64) {
+          setIsCompressing(true);
           try {
-            setPreviewUrl(await compressImage(rawB64));
-          } catch (err) {
-            console.error("Compression failed:", err);
+            // Race compression against a hard timeout
+            const compressed = await Promise.race([
+              compressImage(rawB64),
+              new Promise<string>((_resolve, reject) =>
+                setTimeout(() => reject(new Error("Compression timed out")), COMPRESS_TIMEOUT_MS)
+              ),
+            ]);
+            setPreviewUrl(compressed);
+          } catch (_err) {
+            console.error("Compression failed, using original:", _err);
             setPreviewUrl(rawB64);
+          } finally {
+            setIsCompressing(false);
           }
         }
       };
@@ -47,8 +62,14 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
 
     setIsUploading(true);
     setError(null);
+    setUploadProgress(10);
 
     try {
+      // Simulate staged progress for UX since fetch doesn't expose upload progress natively
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev) => Math.min(prev + 8, 85));
+      }, 300);
+
       const response = await fetch("/api/caretaker/ready", {
         method: "POST",
         headers: {
@@ -62,16 +83,21 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
         }),
       });
 
+      clearInterval(progressInterval);
+
       if (!response.ok) {
         throw new Error("Failed to update status");
       }
 
+      setUploadProgress(100);
       setSuccess(true);
       globalThis.setTimeout(() => {
         globalThis.location.reload();
       }, 1500);
-    } catch (err: any) {
-      setError(err.message || "An error occurred during upload.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "An error occurred during upload.";
+      setError(message);
+      setUploadProgress(0);
     } finally {
       setIsUploading(false);
     }
@@ -100,13 +126,28 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
       
       {!previewUrl ? (
         <button
+          type="button"
           onClick={() => fileInputRef.current?.click()}
-          class="w-full flex flex-col items-center justify-center gap-2 p-6 rounded-xl border border-dashed border-gray-700 bg-gray-900/50 hover:bg-gray-800 hover:border-gray-600 transition-colors"
+          disabled={isCompressing}
+          class="w-full flex flex-col items-center justify-center gap-2 p-6 rounded-xl border border-dashed border-gray-700 bg-gray-900/50 hover:bg-gray-800 hover:border-gray-600 transition-colors disabled:opacity-50"
         >
-          <span class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400">
-            📷
-          </span>
-          <span class="text-sm font-600 text-gray-300">Take a photo of the clean room</span>
+          {isCompressing ? (
+            <>
+              <span class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">
+                <svg class="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+              </span>
+              <span class="text-sm font-600 text-gray-400">Compressing image...</span>
+            </>
+          ) : (
+            <>
+              <span class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400">
+                📷
+              </span>
+              <span class="text-sm font-600 text-gray-300">Take a photo of the clean room</span>
+            </>
+          )}
         </button>
       ) : (
         <div class="space-y-4">
@@ -114,7 +155,8 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
             <img src={previewUrl} alt="Room condition" class="w-full h-full object-cover" />
             <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <button
-                onClick={() => { setFile(null); setPreviewUrl(null); }}
+                type="button"
+                onClick={() => { setFile(null); setPreviewUrl(null); setUploadProgress(0); }}
                 class="text-sm font-600 text-white bg-black/50 px-3 py-1.5 rounded-lg"
               >
                 Retake
@@ -126,12 +168,23 @@ export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCl
             <p class="text-xs font-500 text-rose-400">{error}</p>
           )}
 
+          {/* Upload Progress Bar */}
+          {isUploading && (
+            <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+              <div 
+                class="bg-teal-500 h-full rounded-full transition-all duration-300 ease-out"
+                style={`width: ${uploadProgress}%`}
+              />
+            </div>
+          )}
+
           <button
+            type="button"
             onClick={handleUpload}
             disabled={isUploading || !checklistComplete}
             class="w-full py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 active:scale-95 text-gray-950 font-800 text-sm transition-all disabled:opacity-50 disabled:active:scale-100 disabled:grayscale"
           >
-            {isUploading ? "Uploading..." : "Mark Room as Ready"}
+            {isUploading ? `Uploading... ${uploadProgress}%` : "Mark Room as Ready"}
           </button>
         </div>
       )}

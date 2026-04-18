@@ -27,9 +27,12 @@ export const handler: Handlers<InvoiceData> = {
 export default function InvoicePage({ data, url }: PageProps<InvoiceData>) {
   const { booking, property, ledger } = data;
   
+  const grossAmount = ledger?.grossAmount || booking.amount;
   const istayFee = ledger?.istayAmount || (booking.amount * 0.05);
   const hostEarnings = ledger?.hostAmount || (booking.amount * 0.95);
-  const totalPaid = ledger?.grossAmount || booking.amount;
+  const gstAmount = Math.round(grossAmount * 0.18);
+  const totalWithGst = grossAmount + gstAmount;
+  const invoiceNumber = `INV-${new Date(booking.createdAt).toISOString().slice(0, 10).replace(/-/g, "")}-${booking.id.slice(0, 6).toUpperCase()}`;
 
   const formatINR = (n: number) => 
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(n);
@@ -40,31 +43,41 @@ export default function InvoicePage({ data, url }: PageProps<InvoiceData>) {
   return (
     <>
       <Head>
-        <title>Invoice - {booking.id.toUpperCase()}</title>
+        <title>Invoice - {invoiceNumber}</title>
         <meta name="robots" content="noindex, nofollow" />
         <style>{`
           @media print {
             .no-print { display: none !important; }
             body { background: white !important; }
             .invoice-card { box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; }
+            @page { margin: 1cm; }
           }
         `}</style>
-        {shouldPrint && <script dangerouslySetInnerHTML={{ __html: `window.onload = () => setTimeout(() => window.print(), 500);` }} />}
+        {shouldPrint && <script>{'window.onload = () => setTimeout(() => window.print(), 500);'}</script>}
       </Head>
 
       <div class="min-h-screen bg-gray-50 py-10 px-4">
         <div class="max-w-3xl mx-auto">
           {/* Header Actions */}
-          <div class="no-print flex justify-between items-center mb-8">
+          <div class="no-print flex flex-wrap justify-between items-center mb-8 gap-3">
             <a href="/" class="text-xs font-800 text-teal-600 uppercase tracking-widest flex items-center gap-2">
                ← Back to istay
             </a>
-            <button 
-              onClick={() => window.print()}
-              class="px-6 py-2.5 bg-teal-600 text-white rounded-xl font-800 text-sm shadow-lg shadow-teal-600/20 transition-all hover:bg-teal-700 active:scale-95"
-            >
-              Ready to Print
-            </button>
+            <div class="flex items-center gap-3">
+              <a
+                href={`/api/invoice/${booking.id}?format=json`}
+                target="_blank"
+                class="px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-700 text-xs transition-all hover:bg-gray-200"
+              >
+                Export JSON ↗
+              </a>
+              <a
+                href={`/invoice/${booking.id}?download=1`}
+                class="px-6 py-2.5 bg-teal-600 text-white rounded-xl font-800 text-sm shadow-lg shadow-teal-600/20 transition-all hover:bg-teal-700"
+              >
+                Download PDF
+              </a>
+            </div>
           </div>
 
           {/* Invoice Card */}
@@ -87,8 +100,8 @@ export default function InvoicePage({ data, url }: PageProps<InvoiceData>) {
                 <h2 class="text-xl font-900 text-gray-900 mb-1">TAX INVOICE</h2>
                 <p class="text-xs font-700 text-gray-400 uppercase tracking-widest mb-4">CONFIRMED RESERVATION</p>
                 <div class="space-y-1">
-                  <p class="text-sm font-600 text-gray-500">Invoice ID: <span class="text-gray-900">#INV-${booking.id.slice(0, 8).toUpperCase()}</span></p>
-                  <p class="text-sm font-600 text-gray-500">Date: <span class="text-gray-900">{new Date(booking.createdAt).toLocaleDateString('en-IN')}</span></p>
+                  <p class="text-sm font-600 text-gray-500">Invoice: <span class="text-gray-900 font-700">{invoiceNumber}</span></p>
+                  <p class="text-sm font-600 text-gray-500">Date: <span class="text-gray-900">{new Date(booking.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</span></p>
                 </div>
               </div>
             </div>
@@ -124,32 +137,40 @@ export default function InvoicePage({ data, url }: PageProps<InvoiceData>) {
                       </p>
                     </td>
                     <td class="py-6 font-800 text-gray-900">{booking.nights}</td>
-                    <td class="py-6 font-800 text-gray-900 text-right">{formatINR(totalPaid)}</td>
+                    <td class="py-6 font-800 text-gray-900 text-right">{formatINR(grossAmount)}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <div class="flex justify-end p-8 bg-gray-50 rounded-3xl">
-              <table class="w-full sm:w-64">
+              <table class="w-full sm:w-72">
                 <tr class="text-sm font-600 text-gray-500">
-                  <td class="py-2">Net Earnings</td>
+                  <td class="py-2">Subtotal</td>
+                  <td class="text-right py-2">{formatINR(grossAmount)}</td>
+                </tr>
+                <tr class="text-sm font-600 text-gray-500">
+                  <td class="py-2">Host Earnings (95%)</td>
                   <td class="text-right py-2">{formatINR(hostEarnings)}</td>
                 </tr>
                 <tr class="text-sm font-600 text-gray-500">
-                  <td class="py-2">istay Platform Fee</td>
+                  <td class="py-2">Platform Fee (5%)</td>
                   <td class="text-right py-2">{formatINR(istayFee)}</td>
                 </tr>
+                <tr class="text-sm font-600 text-gray-500">
+                  <td class="py-2">GST @ 18%</td>
+                  <td class="text-right py-2">{formatINR(gstAmount)}</td>
+                </tr>
                 <tr class="border-t border-gray-200">
-                  <td class="py-4 font-900 text-teal-600 text-lg">Total Paid</td>
-                  <td class="text-right py-4 font-900 text-teal-600 text-lg">{formatINR(totalPaid)}</td>
+                  <td class="py-4 font-900 text-teal-600 text-lg">Total Payable</td>
+                  <td class="text-right py-4 font-900 text-teal-600 text-lg">{formatINR(totalWithGst)}</td>
                 </tr>
               </table>
             </div>
 
             <div class="mt-20 pt-10 border-t border-gray-100 text-center">
                <p class="text-xs text-gray-400 font-500 leading-relaxed">
-                 This invoice is issued by istay on behalf of the host. <br/>
+                 This is a system-generated tax invoice issued by istay on behalf of the host. <br/>
                  istay is operated at Ghaffar Manzil, Okhla, New Delhi 110025.
                </p>
             </div>

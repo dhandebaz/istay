@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useState, useEffect, useCallback, useRef } from "preact/hooks";
 import IdVerification from "./IdVerification.tsx";
 
 interface BookingFlowProps {
@@ -13,21 +13,77 @@ interface BookingFlowProps {
   propertyImage?: string;
 }
 
+const POLL_INTERVAL_MS = 5_000; // Poll every 5s
+const MAX_POLL_DURATION_MS = 10 * 60_000; // Stop after 10 minutes
+
 export default function BookingFlow({
   bookingId,
   guestName,
   checkIn,
   checkOut,
   status,
-  verificationStatus,
+  verificationStatus: initialVerificationStatus,
   instructionsContent,
   propertyName,
   propertyImage,
 }: BookingFlowProps) {
   const isConfirmed = status === "confirmed" || status === "room_ready";
-  const isVerified = verificationStatus === "verified";
   
+  // ── Live verification state (reactive polling) ──────────────
+  const [liveVerificationStatus, setLiveVerificationStatus] = useState(initialVerificationStatus);
+  const pollStartRef = useRef<number>(0);
+  const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const isVerified = liveVerificationStatus === "verified";
   const canAccessDetails = isConfirmed && isVerified;
+
+  // Poll for verification status changes
+  const pollVerificationStatus = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/verify/status?bookingId=${bookingId}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.status && data.status !== liveVerificationStatus) {
+          setLiveVerificationStatus(data.status);
+          // Stop polling once verified or failed (terminal states)
+          if (data.status === "verified" || data.status === "failed") {
+            if (pollTimerRef.current) {
+              clearInterval(pollTimerRef.current);
+              pollTimerRef.current = null;
+            }
+          }
+        }
+      }
+    } catch (_err) {
+      // Silently fail — network hiccups shouldn't crash the flow
+    }
+  }, [bookingId, liveVerificationStatus]);
+
+  useEffect(() => {
+    // Only start polling if the booking is confirmed but verification is pending/processing
+    if (!isConfirmed || isVerified || liveVerificationStatus === "failed") return;
+
+    pollStartRef.current = Date.now();
+
+    pollTimerRef.current = setInterval(() => {
+      // Auto-stop after MAX_POLL_DURATION_MS to prevent infinite network usage
+      if (Date.now() - pollStartRef.current > MAX_POLL_DURATION_MS) {
+        if (pollTimerRef.current) {
+          clearInterval(pollTimerRef.current);
+          pollTimerRef.current = null;
+        }
+        return;
+      }
+      pollVerificationStatus();
+    }, POLL_INTERVAL_MS);
+
+    return () => {
+      if (pollTimerRef.current) {
+        clearInterval(pollTimerRef.current);
+        pollTimerRef.current = null;
+      }
+    };
+  }, [isConfirmed, isVerified, liveVerificationStatus, pollVerificationStatus]);
 
   const formatDate = (iso: string) => {
     return new Date(iso + "T00:00:00").toLocaleDateString("en-IN", {
@@ -105,12 +161,22 @@ export default function BookingFlow({
             <p class="text-sm text-gray-500 mt-2 max-w-sm mx-auto">
               {!isConfirmed 
                 ? "Your booking is still pending confirmation. The details will unlock once the payment is fully processed."
+                : liveVerificationStatus === "processing"
+                ? "Your ID is being verified. This page will update automatically — no need to refresh."
                 : "For security and compliance, verify your government ID to unlock the WiFi passwords and check-in codes."
               }
             </p>
           </div>
 
-          {isConfirmed && !isVerified && (
+          {/* Live processing indicator */}
+          {isConfirmed && liveVerificationStatus === "processing" && (
+            <div class="flex items-center justify-center gap-2 p-3 rounded-xl bg-blue-50 border border-blue-100">
+              <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+              <p class="text-xs font-700 text-blue-700">Verification in progress — auto-updating...</p>
+            </div>
+          )}
+
+          {isConfirmed && (liveVerificationStatus === "pending" || !liveVerificationStatus) && (
             <div class="text-left mt-8">
               <IdVerification bookingId={bookingId} guestName={guestName} />
             </div>

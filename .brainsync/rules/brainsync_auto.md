@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 591 notes | Score threshold: >40
+> 605 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -30,14 +30,14 @@
 
 ## Project Standards
 
+- what-changed in shared-context.json — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- Strengthened types Added
+- Strengthened types Added
+- Added JWT tokens authentication — confirmed 3x
+- Patched security issue LUrGen — confirmed 3x
 - Strengthened types Added
 - what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in shared-context.json — confirmed 4x
-- Strengthened types Patched
-- convention in email.ts
-- Strengthened types IdVerification
-- Optimized Score — evolves the database schema to support new requirements — confirmed 3x
-- problem-fix in agent-rules.md — confirmed 5x
 
 ## Known Fixes
 

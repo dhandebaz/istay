@@ -1,4 +1,83 @@
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useCallback } from "preact/hooks";
+
+// ── Toast Notification System (shared pattern) ───────────────
+
+type ToastType = "success" | "error" | "info";
+
+interface ToastItem {
+  id: number;
+  message: string;
+  type: ToastType;
+  exiting?: boolean;
+}
+
+let toastId = 0;
+
+function ToastContainer({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss: (id: number) => void }) {
+  const colorMap: Record<ToastType, string> = {
+    success: "bg-emerald-500",
+    error: "bg-rose-500",
+    info: "bg-gray-800",
+  };
+
+  const iconMap: Record<ToastType, string> = {
+    success: "✓",
+    error: "✕",
+    info: "ℹ",
+  };
+
+  return (
+    <div
+      style={{ position: "fixed", top: 16, right: 16, zIndex: 9999, display: "flex", flexDirection: "column", gap: "8px", maxWidth: "380px" }}
+    >
+      {toasts.map((t) => (
+        <div
+          key={t.id}
+          class={`${colorMap[t.type]} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-600`}
+          style={{
+            animation: t.exiting ? "toast-exit 0.3s ease-in forwards" : "toast-enter 0.35s ease-out",
+            cursor: "pointer",
+          }}
+          onClick={() => onDismiss(t.id)}
+        >
+          <span class="text-base font-800 shrink-0">{iconMap[t.type]}</span>
+          <span class="flex-1">{t.message}</span>
+        </div>
+      ))}
+      <style>{`
+        @keyframes toast-enter { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes toast-exit { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(80px); } }
+      `}</style>
+    </div>
+  );
+}
+
+function ConfirmModal({
+  message,
+  onConfirm,
+  onCancel,
+}: {
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div
+      style={{ position: "fixed", inset: 0, zIndex: 9998, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
+      onClick={(e) => { if (e.target === e.currentTarget) onCancel(); }}
+    >
+      <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4" style={{ animation: "toast-enter 0.25s ease-out" }}>
+        <p class="text-sm text-gray-700 mb-5 leading-relaxed">{message}</p>
+        <div class="flex gap-3 justify-end">
+          <button type="button" onClick={onCancel} class="px-4 py-2 rounded-xl text-sm font-600 text-gray-600 hover:bg-gray-100 transition-colors">Cancel</button>
+          <button type="button" onClick={onConfirm} class="px-4 py-2 rounded-xl text-sm font-700 text-white bg-rose-500 hover:bg-rose-600 transition-colors">Confirm</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main Component ────────────────────────────────────────────
 
 interface TeamMember {
   email: string;
@@ -11,15 +90,46 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [inviting, setInviting] = useState(false);
-  const [error, setError] = useState("");
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const [confirmState, setConfirmState] = useState<{
+    message: string;
+    onConfirm: () => void;
+  } | null>(null);
 
+  // ── Toast helpers ─────────────────────────────────────────
+  const showToast = useCallback((message: string, type: ToastType = "info") => {
+    const id = ++toastId;
+    setToasts((prev) => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts((prev) => prev.map((t) => t.id === id ? { ...t, exiting: true } : t));
+      setTimeout(() => { setToasts((prev) => prev.filter((t) => t.id !== id)); }, 300);
+    }, 3000);
+  }, []);
+
+  const dismissToast = useCallback((id: number) => {
+    setToasts((prev) => prev.map((t) => t.id === id ? { ...t, exiting: true } : t));
+    setTimeout(() => { setToasts((prev) => prev.filter((t) => t.id !== id)); }, 300);
+  }, []);
+
+  const showConfirm = useCallback(
+    (message: string): Promise<boolean> =>
+      new Promise((resolve) => {
+        setConfirmState({
+          message,
+          onConfirm: () => { setConfirmState(null); resolve(true); },
+        });
+      }),
+    [],
+  );
+
+  // ── Data fetching ─────────────────────────────────────────
   const fetchTeam = async () => {
     try {
       const res = await fetch(`/api/host/team?hostId=${hostId}`);
       const data = await res.json();
       if (data.members) setMembers(data.members);
-    } catch (err) {
-      console.error("Failed to fetch team:", err);
+    } catch (_err) {
+      console.error("Failed to fetch team:", _err);
     } finally {
       setLoading(false);
     }
@@ -32,7 +142,6 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
   const handleInvite = async (e: Event) => {
     e.preventDefault();
     setInviting(true);
-    setError("");
     
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
@@ -53,18 +162,20 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
       if (data.ok) {
         form.reset();
         await fetchTeam();
+        showToast("Team member invited successfully", "success");
       } else {
-        setError(data.error || "Failed to invite member");
+        showToast(data.error || "Failed to invite member", "error");
       }
-    } catch (err) {
-      setError("Network error. Please try again.");
+    } catch (_err) {
+      showToast("Network error. Please try again.", "error");
     } finally {
       setInviting(false);
     }
   };
 
   const handleRemove = async (email: string) => {
-    if (!confirm(`Are you sure you want to remove ${email} from the team?`)) return;
+    const confirmed = await showConfirm(`Remove ${email} from the team? They will lose access to all properties.`);
+    if (!confirmed) return;
     
     try {
       const res = await fetch("/api/host/team/remove", {
@@ -72,14 +183,31 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
         body: JSON.stringify({ hostId, email }),
         headers: { "Content-Type": "application/json" }
       });
-      if (res.ok) await fetchTeam();
-    } catch (err) {
-      alert("Failed to remove member");
+      if (res.ok) {
+        await fetchTeam();
+        showToast("Team member removed", "info");
+      } else {
+        showToast("Failed to remove member", "error");
+      }
+    } catch (_err) {
+      showToast("Failed to remove member. Please try again.", "error");
     }
   };
 
   return (
     <div class="space-y-6">
+      {/* Toast Layer */}
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+
+      {/* Confirm Modal */}
+      {confirmState && (
+        <ConfirmModal
+          message={confirmState.message}
+          onConfirm={confirmState.onConfirm}
+          onCancel={() => setConfirmState(null)}
+        />
+      )}
+
       <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div class="p-6 border-b border-gray-50 flex items-center justify-between">
           <div>
@@ -120,6 +248,7 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
                 
                 {member.role !== "owner" && (
                   <button 
+                    type="button"
                     onClick={() => handleRemove(member.email)}
                     class="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
                     title="Remove Member"
@@ -162,13 +291,13 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
             </select>
           </div>
           <button 
+            type="submit"
             disabled={inviting}
             class="px-4 py-2.5 rounded-xl bg-istay-900 text-white text-sm font-800 hover:bg-istay-800 active:scale-95 transition-all disabled:opacity-50"
           >
             {inviting ? "Inviting..." : "Invite"}
           </button>
         </form>
-        {error && <p class="mt-2 text-xs text-rose-500 font-600">{error}</p>}
       </div>
     </div>
   );

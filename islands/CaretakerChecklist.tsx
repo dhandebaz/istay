@@ -13,7 +13,7 @@ const CHECKLIST_ITEMS = [
   { id: "key_returned", label: "Key Returned" },
 ] as const;
 
-export default function CaretakerChecklist({ bookingId, onComplete, disabled }: CaretakerChecklistProps) {
+export default function CaretakerChecklist({ bookingId: _bookingId, onComplete, disabled }: CaretakerChecklistProps) {
   const [state, setState] = useState<Record<string, boolean>>({
     ac_lights_off: false,
     windows_locked: false,
@@ -51,9 +51,12 @@ export default function CaretakerChecklist({ bookingId, onComplete, disabled }: 
       <h3 class="text-xs font-700 text-gray-500 uppercase tracking-widest mb-4">
         Check-out Preparation
       </h3>
+
+      {/* ── Checklist Items ──────────────────────────────────── */}
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {CHECKLIST_ITEMS.map((item) => (
           <button
+            type="button"
             key={item.id}
             disabled={disabled}
             onClick={() => toggle(item.id)}
@@ -73,8 +76,11 @@ export default function CaretakerChecklist({ bookingId, onComplete, disabled }: 
                 </svg>
               )}
             </div>
+          </button>
+        ))}
+      </div>
 
-      {/* Proof of Clean Photo */}
+      {/* ── Proof of Clean Photo (OUTSIDE button loop) ────── */}
       <div class="mt-6 p-4 rounded-2xl bg-gray-50 border border-gray-100">
         <h4 class="text-xs font-800 text-gray-900 mb-2 uppercase flex items-center gap-2">
             📸 Proof of Clean
@@ -83,8 +89,9 @@ export default function CaretakerChecklist({ bookingId, onComplete, disabled }: 
         
         {photo ? (
             <div class="relative group aspect-video rounded-xl overflow-hidden border border-gray-200">
-                <img src={`data:image/jpeg;base64,${photo}`} class="w-full h-full object-cover" />
+                <img src={`data:image/jpeg;base64,${photo}`} class="w-full h-full object-cover" alt="Clean proof" />
                 <button 
+                  type="button"
                   onClick={() => setPhoto(null)}
                   class="absolute top-2 right-2 p-2 rounded-full bg-white/90 backdrop-blur shadow-sm text-gray-900 hover:bg-white transition-all"
                 >
@@ -104,9 +111,6 @@ export default function CaretakerChecklist({ bookingId, onComplete, disabled }: 
                 <input type="file" accept="image/*" capture="camera" class="hidden" onChange={handlePhoto} />
             </label>
         )}
-      </div>
-          </button>
-        ))}
       </div>
       
       {!allChecked && !disabled && (

@@ -4,14 +4,18 @@
 // Called by:
 //   1. Deno.cron every 30 minutes (registered in main.ts)
 //   2. GET /api/cron/sync (manual trigger for testing)
+//
+// Performance notes:
+//   - listBlockedDates() is called ONCE per sync (not twice)
+//   - Orphan deletions + new blocks batched via kv.atomic()
+//   - Past dates are skipped to keep KV lean
 // ================================================================
 
 import {
-  blockDate,
+  getKv,
   getProperty,
   listAllPropertyIndices,
   listBlockedDates,
-  unblockDate,
 } from "./db.ts";
 import { extractBlockedDates } from "./ical.ts";
 import { type CalendarBlock } from "./types.ts";
@@ -19,6 +23,9 @@ import { type CalendarBlock } from "./types.ts";
 
 const ICAL_FETCH_TIMEOUT_MS = 10_000;
 const USER_AGENT = "istay/1.0 Calendar Sync (+https://istay.space)";
+
+/** Deno KV atomic() supports max 10 mutations per transaction */
+const KV_ATOMIC_BATCH_SIZE = 10;
 
 export interface SyncResult {
   propId: string;
@@ -68,42 +75,62 @@ export async function syncPropertyCalendar(
     const allDates = extractBlockedDates(icsText);
 
     const todayStr = new Date().toISOString().slice(0, 10);
-    
+
     // ── Differential Sync Logic ──
-    // 1. Fetch current ical blocks from KV
-    const currentBlocks = (await listBlockedDates(propId))
-      .filter((b: any) => b.reason === "ical" && b.date >= todayStr);
-    
-    const currentDates = new Set(currentBlocks.map((b: any) => b.date));
+    // 1. Fetch ALL current blocks ONCE (eliminates the redundant second read)
+    const allBlocks = await listBlockedDates(propId);
+
+    const icalBlocks = allBlocks.filter(
+      (b) => b.reason === "ical" && b.date >= todayStr,
+    );
+    const currentIcalDates = new Set(icalBlocks.map((b) => b.date));
+
+    // Build a quick lookup of ALL existing blocks (any reason) for precedence checks
+    const existingByDate = new Map(allBlocks.map((b) => [b.date, b]));
 
     const newDates = new Set(allDates.filter((d) => d >= todayStr));
 
-    // 2. Identify dates to remove (in KV but not in fresh iCal)
-    const datesToDelete = [...currentDates].filter((d) => !newDates.has(d));
-    for (const date of datesToDelete) {
-      await unblockDate(propId, date);
-    }
+    // 2. Identify dates to remove (in KV as ical but not in fresh feed)
+    const datesToDelete = [...currentIcalDates].filter((d) => !newDates.has(d));
 
-    // 3. Identify and upsert new dates
-    let synced = 0;
-    const existingBlocks = await listBlockedDates(propId);
-    
+    // 3. Identify dates to upsert (skip manual_block and booked — operational precedence)
+    const datesToAdd: string[] = [];
     for (const date of newDates) {
-      const existing = existingBlocks.find((b: any) => b.date === date);
-
-      // Operational Precedence: Do NOT overwrite manual blocks or real bookings with iCal sync
+      const existing = existingByDate.get(date);
       if (existing && (existing.reason === "manual_block" || existing.reason === "booked")) {
         continue;
       }
-      
-      await blockDate({ propertyId: propId, date, reason: "ical" });
-      synced++;
+      datesToAdd.push(date);
+    }
+
+    // 4. Batch writes via kv.atomic() — up to 10 mutations per transaction
+    const kv = await getKv();
+
+    // Batch deletions
+    for (let i = 0; i < datesToDelete.length; i += KV_ATOMIC_BATCH_SIZE) {
+      const batch = datesToDelete.slice(i, i + KV_ATOMIC_BATCH_SIZE);
+      const atomic = kv.atomic();
+      for (const date of batch) {
+        atomic.delete(["calendar", propId, date]);
+      }
+      await atomic.commit();
+    }
+
+    // Batch additions
+    for (let i = 0; i < datesToAdd.length; i += KV_ATOMIC_BATCH_SIZE) {
+      const batch = datesToAdd.slice(i, i + KV_ATOMIC_BATCH_SIZE);
+      const atomic = kv.atomic();
+      for (const date of batch) {
+        const block: CalendarBlock = { propertyId: propId, date, reason: "ical" };
+        atomic.set(["calendar", propId, date], block);
+      }
+      await atomic.commit();
     }
 
     console.log(
-      `[sync] prop=${propId}: synced ${synced} dates, removed ${datesToDelete.length} orphaned blocks`,
+      `[sync] prop=${propId}: synced ${datesToAdd.length} dates, removed ${datesToDelete.length} orphaned blocks`,
     );
-    return { propId, icsUrl, synced, skipped: false };
+    return { propId, icsUrl, synced: datesToAdd.length, skipped: false };
   } catch (err) {
     clearTimeout(timer);
     const message = err instanceof Error ? err.message : String(err);

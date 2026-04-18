@@ -54,10 +54,17 @@ export async function getKv(): Promise<Deno.Kv> {
 }
 
 // ── ENCRYPTION HELPERS ────────────────────────────────────────
+// CryptoKey is cached in memory (same pattern as _kv singleton).
+// crypto.subtle.importKey() is expensive — no need to call it
+// on every field encrypt/decrypt. One import per process lifetime.
 
 const ENCRYPTION_KEY = () => Deno.env.get("ENCRYPTION_KEY") || "";
 
+let _cryptoKey: CryptoKey | null = null;
+
 async function getCryptoKey(): Promise<CryptoKey> {
+  if (_cryptoKey) return _cryptoKey;
+
   const keyStr = ENCRYPTION_KEY();
   if (!keyStr) {
     console.error("[db] ENCRYPTION_KEY not set. Using fallback (INSECURE).");
@@ -65,13 +72,14 @@ async function getCryptoKey(): Promise<CryptoKey> {
   const enc = new TextEncoder();
   // Pad or truncate to 32 bytes for AES-256
   const keyData = enc.encode((keyStr || "istay-default-secret-key-32-chars").padEnd(32, "0").slice(0, 32));
-  return await crypto.subtle.importKey(
+  _cryptoKey = await crypto.subtle.importKey(
     "raw",
     keyData,
     { name: "AES-GCM" },
     false,
     ["encrypt", "decrypt"],
   );
+  return _cryptoKey;
 }
 
 async function encryptField(text: string | undefined): Promise<string | undefined> {

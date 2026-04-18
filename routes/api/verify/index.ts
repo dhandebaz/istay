@@ -16,11 +16,11 @@ import {
   saveGuestVerification,
   saveNotification,
   savePrivateVerification,
-} from "../../utils/db.ts";
-import { callGeminiVision, GeminiError, stripDataUri } from "../../utils/gemini.ts";
-import type { GuestVerification, Notification, OcrResult, PrivateVerification } from "../../utils/types.ts";
-import { dispatchWebhook } from "../../utils/events.ts";
-import { uploadToR2 } from "../../utils/storage.ts";
+} from "../../../utils/db.ts";
+import { callGeminiVision, stripDataUri } from "../../../utils/gemini.ts";
+import type { GuestVerification, Notification, OcrResult, PrivateVerification } from "../../../utils/types.ts";
+import { dispatchWebhook } from "../../../utils/events.ts";
+import { uploadToR2 } from "../../../utils/storage.ts";
 
 const ALLOWED_ID_TYPES = [
   "aadhaar",

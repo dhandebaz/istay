@@ -7,6 +7,20 @@ import { getGuestProfile, saveGuestProfile } from "./db.ts";
 import type { ChatMessage, GuestProfile } from "./types.ts";
 
 /**
+ * Strips potential markdown code-block wrappers from an LLM response.
+ * Handles: ```json ... ```, ``` ... ```, and leading/trailing whitespace.
+ */
+function sanitizeLLMJson(raw: string): string {
+  let cleaned = raw.trim();
+  // Strip ```json ... ``` or ``` ... ```
+  const fenced = cleaned.match(/^```(?:json)?\s*\n?([\s\S]*?)\n?\s*```$/);
+  if (fenced) {
+    cleaned = fenced[1].trim();
+  }
+  return cleaned;
+}
+
+/**
  * Uses Gemini to analyze a chat session and extract guest preferences/summary.
  * Upserts the result into the persistent Global Guest Profile.
  */
@@ -56,7 +70,8 @@ Return ONLY a JSON object:
       jsonMode: true,
     });
 
-    const intelligence = JSON.parse(res.text);
+    // Resilient JSON parsing: strip markdown fences before parsing
+    const intelligence = JSON.parse(sanitizeLLMJson(res.text));
 
     // 2. Upsert Profile
     const names = existingProfile?.names || [];
