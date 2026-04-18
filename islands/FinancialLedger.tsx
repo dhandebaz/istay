@@ -1,5 +1,3 @@
-/** @jsx h */
-import { h } from "preact";
 import { useCallback, useMemo, useState } from "preact/hooks";
 import type { LedgerEntry } from "../utils/types.ts";
 

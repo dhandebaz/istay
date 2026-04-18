@@ -1,11 +1,15 @@
 import { type Handlers, type PageProps } from "$fresh/server.ts";
-import { Head } from "$fresh/runtime.ts";
+import Header from "../../islands/Header.tsx";
+import Footer from "../../components/Footer.tsx";
+import SEOMeta from "../../components/SEOMeta.tsx";
+import { HomeIcon, MapPinIcon, CheckIcon, StarIcon } from "../../components/Icons.tsx";
 import {
   getBookingById,
   getGuestVerification,
   getKnowledgeByPropId,
   getPropertyById,
   listBlockedDates,
+  listReviews,
   recordPropertyView,
 } from "../../utils/db.ts";
 import { getVibeMatches } from "../../utils/recommendations.ts";
@@ -16,6 +20,7 @@ import type {
   GuestVerification,
   HostKnowledge,
   Property,
+  Review,
   VibeMatch,
 } from "../../utils/types.ts";
 import BookingCalendar from "../../islands/BookingCalendar.tsx";
@@ -29,6 +34,7 @@ interface PropertyPageData {
   isHighlyBooked: boolean;
   dynamicBasePrice: number;
   yieldRules: string[];
+  reviews: Review[];
 
   bookingData?: {
     booking: Booking;
@@ -102,6 +108,8 @@ export const handler: Handlers<PropertyPageData> = {
       }
     }
 
+    const reviews = await listReviews(propId);
+
     return ctx.render({
       property,
       blockedDates,
@@ -110,6 +118,7 @@ export const handler: Handlers<PropertyPageData> = {
       dynamicBasePrice,
       yieldRules,
       bookingData,
+      reviews,
     });
   },
 };
@@ -117,27 +126,40 @@ export const handler: Handlers<PropertyPageData> = {
 export default function PropertyPage(
   { data }: PageProps<PropertyPageData>,
 ) {
-  const { property, blockedDates, vibeMatches, isHighlyBooked, bookingData } =
+  const { property, blockedDates, vibeMatches, isHighlyBooked, bookingData, reviews } =
     data;
-
-  const formatINR = (n: number) =>
-    new Intl.NumberFormat("en-IN", {
-      style: "currency",
-      currency: "INR",
-      maximumFractionDigits: 0,
-    }).format(n);
 
   return (
     <>
+      <SEOMeta 
+        title={`${property.name} | istay`}
+        description={property.description?.substring(0, 160)}
+        image={property.imageUrl}
+        type="website"
+      />
       <Head>
-        <title>{property.name} | istay Direct Booking</title>
-        <meta name="description" content={property.description} />
-        <meta property="og:title" content={property.name} />
-        <meta property="og:description" content={property.description} />
-        {property.imageUrl && (
-          <meta property="og:image" content={property.imageUrl} />
-        )}
-        <meta property="og:type" content="website" />
+        <style dangerouslySetInnerHTML={{ __html: `
+          @media (max-width: 640px) {
+            .mobile-sticky-bar {
+              position: fixed;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              z-index: 50;
+              padding: 1rem 1.5rem;
+              background: rgba(255, 255, 255, 0.9);
+              backdrop-filter: blur(12px);
+              border-top: 1px solid rgba(0, 0, 0, 0.05);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+            }
+          }
+          @media (min-width: 641px) {
+            .mobile-sticky-bar { display: none; }
+          }
+        `}} />
       </Head>
 
       <div class="min-h-screen bg-white font-sans">
@@ -167,13 +189,7 @@ export default function PropertyPage(
               class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 backdrop-blur-md text-xs font-800 text-mint-600 shadow-xl hover:bg-white transition-all transform hover:scale-105"
             >
               <span class="w-5 h-5 rounded bg-mint-500 flex items-center justify-center">
-                <svg width="12" height="12" viewBox="0 0 10 10" fill="white">
-                  <path
-                    d="M5 0.5L0.5 4V9.5H3.5V6.5H6.5V9.5H9.5V4L5 0.5Z"
-                    stroke-width="0.3"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                <HomeIcon class="w-2.5 h-2.5 text-white" />
               </span>
               Direct Booking via istay
             </a>
@@ -195,14 +211,7 @@ export default function PropertyPage(
             </h1>
             {property.address && (
               <p class="mt-2 text-base text-white/90 flex items-center gap-2 font-500">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 12 12"
-                  fill="currentColor"
-                >
-                  <path d="M6 0.5C4.07 0.5 2.5 2.07 2.5 4C2.5 6.75 6 11.5 6 11.5C6 11.5 9.5 6.75 9.5 4C9.5 2.07 7.93 0.5 6 0.5ZM6 5.5C5.17 5.5 4.5 4.83 4.5 4C4.5 3.17 5.17 2.5 6 2.5C6.83 2.5 7.5 3.17 7.5 4C7.5 4.83 6.83 5.5 6 5.5Z" />
-                </svg>
+                <MapPinIcon class="w-4 h-4" />
                 {property.address}
               </p>
             )}
@@ -210,7 +219,58 @@ export default function PropertyPage(
         </div>
 
         {/* ── Main Content ─────────────────────────────────────── */}
-        <div class="max-w-6xl mx-auto px-6 py-12">
+        <div class="max-w-6xl mx-auto px-6 py-6 md:py-12 pb-32 sm:pb-12">
+          {/* Breadcrumbs */}
+          <nav aria-label="Breadcrumb" class="mb-6">
+            <ol class="flex items-center space-x-2 text-sm text-gray-500 font-500">
+              <li>
+                <a href="/" class="hover:text-mint-600 transition-colors">Home</a>
+              </li>
+              <li>
+                <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </li>
+              <li>
+                <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-50 text-mint-700 text-[10px] font-800 uppercase tracking-widest border border-mint-100">
+                  <CheckIcon class="w-2.5 h-2.5" strokeWidth="3" />
+                  Verified Host
+                </div>
+              </li>
+              <li>
+                <div class="w-1 h-1 rounded-full bg-gray-300" />
+              </li>
+              <li>
+                <a href="/search" class="hover:text-mint-600 transition-colors">Search</a>
+              </li>
+              {property.address && (
+                <>
+                  <li>
+                    <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </li>
+                  <li class="capitalize">
+                    <a 
+                      href={`/search?q=${encodeURIComponent(property.address.split(',').slice(-3, -2)[0]?.trim() || property.address.split(',').slice(-2, -1)[0]?.trim() || "India")}`} 
+                      class="hover:text-mint-600 transition-colors"
+                    >
+                      {property.address.split(',').slice(-3, -2)[0]?.trim() || property.address.split(',').slice(-2, -1)[0]?.trim() || "India"}
+                    </a>
+                  </li>
+                </>
+              )}
+              <li>
+                <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </li>
+              <li class="text-gray-900 font-600 truncate max-w-[200px] sm:max-w-xs" aria-current="page">
+                {property.name}
+              </li>
+            </ol>
+          </nav>
+
           <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
             {/* Left column: info */}
             <div class="lg:col-span-3 space-y-10">
@@ -370,6 +430,76 @@ export default function PropertyPage(
                 </div>
               )}
 
+              {/* ── Reviews Section ──────────────────────────── */}
+              <div class="pt-10 border-t border-gray-100" id="reviews">
+                <div class="flex items-center justify-between mb-8">
+                  <div>
+                    <h2 class="text-2xl font-900 text-gray-900 tracking-tight">
+                      Guest Reviews
+                    </h2>
+                    <div class="flex items-center gap-2 mt-1">
+                      <div class="flex items-center text-amber-400">
+                        <StarIcon class="w-4 h-4 fill-current" />
+                        <StarIcon class="w-4 h-4 fill-current" />
+                        <StarIcon class="w-4 h-4 fill-current" />
+                        <StarIcon class="w-4 h-4 fill-current" />
+                        <StarIcon class="w-4 h-4 fill-current" />
+                      </div>
+                      <span class="text-xs font-700 text-gray-400 uppercase tracking-wider">
+                        {reviews.length} {reviews.length === 1 ? "Review" : "Reviews"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {reviews.length === 0 ? (
+                  <div class="p-8 rounded-3xl bg-gray-50 border border-gray-100 text-center">
+                    <p class="text-sm text-gray-400 font-500 italic">
+                      No reviews yet for this property.
+                    </p>
+                  </div>
+                ) : (
+                  <div class="space-y-6">
+                    {reviews.map((review) => (
+                      <div key={review.id} class="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between mb-4">
+                          <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-istay-900 flex items-center justify-center text-white text-sm font-800">
+                              {review.guestName.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <p class="text-sm font-800 text-gray-900">{review.guestName}</p>
+                              <p class="text-[10px] text-gray-400 font-500 uppercase tracking-widest">
+                                {new Date(review.createdAt).toLocaleDateString("en-IN", { month: "long", year: "numeric" })}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          {/* Badge based on source */}
+                          <div class={`px-3 py-1 rounded-full text-[9px] font-900 uppercase tracking-wider border ${
+                            review.source === "direct" 
+                              ? "bg-mint-50 text-mint-700 border-mint-100" 
+                              : "bg-orange-50 text-orange-700 border-orange-100"
+                          }`}>
+                            {review.source === "direct" ? "✓ Verified Guest" : review.sourceLabel}
+                          </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-1 mb-3 text-amber-400">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <StarIcon key={i} class={`w-3 h-3 ${i < review.rating ? "fill-current" : "text-gray-200"}`} />
+                          ))}
+                        </div>
+                        
+                        <p class="text-sm text-gray-600 leading-relaxed italic">
+                          "{review.comment}"
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* Trust Footer */}
               <div class="pt-10 border-t border-gray-100 space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -411,7 +541,7 @@ export default function PropertyPage(
             </div>
 
             {/* Right column: calendar sticky OR Booking Flow */}
-            <div class="lg:col-span-2">
+            <div class="lg:col-span-2" id="booking-section">
               <div class="lg:sticky lg:top-10">
                 {bookingData
                   ? (
@@ -439,6 +569,27 @@ export default function PropertyPage(
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Sticky Mobile Booking Bar */}
+      <div class="mobile-sticky-bar">
+        <div class="flex flex-col">
+          <span class="text-xl font-900 text-mint-600">
+            {formatINR(data.dynamicBasePrice)}
+          </span>
+          <span class="text-[10px] font-700 text-gray-400 uppercase tracking-widest">
+            per night
+          </span>
+        </div>
+        <button 
+          onClick={() => {
+            const el = document.getElementById("booking-section");
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          class="px-8 py-3 rounded-full bg-mint-500 text-istay-900 font-900 text-sm shadow-lg shadow-mint-500/20 active:scale-95 transition-all"
+        >
+          Check Availability
+        </button>
       </div>
 
       {/* AI Concierge Chat Bubble */}

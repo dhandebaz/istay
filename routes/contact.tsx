@@ -1,6 +1,7 @@
-import { Head } from "$fresh/runtime.ts";
 import Header from "../islands/Header.tsx";
 import Footer from "../components/Footer.tsx";
+import SEOMeta from "../components/SEOMeta.tsx";
+import { MailIcon, MapPinIcon, CheckIcon } from "../components/Icons.tsx";
 
 const SCHEMA = JSON.stringify({
   "@context": "https://schema.org",
@@ -25,36 +26,15 @@ const SCHEMA = JSON.stringify({
   },
 });
 
-export default function Contact() {
+export default function Contact({ url }: PageProps) {
+  const isSuccess = url.searchParams.get("success") === "true";
   return (
     <>
-      <Head>
-        <title>Contact Us | istay — Direct Booking Platform</title>
-        <meta
-          name="description"
-          content="Reach out to istay support at support@istay.space. We're here to help you with onboarding, billing, and any technical questions."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Contact istay Support" />
-        <meta
-          property="og:description"
-          content="Get in touch with our team at support@istay.space. Average response time: 24–48 hours."
-        />
-        <meta
-          property="og:image"
-          content="https://istay.space/og-contact.png"
-        />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="Contact istay" />
-        <meta
-          name="twitter:description"
-          content="Reach us at support@istay.space"
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: SCHEMA }}
-        />
-      </Head>
+      <SEOMeta 
+        title="Contact Us | istay — Direct Booking Platform"
+        description="Reach out to istay support at support@istay.space. We're here to help you with onboarding, billing, and any technical questions."
+        schema={SCHEMA}
+      />
 
       <Header />
 
@@ -87,23 +67,7 @@ export default function Contact() {
                 <div class="group">
                   <div class="flex items-start gap-4">
                     <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-istay-50 border border-istay-100 flex items-center justify-center group-hover:bg-istay-100 transition-colors duration-200">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="text-istay-700"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M2.5 6.5L10 11.5L17.5 6.5M3 4.5H17C17.8284 4.5 18.5 5.17157 18.5 6V14C18.5 14.8284 17.8284 15.5 17 15.5H3C2.17157 15.5 1.5 14.8284 1.5 14V6C1.5 5.17157 2.17157 4.5 3 4.5Z"
-                          stroke="currentColor"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
+                      <MailIcon class="w-5 h-5 text-istay-700" />
                     </div>
                     <div>
                       <h2 class="text-sm font-700 text-gray-500 uppercase tracking-wider mb-1">
@@ -146,27 +110,7 @@ export default function Contact() {
                 {/* Physical Address */}
                 <div class="flex items-start gap-4">
                   <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="text-gray-400"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M10 11C11.6569 11 13 9.65685 13 8C13 6.34315 11.6569 5 10 5C8.34315 5 7 6.34315 7 8C7 9.65685 8.34315 11 10 11Z"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                      />
-                      <path
-                        d="M10 1.5C6.41015 1.5 3.5 4.41015 3.5 8C3.5 13 10 18.5 10 18.5C10 18.5 16.5 13 16.5 8C16.5 4.41015 13.5899 1.5 10 1.5Z"
-                        stroke="currentColor"
-                        stroke-width="1.5"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
+                    <MapPinIcon class="w-5 h-5 text-gray-400" />
                   </div>
                   <div>
                     <h2 class="text-sm font-700 text-gray-500 uppercase tracking-wider mb-1">
@@ -187,8 +131,14 @@ export default function Contact() {
 
               {/* Right Column — Contact Form */}
               <div class="lg:col-span-3">
-                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 sm:p-10">
-                  <h2 class="text-xl font-700 text-gray-900 mb-6">
+                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 sm:p-10 relative overflow-hidden">
+                  {isSuccess && (
+                    <div class="absolute top-0 left-0 right-0 bg-mint-500 text-istay-900 py-3 px-6 text-sm font-800 flex items-center justify-center gap-2 animate-slide-down">
+                      <CheckIcon class="w-4.5 h-4.5" strokeWidth="3" />
+                      Message sent successfully! We'll reply within 24 hours.
+                    </div>
+                  )}
+                  <h2 class={`text-xl font-700 text-gray-900 mb-6 ${isSuccess ? 'mt-6' : ''}`}>
                     Send us a message
                   </h2>
 
@@ -281,6 +231,10 @@ export default function Contact() {
                       Send Message →
                     </button>
 
+                    <p class="text-[10px] text-gray-400 text-center flex items-center justify-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-mint-500 animate-pulse" />
+                      Your data is end-to-end encrypted and used only for response.
+                    </p>
                     <p class="text-xs text-gray-400 text-center">
                       By submitting, you agree to our{" "}
                       <a

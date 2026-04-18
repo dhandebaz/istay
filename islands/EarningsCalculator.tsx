@@ -173,6 +173,18 @@ export default function EarningsCalculator() {
               </div>
             </div>
 
+            {/* Visual Bar */}
+            <div class="w-full h-2 bg-gray-100 rounded-full mb-4 overflow-hidden flex">
+              <div 
+                class={`h-full ${name === 'istay' ? 'bg-mint-500' : 'bg-gray-300'}`} 
+                style={{ width: `${(1 - commission) * 100}%` }}
+              />
+              <div 
+                class={`h-full ${name === 'istay' ? 'bg-mint-200' : 'bg-rose-400'}`} 
+                style={{ width: `${commission * 100}%` }}
+              />
+            </div>
+
             <div class="border-t border-current border-opacity-10 pt-3 space-y-1">
               <div class="flex justify-between text-xs text-gray-500">
                 <span>Commission</span>

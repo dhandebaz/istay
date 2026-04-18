@@ -8,6 +8,8 @@ export default function ScraperPreview() {
   const [error, setError] = useState<string | null>(null);
   const [showKnowledge, setShowKnowledge] = useState(false);
 
+  const [isHovered, setIsHovered] = useState(false);
+
   const handleScrape = async (e: Event) => {
     e.preventDefault();
     if (!url) return;
@@ -66,6 +68,17 @@ export default function ScraperPreview() {
                 ⚠️ {error}
               </p>
             )}
+            
+            {/* Play/Hover indicator */}
+            <div 
+              class="absolute -top-12 -right-6 md:-right-12 text-mint-500 opacity-60 flex flex-col items-center animate-bounce"
+              style={{ display: "none" /* Decorative element for user context */ }}
+            >
+              <div class="w-10 h-10 bg-mint-100 rounded-full flex items-center justify-center">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+              <span class="text-xs font-700 mt-1 uppercase tracking-widest">Magic</span>
+            </div>
           </form>
         )
         : (

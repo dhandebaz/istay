@@ -1,3 +1,5 @@
+import { InstagramIcon, WhatsAppIcon } from "../components/Icons.tsx";
+
 const LEGAL_LINKS = [
   { href: "/legal/terms", label: "Terms & Conditions" },
   { href: "/legal/privacy", label: "Privacy Policy" },
@@ -25,6 +27,8 @@ export default function Footer() {
               <img
                 src="/logo.svg"
                 alt="istay logo"
+                width="40"
+                height="40"
                 class="h-10 w-auto opacity-90 group-hover:opacity-100 transition-opacity"
               />
             </a>
@@ -89,13 +93,35 @@ export default function Footer() {
       {/* Bottom Bar — Branding Scrubbed */}
       <div class="border-t border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <p class="text-xs text-gray-500 leading-relaxed">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            <p class="text-xs text-gray-500 leading-relaxed max-w-xl">
               istay | Ghaffar Manzil, Okhla, New Delhi, Delhi 110025, India.
             </p>
-            <p class="text-xs text-gray-600 whitespace-nowrap">
-              © {currentYear} istay
-            </p>
+            <div class="flex items-center gap-5">
+              <div class="flex items-center gap-4 border-r border-gray-800 pr-5">
+                <a 
+                  href="https://instagram.com/istay.space" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  class="text-gray-500 hover:text-white transition-all transform hover:scale-110" 
+                  aria-label="Visit istay Instagram profile"
+                >
+                  <InstagramIcon class="w-5 h-5" />
+                </a>
+                <a 
+                  href="https://wa.me/91XXXXXXXXXX" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  class="text-gray-500 hover:text-emerald-500 transition-all transform hover:scale-110" 
+                  aria-label="Contact istay via WhatsApp"
+                >
+                  <WhatsAppIcon class="w-5 h-5" />
+                </a>
+              </div>
+              <p class="text-[11px] font-500 text-gray-600 whitespace-nowrap">
+                © {currentYear} istay. Direct Bookings, Zero Fees.
+              </p>
+            </div>
           </div>
         </div>
       </div>

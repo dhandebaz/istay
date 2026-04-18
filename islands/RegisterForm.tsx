@@ -1,4 +1,5 @@
 import { useSignal } from "@preact/signals";
+import { CheckIcon } from "../components/Icons.tsx";
 
 export default function RegisterForm() {
   const step = useSignal<"details" | "submitting" | "error">("details");
@@ -8,6 +9,23 @@ export default function RegisterForm() {
   const email = useSignal("");
   const phone = useSignal("");
   const password = useSignal("");
+
+  const isEmailValid = (e: string) => /^\S+@\S+\.\S+$/.test(e);
+  const passwordStrength = (pass: string) => {
+    if (!pass) return 0;
+    let strength = 0;
+    if (pass.length > 7) strength += 1;
+    if (/[A-Z]/.test(pass)) strength += 1;
+    if (/[0-9]/.test(pass)) strength += 1;
+    if (/[^A-Za-z0-9]/.test(pass)) strength += 1;
+    return Math.min(strength, 4);
+  };
+
+  const strength = passwordStrength(password.value);
+  const strengthLabel = ["", "Weak", "Fair", "Good", "Strong"][strength];
+  const strengthColor = ["bg-gray-200", "bg-rose-500", "bg-amber-400", "bg-mint-500", "bg-emerald-500"][strength];
+
+  const acceptTerms = useSignal(false);
 
   async function handleSubmit(e: Event) {
     e.preventDefault();
@@ -19,6 +37,11 @@ export default function RegisterForm() {
 
     if (password.value.length < 8) {
       errorMsg.value = "Password must be at least 8 characters.";
+      return;
+    }
+
+    if (!acceptTerms.value) {
+      errorMsg.value = "Please accept the Terms and Privacy Policy.";
       return;
     }
 
@@ -102,20 +125,39 @@ export default function RegisterForm() {
         <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">
           Email Address
         </label>
-        <input
-          type="email"
-          value={email.value}
-          onInput={(e) => (email.value = (e.target as HTMLInputElement).value)}
-          required
-          class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"
-          placeholder="john@example.com"
-        />
+        <div class="relative">
+          <input
+            type="email"
+            value={email.value}
+            onInput={(e) => (email.value = (e.target as HTMLInputElement).value)}
+            required
+            class={`w-full px-4 py-3 rounded-xl border bg-gray-50 text-gray-900 text-sm focus:bg-white focus:outline-none transition-all duration-200 ${
+              email.value && !isEmailValid(email.value)
+                ? "border-rose-400 focus:border-rose-500"
+                : "border-gray-200 focus:border-mint-400"
+            }`}
+            placeholder="john@example.com"
+          />
+          {email.value && isEmailValid(email.value) && (
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 text-mint-500">
+              <CheckIcon class="w-4 h-4" strokeWidth="3" />
+            </div>
+          )}
+        </div>
       </div>
 
-      <div>
-        <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">
-          Password
-        </label>
+        <div class="flex items-center justify-between mb-1.5 mx-1">
+          <label class="block text-xs font-700 text-gray-700">
+            Password
+          </label>
+          {password.value && (
+            <span class={`text-[10px] font-800 uppercase tracking-widest ${
+              strength <= 1 ? "text-rose-500" : strength === 2 ? "text-amber-500" : "text-mint-600"
+            }`}>
+              {strengthLabel}
+            </span>
+          )}
+        </div>
         <input
           type="password"
           value={password.value}
@@ -127,6 +169,39 @@ export default function RegisterForm() {
           class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"
           placeholder="••••••••"
         />
+        {/* Strength Progress */}
+        <div class="flex gap-1 mt-2 mx-1">
+          {[1, 2, 3, 4].map((level) => (
+            <div 
+              key={level} 
+              class={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
+                password.value && strength >= level ? strengthColor : "bg-gray-200"
+              }`} 
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Consent Checkbox */}
+      <div class="flex items-start gap-3 px-1 mt-6">
+        <label class="relative flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            checked={acceptTerms.value}
+            onChange={(e) => (acceptTerms.value = (e.target as HTMLInputElement).checked)}
+            class="peer sr-only"
+          />
+          <div class="w-5 h-5 border-2 border-gray-200 rounded-lg bg-gray-50 peer-checked:bg-mint-500 peer-checked:border-mint-500 transition-all duration-200" />
+          <div class="absolute inset-0 flex items-center justify-center text-white opacity-0 peer-checked:opacity-100 transition-opacity duration-200 pointer-events-none">
+            <CheckIcon class="w-3.5 h-3.5" strokeWidth="3" />
+          </div>
+        </label>
+        <span class="text-xs text-gray-500 font-500 leading-tight">
+          By continuing, you agree to istay's{" "}
+          <a href="/legal/terms" class="text-mint-600 font-700 hover:text-mint-700 underline decoration-mint-100">Terms of Service</a>
+          {" "}and{" "}
+          <a href="/legal/privacy" class="text-mint-600 font-700 hover:text-mint-700 underline decoration-mint-100">Privacy Policy</a>.
+        </span>
       </div>
 
       {errorMsg.value && (

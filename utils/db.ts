@@ -1007,15 +1007,6 @@ export async function getBookingsDaily(
 
 // ── REVIEWS & FEEDBACK ────────────────────────────────────────
 
-export interface Review {
-  id: string;
-  bookingId: string;
-  propertyId: string;
-  rating: number; // 1-5
-  comment?: string;
-  createdAt: string;
-}
-
 export async function saveReview(review: Review): Promise<void> {
   const kv = await getKv();
   await kv.set(["reviews", review.propertyId, review.id], review);
@@ -1028,7 +1019,9 @@ export async function listReviews(propertyId: string): Promise<Review[]> {
   for await (const entry of iter) {
     reviews.push(entry.value);
   }
-  return reviews;
+  return reviews.sort((a, b) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
 }
 
 export async function saveSurveyToken(

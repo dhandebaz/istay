@@ -13,7 +13,7 @@ import { syncAllProperties } from "./utils/sync.ts";
 // ── iCal Cron — runs every 30 minutes ─────────────────────────
 // Requires --unstable-cron flag (already in deno.json tasks).
 // On Deno Deploy, this is natively supported without the flag.
-Deno.cron("ical-sync", "*/30 * * * *", async () => {
+Deno.cron("ical-sync", "*/15 * * * *", async () => {
   try {
     const result = await syncAllProperties();
     console.log(

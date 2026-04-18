@@ -1,18 +1,24 @@
 import { S3Client } from "s3_lite_client";
 
-const endpoint = Deno.env.get("R2_S3_URL_ENDPOINT") || "";
-const accessKey = Deno.env.get("R2_S3_ACCESS_KEY") || "";
-const secretKey = Deno.env.get("R2_S3_SECURITY_ACCESS_KEY") || "";
-const bucket = Deno.env.get("R2_BUCKET_NAME") || "istay";
+let clientInstance: S3Client | null = null;
+function getClient(): S3Client {
+  if (!clientInstance) {
+    const endpoint = Deno.env.get("R2_S3_URL_ENDPOINT") || "";
+    const accessKey = Deno.env.get("R2_S3_ACCESS_KEY") || "";
+    const secretKey = Deno.env.get("R2_S3_SECURITY_ACCESS_KEY") || "";
+    const bucket = Deno.env.get("R2_BUCKET_NAME") || "istay";
 
-const s3Client = new S3Client({
-  endPoint: endpoint.replace("https://", ""),
-  accessKey,
-  secretKey,
-  bucket,
-  region: "auto",
-  useSSL: true,
-});
+    clientInstance = new S3Client({
+      endPoint: endpoint.replace("https://", ""),
+      accessKey,
+      secretKey,
+      bucket,
+      region: "auto",
+      useSSL: true,
+    });
+  }
+  return clientInstance;
+}
 
 /**
  * Uploads a file to Cloudflare R2.
@@ -24,6 +30,7 @@ export async function uploadToR2(
   mimeType: string,
   isPublic = false,
 ): Promise<string> {
+  const s3Client = getClient();
   await s3Client.putObject(path, buffer, {
     metadata: { "Content-Type": mimeType },
   });
@@ -41,6 +48,7 @@ export async function getSignedUrl(
   path: string,
   seconds = 3600,
 ): Promise<string> {
+  const s3Client = getClient();
   return await s3Client.presignedGetObject(path, { expirySeconds: seconds });
 }
 
@@ -51,6 +59,7 @@ export async function getSignedUrl(
 export function getPublicUrl(path: string): string {
   // If user has a custom domain for R2, they should provide it.
   // Fallback to S3 endpoint format which works for most R2 public setups if enabled.
+  const endpoint = Deno.env.get("R2_S3_URL_ENDPOINT") || "";
   return `${endpoint}/${path}`;
 }
 
@@ -58,5 +67,6 @@ export function getPublicUrl(path: string): string {
  * Deletes an object from R2.
  */
 export async function deleteFromR2(path: string): Promise<void> {
+  const s3Client = getClient();
   await s3Client.deleteObject(path);
 }

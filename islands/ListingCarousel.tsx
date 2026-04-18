@@ -61,6 +61,7 @@ export default function ListingCarousel() {
             <img
               src={prop.imageUrl}
               alt={prop.name}
+              loading="lazy"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             />
 
@@ -79,6 +80,12 @@ export default function ListingCarousel() {
 
             {/* Bottom Content Area */}
             <div class="absolute bottom-8 left-8 right-8">
+              <div class="flex items-center gap-1.5 mb-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                <span class="text-[10px] font-800 text-white uppercase tracking-widest drop-shadow-md">
+                  Live & Bookable
+                </span>
+              </div>
               <h3 class="text-white font-900 text-xl tracking-tight leading-tight mb-2">
                 {prop.name}
               </h3>
@@ -127,6 +134,18 @@ export default function ListingCarousel() {
           </div>
         </div>
       ))}
+      {/* View All Button */}
+      <div class="md:col-span-3 flex justify-center mt-12">
+        <a
+          href="/search"
+          class="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-istay-50 text-istay-900 text-sm font-800 border border-istay-100 hover:bg-istay-100 transition-colors"
+        >
+          View All Verified Properties
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M2 8H14M8 2L14 8L8 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+      </div>
     </div>
   );
 }

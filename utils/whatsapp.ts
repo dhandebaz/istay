@@ -81,8 +81,22 @@ export async function sendWhatsAppText(to: string, text: string) {
   });
 }
 
-/** Backward compatibility alias */
-export async function sendWhatsAppMessage(to: string, text: string) {
-  const result = await sendWhatsAppText(to, text);
-  return result.ok;
+/**
+ * Generates a pre-filled wa.me link for manual host actions.
+ * Used when the automated API is not needed or for quick overrides.
+ */
+export function getWhatsAppLink(phone: string, message: string): string {
+  const cleanPhone = phone.replace(/\D/g, "");
+  const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+  return `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
 }
+
+/**
+ * Standard message text for manual WhatsApp links.
+ */
+export const WHATSAPP_MANUAL_TEMPLATES = {
+  REVIEW_REQUEST: (guestName: string, propertyName: string, reviewUrl: string) =>
+    `Hi ${guestName}! Hope you enjoyed your stay at ${propertyName}. Would you mind leaving us a quick review? It takes less than a minute: ${reviewUrl}`,
+  BOOKING_CONFIRMED: (guestName: string, propertyName: string, guideUrl: string) =>
+    `Hi ${guestName}, your booking at ${propertyName} is confirmed! View your check-in guide here: ${guideUrl}`,
+};

@@ -55,6 +55,32 @@ export default function Terms() {
             </p>
           </div>
 
+          {/* TLDR Banner */}
+          <div class="mb-10 bg-mint-50 border border-mint-200 rounded-2xl p-6">
+            <h2 class="text-mint-800 font-800 text-lg mb-3 flex items-center gap-2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Summary for Busy People
+            </h2>
+            <ul class="space-y-2 text-sm text-mint-900/80 font-500">
+              <li class="flex items-start gap-2">
+                <span class="text-mint-500 mt-1">•</span>
+                istay is just the software platform, not the property manager.
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-mint-500 mt-1">•</span>
+                As a Host, you are responsible for local compliance (taxes, Police Form C, etc.).
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-mint-500 mt-1">•</span>
+                We charge a flat 5% fee on bookings—no hidden costs.
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-mint-500 mt-1">•</span>
+                We process payments via Easebuzz and payout hosts according to the split (usually 95%).
+              </li>
+            </ul>
+          </div>
+
           {/* Content */}
           <div class="prose-legal">
             <h2>1. About istay</h2>

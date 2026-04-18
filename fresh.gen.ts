@@ -62,6 +62,7 @@ import * as $p_checkout from "./routes/p/checkout.tsx";
 import * as $pricing from "./routes/pricing.tsx";
 import * as $register from "./routes/register.tsx";
 import * as $search from "./routes/search.tsx";
+import * as $sitemap_xml from "./routes/sitemap.xml.ts";
 import * as $verify from "./routes/verify.tsx";
 import * as $AddProperty from "./islands/AddProperty.tsx";
 import * as $BookingCalendar from "./islands/BookingCalendar.tsx";
@@ -72,6 +73,8 @@ import * as $DashboardSidebar from "./islands/DashboardSidebar.tsx";
 import * as $DeveloperApi from "./islands/DeveloperApi.tsx";
 import * as $EarningsCalculator from "./islands/EarningsCalculator.tsx";
 import * as $EarningsComparison from "./islands/EarningsComparison.tsx";
+import * as $ErrorBoundary from "./islands/ErrorBoundary.tsx";
+import * as $FaqSearch from "./islands/FaqSearch.tsx";
 import * as $FinancialLedger from "./islands/FinancialLedger.tsx";
 import * as $ForgotPasswordForm from "./islands/ForgotPasswordForm.tsx";
 import * as $GuestChat from "./islands/GuestChat.tsx";
@@ -84,6 +87,7 @@ import * as $ListingCarousel from "./islands/ListingCarousel.tsx";
 import * as $LoginForm from "./islands/LoginForm.tsx";
 import * as $MagicScraperAnimation from "./islands/MagicScraperAnimation.tsx";
 import * as $MobileMenu from "./islands/MobileMenu.tsx";
+import * as $OtaSavingsChart from "./islands/OtaSavingsChart.tsx";
 import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
 import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
 import * as $RegisterForm from "./islands/RegisterForm.tsx";
@@ -156,6 +160,7 @@ const manifest = {
     "./routes/pricing.tsx": $pricing,
     "./routes/register.tsx": $register,
     "./routes/search.tsx": $search,
+    "./routes/sitemap.xml.ts": $sitemap_xml,
     "./routes/verify.tsx": $verify,
   },
   islands: {
@@ -168,6 +173,8 @@ const manifest = {
     "./islands/DeveloperApi.tsx": $DeveloperApi,
     "./islands/EarningsCalculator.tsx": $EarningsCalculator,
     "./islands/EarningsComparison.tsx": $EarningsComparison,
+    "./islands/ErrorBoundary.tsx": $ErrorBoundary,
+    "./islands/FaqSearch.tsx": $FaqSearch,
     "./islands/FinancialLedger.tsx": $FinancialLedger,
     "./islands/ForgotPasswordForm.tsx": $ForgotPasswordForm,
     "./islands/GuestChat.tsx": $GuestChat,
@@ -180,6 +187,7 @@ const manifest = {
     "./islands/LoginForm.tsx": $LoginForm,
     "./islands/MagicScraperAnimation.tsx": $MagicScraperAnimation,
     "./islands/MobileMenu.tsx": $MobileMenu,
+    "./islands/OtaSavingsChart.tsx": $OtaSavingsChart,
     "./islands/PricingCheckout.tsx": $PricingCheckout,
     "./islands/ProofOfCleanUploader.tsx": $ProofOfCleanUploader,
     "./islands/RegisterForm.tsx": $RegisterForm,

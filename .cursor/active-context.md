@@ -1,646 +1,558 @@
-> **BrainSync Context Pumper** 🧠 Dynamically loaded for active file:
-> `islands\SettingsTabs.tsx` (Domain: **Frontend (React/UI)**)
+> **BrainSync Context Pumper** 🧠
+> Dynamically loaded for active file: `islands\DeveloperApi.tsx` (Domain: **Frontend (React/UI)**)
+
+### 🔴 Frontend (React/UI) Gotchas
+- **⚠️ GOTCHA: Fixed null crash in ProofOfCleanUploader — avoids unnecessary re-renders in R...**: - import { useState, useRef, useMemo } from "preact/hooks";
++ import { useMemo, useRef, useState } from "preact/hooks";
+- export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCleanUploaderProps) {
++ export default function ProofOfCleanUploader(
+-   const [_file, setFile] = useState<File | null>(null);
++   { bookingId, guestName }: ProofOfCleanUploaderProps,
+-   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
++ ) {
+-   const [isUploading, setIsUploading] = useState(false);
++   const [_file, setFile] = useState<File | null>(null);
+-   const [uploadProgress, setUploadProgress] = useState(0);
++   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+-   const [success, setSuccess] = useState(false);
++   const [isUploading, setIsUploading] = useState(false);
+-   const [error, setError] = useState<string | null>(null);
++   const [uploadProgress, setUploadProgress] = useState(0);
+-   const [checklist, setChecklist] = useState<Record<string, boolean>>({});
++   const [success, setSuccess] = useState(false);
+-   const [isCompressing, setIsCompressing] = useState(false);
++   const [error, setError] = useState<string | null>(null);
+-   const fileInputRef = useRef<HTMLInputElement>(null);
++   const [checklist, setChecklist] = useState<Record<string, boolean>>({});
+- 
++   const [isCompressing, setIsCompressing] = useState(false);
+-   const checklistComplete = useMemo(() => {
++   const fileInputRef = useRef<HTMLInputElement>(null);
+-     return Object.keys(checklist).length > 0 && Object.values(checklist).every(Boolean);
++ 
+-   }, [checklist]);
++   const checklistComplete = useMemo(() => {
+- 
++     return Object.keys(checklist).length > 0 &&
+-   const handleFileChange = (e: Event) => {
++       Object.values(checklist).every(Boolean);
+-     const input = e.target as HTMLInputElement;
++   }, [checklist]);
+-     if (input.files && input.files[0]) {
++ 
+-       const selectedFile = input.files[0];
++   const handleFileChange = (e:
+… [diff truncated]
+
+📌 IDE AST Context: Modified symbols likely include [ProofOfCleanUploaderProps, ProofOfCleanUploaderProps, COMPRESS_TIMEOUT_MS, COMPRESS_TIMEOUT_MS, ProofOfCleanUploader]
 
 ### 📐 Frontend (React/UI) Conventions & Fixes
-
-- **[decision] decision in IdVerification.tsx**: - class="flex-1 py-3 rounded-xl
-  bg-istay-900 text-white text-sm font-700 hover:bg-istay-800 active:scale-95
-  transition-all shadow-sm"
-
-* class="flex-1 py-3 rounded-xl bg-teal-600 text-white text-sm font-700
-  hover:bg-teal-700 active:scale-95 transition-all shadow-sm"
-
-- class="w-full py-3 rounded-xl bg-istay-900 text-white text-sm font-700
-  hover:bg-istay-800 active:scale-95 transition-all shadow-sm flex items-center
-  justify-center gap-2"
-
-* class="w-full py-3 rounded-xl bg-teal-600 text-white text-sm font-700
-  hover:bg-teal-700 active:scale-95 transition-all shadow-sm flex items-center
-  justify-center gap-2"
-
-📌 IDE AST Context: Modified symbols likely include [IdVerificationProps,
-IdVerificationProps, VerifyStep, VerifyStep, ID_TYPES]
-
-- **[convention] Fixed null crash in Compression — prevents null/undefined
-  runtime crashes — confirmed 6x**: - reader.onload = (e) =>
-  setPreviewUrl(e.target?.result as string);
-
-* reader.onload = async (e) => {
-
-- reader.readAsDataURL(selectedFile);
-
-* const rawB64 = (e.target?.result as string) ?? null;
-
+- **[problem-fix] Fixed null crash in LedgerEntry — avoids unnecessary re-renders in React**: - /** @jsx h */
++ import { useCallback, useMemo, useState } from "preact/hooks";
+- import { h } from "preact";
++ import type { LedgerEntry } from "../utils/types.ts";
+- import { useCallback, useMemo, useState } from "preact/hooks";
++ 
+- import type { LedgerEntry } from "../utils/types.ts";
++ interface FinancialLedgerProps {
+- 
++   entries: LedgerEntry[];
+- interface FinancialLedgerProps {
++ }
+-   entries: LedgerEntry[];
++ 
 - }
-
-* if (rawB64) {
-
-- };
-
-* try {
-
--
-
-* setPreviewUrl(await compressImage(rawB64));
-
-- const handleUpload = async () => {
-
-* } catch (err) {
-
-- if (!previewUrl) return;
-
-* console.error("Compression failed:", err);
-
--
-
-* setPreviewUrl(rawB64);
-
-- setIsUploading(true);
-
-* }
-
-- setError(null);
-
-* }
-
--
-
-* };
-
-- try {
-
-* reader.readAsDataURL(selectedFile);
-
-- const response = await fetch("/api/caretaker/ready", {
-
-* }
-
-- method: "POST",
-
-* };
-
-- headers: {
-
-*
-
-- "Content-Type": "application/json",
-
-* const handleUpload = async () => {
-
-- },
-
-* if (!previewUrl) return;
-
-- body: JSON.stringify({
-
-*
-
-- bookingId,
-
-* setIsUploading(true);
-
-- guestName,
-
-* setError(null);
-
-- photoBase64: previewUrl.split(",")[1], // Strip raw Data URL prefix
-
-*
-
-- checklist,
-
-* try {
-
-- }),
-
-* const response = await fetch("/api/caretaker/ready", {
-
-- });
-
-* method: "POST",
-
--
-
-* headers: {
-
-- if (!response.ok) {
-
-* "Content-Type": "application/json",
-
-- throw new Error("Failed to update status");
-
-* },
-
-- }
-
-* body: JSON.stringify({
-
--
-
-* bookingId,
-
-- setSuccess(true);
-
-* guestName,
-
-- globalThis.setTimeout(() => {
-
-* photoBase64: previewUrl.split(",")[1], // Strip raw Data URL prefix
-
-- globalThis.location.reload();
-
-* checklist,
-
-- }, 1500);
-
-* }),
-
-- } catch (err: any) {
-
-* });
-
-- setError(err.message || "An error occurred during upload.");
-
-*
-
-- } finally {
-
-* if (!response.ok) {
-
-- setIsUploading(false);
-
-* t
-
++ const PAGE_SIZE = 20;
+- const PAGE_SIZE = 20;
++ export default function FinancialLedger({ entries }: FinancialLedgerProps) {
+- 
++   const [filter, setFilter] = useState<"all" | "settled" | "pending">("all");
+- export default function FinancialLedger({ entries }: FinancialLedgerProps) {
++   const [currentPage, setCurrentPage] = useState(1);
+-   const [filter, setFilter] = useState<"all" | "settled" | "pending">("all");
++   const [dateFrom, setDateFrom] = useState("");
+-   const [currentPage, setCurrentPage] = useState(1);
++   const [dateTo, setDateTo] = useState("");
+-   const [dateFrom, setDateFrom] = useState("");
++ 
+-   const [dateTo, setDateTo] = useState("");
++   // ── Filtered + date-ranged entries (memoized) ──────────────
+- 
++   const filtered = useMemo(() => {
+-   // ── Filtered + date-ranged entries (memoized) ──────────────
++     let result = entries;
+-   const filtered = useMemo(() => {
++ 
+-     let result = entries;
++     // Status filter
+- 
++     if (filter !== "all") {
+-     // Status filter
++       result = result.filter((e) => e.status === filter);
+-     if (filter !== "all") {
++     }
+-       result = result.filter((e) => e.status === filter);
++ 
+-     }
++     // Date range filter
+- 
++     if (dateFrom) {
+-     // Date range filter
++       result = result.filter((e) => e.createdAt.slice(0, 10) >= dateFrom);
+-     if (dateFrom) {
++     }
+-       result = result.filter((e) => e.createdAt.slice(0, 10) >= dateFrom);
++     if (dateTo) {
+-     }
++       result = result.filter((e) => e.createdAt.slice(0, 10) <= dateTo);
+-     if (d
 … [diff truncated]
 
-📌 IDE AST Context: Modified symbols likely include [ProofOfCleanUploaderProps,
-ProofOfCleanUploaderProps, ProofOfCleanUploader, ProofOfCleanUploader]
-
-- **[problem-fix] problem-fix in IdVerification.tsx**: File updated (external):
-  islands/IdVerification.tsx
-
-Content summary (452 lines): import { useRef } from "preact/hooks"; import {
-compressImage } from "../utils/compression.ts";
-
-interface IdVerificationProps { bookingId: string; guestName: string; }
-
-type VerifyStep = | "upload" // initial: pick file | "preview" // file selected,
-ready to submit | "scanning" // POST in progress + animation | "verified" //
-matchScore >= 90, verified | "review" // matchScore < 90, needs manual review |
-"error"; // failed
-
-const ID_TYPES = [ { value: "aadhaar", la
-
-- **[what-changed] Replaced dependency Savings — prevents null/undefined runtime
-  crashes**: -
-
-*
-
-- {/* ── Quick Actions ──────────────────────────────────────── */}
-
-* {/* ── OTA Savings Module ✨ ─────────────────────────────── */}
-
-- <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-
-* <div class="mb-8 p-8 rounded-[2rem] bg-istay-900 border border-gray-800 shadow-2xl relative overflow-hidden group">
-
-- {[
-
-* <div class="absolute top-0 right-0 w-64 h-64 bg-mint-500/10 rounded-full blur-3xl -mr-20 -mt-20" />
-
-- {
-
-* <div class="relative flex flex-col md:flex-row items-center justify-between gap-6">
-
-- href: "/dashboard/properties",
-
-* <div class="text-center md:text-left">
-
-- icon: "🏠",
-
-* <h2 class="text-sm font-800 text-mint-400 uppercase tracking-widest mb-2 flex items-center gap-2 justify-center md:justify-start">
-
-- label: "Add Property",
-
-* <span class="w-2 h-2 rounded-full bg-mint-500 animate-pulse" />
-
-- desc: "Import from Airbnb in seconds",
-
-* Revenue Protection
-
-- color: "hover:border-istay-300",
-
-* </h2>
-
-- },
-
-* <p class="text-3xl font-900 text-white tracking-tight">
-
-- {
-
-* You've saved
-  <span class="text-transparent bg-clip-text bg-gradient-to-r from-mint-300 to-mint-500">{formatINR(Math.round((stats.monthlyEarnings
-  / 0.85) - stats.monthlyEarnings))}</span> in OTA commissions
-
-- href: "#",
-
-* </p>
-
-- icon: "📅",
-
-* <p class="text-gray-400 mt-2 text-sm font-500">
-
-- label: "Sync Calendar",
-
-* *Assuming average 15% commission on Airbnb/MMT. You keep 95% with istay.
-
-- desc: "Block dates from iCal",
-
-* </p>
-
-- color: "hover:border-violet-300",
-
-* </div>
-
-- },
-
-* <div class="flex-shrink-0 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm text-center">
-
-- {
-
-*
-
+📌 IDE AST Context: Modified symbols likely include [FinancialLedgerProps, FinancialLedgerProps, PAGE_SIZE, PAGE_SIZE, FinancialLedger]
+- **[problem-fix] problem-fix in EarningsCalculator.tsx**: -             <div class="border-t border-current border-opacity-10 pt-3 space-y-1">
++             {/* Visual Bar */}
+-               <div class="flex justify-between text-xs text-gray-500">
++             <div class="w-full h-2 bg-gray-100 rounded-full mb-4 overflow-hidden flex">
+-                 <span>Commission</span>
++               <div 
+-                 <span class="font-600">{(commission * 100).toFixed(0)}%</span>
++                 class={`h-full ${name === 'istay' ? 'bg-mint-500' : 'bg-gray-300'}`} 
+-               </div>
++                 style={{ width: `${(1 - commission) * 100}%` }}
+-               <div class="flex justify-between text-xs text-gray-500">
++               />
+-                 <span>Platform fee</span>
++               <div 
+-                 <span class="font-600 text-rose-500">
++                 class={`h-full ${name === 'istay' ? 'bg-mint-200' : 'bg-rose-400'}`} 
+-                   -{formatINR(fee)}
++                 style={{ width: `${commission * 100}%` }}
+-                 </span>
++               />
+-               </div>
++             </div>
+-             </div>
++ 
+-           </div>
++             <div class="border-t border-current border-opacity-10 pt-3 space-y-1">
+-         ))}
++               <div class="flex justify-between text-xs text-gray-500">
+-       </div>
++                 <span>Commission</span>
+- 
++                 <span class="font-600">{(commission * 100).toFixed(0)}%</span>
+-       {/* ── SAVINGS BANNER ──────────────────────────────── */}
++               </div>
+-       <div class="rounded-2xl bg-gradient-to-r from-mint-500 to-emerald-400 p-5 sm:p-6 text-istay-900 shadow-md">
++               <div class="flex justify-between text-xs text-gray-500">
+-         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
++                 <span>Platform fee</span>
+-           <div>
++                 <span class="font-600 text-rose-500">
+-             <p class="text-sm font-800 text-istay-900/80 mb-1"
 … [diff truncated]
 
-📌 IDE AST Context: Modified symbols likely include [OverviewData, OverviewData,
-handler, handler, formatINR]
-
-- **[what-changed] what-changed in [token].tsx**: -
-  <label class="block text-center text-sm font-700 text-gray-900 mb-8 uppercase tracking-widest">Your
-  Rating</p>
-
-* <label class="block text-center text-sm font-700 text-gray-900 mb-8 uppercase tracking-widest">Your
-  Rating</label>
-
-📌 IDE AST Context: Modified symbols likely include [FeedbackData, FeedbackData,
-handler, handler, FeedbackPage]
-
-- **[what-changed] what-changed in index.tsx**: File updated (external):
-  routes/index.tsx
-
-Content summary (449 lines): import { Head } from "$fresh/runtime.ts"; import
-Header from "../components/Header.tsx"; import Footer from
-"../components/Footer.tsx"; import MagicScraperAnimation from
-"../islands/MagicScraperAnimation.tsx"; import ScraperPreview from
-"../islands/ScraperPreview.tsx";
-
-const FEATURES = [ { icon: "💰", title: "One-Time Setup. Forever.", desc: "Pay
-₹1,000 once. Own your booking channel forever. No monthly SaaS fees eating into
-your revenue.", }, { icon: "🤖", title: "AI
-
-- **[discovery] discovery in [propId].tsx**: File updated (external):
-  routes/p/[propId].tsx
-
-Content summary (350 lines): import { type Handlers, type PageProps } from
-"$fresh/server.ts";
-import { Head } from "$fresh/runtime.ts"; import { getBookingById,
-getGuestVerification, getKnowledgeByPropId, getPropertyById, listBlockedDates,
-recordPropertyView } from "../../utils/db.ts"; import { getVibeMatches } from
-"../../utils/recommendations.ts"; import type { Booking, GuestVerification,
-Property, VibeMatch, HostKnowledge } from "../../utils/types.ts"; import
-BookingCalendar from "../../islands/BookingCalendar.tsx"; imp
-
-- **[decision] decision in index.tsx**: - icon: JSX.Element;
-
-* icon: ComponentChildren;
-
-📌 IDE AST Context: Modified symbols likely include [OverviewData, OverviewData,
-handler, handler, formatINR]
-
-- **[convention] decision in index.tsx — confirmed 3x**: - export const handler:
-  Handlers<OverviewData> = {
-
-* export const handler: Handlers<OverviewData, DashboardState> = {
-
-- const { hostId } = ctx.state;
-
-* const { hostId } = ctx.state as DashboardState;
-
-📌 IDE AST Context: Modified symbols likely include [OverviewData, OverviewData,
-handler, handler, formatINR]
-
-- **[discovery] discovery in index.tsx**: File updated (external):
-  routes/dashboard/index.tsx
-
-Content summary (393 lines): import { type Handlers, type PageProps } from
-"$fresh/server.ts";
-import { Head } from "$fresh/runtime.ts"; import { getDashboardStats,
-listBookings, listProperties, getPropertyViewsDaily, getBookingsDaily, } from
-"../../utils/db.ts"; import type { Booking, DashboardState, DashboardStats }
-from "../../utils/types.ts"; import LinkPerformanceChart from
-"../../islands/LinkPerformanceChart.tsx";
-
-interface OverviewData { stats: DashboardStats; recentBookings: Booking[];
-setupFeePaid:
-
-- **[what-changed] Replaced dependency StatCard — prevents null/undefined
-  runtime crashes**: -
-  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-
-* <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-8">
-
-- </div>
-
-* <StatCard
-
--
-
-* label="Link Performance"
-
-- {/* ── Quick Actions ──────────────────────────────────────── */}
-
-* value={String(stats.linkViews7Days)}
-
-- <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-
-* sub="Profile views (7 days)"
-
-- {[
-
-* gradient="bg-gradient-to-br from-mint-500 to-teal-600"
-
-- {
-
-* icon={
-
-- href: "/dashboard/properties",
-
-* <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-
-- icon: "🏠",
-
-* <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
-
-- label: "Add Property",
-
-* <circle cx="12" cy="12" r="3"/>
-
-- desc: "Import from Airbnb in seconds",
-
-* </svg>
-
-- color: "hover:border-istay-300",
-
-* }
-
-- },
-
-* />
-
-- {
-
-* </div>
-
-- href: "#",
-
-*
-
-- icon: "📅",
-
-* {/* ── Quick Actions ──────────────────────────────────────── */}
-
-- label: "Sync Calendar",
-
-* <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-
-- desc: "Block dates from iCal",
-
-* {[
-
-- color: "hover:border-violet-300",
-
-* {
-
-- },
-
-* href: "/dashboard/properties",
-
-- {
-
-* icon: "🏠",
-
-- href: "/contact",
-
-* label: "Add Property",
-
-- icon: "💬",
-
-* desc: "Import from Airbnb in seconds",
-
-- label: "Get Support",
-
-* color: "hover:border-istay-300",
-
-- desc: "We reply in 24–48 hours",
-
-* },
-
-- color: "hover:border-blue-300",
-
-* {
-
-- },
-
-*
-
+📌 IDE AST Context: Modified symbols likely include [SETUP_FEE, SETUP_FEE, Platform, Platform, PLATFORMS]
+- **[problem-fix] problem-fix in ErrorBoundary.tsx**: -   static getDerivedStateFromError(error: Error) {
++   static override getDerivedStateFromError(error: Error) {
+
+📌 IDE AST Context: Modified symbols likely include [Props, Props, State, State, ErrorBoundary]
+- **[what-changed] what-changed in OtaSavingsChart.tsx**: - interface SavingsData {
++ export interface SavingsData {
+
+📌 IDE AST Context: Modified symbols likely include [SavingsData, SavingsData, OtaSavingsChartProps, OtaSavingsChartProps, OtaSavingsChart]
+- **[problem-fix] problem-fix in ErrorBoundary.tsx**: -           <h3 class="text-sm font-700 text-gray-900 mb-1">Component Failed to Load</h3>
++           <h3 class="text-sm font-700 text-gray-900 mb-1">
+-           <p class="text-xs text-gray-500 max-w-sm">
++             Component Failed to Load
+-             Something went wrong while rendering this section. Please refresh the page.
++           </h3>
+-           </p>
++           <p class="text-xs text-gray-500 max-w-sm">
+-         </div>
++             Something went wrong while rendering this section. Please refresh
+-       );
++             the page.
+-     }
++           </p>
+- 
++         </div>
+-     return this.props.children;
++       );
+-   }
++     }
+- }
++ 
+- 
++     return this.props.children;
++   }
++ }
++ 
+
+📌 IDE AST Context: Modified symbols likely include [Props, Props, State, State, ErrorBoundary]
+- **[decision] Optimized Date — avoids unnecessary re-renders in React**: - import { useState, useCallback, useMemo } from "preact/hooks";
++ import { useCallback, useMemo, useState } from "preact/hooks";
+-     const headers = ["Date", "Transaction ID", "Booking Ref", "Gross Amount", "iStay Fee", "Net Payout", "Status"];
++     const headers = [
+-     const rows = filtered.map((e) => [
++       "Date",
+-       new Date(e.createdAt).toISOString().slice(0, 10),
++       "Transaction ID",
+-       e.gatewayOrderId,
++       "Booking Ref",
+-       e.bookingId,
++       "Gross Amount",
+-       e.grossAmount.toString(),
++       "iStay Fee",
+-       e.istayAmount.toString(),
++       "Net Payout",
+-       e.hostAmount.toString(),
++       "Status",
+-       e.status,
++     ];
+-     ]);
++     const rows = filtered.map((e) => [
+- 
++       new Date(e.createdAt).toISOString().slice(0, 10),
+-     const csvContent = [
++       e.gatewayOrderId,
+-       headers.join(","),
++       e.bookingId,
+-       ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
++       e.grossAmount.toString(),
+-     ].join("\n");
++       e.istayAmount.toString(),
+- 
++       e.hostAmount.toString(),
+-     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
++       e.status,
+-     const url = URL.createObjectURL(blob);
++     ]);
+-     const link = document.createElement("a");
++ 
+-     link.href = url;
++     const csvContent = [
+-     link.download = `istay-ledger-${filter}-${new Date().toISOString().slice(0, 10)}.csv`;
++       headers.join(","),
+-     link.click();
++       ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+-     URL.revokeObjectURL(url);
++     ].join("\n");
+-   }, [filtered, filter]);
++ 
+- 
++     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+-   return (
++     const url = URL.createObjectURL(blob);
+-     <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden mt-8">
++     const link = document.createElement("a");
+-       <div class="px-8 py-6 border-b border-gray-50 flex fle
 … [diff truncated]
 
-📌 IDE AST Context: Modified symbols likely include [OverviewData, handler,
-formatINR, formatDate, StatCardProps]
-
-- **[convention] what-changed in index.tsx — confirmed 3x**: -
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 md:pt-32 md:pb-28 text-center">
-
-* <div class="relative max-w-7xl mx-auto px-6 lg:px-8 pt-24 pb-20 md:pt-32 md:pb-28 text-center">
-
-📌 IDE AST Context: Modified symbols likely include [FEATURES, PLATFORMS,
-SCHEMA, Home]
-
-- **[what-changed] what-changed in contact.tsx**: -
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-* <div class="max-w-7xl mx-auto px-6 lg:px-8">
-
-- <div class="max-w-7xl mx-auto px-4 md:px-0 lg:px-8">
-
-* <div class="max-w-7xl mx-auto px-6 lg:px-8">
-
-- Airbnb link (e.g. airbnb.com/rooms/123)
-
-* Property URL (e.g., airbnb.com/rooms/12345678)
-
-📌 IDE AST Context: Modified symbols likely include [SCHEMA, Contact]
-
-- **[convention] Fixed null crash in ResendVerificationBtn — prevents
-  null/undefined runtime c... — confirmed 3x**: -
-
-* import ResendVerificationBtn from "../../islands/ResendVerificationBtn.tsx";
-
-- const getKv = (() => {
-
-*
-
-- let kv: Deno.Kv | null = null;
-
-* const getKv = (() => {
-
-- return async () => {
-
-* let kv: Deno.Kv | null = null;
-
-- if (!kv) kv = await Deno.openKv();
-
-* return async () => {
-
-- return kv;
-
-* if (!kv) kv = await Deno.openKv();
-
-- };
-
-* return kv;
-
-- })();
-
-* };
-
--
-
-* })();
-
-- interface LayoutData {
-
-*
-
-- unreadCount: number;
-
-* interface LayoutData {
-
+📌 IDE AST Context: Modified symbols likely include [FinancialLedgerProps, FinancialLedgerProps, PAGE_SIZE, PAGE_SIZE, FinancialLedger]
+- **[decision] Optimized Record — avoids unnecessary re-renders in React**: - import { useState, useMemo } from "preact/hooks";
++ import { useMemo, useState } from "preact/hooks";
+-   onComplete: (checklist: Record<string, boolean>, photoBase64?: string) => void;
++   onComplete: (
+-   disabled?: boolean;
++     checklist: Record<string, boolean>,
 - }
-
-* unreadCount: number;
-
--
-
-* }
-
-- export const handler: Handlers<LayoutData, DashboardState> = {
-
-*
-
-- GET: async (_req, ctx) => {
-
-* export const handler: Handlers<LayoutData, DashboardState> = {
-
-- // Load unread notification count from KV
-
-* GET: async (_req, ctx) => {
-
-- let unreadCount = 0;
-
-* // Load unread notification count from KV
-
-- try {
-
-* let unreadCount = 0;
-
-- const kv = await getKv();
-
-* try {
-
-- const iter = kv.list<Notification>({
-
-* const kv = await getKv();
-
-- prefix: ["notification", ctx.state.hostId],
-
-* const iter = kv.list<Notification>({
-
-- });
-
-* prefix: ["notification", ctx.state.hostId],
-
-- for await (const entry of iter) {
-
-* });
-
-- if (entry.value && !entry.value.read) {
-
-* for await (const entry of iter) {
-
-- unreadCount++;
-
-* if (entry.value && !entry.value.read) {
-
-- }
-
-* unreadCount++;
-
-- }
-
-* }
-
-- } catch {
-
-* }
-
-- // KV not available — show 0
-
-* } catch {
-
-- }
-
-* // KV not available — show 0
-
--
-
-* }
-
-- ctx.state = { ...ctx.state };
-
-*
-
-- const resp = await ctx.render({ unreadCount });
-
-* ctx.state = { ...ctx.state };
-
-- return resp;
-
-* const resp = await ctx.render({ unreadCount });
-
-- },
-
-* return resp;
-
-- };
-
-* },
-
--
-
-* };
-
-- export default function DashboardLayout(
-
-*
-
-- { Component, url, state, data }: PageProps<LayoutData, DashboardState>,
-
-* export default function DashboardLayout(
-
--
-
++     photoBase64?: string,
+- 
++   ) => void;
+- const CHECKLIST_ITEMS = [
++   disabled?: boolean;
+-   { id: "ac_lights_off", label: "AC/Lights Off" },
++ }
+-   { id: "windows_locked", label: "Windows Locked" },
++ 
+-   { id: "geyser_off", label: "Geyser Off" },
++ const CHECKLIST_ITEMS = [
+-   { id: "key_returned", label: "Key Returned" },
++   { id: "ac_lights_off", label: "AC/Lights Off" },
+- ] as const;
++   { id: "windows_locked", label: "Windows Locked" },
+- 
++   { id: "geyser_off", label: "Geyser Off" },
+- export default function CaretakerChecklist({ bookingId: _bookingId, onComplete, disabled }: CaretakerChecklistProps) {
++   { id: "key_returned", label: "Key Returned" },
+-   const [state, setState] = useState<Record<string, boolean>>({
++ ] as const;
+-     ac_lights_off: false,
++ 
+-     windows_locked: false,
++ export default function CaretakerChecklist(
+-     geyser_off: false,
++   { bookingId: _bookingId, onComplete, disabled }: CaretakerChecklistProps,
+-     key_returned: false,
++ ) {
+-   });
++   const [state, setState] = useState<Record<string, boolean>>({
+-   const [photo, setPhoto] = useState<string | null>(null);
++     ac_lights_off: false,
+- 
++     windows_locked: false,
+-   const allChecked = useMemo(() => {
++     geyser_off: false,
+-     return Object.values(state).every(Boolean) && !!photo;
++     key_returned: false,
+-   }, [state, photo]);
++   });
+- 
++   const [photo, setPhoto] = useState<string | null>(null);
+-   const toggle = (id: string) => {
++ 
+-     if (disabled) return;
++   const allChecked = useMemo(() => {
+-     const newState = { ...state, [id]: !state[id] };
++     return Object.values(state).every(Boolean) && !!photo;
+-     setState(newState);
++   }, [state, photo]);
+-  
 … [diff truncated]
 
-📌 IDE AST Context: Modified symbols likely include [getKv, LayoutData, handler,
-DashboardLayout]
+📌 IDE AST Context: Modified symbols likely include [CaretakerChecklistProps, CaretakerChecklistProps, CHECKLIST_ITEMS, CHECKLIST_ITEMS, CaretakerChecklist]
+- **[trade-off] trade-off in OtaSavingsChart.tsx**: -     1
++     1,
+-           <p class="text-xs text-gray-400 mt-0.5">Estimated commissions retained vs Airbnb/Booking.com</p>
++           <p class="text-xs text-gray-400 mt-0.5">
+-         </div>
++             Estimated commissions retained vs Airbnb/Booking.com
+- 
++           </p>
+-         {/* Summary pills */}
++         </div>
+-         <div class="flex items-center gap-3">
++ 
+-           <div class="flex items-center gap-1.5 px-3 py-1.5 bg-mint-50 rounded-lg">
++         {/* Summary pills */}
+-             <span class="w-2.5 h-2.5 rounded-full bg-mint-500 animate-pulse" />
++         <div class="flex items-center gap-3">
+-             <span class="text-xs font-800 text-mint-700">
++           <div class="flex items-center gap-1.5 px-3 py-1.5 bg-mint-50 rounded-lg">
+-               ₹{totalSavings.toLocaleString("en-IN")} Total Saved
++             <span class="w-2.5 h-2.5 rounded-full bg-mint-500 animate-pulse" />
+-             </span>
++             <span class="text-xs font-800 text-mint-700">
+-           </div>
++               ₹{totalSavings.toLocaleString("en-IN")} Total Saved
+-         </div>
++             </span>
+-       </div>
++           </div>
+- 
++         </div>
+-       {/* Chart Grid */}
++       </div>
+-       <div class="relative">
++ 
+-         <div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
++       {/* Chart Grid */}
+-           {[0, 1, 2, 3].map((i) => (
++       <div class="relative">
+-             <div key={i} class="border-b border-gray-50 w-full h-0" />
++         <div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+-           ))}
++           {[0, 1, 2, 3].map((i) => (
+-         </div>
++             <div key={i} class="border-b border-gray-50 w-full h-0" />
+- 
++           ))}
+-         {/* Bars */}
++         </div>
+-         <div class="relative flex items-end justify-between gap-4 sm:gap-6 h-44">
++ 
+-           {data.map((month) => {
++         {/* Bars */}
+-             const barHeight = ma
+… [diff truncated]
+
+📌 IDE AST Context: Modified symbols likely include [SavingsData, SavingsData, OtaSavingsChartProps, OtaSavingsChartProps, OtaSavingsChart]
+- **[what-changed] Replaced preact/hooks with preact/hooks — avoids unnecessary re-renders in React**: - import { useState, useCallback } from "preact/hooks";
++ import { useCallback, useState } from "preact/hooks";
+- export default function SettingsTabs({ initialTab = "general", tabs, children }: SettingsTabsProps) {
++ export default function SettingsTabs(
+-   const [activeTab, setActiveTab] = useState(initialTab);
++   { initialTab = "general", tabs, children }: SettingsTabsProps,
+- 
++ ) {
+-   // Update URL without refresh
++   const [activeTab, setActiveTab] = useState(initialTab);
+-   const switchTab = useCallback((id: string) => {
++ 
+-     setActiveTab(id);
++   // Update URL without refresh
+-     const url = new URL(globalThis.location.href);
++   const switchTab = useCallback((id: string) => {
+-     url.searchParams.set("tab", id);
++     setActiveTab(id);
+-     globalThis.history.pushState({}, "", url);
++     const url = new URL(globalThis.location.href);
+-   }, []);
++     url.searchParams.set("tab", id);
+- 
++     globalThis.history.pushState({}, "", url);
+-   return (
++   }, []);
+-     <div class="space-y-6">
++ 
+-       {/* Tab Navigation */}
++   return (
+-       <div class="flex items-center gap-1 p-1 bg-gray-100 rounded-2xl w-fit overflow-x-auto no-scrollbar">
++     <div class="space-y-6">
+-         {tabs.map((tab) => (
++       {/* Tab Navigation */}
+-           <button
++       <div class="flex items-center gap-1 p-1 bg-gray-100 rounded-2xl w-fit overflow-x-auto no-scrollbar">
+-             type="button"
++         {tabs.map((tab) => (
+-             key={tab.id}
++           <button
+-             onClick={() => switchTab(tab.id)}
++             type="button"
+-             class={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-700 transition-all whitespace-nowrap ${
++             key={tab.id}
+-               activeTab === tab.id
++             onClick={() => switchTab(tab.id)}
+-                 ? "bg-white text-gray-900 shadow-sm"
++             class={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-700 transition-all whitespace-nowrap ${
+-  
+… [diff truncated]
+
+📌 IDE AST Context: Modified symbols likely include [Tab, Tab, SettingsTabsProps, SettingsTabsProps, SettingsTabs]
+- **[what-changed] Refactored Step logic**: - import { useState, useEffect } from "preact/hooks";
++ import { useEffect, useState } from "preact/hooks";
+-            <span class={`text-[10px] sm:text-xs text-gray-500 font-mono overflow-hidden whitespace-nowrap transition-opacity duration-300 ${step >= 1 ? 'opacity-100' : 'opacity-0'}`}>
++           <span
+-              https://airbnb.com/h/beautiful-villa-stay
++             class={`text-[10px] sm:text-xs text-gray-500 font-mono overflow-hidden whitespace-nowrap transition-opacity duration-300 ${
+-            </span>
++               step >= 1 ? "opacity-100" : "opacity-0"
+-         </div>
++             }`}
+-       </div>
++           >
+- 
++             https://airbnb.com/h/beautiful-villa-stay
+-       <div class="flex-1 relative flex flex-col items-center justify-center p-6 bg-white overflow-hidden">
++           </span>
+-         
++         </div>
+-         {/* Step 0: Idle/Waiting */}
++       </div>
+-         <div class={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-out ${step === 0 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
++ 
+-           <div class="w-16 h-16 rounded-2xl bg-mint-50 text-mint-600 flex items-center justify-center mb-4 border border-mint-100 shadow-sm">
++       <div class="flex-1 relative flex flex-col items-center justify-center p-6 bg-white overflow-hidden">
+-             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
++         {/* Step 0: Idle/Waiting */}
+-               <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
++         <div
+-               <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
++           class={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-out ${
+-             </svg>
++             step === 0
+-           </div>
++               ? "opac
+… [diff truncated]
+
+📌 IDE AST Context: Modified symbols likely include [MagicScraperAnimation, MagicScraperAnimation]
+- **[discovery] discovery in AddProperty.tsx**: File updated (external): islands/AddProperty.tsx
+
+Content summary (494 lines):
+import { useSignal } from "@preact/signals";
+import type { ScrapedListing } from "../utils/types.ts";
+
+// ── Step State Machine ────────────────────────────────────────
+type Step = "idle" | "loading" | "preview" | "saving" | "success" | "error";
+
+// ── Skeleton Loader ───────────────────────────────────────────
+function SkeletonPulse({ class: cls }: { class: string }) {
+  return (
+    <div
+      class={`animate-pulse bg-gray-200 rounded-xl ${cls}`}
+      aria-hidden="true"
+    />
+  );
+}
+
+functio
+- **[what-changed] what-changed in BookingCalendar.tsx**: File updated (external): islands/BookingCalendar.tsx
+
+Content summary (407 lines):
+import { computed, useSignal } from "@preact/signals";
+import { useEffect } from "preact/hooks";
+
+interface BookingCalendarProps {
+  /** ISO date strings (YYYY-MM-DD) that are blocked/unavailable */
+  blockedDates: string[];
+  /** Nightly rate in INR */
+  basePrice: number;
+  /** Property ID for linking to checkout */
+  propId: string;
+}
+
+// Days header (Monday-start)
+const DAY_LABELS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+
+- **[problem-fix] problem-fix in CheckoutForm.tsx**: File updated (external): islands/CheckoutForm.tsx
+
+Content summary (316 lines):
+import { useSignal } from "@preact/signals";
+
+interface CheckoutFormProps {
+  propId: string;
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+  amount: number;
+  propertyName: string;
+}
+
+type FormStep = "details" | "submitting" | "redirecting" | "error";
+
+function FloatingInput({
+  id,
+  label,
+  type = "text",
+  value,
+  onInput,
+  required = true,
+  pattern,
+  autocomplete,
+}: {
+  id: string;
+  label: string;
+  type?: string;
+  value: string;
+  onInput: (v: string) => void;
+  required
+- **[what-changed] what-changed in DashboardSidebar.tsx**: File updated (external): islands/DashboardSidebar.tsx
+
+Content summary (383 lines):
+import { useEffect, useState } from "preact/hooks";
+import { type ComponentChildren } from "preact";
+
+interface NavItem {
+  href: string;
+  label: string;
+  icon: ComponentChildren;
+  exact?: boolean;
+}
+
+interface SidebarProps {
+  currentPath: string;
+}
+
+const LEGAL_LINKS = [
+  { href: "/legal/terms", label: "Terms & Conditions" },
+  { href: "/legal/privacy", label: "Privacy Policy" },
+];
+
+export default function DashboardSidebar({ currentPath }: SidebarProps) {
+  const [activePath, setActivePat

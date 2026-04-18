@@ -144,6 +144,38 @@ export default function PricingCheckout({ hostId }: PricingCheckoutProps) {
         </p>
       )}
 
+      {/* Trust Badges */}
+      <div class="mt-8 flex flex-col items-center">
+        <div class="flex items-center gap-3 mb-3">
+          <p class="text-[10px] uppercase tracking-widest text-gray-400 font-700">
+            Secured by Razorpay
+          </p>
+          <span class="px-2 py-0.5 rounded text-[9px] font-800 tracking-wider bg-gray-100 text-gray-600 uppercase">
+            GST Invoice Available
+          </span>
+        </div>
+        <div class="flex items-center gap-4 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
+          <svg width="32" height="20" viewBox="0 0 32 20" fill="none" aria-label="SSL Secured">
+            <rect width="32" height="20" rx="3" fill="#ffffff" stroke="#e5e7eb"/>
+            <path d="M16 5V8H12V5C12 2.79086 13.7909 1 16 1C18.2091 1 20 2.79086 20 5V8H16V5Z" fill="#10B981" />
+            <rect x="10" y="8" width="12" height="10" rx="1.5" fill="#10B981"/>
+          </svg>
+          <svg width="32" height="20" viewBox="0 0 32 20" fill="none" aria-label="UPI">
+            <rect width="32" height="20" rx="3" fill="#ffffff" stroke="#e5e7eb"/>
+            <text x="6" y="14" font-family="sans-serif" font-weight="900" font-size="10" fill="#1f2937">UPI</text>
+          </svg>
+          <svg width="32" height="20" viewBox="0 0 32 20" fill="none" aria-label="Visa">
+            <rect width="32" height="20" rx="3" fill="#ffffff" stroke="#e5e7eb"/>
+            <text x="3" y="14" font-family="sans-serif" font-weight="900" font-size="10" fill="#1a1f71" font-style="italic">VISA</text>
+          </svg>
+          <svg width="32" height="20" viewBox="0 0 32 20" fill="none" aria-label="Mastercard">
+            <rect width="32" height="20" rx="3" fill="#ffffff" stroke="#e5e7eb"/>
+            <circle cx="12" cy="10" r="6" fill="#eb001b" fill-opacity="0.8"/>
+            <circle cx="20" cy="10" r="6" fill="#f79e1b" fill-opacity="0.8"/>
+          </svg>
+        </div>
+      </div>
+
       {/* Razorpay script injection */}
       <script src="https://checkout.razorpay.com/v1/checkout.js" async />
     </div>

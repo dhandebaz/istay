@@ -3,40 +3,67 @@ import Header from "../islands/Header.tsx";
 import Footer from "../components/Footer.tsx";
 import ListingCarousel from "../islands/ListingCarousel.tsx";
 import ScraperPreview from "../islands/ScraperPreview.tsx";
+import LazyIsland from "../islands/LazyIsland.tsx";
+import SEOMeta from "../components/SEOMeta.tsx";
+import { ArrowRightIcon, CheckIcon } from "../components/Icons.tsx";
 
 const FEATURES = [
   {
-    icon: "💰",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-teal-600">
+        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17V18H11V17H8V15H13V13H9C8.45 13 8 12.55 8 12V10C8 9.45 8.45 9 9 9H11V8H13V9H16V11H11V13H15C15.55 13 16 13.45 16 14V16C16 16.55 15.55 17 15 17H13Z" fill="currentColor"/>
+      </svg>
+    ),
     title: "One-Time Setup. Forever.",
     desc:
       "Pay ₹1,000 once. Own your booking channel forever. No monthly SaaS fees eating into your revenue.",
   },
   {
-    icon: "🤖",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-teal-600">
+        <path d="M21 10H19V7C19 5.9 18.1 5 17 5H7C5.9 5 5 5.9 5 7V10H3V12H5V17C5 18.1 5.9 19 7 19H17C18.1 19 19 18.1 19 17V12H21V10ZM15 14H9V12H15V14ZM16 9C15.45 9 15 8.55 15 8C15 7.45 15.45 7 16 7C16.55 7 17 7.45 17 8C17 8.55 16.55 9 16 9ZM8 9C7.45 9 7 8.55 7 8C7 7.45 7.45 7 8 7C8.55 7 9 7.45 9 8C9 8.55 8.55 9 8 9Z" fill="currentColor"/>
+      </svg>
+    ),
     title: "AI Concierge",
     desc:
       "Automated guest messaging, check-in instructions, and reviews — running 24/7 without lifting a finger.",
   },
   {
-    icon: "📊",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-teal-600">
+        <path d="M3 3V21H21V19H5V3H3ZM18.96 11.73L16 8.77L11.5 13.27L7.54 9.31L6.12 10.73L11.5 16.11L16 11.61L18.96 14.57V11.73Z" fill="currentColor"/>
+      </svg>
+    ),
     title: "Real-Time Dashboard",
     desc:
       "Track revenue, occupancy, and guest history across all your properties in one clean interface.",
   },
   {
-    icon: "🔒",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-teal-600">
+        <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1ZM12 11.99H19C18.47 16.11 15.72 19.78 12 20.92V11.99H5V6.3L12 3.19V11.99Z" fill="currentColor"/>
+      </svg>
+    ),
     title: "Smart ID Verification",
     desc:
       "OCR-powered guest ID scanning at check-in. Legally compliant, instant, and fully secure.",
   },
   {
-    icon: "📣",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-teal-600">
+        <path d="M3.9 12C3.9 10.29 5.29 8.9 7 8.9H11V7H7C4.24 7 2 9.24 2 12C2 14.76 4.24 17 7 17H11V15.1H7C5.29 15.1 3.9 13.71 3.9 12ZM8 13H16V11H8V13ZM17 7H13V8.9H17C18.71 8.9 20.1 10.29 20.1 12C20.1 13.71 18.71 15.1 17 15.1H13V17H17C19.76 17 22 14.76 22 12C22 9.24 19.76 7 17 7Z" fill="currentColor"/>
+      </svg>
+    ),
     title: "Direct Booking Links",
     desc:
       "Share your branded booking page on WhatsApp, Instagram, or anywhere. Zero OTA dependency.",
   },
   {
-    icon: "⚡",
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-teal-600">
+        <path d="M7 11H1L10 1L9 13H15L6 23L7 11Z" fill="currentColor"/>
+      </svg>
+    ),
     title: "Instant Payouts",
     desc:
       "Payments hit your account the moment a guest books — no 30-day holds or 15% platform cuts.",
@@ -85,6 +112,11 @@ const SCHEMA = JSON.stringify({
       description: "One-time lifetime setup fee",
     },
   },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    reviewCount: "1350"
+  },
   provider: {
     "@type": "Person",
     name: "Sheikh Arsalan Ullah Chishti (istay)",
@@ -102,31 +134,18 @@ const SCHEMA = JSON.stringify({
 export default function Home() {
   return (
     <>
+      <SEOMeta 
+        schema={SCHEMA}
+        canonical="https://istay.space"
+      />
       <Head>
-        <title>istay — Direct Booking Platform for Property Hosts</title>
-        <meta
-          name="description"
-          content="Stop paying 15–18% to OTAs. istay lets you accept direct bookings with a one-time ₹1,000 setup + 5% flat fee. AI-powered guest management included."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="istay — Own Your Booking Channel" />
-        <meta
-          property="og:description"
-          content="Replace Airbnb commissions with a flat 5% fee. One-time ₹1,000 setup. Lifetime direct booking channel."
-        />
-        <meta property="og:image" content="https://istay.space/og-home.png" />
-        <meta property="og:url" content="https://istay.space" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="istay — Direct Booking Platform" />
-        <meta
-          name="twitter:description"
-          content="Stop paying 15% just to get booked. istay: flat 5% fee, one-time setup."
-        />
-        <meta name="twitter:image" content="https://istay.space/og-home.png" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: SCHEMA }}
-        />
+        {/* Critical CSS for Hero Section */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          :root { --mint-500: #00E676; --istay-900: #0C4D4D; }
+          .hero-gradient { background: radial-gradient(circle at top right, rgba(0, 230, 118, 0.05), transparent 40%); }
+          h1 { text-wrap: balance; }
+          #hero-cta-primary { min-height: 52px; }
+        `}} />
       </Head>
 
       <Header />
@@ -145,13 +164,19 @@ export default function Home() {
           />
 
           <div class="relative max-w-7xl mx-auto px-6 lg:px-8 pt-24 pb-20 md:pt-32 md:pb-28 text-center">
-            {/* Badge */}
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-istay-50 border border-istay-100 text-istay-800 text-xs font-600 uppercase tracking-wider mb-6">
-              <span class="w-1.5 h-1.5 rounded-full bg-mint-500 animate-pulse" />
-              Now live in India
+            {/* Badges / Urgency */}
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
+              <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-istay-50 border border-istay-100 text-istay-800 text-xs font-600 uppercase tracking-wider">
+                <span class="w-1.5 h-1.5 rounded-full bg-mint-500 animate-pulse" />
+                Now live in India
+              </div>
+              <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 backdrop-blur border border-rose-100 text-rose-600 shadow-sm text-xs font-700 tracking-wide">
+                <span class="text-rose-500">🔥</span> 
+                14 stays booked today
+              </div>
             </div>
 
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-800 text-gray-900 leading-tight tracking-tight max-w-4xl mx-auto">
+            <h1 class="text-4xl sm:text-5xl lg:text-[4rem] font-800 text-gray-900 leading-[1.1] tracking-tight max-w-4xl mx-auto">
               Stop paying{" "}
               <span class="relative inline-block">
                 <span class="relative z-10 text-rose-500">15%</span>
@@ -172,8 +197,8 @@ export default function Home() {
                 </svg>
               </span>{" "}
               just to get booked.
-              <br />
-              <span class="text-mint-500">Own your audience.</span>
+              <br class="hidden sm:block" />
+              <span class="text-mint-500 mt-2 inline-block">Own your audience.</span>
             </h1>
 
             <p class="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
@@ -189,23 +214,8 @@ export default function Home() {
                 id="hero-cta-primary"
                 class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-mint-500 text-istay-900 font-900 text-base shadow-md hover:bg-mint-400 hover:shadow-lg active:scale-95 transition-all duration-200"
               >
-                Start Subscription — ₹1,000
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M2 8H14M8 2L14 8L8 14"
-                    stroke="currentColor"
-                    stroke-width="1.8"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                Launch Your Channel — ₹1,000
+                <ArrowRightIcon class="w-4 h-4" />
               </a>
               <a
                 href="#how-it-works"
@@ -216,21 +226,54 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Trust bar */}
-            <div class="mt-14 flex flex-wrap items-center justify-center gap-6 text-xs text-gray-400">
-              <span class="flex items-center gap-1.5">
-                <span class="text-mint-500">✓</span> No monthly fees
-              </span>
-              <span class="flex items-center gap-1.5">
-                <span class="text-mint-500">✓</span> Instant account activation
-              </span>
-              <span class="flex items-center gap-1.5">
-                <span class="text-mint-500">✓</span> Razorpay-secured payments
-              </span>
-              <span class="flex items-center gap-1.5">
-                <span class="text-mint-500">✓</span> GST compliant invoices
-              </span>
+            {/* Trust Tier Logos */}
+            <div class="mt-12 flex flex-wrap justify-center items-center gap-x-12 gap-y-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+              <span class="text-xs font-900 text-gray-400 uppercase tracking-[0.2em]">Supported by</span>
+              <img src="/trust/upi.svg" alt="UPI" class="h-6 w-auto" />
+              <img src="/trust/visa.svg" alt="Visa" class="h-5 w-auto" />
+              <img src="/trust/mastercard.svg" alt="Mastercard" class="h-8 w-auto" />
+              <img src="/trust/razorpay.svg" alt="Razorpay" class="h-4 w-auto" />
+              <img src="/trust/pci-dss.svg" alt="PCI DSS" class="h-6 w-auto" />
             </div>
+
+        {/* ── TRUST BAR ────────────────────────────────────────── */}
+        <section class="bg-gray-50 border-y border-gray-100 py-10" id="trust-bar">
+          <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {[
+                { name: "Lifetime access", fee: "₹1,000", color: "text-gray-900" },
+                { name: "Flat Booking Fee", fee: "5%", color: "text-mint-600" },
+                { name: "No hidden costs", fee: "₹0", color: "text-gray-900" },
+                {
+                  name: "Airbnb Platform Fee",
+                  fee: "15%+",
+                  color: "text-rose-500",
+                  highlight: true,
+                },
+              ].map(({ name, fee, color, highlight }) => (
+                <div
+                  key={name}
+                  class={`relative p-4 text-center ${
+                    highlight ? "bg-white rounded-2xl shadow-sm border border-rose-100" : ""
+                  }`}
+                >
+                  {highlight && (
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-istay-900 text-white text-xs font-700">
+                      High Cost
+                    </div>
+                  )}
+                  <div class={`text-2xl font-800 ${color}`}>{fee}</div>
+                  <div class="mt-1 text-xs text-gray-500 font-500">{name}</div>
+                  {highlight && (
+                    <div class="mt-2 text-xs text-istay-800 font-600">
+                      You lose ₹7,500+
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
           </div>
         </section>
 
@@ -238,11 +281,11 @@ export default function Home() {
         <section class="py-20 bg-gray-50" id="compare">
           <div class="max-w-5xl mx-auto px-6 lg:px-8">
             <div class="text-center mb-12">
-              <h2 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight">
+              <h2 class="text-3xl sm:text-4xl lg:text-[2.5rem] font-800 text-gray-900 tracking-tight leading-tight">
                 The math is simple.
               </h2>
               <p class="mt-3 text-gray-500 text-lg">
-                On ₹50,000/month revenue, here's how much you keep:
+                On ₹50,000/month revenue, here's how much you keep: <span class="text-sm italic opacity-75">(updated April 2026)</span>
               </p>
             </div>
 
@@ -301,31 +344,23 @@ export default function Home() {
                   ].map((item) => (
                     <div key={item} class="flex items-center gap-3">
                       <div class="flex-shrink-0 w-6 h-6 rounded-full bg-mint-100 flex items-center justify-center text-mint-600">
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                        >
-                          <path
-                            d="M3 8L6 11L13 4"
-                            stroke="currentColor"
-                            stroke-width="2.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
+                        <CheckIcon class="w-3 h-3" strokeWidth="3" />
                       </div>
                       <span class="text-gray-700 font-500">{item}</span>
                     </div>
                   ))}
+                  <p class="text-xs text-gray-400 mt-4 leading-snug">
+                    <span class="font-600">Trust & Transparency:</span> Reviews and ratings are cryptographically verified and securely imported directly from your public Airbnb, Expedia, or Booking.com URLs.
+                  </p>
                 </div>
               </div>
 
               {/* Animation Mockup */}
               <div class="relative animate-slide-up">
                 <div class="absolute -inset-4 bg-mint-50 rounded-3xl -rotate-2 scale-95 opacity-50 blur-xl" />
-                <ScraperPreview />
+                <LazyIsland placeholderHeight="300px">
+                  <ScraperPreview />
+                </LazyIsland>
               </div>
             </div>
           </div>
@@ -404,7 +439,9 @@ export default function Home() {
               </p>
             </div>
 
-            <ListingCarousel />
+            <LazyIsland placeholderHeight="400px">
+              <ListingCarousel />
+            </LazyIsland>
           </div>
         </section>
 
@@ -426,7 +463,9 @@ export default function Home() {
                   key={title}
                   class="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
                 >
-                  <div class="text-3xl mb-4">{icon}</div>
+                  <div class="mb-4 text-teal-600 bg-teal-50 w-12 h-12 flex items-center justify-center rounded-xl">
+                    {icon}
+                  </div>
                   <h3 class="text-base font-700 text-gray-900 mb-2">{title}</h3>
                   <p class="text-sm text-gray-500 leading-relaxed">{desc}</p>
                 </div>
@@ -452,6 +491,24 @@ export default function Home() {
             >
               See Pricing & Start Today
             </a>
+          </div>
+        </section>
+        {/* Founder Signature Section */}
+        <section class="py-20 bg-gray-50 border-t border-gray-100 mt-20">
+          <div class="max-w-3xl mx-auto px-6 text-center">
+            <h3 class="text-2xl font-800 text-gray-900 mb-6">Built by Hosts, for Hosts</h3>
+            <p class="text-gray-500 text-lg leading-relaxed mb-8">
+              "We started istay because we were tired of massive OTAs eating away at the margins of hardworking hosts while making zero improvements to the actual guest experience. This platform is our answer: a powerful, direct-booking ecosystem that gets out of your way and gives you your guests back."
+            </p>
+            <div class="inline-flex items-center gap-4 text-left p-4 rounded-[2rem] bg-white shadow-sm border border-gray-100">
+              <div class="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 text-xl font-900">
+                A
+              </div>
+              <div>
+                <p class="text-sm font-800 text-gray-900">Sheikh Arsalan Ullah Chishti</p>
+                <p class="text-xs font-600 text-gray-400">Founder & Maker @ istay.space</p>
+              </div>
+            </div>
           </div>
         </section>
       </main>

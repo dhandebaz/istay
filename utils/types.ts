@@ -26,6 +26,13 @@ export interface Host {
   legacyApiKeyExpires?: string;
   /** Active webhook subscriptions for this agency */
   webhooks?: WebhookConfig[];
+  /** Custom branding and compliance settings */
+  settings?: {
+    logoUrl?: string;
+    gstin?: string;
+    businessName?: string;
+    phone?: string;
+  };
 }
 
 export interface WebhookConfig {
@@ -72,6 +79,18 @@ export interface Property {
   caretakerToken?: string;
   caretakerPhone?: string;
   caretakerName?: string;
+  /** Dynamic pricing rules defined by the host */
+  pricingSettings?: {
+    weekendSurcharge?: number; // decimal e.g. 0.15 for 15%
+    seasonalAdjustments?: Array<{
+      startDate: string; // MM-DD
+      endDate: string; // MM-DD
+      adjustment: number; // decimal e.g. 0.20 for +20%
+      label: string;
+    }>;
+    minPrice?: number;
+    maxPrice?: number;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -375,4 +394,20 @@ export interface DashboardState {
   hostEmail: string;
   role: "owner" | "manager" | "staff" | "accountant";
   emailVerified: boolean;
+}
+
+// ── REVIEWS ───────────────────────────────────────────────────
+
+export interface Review {
+  id: string;
+  propertyId: string;
+  bookingId?: string; // Optional if imported
+  guestName: string;
+  rating: number; // 1-5
+  comment: string;
+  /** "direct" (istay) or "imported" (Airbnb/MMT) */
+  source: "direct" | "imported";
+  /** platform badge label e.g. "Verified Guest" or "Airbnb" */
+  sourceLabel: string;
+  createdAt: string;
 }

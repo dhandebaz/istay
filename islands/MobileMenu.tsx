@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 
 interface NavLink {
   href: string;
@@ -14,6 +14,18 @@ export default function MobileMenu({ links }: MobileMenuProps) {
 
   const toggle = () => setOpen((v) => !v);
   const close = () => setOpen(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) {
+        close();
+      }
+    };
+    if (open) {
+      globalThis.addEventListener("keydown", handleKeyDown);
+    }
+    return () => globalThis.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   return (
     <div class="md:hidden">

@@ -50,6 +50,31 @@ export default function DashboardLayout(
 
       {/* ── Main Panel ───────────────────────────────────────── */}
       <div class="flex flex-col flex-1 overflow-hidden">
+        {/* Legal Update Banner */}
+        <div class="bg-istay-900 px-6 py-2.5 flex items-center justify-between shadow-md z-10 overflow-hidden relative group">
+          <div class="absolute inset-0 bg-gradient-to-r from-mint-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+          <div class="flex items-center gap-3 relative z-10">
+            <span class="flex-shrink-0 text-mint-500">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </span>
+            <p class="text-[11px] font-700 text-white tracking-wide uppercase">
+              <span class="text-mint-500">Updated:</span> Our host agreement and direct booking terms were updated on April 15, 2026.
+            </p>
+          </div>
+          <a
+            href="/legal/terms"
+            class="relative z-10 text-[10px] font-900 bg-white/10 text-white px-3 py-1 rounded-full border border-white/20 hover:bg-white hover:text-istay-900 transition-all uppercase tracking-widest"
+          >
+            Review Changes
+          </a>
+        </div>
+
         {/* Email Verification Banner */}
         {state?.emailVerified === false && (
           <div class="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center justify-between shadow-sm z-10 transition-all">
