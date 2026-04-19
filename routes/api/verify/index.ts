@@ -51,43 +51,39 @@ TASK:
 1. Extract the following fields from this ID document image:
    - "name": Full name as printed on the ID
    - "dob": Date of birth (format: YYYY-MM-DD if visible, otherwise "not visible")
-   - "id_number": Full ID number as printed (Aadhaar: XXXX-XXXX-XXXX, Passport: alphanumeric, DL: state code + number)
+   - "id_number": Full ID number as printed
    - "address": Full address if present, otherwise "not visible"
+   - "gender": "male", "female", "other", or "not visible"
+   - "nationality": Country of citizenship (ISO code or Full Name)
+   - "id_expiry": Expiry date if present (YYYY-MM-DD or "not visible")
+   - "visa_details": (For Passports only) Object with keys "number", "expiry", "entry_date"
 
 2. Compare the extracted name with the Guest Name: "${guestName}"
    - Calculate a "match_score" from 0 to 100:
      - 100 = exact match
-     - 90-99 = minor variation (e.g., middle name present/absent, spelling difference)
-     - 70-89 = partial match (first name matches but last name differs)
-     - 0-69 = poor match (different person likely)
-   - Be lenient with common Indian name variations (e.g., "Kumar" vs "Kumaar", initials)
+     - 90-99 = minor variation
+     - 70-89 = partial match
+     - 0-69 = poor match
+   - Be lenient with common Indian name variations.
 
 3. Check for document quality issues. Add to "flags" array if any:
-   - "blurred" — text is not clearly readable
-   - "edited" — signs of digital manipulation or photoshop
-   - "low_quality" — low resolution or poor lighting
-   - "expired" — if expiry date is visible and past
-   - "partial" — part of the document is cut off or missing
+   - "blurred", "edited", "low_quality", "expired", "partial"
 
 RESPOND WITH ONLY a JSON object in this exact format:
 {
   "name": "extracted name",
-  "dob": "YYYY-MM-DD or not visible",
+  "dob": "YYYY-MM-DD",
   "id_number": "extracted ID number",
-  "address": "extracted address or not visible",
+  "address": "extracted address",
+  "gender": "male|female|other|not visible",
+  "nationality": "Indian|USA|etc",
+  "id_expiry": "YYYY-MM-DD",
+  "visa_details": { "number": "...", "expiry": "...", "entry_date": "..." },
   "match_score": 95,
   "flags": []
 }
 
-If the image is NOT a government ID document, return:
-{
-  "name": "",
-  "dob": "",
-  "id_number": "",
-  "address": "",
-  "match_score": 0,
-  "flags": ["not_an_id_document"]
-}`;
+If the image is NOT a government ID document, return all fields empty and flags: ["not_an_id_document"]`;
 }
 
 export const handler: Handlers = {
@@ -250,9 +246,15 @@ export const handler: Handlers = {
       dob: ocrResult.dob !== "not visible" ? ocrResult.dob : undefined,
       idNumber: ocrResult.id_number || undefined,
       idObjectKey,
-      address: ocrResult.address !== "not visible"
-        ? ocrResult.address
-        : undefined,
+      address: ocrResult.address !== "not visible" ? ocrResult.address : undefined,
+      gender: (ocrResult.gender as any) || "not_visible",
+      nationality: ocrResult.nationality,
+      idExpiry: ocrResult.id_expiry,
+      visaDetails: ocrResult.visa_details ? {
+        number: ocrResult.visa_details.number,
+        expiry: ocrResult.visa_details.expiry,
+        entryDate: ocrResult.visa_details.entry_date,
+      } : undefined,
       matchScore,
       flags,
       rawResponse: JSON.stringify(ocrResult),

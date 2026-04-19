@@ -2,15 +2,17 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 import {
   getBookingById,
+  getHost,
   getLedgerEntry,
   getPropertyById,
 } from "../../utils/db.ts";
-import type { Booking, LedgerEntry, Property } from "../../utils/types.ts";
+import type { Booking, Host, LedgerEntry, Property } from "../../utils/types.ts";
 
 interface InvoiceData {
   booking: Booking;
   property: Property | null;
   ledger: LedgerEntry | null;
+  host: Host | null;
 }
 
 export const handler: Handlers<InvoiceData> = {
@@ -24,12 +26,14 @@ export const handler: Handlers<InvoiceData> = {
       getLedgerEntry(bookingId),
     ]);
 
-    return ctx.render({ booking, property, ledger });
+    const host = property ? await getHost(property.hostId) : null;
+
+    return ctx.render({ booking, property, ledger, host });
   },
 };
 
 export default function InvoicePage({ data, url }: PageProps<InvoiceData>) {
-  const { booking, property, ledger } = data;
+  const { booking, property, ledger, host } = data;
 
   const grossAmount = ledger?.grossAmount || booking.amount;
   const istayFee = ledger?.istayAmount || (booking.amount * 0.05);
@@ -105,12 +109,29 @@ export default function InvoicePage({ data, url }: PageProps<InvoiceData>) {
 
             <div class="flex flex-col sm:flex-row justify-between items-start gap-8 mb-16 border-b border-gray-100 pb-12">
               <div>
-                <h1 class="text-3xl font-900 text-teal-600 mb-2">istay</h1>
-                <p class="text-sm text-gray-500 font-500 leading-relaxed">
-                  Ghaffar Manzil, Okhla<br />
-                  New Delhi, Delhi 110025<br />
-                  India
+                {host?.settings?.logoUrl
+                  ? (
+                    <img
+                      src={host.settings.logoUrl}
+                      alt={host.settings.businessName || "Host Logo"}
+                      class="h-12 object-contain mb-4"
+                    />
+                  )
+                  : <h1 class="text-3xl font-900 text-teal-600 mb-2">istay</h1>}
+                <p class="text-sm text-gray-500 font-500 leading-relaxed max-w-xs whitespace-pre-line">
+                  {host?.settings?.businessAddress || (
+                    <>
+                      Ghaffar Manzil, Okhla<br />
+                      New Delhi, Delhi 110025<br />
+                      India
+                    </>
+                  )}
                 </p>
+                {host?.settings?.gstin && (
+                  <p class="text-[10px] font-800 text-gray-400 mt-3 tracking-widest uppercase">
+                    GSTIN: {host.settings.gstin}
+                  </p>
+                )}
               </div>
               <div class="sm:text-right">
                 <h2 class="text-xl font-900 text-gray-900 mb-1">TAX INVOICE</h2>

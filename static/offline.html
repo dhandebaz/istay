@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline | istay</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f9fafb;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .card {
+            background: white;
+            padding: 3rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            max-width: 400px;
+            width: 90%;
+            border: 1px border #f3f4f6;
+        }
+        h1 { font-weight: 800; margin-bottom: 0.5rem; color: #0d9488; }
+        p { color: #6b7280; font-size: 0.9rem; line-height: 1.5; }
+        .btn {
+            display: inline-block;
+            margin-top: 1.5rem;
+            background: #111827;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>you're offline</h1>
+        <p>It looks like you've lost connection. Don't worry, some parts of istay (like the caretaker portal) might still work in read-only mode.</p>
+        <a href="javascript:window.location.reload()" class="btn">Try Again</a>
+    </div>
+</body>
+</html>

@@ -35,6 +35,12 @@ export const handler: Handlers<SettingsPageData, DashboardState> = {
     const email = (form.get("email") as string || "").trim();
     const phone = (form.get("phone") as string || "").trim();
 
+    // Compliance fields
+    const businessName = (form.get("businessName") as string || "").trim();
+    const gstin = (form.get("gstin") as string || "").trim();
+    const businessAddress = (form.get("businessAddress") as string || "").trim();
+    const logoUrl = (form.get("logoUrl") as string || "").trim();
+
     if (!name || !email) {
       return ctx.render({ host: null });
     }
@@ -52,6 +58,13 @@ export const handler: Handlers<SettingsPageData, DashboardState> = {
       cashfreeVendorId: existing.value?.cashfreeVendorId,
       createdAt: existing.value?.createdAt ?? now,
       updatedAt: now,
+      settings: {
+        ...(existing.value?.settings || {}),
+        businessName,
+        gstin,
+        businessAddress,
+        logoUrl,
+      },
     };
 
     await kv.set(["host", hostId], updatedHost);
@@ -79,6 +92,7 @@ export default function SettingsPage(
 
   const tabs = [
     { id: "general", label: "General", icon: "⚙️" },
+    { id: "compliance", label: "Compliance", icon: "⚖️" },
     { id: "notifications", label: "Notifications", icon: "🔔" },
     ...(role === "owner" || role === "manager"
       ? [
@@ -228,6 +242,121 @@ export default function SettingsPage(
                     <span class="px-3 py-1 rounded-full bg-istay-900 text-white text-xs font-700">
                       Active
                     </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* ── COMPLIANCE TAB ─────────────────────────────────── */}
+            <div class={activeTab === "compliance" ? "block" : "hidden"}>
+              <div class="max-w-2xl space-y-6">
+                <form
+                  method="POST"
+                  class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-5"
+                >
+                  <h2 class="text-base font-700 text-gray-900">
+                    Business & Regulatory
+                  </h2>
+                  <p class="text-xs text-gray-400">
+                    This information will be used for Form C reporting and
+                    professional invoicing.
+                  </p>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label
+                        for="businessName"
+                        class="block text-xs font-600 text-gray-500 mb-1.5"
+                      >
+                        Registered Business Name
+                      </label>
+                      <input
+                        id="businessName"
+                        name="businessName"
+                        type="text"
+                        value={host?.settings?.businessName ?? ""}
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:border-istay-700 focus:bg-white outline-none"
+                        placeholder="e.g. Istay Hospitality Pvt Ltd"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        for="gstin"
+                        class="block text-xs font-600 text-gray-500 mb-1.5"
+                      >
+                        GSTIN (Optional)
+                      </label>
+                      <input
+                        id="gstin"
+                        name="gstin"
+                        type="text"
+                        value={host?.settings?.gstin ?? ""}
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:border-istay-700 focus:bg-white outline-none"
+                        placeholder="22AAAAA0000A1Z5"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      for="businessAddress"
+                      class="block text-xs font-600 text-gray-500 mb-1.5"
+                    >
+                      Business Address
+                    </label>
+                    <textarea
+                      id="businessAddress"
+                      name="businessAddress"
+                      rows={3}
+                      class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:border-istay-700 focus:bg-white outline-none"
+                      placeholder="Full registered address..."
+                    >
+                      {host?.settings?.businessAddress ?? ""}
+                    </textarea>
+                  </div>
+
+                  <div>
+                    <label
+                      for="logoUrl"
+                      class="block text-xs font-600 text-gray-500 mb-1.5"
+                    >
+                      Invoice Logo URL (High Res)
+                    </label>
+                    <input
+                      id="logoUrl"
+                      name="logoUrl"
+                      type="url"
+                      value={host?.settings?.logoUrl ?? ""}
+                      class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:border-istay-700 focus:bg-white outline-none"
+                      placeholder="https://yourdomain.com/logo.png"
+                    />
+                  </div>
+
+                  {/* Hidden fields for other settings during form submit */}
+                  <input type="hidden" name="name" value={host?.name ?? ""} />
+                  <input type="hidden" name="email" value={host?.email ?? ""} />
+                  <input type="hidden" name="phone" value={host?.phone ?? ""} />
+
+                  <button
+                    type="submit"
+                    class="px-6 py-3 rounded-xl bg-istay-900 text-white text-sm font-700 hover:bg-istay-800 transition-all"
+                  >
+                    Save Compliance Info
+                  </button>
+                </form>
+
+                <div class="bg-amber-50 rounded-2xl border border-amber-200 p-5 flex gap-3">
+                  <span class="text-xl">ℹ️</span>
+                  <div>
+                    <p class="text-xs font-700 text-amber-900">
+                      Form C Automation
+                    </p>
+                    <p class="text-[11px] text-amber-700 mt-1 leading-relaxed">
+                      iStay uses Gemini Vision to automatically extract guest
+                      details from ID photos. Once verified, you can download a
+                      filled Form C arrival report from the Guest record in your
+                      dashboard to save time on manual data entry.
+                    </p>
                   </div>
                 </div>
               </div>

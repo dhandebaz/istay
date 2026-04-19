@@ -227,6 +227,16 @@ export interface PrivateVerification {
   idObjectKey?: string;
   /** Full address from ID */
   address?: string;
+  /** Extracted for Form C compliance */
+  gender?: "male" | "female" | "other" | "not_visible";
+  nationality?: string;
+  idExpiry?: string;
+  /** Specifically for foreign guest compliance */
+  visaDetails?: {
+    number?: string;
+    expiry?: string;
+    entryDate?: string;
+  };
   /** OCR match score (0-100) */
   matchScore: number;
   /** AI confidence flags */
@@ -280,6 +290,14 @@ export interface OcrResult {
   dob: string;
   id_number: string;
   address: string;
+  gender?: string;
+  nationality?: string;
+  id_expiry?: string;
+  visa_details?: {
+    number?: string;
+    expiry?: string;
+    entry_date?: string;
+  };
   match_score: number;
   flags: string[];
 }

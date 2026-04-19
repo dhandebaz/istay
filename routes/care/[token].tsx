@@ -9,6 +9,7 @@ import {
 import type { Booking, Host, Property } from "../../utils/types.ts";
 import SupplyRequest from "../../islands/SupplyRequest.tsx";
 import ProofOfCleanUploader from "../../islands/ProofOfCleanUploader.tsx";
+import OfflineNotice from "../../islands/OfflineNotice.tsx";
 
 interface CaretakerData {
   property: Property;
@@ -98,6 +99,8 @@ export default function CaretakerPortal({ data }: PageProps<CaretakerData>) {
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
       </Head>
+
+      <OfflineNotice />
 
       <div
         class="min-h-screen bg-gray-950 text-white"

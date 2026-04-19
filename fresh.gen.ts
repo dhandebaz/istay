@@ -18,6 +18,7 @@ import * as $api_contact from "./routes/api/contact.ts";
 import * as $api_cron_reviews from "./routes/api/cron/reviews.ts";
 import * as $api_cron_sync from "./routes/api/cron/sync.ts";
 import * as $api_host_api_key_rotate from "./routes/api/host/api-key/rotate.ts";
+import * as $api_host_form_c_bookingId_ from "./routes/api/host/form-c/[bookingId].ts";
 import * as $api_host_team from "./routes/api/host/team.ts";
 import * as $api_host_team_invite from "./routes/api/host/team/invite.ts";
 import * as $api_host_webhooks_add from "./routes/api/host/webhooks/add.ts";
@@ -92,6 +93,7 @@ import * as $ListingCarousel from "./islands/ListingCarousel.tsx";
 import * as $LoginForm from "./islands/LoginForm.tsx";
 import * as $MagicScraperAnimation from "./islands/MagicScraperAnimation.tsx";
 import * as $MobileMenu from "./islands/MobileMenu.tsx";
+import * as $OfflineNotice from "./islands/OfflineNotice.tsx";
 import * as $OtaSavingsChart from "./islands/OtaSavingsChart.tsx";
 import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
 import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
@@ -123,6 +125,7 @@ const manifest = {
     "./routes/api/cron/reviews.ts": $api_cron_reviews,
     "./routes/api/cron/sync.ts": $api_cron_sync,
     "./routes/api/host/api-key/rotate.ts": $api_host_api_key_rotate,
+    "./routes/api/host/form-c/[bookingId].ts": $api_host_form_c_bookingId_,
     "./routes/api/host/team.ts": $api_host_team,
     "./routes/api/host/team/invite.ts": $api_host_team_invite,
     "./routes/api/host/webhooks/add.ts": $api_host_webhooks_add,
@@ -199,6 +202,7 @@ const manifest = {
     "./islands/LoginForm.tsx": $LoginForm,
     "./islands/MagicScraperAnimation.tsx": $MagicScraperAnimation,
     "./islands/MobileMenu.tsx": $MobileMenu,
+    "./islands/OfflineNotice.tsx": $OfflineNotice,
     "./islands/OtaSavingsChart.tsx": $OtaSavingsChart,
     "./islands/PricingCheckout.tsx": $PricingCheckout,
     "./islands/ProofOfCleanUploader.tsx": $ProofOfCleanUploader,

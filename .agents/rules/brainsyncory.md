@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 974 notes | Score threshold: >40
+> 1069 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,28 +20,30 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
-- **⚠️ GOTCHA: Optimized Patched** — - - problem-fix in shared-context.json
-+ - Patched security issue WWgg
-- **⚠️ GOTCHA: Added JWT tokens authentication** — - > 946 notes | Score threshold: >40
-+ > 947 notes | Score threshold: 
-- **⚠️ GOTCHA: Replaced session cookies with JWT tokens** — - > 940 notes | Score threshold: >40
-+ > 941 notes | Score threshold: 
-- **⚠️ GOTCHA: Optimized Score** — - > 935 notes | Score threshold: >40
-+ > 937 notes | Score threshold: 
-- **⚠️ GOTCHA: Updated schema GOTCHA** — - - ⚠️ GOTCHA: Updated schema Score — evolves the database schema to s
-- **⚠️ GOTCHA: Updated schema GOTCHA** — - - gotcha in shared-context.json
-+ - ⚠️ GOTCHA: Updated schema Score 
+- **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 1048 notes | Score threshold: >40
++ > 1051 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication** — - > 1045 notes | Score threshold: >40
++ > 1048 notes | Score threshold
+- **⚠️ GOTCHA: Optimized Score** — - > 1042 notes | Score threshold: >40
++ > 1045 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication** — - > 1039 notes | Score threshold: >40
++ > 1042 notes | Score threshold
+- **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 1033 notes | Score threshold: >40
++ > 1039 notes | Score threshold
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in _app.tsx
++ - problem-fix in agent-rules.md
+- - prob
 
 ## Project Standards
 
-- Added API key auth authentication — improves module reusability — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - Added JWT tokens authentication — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
+- what-changed in shared-context.json — confirmed 3x
 - Added JWT tokens authentication — confirmed 3x
-- what-changed in shared-context.json — confirmed 3x
-- what-changed in shared-context.json — confirmed 3x
+- discovery in shared-context.json — confirmed 3x
+- Added JWT tokens authentication — confirmed 3x
 
 ## Known Fixes
 
@@ -53,10 +55,10 @@
 
 ## Recent Decisions
 
+- Optimized Legal — offloads heavy computation off the main thread
+- Optimized Implementation — offloads heavy computation off the main thread
 - Optimized Score — evolves the database schema to support new requirements
 - Optimized Score — evolves the database schema to support new requirements
-- decision in index.tsx
-- Optimized Create — offloads heavy computation off the main thread
 
 ## Learned Patterns
 
