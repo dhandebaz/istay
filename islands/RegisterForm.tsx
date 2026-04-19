@@ -145,7 +145,7 @@ export default function RegisterForm() {
           )}
         </div>
       </div>
-
+      <div>
         <div class="flex items-center justify-between mb-1.5 mx-1">
           <label class="block text-xs font-700 text-gray-700">
             Password

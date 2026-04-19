@@ -81,6 +81,9 @@ export async function sendWhatsAppText(to: string, text: string) {
   });
 }
 
+// Export as alias for broader compatibility across the codebase
+export { sendWhatsAppText as sendWhatsAppMessage };
+
 /**
  * Generates a pre-filled wa.me link for manual host actions.
  * Used when the automated API is not needed or for quick overrides.

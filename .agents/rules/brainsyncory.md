@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1069 notes | Score threshold: >40
+> 1139 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,6 +20,9 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in agent-rules.md
++ - Patched security issue Export
+- 
 - **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 1048 notes | Score threshold: >40
 + > 1051 notes | Score threshold
 - **⚠️ GOTCHA: Added JWT tokens authentication** — - > 1045 notes | Score threshold: >40
@@ -30,20 +33,17 @@
 + > 1042 notes | Score threshold
 - **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 1033 notes | Score threshold: >40
 + > 1039 notes | Score threshold
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in _app.tsx
-+ - problem-fix in agent-rules.md
-- - prob
 
 ## Project Standards
 
+- convention in shared-context.json
 - what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - Added JWT tokens authentication — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in shared-context.json — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
 - Added JWT tokens authentication — confirmed 3x
-- discovery in shared-context.json — confirmed 3x
-- Added JWT tokens authentication — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
 
 ## Known Fixes
 
