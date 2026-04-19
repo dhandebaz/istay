@@ -31,6 +31,7 @@ import * as $api_onboard_verify from "./routes/api/onboard/verify.ts";
 import * as $api_pay from "./routes/api/pay.ts";
 import * as $api_properties from "./routes/api/properties.ts";
 import * as $api_public_listings from "./routes/api/public/listings.ts";
+import * as $api_public_search from "./routes/api/public/search.ts";
 import * as $api_scrape from "./routes/api/scrape.ts";
 import * as $api_verify_index from "./routes/api/verify/index.ts";
 import * as $api_verify_status from "./routes/api/verify/status.ts";
@@ -64,15 +65,18 @@ import * as $register from "./routes/register.tsx";
 import * as $search from "./routes/search.tsx";
 import * as $sitemap_xml from "./routes/sitemap.xml.ts";
 import * as $verify from "./routes/verify.tsx";
+import * as $widget_propId_ from "./routes/widget/[propId].tsx";
 import * as $AddProperty from "./islands/AddProperty.tsx";
 import * as $BookingCalendar from "./islands/BookingCalendar.tsx";
 import * as $BookingFlow from "./islands/BookingFlow.tsx";
 import * as $CaretakerChecklist from "./islands/CaretakerChecklist.tsx";
 import * as $CheckoutForm from "./islands/CheckoutForm.tsx";
+import * as $CookieBanner from "./islands/CookieBanner.tsx";
 import * as $DashboardSidebar from "./islands/DashboardSidebar.tsx";
 import * as $DeveloperApi from "./islands/DeveloperApi.tsx";
 import * as $EarningsCalculator from "./islands/EarningsCalculator.tsx";
 import * as $EarningsComparison from "./islands/EarningsComparison.tsx";
+import * as $EmbedWidgetModal from "./islands/EmbedWidgetModal.tsx";
 import * as $ErrorBoundary from "./islands/ErrorBoundary.tsx";
 import * as $FaqSearch from "./islands/FaqSearch.tsx";
 import * as $FinancialLedger from "./islands/FinancialLedger.tsx";
@@ -82,6 +86,7 @@ import * as $Header from "./islands/Header.tsx";
 import * as $IdVerification from "./islands/IdVerification.tsx";
 import * as $KnowledgeEditor from "./islands/KnowledgeEditor.tsx";
 import * as $KnowledgeUploader from "./islands/KnowledgeUploader.tsx";
+import * as $LazyIsland from "./islands/LazyIsland.tsx";
 import * as $LinkPerformanceChart from "./islands/LinkPerformanceChart.tsx";
 import * as $ListingCarousel from "./islands/ListingCarousel.tsx";
 import * as $LoginForm from "./islands/LoginForm.tsx";
@@ -90,9 +95,11 @@ import * as $MobileMenu from "./islands/MobileMenu.tsx";
 import * as $OtaSavingsChart from "./islands/OtaSavingsChart.tsx";
 import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
 import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
+import * as $PropertyGrid from "./islands/PropertyGrid.tsx";
 import * as $RegisterForm from "./islands/RegisterForm.tsx";
 import * as $ResendVerificationBtn from "./islands/ResendVerificationBtn.tsx";
 import * as $ScraperPreview from "./islands/ScraperPreview.tsx";
+import * as $ScrollToTop from "./islands/ScrollToTop.tsx";
 import * as $SettingsTabs from "./islands/SettingsTabs.tsx";
 import * as $SupplyRequest from "./islands/SupplyRequest.tsx";
 import * as $TeamManagement from "./islands/TeamManagement.tsx";
@@ -129,6 +136,7 @@ const manifest = {
     "./routes/api/pay.ts": $api_pay,
     "./routes/api/properties.ts": $api_properties,
     "./routes/api/public/listings.ts": $api_public_listings,
+    "./routes/api/public/search.ts": $api_public_search,
     "./routes/api/scrape.ts": $api_scrape,
     "./routes/api/verify/index.ts": $api_verify_index,
     "./routes/api/verify/status.ts": $api_verify_status,
@@ -162,6 +170,7 @@ const manifest = {
     "./routes/search.tsx": $search,
     "./routes/sitemap.xml.ts": $sitemap_xml,
     "./routes/verify.tsx": $verify,
+    "./routes/widget/[propId].tsx": $widget_propId_,
   },
   islands: {
     "./islands/AddProperty.tsx": $AddProperty,
@@ -169,10 +178,12 @@ const manifest = {
     "./islands/BookingFlow.tsx": $BookingFlow,
     "./islands/CaretakerChecklist.tsx": $CaretakerChecklist,
     "./islands/CheckoutForm.tsx": $CheckoutForm,
+    "./islands/CookieBanner.tsx": $CookieBanner,
     "./islands/DashboardSidebar.tsx": $DashboardSidebar,
     "./islands/DeveloperApi.tsx": $DeveloperApi,
     "./islands/EarningsCalculator.tsx": $EarningsCalculator,
     "./islands/EarningsComparison.tsx": $EarningsComparison,
+    "./islands/EmbedWidgetModal.tsx": $EmbedWidgetModal,
     "./islands/ErrorBoundary.tsx": $ErrorBoundary,
     "./islands/FaqSearch.tsx": $FaqSearch,
     "./islands/FinancialLedger.tsx": $FinancialLedger,
@@ -182,6 +193,7 @@ const manifest = {
     "./islands/IdVerification.tsx": $IdVerification,
     "./islands/KnowledgeEditor.tsx": $KnowledgeEditor,
     "./islands/KnowledgeUploader.tsx": $KnowledgeUploader,
+    "./islands/LazyIsland.tsx": $LazyIsland,
     "./islands/LinkPerformanceChart.tsx": $LinkPerformanceChart,
     "./islands/ListingCarousel.tsx": $ListingCarousel,
     "./islands/LoginForm.tsx": $LoginForm,
@@ -190,9 +202,11 @@ const manifest = {
     "./islands/OtaSavingsChart.tsx": $OtaSavingsChart,
     "./islands/PricingCheckout.tsx": $PricingCheckout,
     "./islands/ProofOfCleanUploader.tsx": $ProofOfCleanUploader,
+    "./islands/PropertyGrid.tsx": $PropertyGrid,
     "./islands/RegisterForm.tsx": $RegisterForm,
     "./islands/ResendVerificationBtn.tsx": $ResendVerificationBtn,
     "./islands/ScraperPreview.tsx": $ScraperPreview,
+    "./islands/ScrollToTop.tsx": $ScrollToTop,
     "./islands/SettingsTabs.tsx": $SettingsTabs,
     "./islands/SupplyRequest.tsx": $SupplyRequest,
     "./islands/TeamManagement.tsx": $TeamManagement,

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Test | iStay</title>
+    <style>
+        body { font-family: sans-serif; padding: 50px; background: #f9fafb; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        h1 { color: #111827; }
+        .istay-widget { margin-top: 30px; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Personal Blog</h1>
+        <p>This is a test of the iStay direct booking widget.</p>
+        
+        <div class="istay-widget" data-prop-id="test-prop-id"></div>
+    </div>
+
+    <!-- The widget script -->
+    <script src="http://localhost:8000/widget.js"></script>
+</body>
+</html>

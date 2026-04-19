@@ -202,7 +202,24 @@ export default function BookingCalendar(
       nights: String(nights.value),
       amount: String(totalAmount.value),
     });
-    globalThis.location.href = `/p/checkout?${params.toString()}`;
+    const url = `/p/checkout?${params.toString()}`;
+    
+    if (isWidget) {
+      // For widgets, we want to redirect the PARENT window if possible
+      // to the istay checkout page for better conversion.
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.location.href = url;
+        } else {
+          globalThis.location.href = url;
+        }
+      } catch {
+        // Handle cross-origin restrictions: fallback to new tab
+        window.open(url, "_blank");
+      }
+    } else {
+      globalThis.location.href = url;
+    }
   }
 
   const weeks = buildMonthGrid(displayYear.value, displayMonth.value);

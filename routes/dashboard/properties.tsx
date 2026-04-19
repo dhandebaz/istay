@@ -3,6 +3,7 @@ import { Head } from "$fresh/runtime.ts";
 import { listProperties } from "../../utils/db.ts";
 import type { DashboardState, Property } from "../../utils/types.ts";
 import AddProperty from "../../islands/AddProperty.tsx";
+import EmbedWidgetModal from "../../islands/EmbedWidgetModal.tsx";
 
 interface PropertiesData {
   properties: Property[];
@@ -113,6 +114,12 @@ export default function PropertiesPage({ data }: PageProps<PropertiesData>) {
                     <span class="text-xs text-gray-400 ml-1">/ night</span>
                   </div>
                   <div class="flex items-center gap-2">
+                    {/* Embed Widget Modal */}
+                    <EmbedWidgetModal
+                      propId={property.id}
+                      propertyName={property.name}
+                    />
+                    
                     {/* Copy booking link */}
                     <button
                       class="p-2 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-istay-900 transition-colors duration-150"

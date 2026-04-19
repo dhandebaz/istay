@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 963 notes | Score threshold: >40
+> 974 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -34,14 +34,14 @@
 
 ## Project Standards
 
+- Added API key auth authentication — improves module reusability — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
 - Added JWT tokens authentication — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - Added JWT tokens authentication — confirmed 3x
 - what-changed in shared-context.json — confirmed 3x
 - what-changed in shared-context.json — confirmed 3x
-- Added JWT tokens authentication — confirmed 3x
-- what-changed in shared-context.json — confirmed 10x
-- problem-fix in shared-context.json — confirmed 3x
 
 ## Known Fixes
 

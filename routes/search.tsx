@@ -195,8 +195,3 @@ export default function SearchPage({ data }: PageProps<SearchData>) {
     </>
   );
 }
-        </div>
-      </div>
-    </>
-  );
-}
