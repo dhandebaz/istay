@@ -1,10 +1,10 @@
 {
   "$schema": "https://fresh.deno.dev/schemas/config.schema.json",
   "tasks": {
-    "check": "deno check --unstable-cron **/*.ts **/*.tsx",
-    "start": "deno run -A --unstable-cron --watch=static/,routes/ dev.ts",
-    "build": "deno run -A --unstable-cron dev.ts build",
-    "preview": "deno run -A --unstable-cron main.ts",
+    "check": "deno check --unstable-cron --unstable-kv **/*.ts **/*.tsx",
+    "start": "deno run -A --unstable-cron --unstable-kv --watch=static/,routes/ dev.ts",
+    "build": "deno run -A --unstable-cron --unstable-kv dev.ts build",
+    "preview": "deno run -A --unstable-cron --unstable-kv main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
   "lint": {

@@ -10,19 +10,33 @@ import manifest from "./fresh.gen.ts";
 import config from "./fresh.config.ts";
 import { syncAllProperties } from "./utils/sync.ts";
 
-// ── iCal Cron — runs every 30 minutes ─────────────────────────
-// Requires --unstable-cron flag (already in deno.json tasks).
-// On Deno Deploy, this is natively supported without the flag.
-Deno.cron("ical-sync", "*/15 * * * *", async () => {
-  try {
-    const result = await syncAllProperties();
+// Ensure background tasks don't prevent the server from starting
+try {
+  // ── iCal Cron — runs every 15 minutes ─────────────────────────
+  // Requires --unstable-cron flag (already in deno.json tasks).
+  // On Deno Deploy, this is natively supported without the flag.
+  Deno.cron("ical-sync", "*/15 * * * *", async () => {
+    try {
+      const result = await syncAllProperties();
+      console.log(
+        `[cron] iCal sync complete: ${result.synced} dates synced across ${result.total} properties`,
+      );
+    } catch (err) {
+      console.error("[cron] iCal sync failed during execution:", err);
+    }
+  });
+
+  // Initial Sync on boot
+  syncAllProperties().then((result) => {
     console.log(
-      `[cron] iCal sync complete: ${result.synced} dates synced across ${result.total} properties`,
+      `[boot] Initial iCal sync complete: ${result.synced} dates synced`,
     );
-  } catch (err) {
-    console.error("[cron] iCal sync failed:", err);
-  }
-});
+  }).catch((err) => {
+    console.error("[boot] Initial iCal sync failed (non-critical):", err);
+  });
+} catch (err) {
+  console.error("[boot] Failed to register background tasks (KV/Cron issue?):", err);
+}
 
 import { scrubOldPii } from "./utils/db.ts";
 

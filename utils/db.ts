@@ -47,6 +47,11 @@ let _kv: Deno.Kv | null = null;
 
 export async function getKv(): Promise<Deno.Kv> {
   if (!_kv) {
+    if (typeof Deno.openKv !== "function") {
+      throw new Error(
+        "Deno.openKv is not available. Please ensure you are running with the --unstable-kv flag.",
+      );
+    }
     _kv = await Deno.openKv();
   }
   return _kv;
