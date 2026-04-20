@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run -A
+#!/usr/bin/env -S deno run -A --unstable-kv --unstable-cron
 
 import dev from "$fresh/dev.ts";
 import config from "./fresh.config.ts";
