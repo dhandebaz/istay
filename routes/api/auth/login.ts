@@ -45,7 +45,7 @@ export const handler: Handlers = {
       );
 
       // Tell frontend where to route (if they haven't paid logic)
-      const redirectUrl = host.setupFeePaid ? "/dashboard" : "/pricing";
+      const redirectUrl = host.subscriptionStatus === "active" ? "/dashboard" : "/pricing";
 
       return new Response(JSON.stringify({ ok: true, redirectUrl }), {
         status: 200,

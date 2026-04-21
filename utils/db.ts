@@ -164,7 +164,10 @@ export async function getHost(id: string): Promise<Host | null> {
   
   return {
     ...host,
-    plan: host.plan as "lifetime",
+    plan: host.plan as any,
+    subscriptionStatus: host.subscriptionStatus as any,
+    subscriptionExpiresAt: host.subscriptionExpiresAt?.toISOString(),
+    walletBalance: host.walletBalance,
     settings: host.settings as any,
     webhooks: host.webhooks as any,
     createdAt: host.createdAt.toISOString(),
@@ -182,6 +185,9 @@ export async function saveHost(data: Host): Promise<void> {
       name: data.name,
       phone: data.phone,
       plan: data.plan,
+      subscriptionStatus: data.subscriptionStatus,
+      subscriptionExpiresAt: data.subscriptionExpiresAt ? new Date(data.subscriptionExpiresAt) : null,
+      walletBalance: data.walletBalance,
       setupFeePaid: data.setupFeePaid,
       gatewayVendorId: data.gatewayVendorId,
       cashfreeVendorId: data.cashfreeVendorId,
@@ -197,6 +203,9 @@ export async function saveHost(data: Host): Promise<void> {
       name: data.name,
       phone: data.phone,
       plan: data.plan,
+      subscriptionStatus: data.subscriptionStatus,
+      subscriptionExpiresAt: data.subscriptionExpiresAt ? new Date(data.subscriptionExpiresAt) : null,
+      walletBalance: data.walletBalance,
       setupFeePaid: data.setupFeePaid,
       gatewayVendorId: data.gatewayVendorId,
       cashfreeVendorId: data.cashfreeVendorId,
@@ -220,7 +229,7 @@ export async function listAllHosts(): Promise<Host[]> {
   const hosts = await prisma.host.findMany();
   return hosts.map(h => ({
     ...h,
-    plan: h.plan as "lifetime",
+    plan: h.plan as any,
     settings: h.settings as any,
     webhooks: h.webhooks as any,
     createdAt: h.createdAt.toISOString(),

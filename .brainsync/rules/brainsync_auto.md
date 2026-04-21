@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1370 notes | Score threshold: >40
+> 1375 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,6 +20,8 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **⚠️ GOTCHA: Added JWT tokens authentication — ensures atomic multi-step database operations** — - > 1333 notes | Score threshold: >40
++ > 1370 notes | Score threshold
 - **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in PricingCheckout.tsx
 + - problem-fix in agent-rules.
 - **gotcha in shared-context.json** — -     }
@@ -39,19 +41,17 @@
 - }
 +       "id": "4bf23753650c6f9e",
 +
-- **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 1315 notes | Score threshold: >40
-+ > 1318 notes | Score threshold
 
 ## Project Standards
 
+- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 8x
+- what-changed in shared-context.json — confirmed 8x
+- problem-fix in agent-rules.md — confirmed 5x
+- what-changed in pay.ts — confirmed 3x
+- Patched security issue EaxTta — confirmed 3x
 - Updated Header database schema — confirmed 3x
 - what-changed in EarningsCalculator.tsx — confirmed 4x
 - Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 9x
-- what-changed in shared-context.json — confirmed 9x
-- Optimized Score — evolves the database schema to support new requirements — confirmed 3x
-- Optimized Fixed — confirmed 6x
-- Fixed null crash in Implementation — confirmed 4x
-- Updated getHost database schema — confirmed 3x
 
 ## Known Fixes
 

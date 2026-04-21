@@ -7,18 +7,20 @@ import FaqSearch from "../islands/FaqSearch.tsx";
 import LazyIsland from "../islands/LazyIsland.tsx";
 import SEOMeta from "../components/SEOMeta.tsx";
 import { ArrowRightIcon, CheckIcon, StarIcon } from "../components/Icons.tsx";
-import { parseCookies } from "../routes/dashboard/_middleware.ts";
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { getHost } from "../utils/db.ts";
 
 interface PricingData {
   hostId: string | null;
+  subscriptionStatus: string | null;
 }
 
 export const handler: Handlers<PricingData> = {
-  GET(req, ctx) {
+  async GET(req, ctx) {
     const cookies = parseCookies(req.headers.get("cookie"));
     const session = cookies["host_session"];
     let hostId: string | null = null;
+    let subscriptionStatus: string | null = null;
+
     if (session) {
       try {
         const decoded = decodeURIComponent(session);
@@ -26,8 +28,15 @@ export const handler: Handlers<PricingData> = {
       } catch {
         hostId = session.trim() || null;
       }
+
+      if (hostId) {
+        const host = await getHost(hostId);
+        if (host) {
+          subscriptionStatus = host.subscriptionStatus;
+        }
+      }
     }
-    return ctx.render({ hostId });
+    return ctx.render({ hostId, subscriptionStatus });
   },
 };
 
@@ -152,15 +161,25 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                     </ul>
 
                     {data.hostId ? (
+                      data.subscriptionStatus === "active" ? (
+                        <a
+                          href="/dashboard"
+                          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-istay-900 text-white font-800 shadow-md hover:bg-istay-800 hover:shadow-lg active:scale-95 transition-all duration-200"
+                        >
+                          Go to Dashboard
+                          <ArrowRightIcon class="w-4 h-4" />
+                        </a>
+                      ) : (
+                        <PricingCheckout hostId={data.hostId} />
+                      )
+                    ) : (
                       <a
-                        href="/dashboard"
-                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-istay-900 text-white font-800 shadow-md hover:bg-istay-800 hover:shadow-lg active:scale-95 transition-all duration-200"
+                        href="/register"
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-mint-500 text-istay-900 font-900 text-base shadow-md hover:bg-mint-400 hover:shadow-lg active:scale-95 transition-all duration-200"
                       >
-                        Go to Dashboard
+                        Launch Your Channel — ₹1,000
                         <ArrowRightIcon class="w-4 h-4" />
                       </a>
-                    ) : (
-                      <PricingCheckout hostId={""} /> // Assuming the original component handles unauthenticated flow when needed, but actually wait, let me look at the code.
                     )}
                     <div class="mt-6 text-xs text-gray-400 font-500">
                       Looking for Enterprise / Multi-user? <span class="text-mint-600 cursor-pointer hover:underline">Coming Soon.</span>
