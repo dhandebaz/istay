@@ -175,66 +175,83 @@ async function decryptField(
 // ── HOST ──────────────────────────────────────────────────────
 
 export async function getHost(id: string): Promise<Host | null> {
-  const prisma = getPrisma();
-  const host = await prisma.host.findUnique({
-    where: { id },
-  });
-  if (!host) return null;
-  
-  return {
-    ...host,
-    plan: host.plan as any,
-    subscriptionStatus: host.subscriptionStatus as any,
-    subscriptionExpiresAt: host.subscriptionExpiresAt?.toISOString(),
-    walletBalance: host.walletBalance,
-    settings: host.settings as any,
-    webhooks: host.webhooks as any,
-    createdAt: host.createdAt.toISOString(),
-    updatedAt: host.updatedAt.toISOString(),
-    legacyApiKeyExpires: host.legacyApiKeyExpires?.toISOString(),
-  };
+  if (!id) {
+    console.warn("[db] getHost called with null/undefined ID");
+    return null;
+  }
+  try {
+    const prisma = getPrisma();
+    const host = await prisma.host.findUnique({
+      where: { id },
+    });
+    if (!host) {
+      console.warn(`[db] getHost: Host not found for ID: ${id}`);
+      return null;
+    }
+    return {
+      ...host,
+      plan: host.plan as any,
+      subscriptionStatus: host.subscriptionStatus as any,
+      subscriptionExpiresAt: host.subscriptionExpiresAt?.toISOString(),
+      walletBalance: host.walletBalance,
+      settings: host.settings as any,
+      webhooks: host.webhooks as any,
+      createdAt: host.createdAt.toISOString(),
+      updatedAt: host.updatedAt.toISOString(),
+      legacyApiKeyExpires: host.legacyApiKeyExpires?.toISOString(),
+    } as any;
+  } catch (err) {
+    console.error(`[db] getHost failed for ${id}:`, err);
+    throw new Error(`Database connection error while retrieving host data.`);
+  }
 }
 
 export async function saveHost(data: Host): Promise<void> {
-  const prisma = getPrisma();
-  await prisma.host.upsert({
-    where: { id: data.id },
-    update: {
-      email: data.email,
-      name: data.name,
-      phone: data.phone,
-      plan: data.plan,
-      subscriptionStatus: data.subscriptionStatus,
-      subscriptionExpiresAt: data.subscriptionExpiresAt ? new Date(data.subscriptionExpiresAt) : null,
-      walletBalance: data.walletBalance,
-      setupFeePaid: data.setupFeePaid,
-      gatewayVendorId: data.gatewayVendorId,
-      cashfreeVendorId: data.cashfreeVendorId,
-      apiKey: data.apiKey,
-      legacyApiKey: data.legacyApiKey,
-      legacyApiKeyExpires: data.legacyApiKeyExpires ? new Date(data.legacyApiKeyExpires) : null,
-      settings: data.settings as any,
-      webhooks: data.webhooks as any,
-    },
-    create: {
-      id: data.id,
-      email: data.email,
-      name: data.name,
-      phone: data.phone,
-      plan: data.plan,
-      subscriptionStatus: data.subscriptionStatus,
-      subscriptionExpiresAt: data.subscriptionExpiresAt ? new Date(data.subscriptionExpiresAt) : null,
-      walletBalance: data.walletBalance,
-      setupFeePaid: data.setupFeePaid,
-      gatewayVendorId: data.gatewayVendorId,
-      cashfreeVendorId: data.cashfreeVendorId,
-      apiKey: data.apiKey,
-      legacyApiKey: data.legacyApiKey,
-      legacyApiKeyExpires: data.legacyApiKeyExpires ? new Date(data.legacyApiKeyExpires) : null,
-      settings: data.settings as any,
-      webhooks: data.webhooks as any,
-    },
-  });
+  try {
+    const prisma = getPrisma();
+    await prisma.host.upsert({
+      where: { id: data.id },
+      update: {
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
+        plan: data.plan,
+        subscriptionStatus: data.subscriptionStatus,
+        subscriptionExpiresAt: data.subscriptionExpiresAt ? new Date(data.subscriptionExpiresAt) : null,
+        walletBalance: data.walletBalance,
+        setupFeePaid: data.setupFeePaid,
+        gatewayVendorId: data.gatewayVendorId,
+        cashfreeVendorId: data.cashfreeVendorId,
+        apiKey: data.apiKey,
+        legacyApiKey: data.legacyApiKey,
+        legacyApiKeyExpires: data.legacyApiKeyExpires ? new Date(data.legacyApiKeyExpires) : null,
+        settings: data.settings as any,
+        webhooks: data.webhooks as any,
+      },
+      create: {
+        id: data.id,
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
+        plan: data.plan,
+        subscriptionStatus: data.subscriptionStatus,
+        subscriptionExpiresAt: data.subscriptionExpiresAt ? new Date(data.subscriptionExpiresAt) : null,
+        walletBalance: data.walletBalance,
+        setupFeePaid: data.setupFeePaid,
+        gatewayVendorId: data.gatewayVendorId,
+        cashfreeVendorId: data.cashfreeVendorId,
+        apiKey: data.apiKey,
+        legacyApiKey: data.legacyApiKey,
+        legacyApiKeyExpires: data.legacyApiKeyExpires ? new Date(data.legacyApiKeyExpires) : null,
+        settings: data.settings as any,
+        webhooks: data.webhooks as any,
+      },
+    });
+    console.log(`[db] saveHost success: ${data.id} (${data.name})`);
+  } catch (err) {
+    console.error(`[db] saveHost failed for ${data.id}:`, err);
+    throw new Error("Failed to save host profile. Please check your connection.");
+  }
 
   // Dual-write to KV for high-speed middleware lookups if needed
   const kv = await getKv();
@@ -303,16 +320,21 @@ export async function hashPassword(password: string, saltHex?: string) {
 }
 
 export async function getAuthRecord(email: string): Promise<AuthRecord | null> {
-  const prisma = getPrisma();
-  const auth = await prisma.authRecord.findUnique({
-    where: { email: email.toLowerCase() },
-  });
-  if (!auth) return null;
-  return {
-    ...auth,
-    role: auth.role as any,
-    resetTokenExpires: auth.resetTokenExpires?.toISOString(),
-  };
+  try {
+    const prisma = getPrisma();
+    const auth = await prisma.authRecord.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+    if (!auth) return null;
+    return {
+      ...auth,
+      role: auth.role as any,
+      resetTokenExpires: auth.resetTokenExpires?.toISOString(),
+    };
+  } catch (err) {
+    console.error(`[db] getAuthRecord failed for ${email}:`, err);
+    throw new Error("Authentication database is currently unreachable. Please try again in a few moments.");
+  }
 }
 
 export async function saveAuthRecord(data: AuthRecord): Promise<void> {

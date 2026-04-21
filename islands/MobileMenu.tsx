@@ -81,7 +81,7 @@ export default function MobileMenu({ links }: MobileMenuProps) {
       {open && (
         <div
           id="mobile-menu-panel"
-          class="absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg animate-fade-in"
+          class="absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-2xl animate-fade-in z-[100]"
           role="dialog"
           aria-label="Mobile navigation"
         >
@@ -99,13 +99,13 @@ export default function MobileMenu({ links }: MobileMenuProps) {
               ))}
               <a
                 href="/login"
-                class="block px-3 py-3 text-base font-600 text-istay-900 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                class="block px-4 py-3 text-base font-600 text-istay-900 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-colors"
               >
                 Login
               </a>
             </div>
 
-            <div class="p-6 bg-gray-50 border-t border-gray-100">
+            <div class="p-6 bg-white border-t border-gray-100">
               <a
                 href="/register"
                 class="flex items-center justify-center w-full px-6 py-3.5 rounded-xl bg-mint-500 text-istay-900 text-sm font-800 shadow-sm active:scale-[0.98] transition-all"

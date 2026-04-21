@@ -53,14 +53,28 @@ export const handler: Handlers<OverviewData, DashboardState> = {
       setupFeePaid = (hostEntry.value as any)?.setupFeePaid ?? false;
     }
 
-    const [stats, allBookings, properties, notifications, ledgerEntries] =
-      await Promise.all([
-        getDashboardStats(hostId),
-        listBookings(hostId),
-        listProperties(hostId),
-        listNotifications(hostId),
-        listLedgerEntriesByHost(hostId),
-      ]);
+    let stats: DashboardStats;
+    let allBookings: Booking[] = [];
+    let notifications: Notification[] = [];
+    let ledgerEntries: LedgerEntry[] = [];
+    let properties: any[] = [];
+
+    try {
+      [stats, allBookings, properties, notifications, ledgerEntries] =
+        await Promise.all([
+          getDashboardStats(hostId).catch(err => {
+            console.error("[dashboard] getDashboardStats failed:", err);
+            return { totalRevenue: 0, occupancyRate: 0, activeProperties: 0, bookingsThisMonth: 0 };
+          }),
+          listBookings(hostId).catch(() => []),
+          listProperties(hostId).catch(() => []),
+          listNotifications(hostId).catch(() => []),
+          listLedgerEntriesByHost(hostId).catch(() => []),
+        ]);
+    } catch (err) {
+      console.error("[dashboard-critical] Critical failure in data fetch:", err);
+      stats = { totalRevenue: 0, occupancyRate: 0, activeProperties: 0, bookingsThisMonth: 0 };
+    }
 
     const currentMonth = new Date().toISOString().slice(0, 7);
     const [analytics, insights] = await Promise.all([

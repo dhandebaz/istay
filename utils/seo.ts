@@ -15,7 +15,7 @@ const DEFAULT_CONFIG: SEOConfig = {
   title: "istay | Direct Bookings for Independent Hosts",
   description: "Stop paying 15% commissions. Use istay to accept direct bookings via WhatsApp and Instagram with a flat 5% fee.",
   canonical: "https://istay.space",
-  ogImage: "https://istay.space/og-main.jpg",
+  ogImage: "https://istay.space/og-main.png",
 };
 
 /**

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "preact/hooks";
 import MobileMenu from "./MobileMenu.tsx";
-import { ArrowRightIcon, ChevronDownIcon } from "../components/Icons.tsx";
+import { ArrowRightIcon } from "../components/Icons.tsx";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -24,18 +24,17 @@ export default function Header() {
 
   return (
     <header
-      class={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 bg-white py-3 border-b ${scrolled ? "shadow-sm border-gray-100" : "border-gray-50"}`}
+      class={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 bg-white py-3 border-b ${scrolled ? "shadow-md border-gray-200" : "border-gray-100"}`}
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-12 sm:h-auto">
-          {/* Logo */}
           <a
             href="/"
             class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95"
             aria-label="istay — Home"
           >
             <img
-              src={`/logo.svg?v=${ASSET_VERSION}`}
+              src="/logo.svg"
               alt="iStay Platform Logo"
               width="36"
               height="36"

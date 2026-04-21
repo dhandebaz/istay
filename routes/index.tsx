@@ -57,28 +57,14 @@ const FEATURES = [
 ];
 
 const PLATFORMS = [
-  { name: "Airbnb", fee: "15%", color: "text-rose-500", bg: "bg-rose-50" },
-  {
-    name: "MakeMyTrip",
-    fee: "18%",
-    color: "text-orange-500",
-    bg: "bg-orange-50",
-  },
-  {
-    name: "Agoda",
-    fee: "18%",
-    color: "text-blue-600",
-    bg: "bg-blue-50",
-  },
-  {
-    name: "Expedia",
-    fee: "18%",
-    color: "text-indigo-600",
-    bg: "bg-indigo-50",
-  },
+  { name: "Airbnb", fee: "15-20%", color: "text-rose-500", bg: "bg-rose-50" },
+  { name: "Booking.com", fee: "15-25%", color: "text-blue-700", bg: "bg-blue-50" },
+  { name: "VRBO", fee: "10-15%", color: "text-indigo-600", bg: "bg-indigo-50" },
+  { name: "MakeMyTrip", fee: "18-22%", color: "text-orange-500", bg: "bg-orange-50" },
+  { name: "Agoda", fee: "18-25%", color: "text-blue-600", bg: "bg-blue-50" },
   {
     name: "istay",
-    fee: "5%",
+    fee: "5% Direct",
     color: "text-teal-600",
     bg: "bg-teal-50",
     highlight: true,
@@ -92,7 +78,7 @@ const SCHEMA = JSON.stringify({
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
   description:
-    "Direct booking platform for property hosts. Replace Airbnb commissions with a flat 5% fee.",
+    "The unified hospitality dashboard for independent hosts. Connect Airbnb, Booking.com, and MMT while accepting direct bookings with a flat 5% fee.",
   offers: {
     "@type": "Offer",
     price: "1000",

@@ -25,18 +25,25 @@ export const handler: Handlers<PricingData> = {
     if (session) {
       try {
         const decoded = decodeURIComponent(session);
-        hostId = decoded.split("|")[0]?.trim() || null;
-      } catch {
-        hostId = session.trim() || null;
-      }
-
-      if (hostId) {
-        const host = await getHost(hostId);
-        if (host) {
-          subscriptionStatus = host.subscriptionStatus;
+        // Standard format is hostId|name
+        hostId = decoded.includes("|") ? decoded.split("|")[0].trim() : decoded.trim();
+        
+        if (hostId) {
+          try {
+            const host = await getHost(hostId);
+            if (host) {
+              subscriptionStatus = host.subscriptionStatus;
+            }
+          } catch (dbErr) {
+            console.error("[pricing-handler] Database error while fetching host:", dbErr);
+            // Don't crash the whole page, just act as if not logged in or show limited UI
+          }
         }
+      } catch (err) {
+        console.warn("[pricing-handler] Failed to parse session cookie:", err);
       }
     }
+    
     return ctx.render({ hostId, subscriptionStatus });
   },
 };
@@ -102,10 +109,11 @@ export default function Pricing({ data }: PageProps<PricingData>) {
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-800 text-gray-900 tracking-tight leading-tight max-w-4xl mx-auto">
               Connect every channel.
               <br />
-              <span class="text-mint-500">One interface to manage it all.</span>
+              <span class="text-mint-500">One interface to rule them all.</span>
             </h1>
             <p class="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              We aren't here to replace the OTAs — we're here to connect them. Sync your Airbnb, MMT, Agoda, and more into one powerful command center.
+              istay isn't here to replace the OTAs — we're here to connect them. Direct booking power meets a unified command center for your entire hosting business.
+              <span class="block mt-2 font-600 text-istay-900">Manage Airbnb, Booking.com, and MMT in one place.</span>
             </p>
           </div>
         </section>
@@ -115,10 +123,10 @@ export default function Pricing({ data }: PageProps<PricingData>) {
           <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="relative rounded-3xl bg-gradient-to-br from-mint-400 to-emerald-600 p-px shadow-xl">
               <div class="rounded-[23px] bg-white p-8 sm:p-12">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                   <div>
                     <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-100 text-istay-900 text-xs font-900 mb-5 tracking-tight uppercase">
-                      ✦ Monthly Plan
+                      ✦ Professional Plan
                     </div>
                     <div class="mb-8">
                       <div class="flex items-baseline gap-2 mb-1">
@@ -140,14 +148,16 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                     </div>
 
                     <ul class="space-y-4 mb-10">
-                      {[
-                        "Branded direct booking page",
-                        "AI Guest Concierge (24/7)",
-                        "OCR guest ID verification",
-                        "Real-time revenue dashboard",
-                        "Easebuzz Slices (95/5 split)",
-                        "WhatsApp booking notifications",
-                        "Unlimited properties",
+                       {[
+                        "Unified Multi-OTA Dashboard",
+                        "24/7 AI Guest Concierge",
+                        "Real-time Calendar & Sync",
+                        "Smart OCR ID Verification",
+                        "Direct Checkout (Easebuzz)",
+                        "WhatsApp Bot Notifications",
+                        "Automated Subscription Renewal",
+                        "Manual & Instant Top-ups",
+                        "Unlimited Properties & Bookings",
                       ].map((item) => (
                         <li
                           key={item}
@@ -178,13 +188,10 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                         href="/register"
                         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-mint-500 text-istay-900 font-900 text-base shadow-md hover:bg-mint-400 hover:shadow-lg active:scale-95 transition-all duration-200"
                       >
-                        Launch Your Channel — ₹1,000
+                        Start Your Channel — ₹1,000
                         <ArrowRightIcon class="w-4 h-4" />
                       </a>
                     )}
-                    <div class="mt-6 text-xs text-gray-400 font-500">
-                      Looking for Enterprise / Multi-user? <span class="text-mint-600 cursor-pointer hover:underline">Coming Soon.</span>
-                    </div>
                   </div>
 
                   {/* Comparison table */}
@@ -205,17 +212,15 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                       </thead>
                       <tbody class="divide-y divide-gray-100">
                         {[
-                          { name: "istay", pct: "5%", home: "₹95,000", highlight: true },
-                          { name: "Airbnb", pct: "15%", home: "₹85,000" },
-                          { name: "MakeMyTrip", pct: "18%", home: "₹82,000" },
-                          { name: "Agoda", pct: "18%", home: "₹82,000" },
-                          { name: "Expedia", pct: "18%", home: "₹82,000" },
-                          { name: "Booking.com", pct: "17%", home: "₹83,000" },
-                          { name: "VRBO", pct: "12%", home: "₹88,000" },
-                          { name: "Goibibo", pct: "18%", home: "₹82,000" },
-                          { name: "TripAdvisor", pct: "15%", home: "₹85,000" },
-                          { name: "Hostelworld", pct: "15%", home: "₹85,000" },
-                          { name: "Cleartrip", pct: "18%", home: "₹82,000" },
+                          { name: "istay Dashboard", pct: "5%", home: "₹95,000", highlight: true },
+                          { name: "Airbnb", pct: "15%+", home: "₹85,000" },
+                          { name: "Booking.com", pct: "15%+", home: "₹85,000" },
+                          { name: "MakeMyTrip", pct: "18%+", home: "₹82,000" },
+                          { name: "Agoda", pct: "18%+", home: "₹82,000" },
+                          { name: "Expedia", pct: "18%+", home: "₹82,000" },
+                          { name: "VRBO", pct: "12%+", home: "₹88,000" },
+                          { name: "TripAdvisor", pct: "15%+", home: "₹85,000" },
+                          { name: "Goibibo", pct: "18%+", home: "₹82,000" },
                         ].map(({ name, pct, home, highlight }) => (
                           <tr
                             key={name}
@@ -231,7 +236,7 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                               {name}
                               {highlight && (
                                 <span class="ml-2 text-[10px] bg-mint-500 text-istay-900 font-900 px-1.5 py-0.5 rounded-full">
-                                  RECOMMENDED
+                                  BEST VALUE
                                 </span>
                               )}
                             </td>

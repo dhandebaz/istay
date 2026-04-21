@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1462 notes | Score threshold: >40
+> 1501 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,28 +20,34 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Prisma — uses a proper password hashing algori
+- **gotcha in shared-context.json** — -     }
++     },
+-   ]
++     {
+- }
++       "id": "d009a65695dc4cc2",
++
+- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: problem-fix in agent-rules.md
++ - ⚠️ GOTCHA: Added JWT 
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1401 notes | Score threshold: >40
++ > 1462 notes | Score threshold
 - **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Patched security issue Ceonzb
 + - problem-fix in agent-rules.md
 - 
 - **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in agent-rules.md
 + - Patched security issue NeqJQsLMW
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Users — prevents null/undefined runtime crashe
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Users — prevents null/undefined runtime crashe
-- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: Added JWT tokens authentication — ensures atomic multi-
-- **gotcha in db.ts** — - let _prisma: PrismaClient | null = null;
-+ let _prisma: any = null;
-
 
 ## Project Standards
 
-- convention in test_standard.ts
-- what-changed in shared-context.json — confirmed 7x
-- problem-fix in shared-context.json — confirmed 3x
-- problem-fix in agent-rules.md — confirmed 3x
-- Fixed null crash in PrismaClient — prevents null/undefined runtime crashes — confirmed 4x
-- Replaced auth Update — confirmed 3x
+- Added API key auth authentication — externalizes configuration for environmen... — confirmed 9x
 - Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 8x
-- what-changed in shared-context.json — confirmed 8x
+- what-changed in shared-context.json — confirmed 15x
+- problem-fix in agent-rules.md — confirmed 7x
+- Fixed null crash in Deno — uses a proper password hashing algorithm — confirmed 4x
+- what-changed in db.ts — confirmed 3x
+- convention in test_standard.ts
+- Updated schema package — confirmed 3x
 
 ## Known Fixes
 
@@ -53,10 +59,10 @@
 
 ## Recent Decisions
 
+- decision in MobileMenu.tsx
+- Optimized package — offloads heavy computation off the main thread
 - Optimized package — offloads heavy computation off the main thread
 - decision in shared-context.json
-- Optimized Score — evolves the database schema to support new requirements
-- Optimized Score — evolves the database schema to support new requirements
 
 ## Learned Patterns
 
