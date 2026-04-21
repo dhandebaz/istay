@@ -8,6 +8,7 @@ import LazyIsland from "../islands/LazyIsland.tsx";
 import SEOMeta from "../components/SEOMeta.tsx";
 import { ArrowRightIcon, CheckIcon, StarIcon } from "../components/Icons.tsx";
 import { getHost } from "../utils/db.ts";
+import { parseCookies } from "./dashboard/_middleware.ts";
 
 interface PricingData {
   hostId: string | null;
@@ -204,18 +205,17 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                       </thead>
                       <tbody class="divide-y divide-gray-100">
                         {[
-                          {
-                            name: "istay",
-                            pct: "5%",
-                            home: "₹95,000",
-                            highlight: true,
-                          },
+                          { name: "istay", pct: "5%", home: "₹95,000", highlight: true },
                           { name: "Airbnb", pct: "15%", home: "₹85,000" },
                           { name: "MakeMyTrip", pct: "18%", home: "₹82,000" },
                           { name: "Agoda", pct: "18%", home: "₹82,000" },
                           { name: "Expedia", pct: "18%", home: "₹82,000" },
+                          { name: "Booking.com", pct: "17%", home: "₹83,000" },
                           { name: "VRBO", pct: "12%", home: "₹88,000" },
-                          { name: "Booking.com", pct: "≈17%", home: "₹83,000" },
+                          { name: "Goibibo", pct: "18%", home: "₹82,000" },
+                          { name: "TripAdvisor", pct: "15%", home: "₹85,000" },
+                          { name: "Hostelworld", pct: "15%", home: "₹85,000" },
+                          { name: "Cleartrip", pct: "18%", home: "₹82,000" },
                         ].map(({ name, pct, home, highlight }) => (
                           <tr
                             key={name}

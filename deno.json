@@ -25,7 +25,9 @@
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
     "s3_lite_client": "https://deno.land/x/s3_lite_client@0.7.0/mod.ts",
-    "@prisma/client": "npm:@prisma/client@6.4.1"
+    "@prisma/client": "npm:@prisma/client@6.4.1",
+    "@prisma/adapter-pg": "npm:@prisma/adapter-pg@6.4.1",
+    "pg": "npm:pg@8.13.3"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

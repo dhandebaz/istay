@@ -40,7 +40,11 @@ import type {
   Property,
   WebhookConfig,
 } from "./types.ts";
-import { PrismaClient } from "../generated/client/deno/edge.ts";
+// Use the standard Prisma Client from the npm package with Deno-compatible import.
+import PrismaClientPkg from "@prisma/client";
+const PrismaClient = (PrismaClientPkg as any).PrismaClient || PrismaClientPkg;
+import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
 
 // ── KV Singleton ──────────────────────────────────────────────
 
@@ -61,11 +65,26 @@ export async function getKv(): Promise<Deno.Kv | null> {
 
 // ── Prisma Singleton ──────────────────────────────────────────
 
-let _prisma: PrismaClient | null = null;
+let _prisma: any = null;
 
-export function getPrisma(): PrismaClient {
+export function getPrisma(): any {
   if (!_prisma) {
-    _prisma = new PrismaClient();
+    const url = Deno.env.get("DATABASE_URL") || "";
+    console.log("[db] DATABASE_URL protocol:", url.split(":")[0]);
+    
+    // In Deno, we use the Driver Adapter for all non-Accelerate/non-Prisma-Postgres connections
+    // to avoid native binary issues.
+    if (url.startsWith("prisma://") || url.startsWith("prisma+postgres://")) {
+      console.log("[db] Initializing standard PrismaClient (no adapter)");
+      _prisma = new PrismaClient();
+    } else {
+      console.log("[db] Initializing PrismaClient with Driver Adapter");
+      const pool = new pg.Pool({ connectionString: url });
+      const adapter = new PrismaPg(pool);
+      // NOTE: With driver-adapters, we STILL pass the datasource url to the client 
+      // but it communicates via the adapter.
+      _prisma = new PrismaClient({ adapter });
+    }
   }
   return _prisma;
 }
@@ -1464,7 +1483,7 @@ export async function deductAiWalletCost(
   const prisma = getPrisma();
   
   const totalTokens = usageMeta.prompt + usageMeta.completion;
-  const inrCost = (totalTokens / 1_000_000) * 200; 
+  const inrCost = (totalTokens / 1_000_000) * 250; 
   const roundedCost = Math.max(0.01, Math.round(inrCost * 100) / 100);
 
   // ── Check Current Balance ──
@@ -1494,7 +1513,7 @@ export async function deductAiWalletCost(
         meta: {
           tokens: usageMeta,
           model: usageMeta.model,
-          rate: 200, 
+          rate: 250, 
         },
       },
     }),

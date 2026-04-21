@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1375 notes | Score threshold: >40
+> 1462 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,53 +20,43 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
-- **⚠️ GOTCHA: Added JWT tokens authentication — ensures atomic multi-step database operations** — - > 1333 notes | Score threshold: >40
-+ > 1370 notes | Score threshold
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in PricingCheckout.tsx
-+ - problem-fix in agent-rules.
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "3ca9f0c7d6350ab6",
-+
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in WalletTransaction — reduces initial bundle siz
-- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - > 1318 notes | Score threshold: >40
-+ > 1322 notes | Score threshold
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "4bf23753650c6f9e",
-+
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Patched security issue Ceonzb
++ - problem-fix in agent-rules.md
+- 
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in agent-rules.md
++ - Patched security issue NeqJQsLMW
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Users — prevents null/undefined runtime crashe
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Users — prevents null/undefined runtime crashe
+- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: Added JWT tokens authentication — ensures atomic multi-
+- **gotcha in db.ts** — - let _prisma: PrismaClient | null = null;
++ let _prisma: any = null;
+
 
 ## Project Standards
 
+- convention in test_standard.ts
+- what-changed in shared-context.json — confirmed 7x
+- problem-fix in shared-context.json — confirmed 3x
+- problem-fix in agent-rules.md — confirmed 3x
+- Fixed null crash in PrismaClient — prevents null/undefined runtime crashes — confirmed 4x
+- Replaced auth Update — confirmed 3x
 - Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 8x
 - what-changed in shared-context.json — confirmed 8x
-- problem-fix in agent-rules.md — confirmed 5x
-- what-changed in pay.ts — confirmed 3x
-- Patched security issue EaxTta — confirmed 3x
-- Updated Header database schema — confirmed 3x
-- what-changed in EarningsCalculator.tsx — confirmed 4x
-- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 9x
 
 ## Known Fixes
 
 - ❌ - - ⚠️ GOTCHA: Fixed null crash in ProofOfCleanUploader — avoids unnecessary re-renders in R... → ✅ problem-fix in agent-rules.md
 - ❌ -   const [error, setError] = useState<string | null>(null); → ✅ problem-fix in PricingCheckout.tsx
+- ❌ - - Fixed null crash in Users — prevents null/undefined runtime crashes → ✅ problem-fix in agent-rules.md
 - ❌ - - Fixed null crash in CryptoKey — uses a proper password hashing algorithm → ✅ problem-fix in agent-rules.md
 - ❌ - - Fixed null crash in LedgerEntry — avoids unnecessary re-renders in React → ✅ problem-fix in agent-rules.md
-- ❌ - - Fixed null crash in Math → ✅ problem-fix in agent-rules.md
 
 ## Recent Decisions
 
+- Optimized package — offloads heavy computation off the main thread
+- decision in shared-context.json
 - Optimized Score — evolves the database schema to support new requirements
 - Optimized Score — evolves the database schema to support new requirements
-- Optimized Legal — offloads heavy computation off the main thread
-- Optimized Implementation — offloads heavy computation off the main thread
 
 ## Learned Patterns
 
