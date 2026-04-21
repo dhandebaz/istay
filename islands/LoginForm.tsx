@@ -34,8 +34,8 @@ export default function LoginForm() {
       }
 
       // Backend tells us where to route (dashboard if paid, pricing if not)
-      if (typeof globalThis.location !== "undefined") {
-        globalThis.location.href = data.redirectUrl || "/dashboard";
+      if (typeof window !== "undefined") {
+        window.location.href = data.redirectUrl || "/dashboard";
       }
     } catch {
       step.value = "error";

@@ -51,7 +51,7 @@ export default function App({ Component, url }: PageProps) {
         
         {/* Global Floating WhatsApp Button */}
         <a 
-          href="https://wa.me/91XXXXXXXXXX?text=I%20have%20a%20question%20about%20istay%20onboarding" 
+          href="https://wa.me/919873420803?text=I%20have%20a%20question%20about%20istay%20onboarding" 
           target="_blank" 
           rel="noopener noreferrer"
           class="fixed bottom-6 right-6 z-[90] w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 hover:shadow-mint-500/30 transition-all duration-300"

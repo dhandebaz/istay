@@ -69,8 +69,8 @@ export default function RegisterForm() {
       }
 
       // Automatically redirect to the next step of onboarding (payment setup API)
-      if (typeof globalThis.location !== "undefined") {
-        globalThis.location.href = "/pricing";
+      if (typeof window !== "undefined") {
+        window.location.href = "/pricing";
       }
     } catch {
       step.value = "error";

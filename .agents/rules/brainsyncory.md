@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1634 notes | Score threshold: >40
+> 1704 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -36,19 +36,19 @@ Content summary (8
 
 ## Project Standards
 
-- Replaced auth Navigate — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 4x
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Updated schema DLDl — hardens HTTP security headers — confirmed 4x
+- Replaced auth Fixed — confirmed 3x
+- what-changed in shared-context.json — confirmed 8x
+- problem-fix in agent-rules.md — confirmed 7x
+- what-changed in Footer.tsx — confirmed 3x
+- what-changed in shared-context.json — confirmed 6x
+- problem-fix in agent-rules.md — confirmed 6x
+- what-changed in shared-context.json — confirmed 9x
+- problem-fix in agent-rules.md — confirmed 8x
 
 ## Known Fixes
 
 - ❌ - - ⚠️ GOTCHA: Fixed null crash in ProofOfCleanUploader — avoids unnecessary re-renders in R... → ✅ problem-fix in agent-rules.md
-- ❌ -   const [error, setError] = useState<string | null>(null); → ✅ problem-fix in PricingCheckout.tsx
+- ❌ -   const [error, setError] = useState<string | null>(null); → ✅ problem-fix in BillingManager.tsx
 - ❌ - - Fixed null crash in Users — prevents null/undefined runtime crashes → ✅ problem-fix in agent-rules.md
 - ❌ - - Fixed null crash in CryptoKey — uses a proper password hashing algorithm → ✅ problem-fix in agent-rules.md
 - ❌ - - Fixed null crash in LedgerEntry — avoids unnecessary re-renders in React → ✅ problem-fix in agent-rules.md
