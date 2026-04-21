@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1560 notes | Score threshold: >40
+> 1568 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,67 +20,29 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "d009a65695dc4cc2",
-+
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "3ca9f0c7d6350ab6",
-+
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "4bf23753650c6f9e",
-+
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "8c4a2a944bad3298",
-+
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "a2958601d6806252",
-+
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "f2a544fad4f07525",
-+
-
-## Active: `.`
-
-- **gotcha in shared-context.json**
-- **gotcha in shared-context.json**
-- **gotcha in shared-context.json**
-- **gotcha in shared-context.json**
-- **gotcha in shared-context.json**
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1554 notes | Score threshold: >40
++ > 1560 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: problem-fix in agent-rules.md
++ - ⚠️ GOTCHA: Added JWT 
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1533 notes | Score threshold: >40
++ > 1554 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1530 notes | Score threshold: >40
++ > 1533 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1501 notes | Score threshold: >40
++ > 1530 notes | Score threshold
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in shared-context.json
++ - problem-fix in agent-rules.
 
 ## Project Standards
 
-- convention in deno.json
-- Updated schema DLDl — hardens HTTP security headers — confirmed 3x
-- Added API key auth authentication — improves module reusability — confirmed 6x
-- convention in fresh.gen.ts
-- Added API key auth authentication — improves module reusability — confirmed 4x
-- Added API key auth authentication — improves module reusability — confirmed 3x
-- convention in fresh.gen.ts
 - Added JWT tokens authentication — confirmed 4x
+- Optimized Fixed — confirmed 4x
+- what-changed in shared-context.json — confirmed 5x
+- Fixed null crash in PrismaClientPkg — uses a proper password hashing algorithm — confirmed 3x
+- Updated schema DLDl — hardens HTTP security headers — confirmed 3x
+- Added session cookies authentication — confirmed 3x
+- what-changed in shared-context.json — confirmed 8x
+- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 3x
 
 ## Known Fixes
 
@@ -92,10 +54,10 @@
 
 ## Recent Decisions
 
+- decision in MobileMenu.tsx
 - Optimized package — offloads heavy computation off the main thread
 - Optimized package — offloads heavy computation off the main thread
 - decision in shared-context.json
-- decision in MobileMenu.tsx
 
 ## Learned Patterns
 
