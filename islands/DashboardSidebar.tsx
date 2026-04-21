@@ -23,7 +23,9 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
 
   // Sync active state with client-side navigation
   useEffect(() => {
-    setActivePath(globalThis.location?.pathname ?? currentPath);
+    if (typeof globalThis.location !== "undefined") {
+      setActivePath(globalThis.location.pathname);
+    }
   }, []);
 
   const isActive = (item: NavItem) => {

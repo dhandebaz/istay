@@ -6,13 +6,11 @@
     "jsr:@std/encoding@^1.0.5": "1.0.10",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@^1.0.6": "1.1.4",
-    "npm:@preact/signals@1.2.3": "1.2.3_preact@10.22.0",
     "npm:@prisma/adapter-pg@*": "6.4.1_pg@8.13.3",
     "npm:@prisma/adapter-pg@6.4.1": "6.4.1_pg@8.13.3",
     "npm:@prisma/client@6.4.1": "6.4.1_prisma@6.4.1",
     "npm:pg@*": "8.13.3",
     "npm:pg@8.13.3": "8.13.3",
-    "npm:preact@10.22.0": "10.22.0",
     "npm:prisma@6.4.1": "6.4.1"
   },
   "jsr": {
@@ -170,16 +168,6 @@
       "integrity": "sha512-pEl1bO9mfAmIC+tW5btTmrKaujg3zGtUmWNdCw/xs70FBjwAL3o9OEKNHvNmnyylD6ubxUERiEhdsL0xBQ9efw==",
       "os": ["win32"],
       "cpu": ["x64"]
-    },
-    "@preact/signals-core@1.14.1": {
-      "integrity": "sha512-vxPpfXqrwUe9lpjqfYNjAF/0RF/eFGeLgdJzdmIIZjpOnTmGmAB4BjWone562mJGMRP4frU6iZ6ei3PDsu52Ng=="
-    },
-    "@preact/signals@1.2.3_preact@10.22.0": {
-      "integrity": "sha512-M2DXse3Wi8HwjI1d2vQWOLJ3lHogvqTsJYvl4ofXRXgMFQzJ7kmlZvlt5i8x5S5VwgZu0ghru4HkLqOoFfU2JQ==",
-      "dependencies": [
-        "@preact/signals-core",
-        "preact"
-      ]
     },
     "@prisma/adapter-pg@6.4.1_pg@8.13.3": {
       "integrity": "sha512-alwRFNHawfeFfjbErMOUbLRgoxBSTCdcGpxV66oKSwsgNPQHjAqBb+xxD5Xg2Y4oyhP2ul1d5GT5vfWgTBzQPg==",
@@ -353,9 +341,6 @@
       "dependencies": [
         "xtend"
       ]
-    },
-    "preact@10.22.0": {
-      "integrity": "sha512-RRurnSjJPj4rp5K6XoP45Ui33ncb7e4H7WiOHVpjbkvqvA3U+N8Z6Qbo0AE6leGYBV66n8EhEaFixvIu3SkxFw=="
     },
     "prisma@6.4.1": {
       "integrity": "sha512-q2uJkgXnua/jj66mk6P9bX/zgYJFI/jn4Yp0aS6SPRrjH/n6VyOV7RDe1vHD0DX8Aanx4MvgmUPPoYnR6MJnPg==",
@@ -777,11 +762,9 @@
     ],
     "packageJson": {
       "dependencies": [
-        "npm:@preact/signals@1.2.3",
         "npm:@prisma/adapter-pg@6.4.1",
         "npm:@prisma/client@6.4.1",
         "npm:pg@8.13.3",
-        "npm:preact@10.22.0",
         "npm:prisma@6.4.1"
       ]
     }

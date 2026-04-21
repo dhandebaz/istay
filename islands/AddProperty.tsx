@@ -287,7 +287,11 @@ function SuccessState(
       </div>
       <div class="flex flex-col w-full gap-2 mt-2">
         <button
-          onClick={() => globalThis.location?.reload()}
+          onClick={() => {
+            if (typeof globalThis.location !== "undefined") {
+              globalThis.location.reload();
+            }
+          }}
           class="w-full py-2.5 rounded-xl bg-teal-500 text-white text-sm font-600 hover:bg-teal-600 transition-colors"
         >
           View Properties

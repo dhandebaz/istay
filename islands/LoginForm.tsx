@@ -34,7 +34,9 @@ export default function LoginForm() {
       }
 
       // Backend tells us where to route (dashboard if paid, pricing if not)
-      globalThis.location.href = data.redirectUrl || "/dashboard";
+      if (typeof globalThis.location !== "undefined") {
+        globalThis.location.href = data.redirectUrl || "/dashboard";
+      }
     } catch {
       step.value = "error";
       errorMsg.value = "Network error. Please try again.";

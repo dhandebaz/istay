@@ -21,9 +21,11 @@ export default function SettingsTabs(
   // Update URL without refresh
   const switchTab = useCallback((id: string) => {
     setActiveTab(id);
-    const url = new URL(globalThis.location.href);
-    url.searchParams.set("tab", id);
-    globalThis.history.pushState({}, "", url);
+    if (typeof globalThis.location !== "undefined") {
+      const url = new URL(globalThis.location.href);
+      url.searchParams.set("tab", id);
+      globalThis.history.pushState({}, "", url);
+    }
   }, []);
 
   return (

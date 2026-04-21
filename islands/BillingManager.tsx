@@ -56,7 +56,9 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
             });
             const verifyData = await verifyRes.json();
             if (verifyData.ok) {
-              window.location.reload();
+              if (typeof window !== "undefined") {
+                window.location.reload();
+              }
             } else {
               throw new Error(verifyData.error || "Verification failed");
             }
@@ -67,9 +69,13 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
         theme: { color: "#00E676" },
       };
 
-      const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", (response: any) => setError(response.error.description));
-      rzp.open();
+      if (typeof window !== "undefined" && window.Razorpay) {
+        const rzp = new window.Razorpay(options);
+        rzp.on("payment.failed", (response: any) => setError(response.error.description));
+        rzp.open();
+      } else {
+        throw new Error("Payment gateway not loaded. Please refresh.");
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -91,7 +97,9 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
 
       // Razorpay provides a short_url for subscription auth
       if (data.short_url) {
-        window.location.href = data.short_url;
+        if (typeof window !== "undefined") {
+          window.location.href = data.short_url;
+        }
       } else {
         throw new Error("No checkout URL found for subscription");
       }

@@ -293,13 +293,17 @@ export default function DeveloperApi(
   };
 
   const handleCopyApiKey = () => {
-    navigator.clipboard.writeText(apiKey);
-    showToast("API key copied to clipboard", "success");
+    if (typeof navigator !== "undefined") {
+      navigator.clipboard.writeText(apiKey);
+      showToast("API key copied to clipboard", "success");
+    }
   };
 
   const handleCopySecret = (secret: string) => {
-    navigator.clipboard.writeText(secret);
-    showToast("Webhook secret copied to clipboard", "success");
+    if (typeof navigator !== "undefined") {
+      navigator.clipboard.writeText(secret);
+      showToast("Webhook secret copied to clipboard", "success");
+    }
   };
 
   const toggleSecretReveal = (hookId: string) => {

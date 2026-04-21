@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1620 notes | Score threshold: >40
+> 1634 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -16,10 +16,13 @@
 - **ALWAYS** ask the user before running commands that modify system state, install packages, or make network requests.
 - When in doubt, **show the command first** and wait for approval.
 
-**Stack:** JavaScript
+**Stack:** JavaScript · DB: PostgreSQL, Prisma
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **gotcha in agent-rules.md** — File updated (external): .brainsync/agent-rules.md
+
+Content summary (8
 - **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - > 1584 notes | Score threshold: >40
 + > 1598 notes | Score threshold
 - **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - > 1573 notes | Score threshold: >40
@@ -30,19 +33,17 @@
 + > 1560 notes | Score threshold
 - **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: problem-fix in agent-rules.md
 + - ⚠️ GOTCHA: Added JWT 
-- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1533 notes | Score threshold: >40
-+ > 1554 notes | Score threshold
 
 ## Project Standards
 
+- Replaced auth Navigate — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 4x
 - what-changed in brainsync_auto.md — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 3x
 - what-changed in brainsync_auto.md — confirmed 3x
 - Updated schema DLDl — hardens HTTP security headers — confirmed 4x
-- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 3x
-- what-changed in shared-context.json — confirmed 3x
-- Updated schema DLDl — hardens HTTP security headers — confirmed 7x
 
 ## Known Fixes
 
@@ -166,6 +167,7 @@ The Code node offers two execution modes. Choose based on your use case:
 
 - [JavaScript/TypeScript] Use === not == (strict equality prevents type coercion bugs)
 - [JavaScript/TypeScript] Use const by default, let when reassignment needed, never var
+- [Prisma] Run prisma generate after schema changes
 
 ## Available Tools (ON-DEMAND only)
 - `sys_core_01(q)` — Deep search when stuck

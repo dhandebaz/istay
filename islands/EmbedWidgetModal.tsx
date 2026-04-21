@@ -8,11 +8,17 @@ interface EmbedWidgetModalProps {
 export default function EmbedWidgetModal({ propId, propertyName }: EmbedWidgetModalProps) {
   const isOpen = useSignal(false);
   const copied = useSignal(false);
+  const origin = useSignal("");
+
+  useEffect(() => {
+    origin.value = window.location.origin;
+  }, []);
 
   const embedCode = `<div class="istay-widget" data-prop-id="${propId}"></div>
-<script src="${window.location.origin}/widget.js"></script>`;
+<script src="${origin.value || ""}/widget.js"></script>`;
 
   const copyCode = async () => {
+    if (!origin.value) return;
     try {
       await navigator.clipboard.writeText(embedCode);
       copied.value = true;
