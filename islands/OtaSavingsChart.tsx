@@ -31,7 +31,7 @@ export default function OtaSavingsChart({
         <div>
           <h3 class="text-base font-700 text-gray-900">OTA Savings History</h3>
           <p class="text-xs text-gray-400 mt-0.5">
-            Estimated commissions retained vs Airbnb/Booking.com
+            Retained commissions vs Airbnb, Agoda, and MMT distributions
           </p>
         </div>
 

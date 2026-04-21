@@ -84,13 +84,16 @@ export const handler: Handlers = {
       return Response.json({ error: "Host not found" }, { status: 404 });
     }
 
-    if (host.setupFeePaid) {
-      return Response.json({ ok: true, alreadyPaid: true });
-    }
+    // 30 days from now
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 30);
 
     const updatedHost = {
       ...host,
-      setupFeePaid: true,
+      setupFeePaid: true, // Keep for legacy compatibility
+      subscriptionStatus: "active" as const,
+      plan: "standard" as const,
+      subscriptionExpiry: expiryDate.toISOString(),
       updatedAt: new Date().toISOString(),
     };
     await saveHost(updatedHost);

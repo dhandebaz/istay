@@ -58,7 +58,11 @@ export const handler: Handlers = {
 
     // Store in Deno KV
     const kv = await getKv();
-    await kv.set(["contact_inquiry", id], inquiry);
+    if (kv) {
+      await kv.set(["contact_inquiry", id], inquiry);
+    } else {
+      console.error("[contact] KV unavailable - inquiry logged only to console");
+    }
 
     console.log(
       `[contact] New inquiry from ${name} <${email}> id=${id}`,

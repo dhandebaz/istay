@@ -170,10 +170,10 @@ export default function DashboardLayout(
                 </p>
                 <div class="flex items-center gap-1.5 mt-0.5">
                   <p class="text-[10px] bg-istay-50 text-istay-600 px-1.5 py-0.5 rounded border border-istay-100 uppercase tracking-tighter font-800 leading-none">
-                    {state?.plan === "lifetime" ? "Lifetime" : "Monthly"}
+                    {state?.plan === "lifetime" ? "Lifetime" : "SaaS"}
                   </p>
                   <p class="text-[10px] bg-mint-50 text-mint-700 px-1.5 py-0.5 rounded border border-mint-100 uppercase tracking-tighter font-800 leading-none">
-                    ₹{(state as any)?.walletBalance ?? 0} Cr
+                    ₹{state?.walletBalance?.toFixed(2) ?? "0.00"} Cr
                   </p>
                 </div>
               </div>

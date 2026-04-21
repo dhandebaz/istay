@@ -65,10 +65,16 @@ const PLATFORMS = [
     bg: "bg-orange-50",
   },
   {
-    name: "Booking.com",
-    fee: "15–20%",
-    color: "text-blue-500",
+    name: "Agoda",
+    fee: "18%",
+    color: "text-blue-600",
     bg: "bg-blue-50",
+  },
+  {
+    name: "Expedia",
+    fee: "18%",
+    color: "text-indigo-600",
+    bg: "bg-indigo-50",
   },
   {
     name: "istay",
@@ -178,35 +184,16 @@ export default function Home({ data }: PageProps) {
             </div>
 
             <h1 class="text-4xl sm:text-5xl lg:text-[4rem] font-800 text-gray-900 leading-[1.1] tracking-tight max-w-4xl mx-auto">
-              Stop paying{" "}
-              <span class="relative inline-block">
-                <span class="relative z-10 text-rose-500">15%</span>
-                <svg
-                  class="absolute -bottom-1 left-0 w-full"
-                  height="8"
-                  viewBox="0 0 100 8"
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M0 7 Q50 0 100 7"
-                    stroke="#fca5a5"
-                    stroke-width="2.5"
-                    fill="none"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </span>{" "}
-              just to get booked.
+              Connect every channel.
               <br class="hidden sm:block" />
-              <span class="text-mint-500 mt-2 inline-block">Own your audience.</span>
+              <span class="text-mint-500 mt-2 inline-block">One dashboard to rule them all.</span>
             </h1>
 
             <p class="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              istay is a direct booking platform for Airbnb and hotel hosts.
+              istay isn't here to replace the OTAs — we're here to connect them. 
               Accept bookings through your own channel with a flat{" "}
               <span class="font-600 text-gray-700">5% fee</span>{" "}
-              — no monthly subscriptions, no vendor lock-in.
+              while managing everything in one powerful command center.
             </p>
 
             <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -242,9 +229,9 @@ export default function Home({ data }: PageProps) {
           <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
-                { name: "Lifetime access", fee: "₹1,000", color: "text-gray-900" },
+                { name: "SaaS Subscription", fee: "₹1,000", color: "text-gray-900" },
                 { name: "Flat Booking Fee", fee: "5%", color: "text-mint-600" },
-                { name: "No hidden costs", fee: "₹0", color: "text-gray-900" },
+                { name: "Unified Multi-Sync", fee: "Included", color: "text-gray-900" },
                 {
                   name: "Airbnb Platform Fee",
                   fee: "15%+",
@@ -391,9 +378,9 @@ export default function Home({ data }: PageProps) {
                 {[
                   {
                     step: "01",
-                    title: "Pay once & onboard",
+                    title: "Connect your channels",
                     desc:
-                      "Pay the ₹1,000 setup fee. We activate your account and branded booking page instantly.",
+                      "Connect your Airbnb, MMT, and other accounts. We sync your calendars and listings in one click.",
                   },
                   {
                     step: "02",

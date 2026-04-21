@@ -92,37 +92,44 @@ export async function handler(
     }
   }
 
-  // Try to load host from KV to verify they exist and get latest state
+  // Try to load host from KV/DB to verify they exist and get latest state
   let emailVerified = true;
   let hostEmail = "";
+  let plan: "monthly" | "lifetime" = "monthly";
+  let walletBalance = 0;
+  let subscriptionStatus: "active" | "expired" | "trailing" = "expired";
+
   try {
-    const kv = await getKv();
-    const hostEntry = await kv.get(["host", hostId]);
-    if (hostEntry.value) {
-      const host = hostEntry.value as any;
+    const { getHost } = await import("../../utils/db.ts");
+    const host = await getHost(hostId);
+
+    if (host) {
       hostName = host.name ?? hostName;
       hostEmail = host.email;
+      plan = host.plan as any;
+      walletBalance = host.walletBalance;
+      subscriptionStatus = host.subscriptionStatus as any;
 
-      if (host.setupFeePaid === false) {
+      // Enforcement: If subscription is expired and user is trying to access anything other than billing/settings
+      if (subscriptionStatus === "expired" && !path.startsWith("/dashboard/billing") && !path.startsWith("/dashboard/settings")) {
         return new Response(null, {
           status: 302,
-          headers: { Location: `/pricing?auth=onboarding_incomplete` },
+          headers: { Location: `/dashboard/billing?status=expired` },
         });
       }
 
-      // Final Role Verification (if cookie role is missing/suspect)
-      const authEntry = await kv.get(["auth", hostEmail.toLowerCase()]);
-      if (authEntry.value) {
-        const auth = authEntry.value as any;
-        emailVerified = auth.emailVerified ?? true;
-        // If the session matches the primary host email, ensure role is owner
-        if (auth.email.toLowerCase() === hostEmail.toLowerCase()) {
-          role = "owner";
+      const kv = await getKv();
+      if (kv) {
+        // Final Email Verification check
+        const authEntry = await kv.get(["auth", hostEmail.toLowerCase()]);
+        if (authEntry.value) {
+          const auth = authEntry.value as any;
+          emailVerified = auth.emailVerified ?? true;
         }
       }
     }
   } catch (err) {
-    console.warn("[middleware] KV lookup failed:", err);
+    console.warn("[middleware] Host state lookup failed:", err);
   }
 
   ctx.state.hostId = hostId;
@@ -130,6 +137,9 @@ export async function handler(
   ctx.state.hostEmail = hostEmail;
   ctx.state.role = role;
   ctx.state.emailVerified = emailVerified;
+  ctx.state.plan = plan;
+  ctx.state.walletBalance = walletBalance;
+  ctx.state.subscriptionStatus = subscriptionStatus;
 
   return await ctx.next();
 }

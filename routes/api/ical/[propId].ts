@@ -9,6 +9,9 @@ export const handler: Handlers = {
   GET: async (_req, ctx) => {
     const { propId } = ctx.params;
     const kv = await getKv();
+    if (!kv) {
+      return new Response("Service temporarily limited. Please try again later.", { status: 503 });
+    }
 
     // 1. Resolve hostId from the property index
     const idx = await kv.get<{ hostId: string }>(["prop_index", propId]);

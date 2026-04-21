@@ -40,7 +40,7 @@ export default function EarningsComparison(
           </h2>
           <p class="text-sm text-gray-500 max-w-sm">
             By booking directly through istay instead of high-commission OTAs
-            (15% avg), you kept more of your hard-earned revenue.
+            (Airbnb, Agoda, or MMT), you kept more of your hard-earned revenue.
           </p>
         </div>
 

@@ -418,6 +418,9 @@ export interface DashboardState {
   hostEmail: string;
   role: "owner" | "manager" | "staff" | "accountant";
   emailVerified: boolean;
+  plan: "monthly" | "lifetime";
+  walletBalance: number;
+  subscriptionStatus: "active" | "expired" | "trailing";
 }
 
 // ── REVIEWS ───────────────────────────────────────────────────

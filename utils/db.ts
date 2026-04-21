@@ -210,7 +210,9 @@ export async function saveHost(data: Host): Promise<void> {
 
   // Dual-write to KV for high-speed middleware lookups if needed
   const kv = await getKv();
-  await kv.set(["host", data.id], data);
+  if (kv) {
+    await kv.set(["host", data.id], data);
+  }
 }
 
 export async function listAllHosts(): Promise<Host[]> {
@@ -1531,12 +1533,22 @@ export async function updateSubscription(
 export async function listWalletTransactions(
   hostId: string,
 ): Promise<WalletTransaction[]> {
-  const prisma = getPrisma();
-  const transactions = await prisma.walletTransaction.findMany({
-    where: { hostId },
-    orderBy: { createdAt: "desc" },
-  });
-  return transactions as WalletTransaction[];
+  try {
+    const prisma = getPrisma();
+    const transactions = await prisma.walletTransaction.findMany({
+      where: { hostId },
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    });
+    return transactions.map(t => ({
+      ...t,
+      createdAt: t.createdAt.toISOString(),
+      meta: t.meta as any,
+    })) as WalletTransaction[];
+  } catch (err) {
+    console.error("[db] listWalletTransactions failed:", err);
+    return [];
+  }
 }
 
 /**

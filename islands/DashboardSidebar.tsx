@@ -407,7 +407,35 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
             class="md:hidden fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl flex flex-col"
             aria-label="Mobile sidebar"
           >
-            <SidebarContent />
+            {/* Logo Mobile */}
+            <div class="flex items-center px-6 h-20 border-b border-gray-100 flex-shrink-0">
+              <a href="/" class="flex items-center gap-2">
+                <img src="/logo.svg" alt="istay logo" class="h-8 w-auto" />
+              </a>
+            </div>
+
+            {/* Navigation Mobile */}
+            <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
+              {NAV_ITEMS.map((item) => {
+                const active = isActive(item);
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => {
+                      setActivePath(item.href);
+                      setMobileOpen(false);
+                    }}
+                    class={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-600 transition-all ${
+                      active ? "bg-teal-50 text-teal-600" : "text-gray-500 hover:bg-gray-50"
+                    }`}
+                  >
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </a>
+                );
+              })}
+            </nav>
           </aside>
         </>
       )}

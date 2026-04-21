@@ -228,26 +228,27 @@ export default function DashboardOverview(
         <title>Overview | istay Dashboard</title>
       </Head>
 
-      {/* Payment Reminder Banner */}
-      {!data.setupFeePaid && (
-        <div class="mb-8 rounded-2xl bg-amber-50 border border-amber-200 p-4 flex items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">⚠️</span>
+      {/* Subscription Requirement Banner */}
+      {data.stats.subscriptionStatus === "expired" && (
+        <div class="mb-8 rounded-2xl bg-rose-50 border border-rose-200 p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center shrink-0">
+              <span class="text-2xl">⏳</span>
+            </div>
             <div>
-              <p class="text-sm font-700 text-amber-900">
-                Account Activation Required
+              <p class="text-base font-800 text-rose-900 tracking-tight">
+                Subscription Required
               </p>
-              <p class="text-xs text-amber-700">
-                Pay the one-time ₹1,000 setup fee to activate your booking page
-                and start accepting guests.
+              <p class="text-sm text-rose-700 mt-0.5 max-w-xl leading-relaxed">
+                Your direct booking engine is currently offline. Activate your **₹1,000/mo SaaS subscription** to resume accepting guest reservations and sync with Airbnb, Agoda, and Expedia.
               </p>
             </div>
           </div>
           <a
-            href="/pricing"
-            class="whitespace-nowrap px-4 py-2 rounded-full bg-amber-600 text-white text-xs font-700 hover:bg-amber-700 transition-colors"
+            href="/dashboard/billing"
+            class="whitespace-nowrap px-8 py-3 rounded-2xl bg-rose-600 text-white text-sm font-800 hover:bg-rose-700 transition-all hover:scale-[1.02] shadow-lg shadow-rose-600/20"
           >
-            Activate Now
+            Activate Platform →
           </a>
         </div>
       )}
@@ -363,14 +364,14 @@ export default function DashboardOverview(
             href: "/dashboard/properties",
             icon: "🏠",
             label: "Add Property",
-            desc: "Import from Airbnb in seconds",
-            color: "hover:border-istay-300",
+            desc: "Import from Airbnb, Agoda, or Expedia",
+            color: "hover:border-teal-300",
           },
           {
             href: "#",
             icon: "📅",
-            label: "Sync Calendar",
-            desc: "Block dates from iCal",
+            label: "Sync OTA Channels",
+            desc: "Connect iCal from all platforms",
             color: "hover:border-violet-300",
           },
           {

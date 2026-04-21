@@ -40,34 +40,30 @@ const SCHEMA = JSON.stringify({
     "@type": "Offer",
     price: "1000",
     priceCurrency: "INR",
-    description: "₹1,000 monthly SaaS subscription. AI usage credits are separate.",
+    description: "₹1,000 monthly SaaS subscription for a Unified Hospitality Dashboard. AI usage credits are prepaid via wallet.",
   },
 });
 
 const FAQS = [
   {
     q: "How does the pricing work?",
-    a: "istay charging a simple ₹1,000 monthly SaaS fee to keep your digital concierge and booking channel live. AI token usage (Concierge chats, OCR) is billed separately through a prepaid wallet to ensure you only pay for what you use.",
+    a: "istay charging a simple ₹1,000 monthly SaaS fee to keep your unified dashboard and direct booking channel live. AI token usage (Concierge chats, OCR) is billed separately through a prepaid wallet to ensure you only pay for what you use.",
   },
   {
     q: "What is the AI Wallet?",
-    a: "The AI Wallet is where you top up credits (₹100, ₹500, or ₹1,000) for advanced AI tasks like autonomous WhatsApp responses and Global Guest Intelligence. We charge a fair rate based on actual tokens used, giving you enterprise-grade AI at warehouse prices.",
+    a: "The AI Wallet is where you top up credits (₹100, ₹500, or ₹1,000) for advanced AI tasks like autonomous WhatsApp responses and Global Guest Intelligence. We charge a fair rate based on actual tokens used.",
   },
   {
-    q: "Can I still use Airbnb alongside istay?",
-    a: "Absolutely. istay is an additional direct channel, not a replacement. Many hosts use it to convert repeat guests and social followers away from OTAs.",
+    q: "Does istay replace Airbnb or MakeMyTrip?",
+    a: "No. istay connects them. We aren't here to replace the OTAs but to act as your central command center—connecting your calendars, messages, and reviews into one dashboard while giving you a low-fee direct channel for your repeat guests.",
   },
   {
-    q: "Is the setup fee refundable?",
-    a: "No — once your account is activated and your booking page is live, the ₹1,000 setup fee is non-refundable. Please review our Cancellation Policy for details.",
+    q: "What happened to the lifetime fee?",
+    a: "We've moved to a monthly subscription of ₹1,000 to ensure we can provide continuous enterprise-grade support, real-time OTA syncing, and ongoing platform updates for all hosts.",
   },
   {
     q: "How are guests charged?",
     a: "Guests pay via UPI, debit/credit card, or net banking through our Easebuzz integration. You receive 95% directly to your linked bank account.",
-  },
-  {
-    q: "Do I need any technical skills?",
-    a: "None. Setup takes under 10 minutes — just fill in your property details, set your rates, and share your link. No code required.",
   },
 ];
 
@@ -75,8 +71,8 @@ export default function Pricing({ data }: PageProps<PricingData>) {
   return (
     <>
       <SEOMeta 
-        title="Pricing | istay — ₹1,000 Setup + 5% Flat Fee"
-        description="istay charges a one-time ₹1,000 setup fee and a flat 5% per booking. Compare vs Airbnb (15%) and MakeMyTrip (18%) — and see how much you keep."
+        title="Pricing | istay — One Dashboard to Connect Them All"
+        description="istay connects your Airbnb, MMT, Booking.com, and more into one powerful dashboard. ₹1,000/mo flat fee. Own your guests, keep your margins."
         schema={SCHEMA}
       />
 
@@ -91,20 +87,15 @@ export default function Pricing({ data }: PageProps<PricingData>) {
           />
           <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-mint-100 border border-mint-200 text-istay-900 text-xs font-800 uppercase tracking-wider mb-6">
-              Transparent Pricing
+              Unified Host Dashboard
             </div>
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-800 text-gray-900 tracking-tight leading-tight max-w-4xl mx-auto">
-              Stop paying{" "}
-              <span class="text-rose-500 underline decoration-rose-200 decoration-4 underline-offset-4">
-                15%
-              </span>{" "}
-              just to get booked.
+              Connect every channel.
               <br />
-              <span class="text-mint-500">Own your audience.</span>
+              <span class="text-mint-500">One interface to manage it all.</span>
             </h1>
             <p class="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              One lifetime fee. One flat transaction rate. No monthly bills, no
-              OTA dependency.
+              We aren't here to replace the OTAs — we're here to connect them. Sync your Airbnb, MMT, Agoda, and more into one powerful command center.
             </p>
           </div>
         </section>
@@ -202,6 +193,9 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                           },
                           { name: "Airbnb", pct: "15%", home: "₹85,000" },
                           { name: "MakeMyTrip", pct: "18%", home: "₹82,000" },
+                          { name: "Agoda", pct: "18%", home: "₹82,000" },
+                          { name: "Expedia", pct: "18%", home: "₹82,000" },
+                          { name: "VRBO", pct: "12%", home: "₹88,000" },
                           { name: "Booking.com", pct: "≈17%", home: "₹83,000" },
                         ].map(({ name, pct, home, highlight }) => (
                           <tr

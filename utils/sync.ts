@@ -107,6 +107,10 @@ export async function syncPropertyCalendar(
 
     // 4. Batch writes via kv.atomic() — up to 10 mutations per transaction
     const kv = await getKv();
+    if (!kv) {
+      console.warn(`[sync] Skipping prop=${propId}: Deno KV not available`);
+      return { propId, icsUrl, synced: 0, skipped: true, error: "Deno KV unavailable" };
+    }
 
     // Batch deletions
     for (let i = 0; i < datesToDelete.length; i += KV_ATOMIC_BATCH_SIZE) {

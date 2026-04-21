@@ -81,7 +81,7 @@ export default function MobileMenu({ links }: MobileMenuProps) {
       {open && (
         <div
           id="mobile-menu-panel"
-          class="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-lg animate-fade-in"
+          class="absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg animate-fade-in"
           role="dialog"
           aria-label="Mobile navigation"
         >

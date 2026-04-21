@@ -48,9 +48,10 @@ export const handler: Handlers = {
         body: JSON.stringify({
           amount,
           currency: "INR",
-          receipt: `receipt_onboard_${hostId}_${Date.now()}`,
+          receipt: `receipt_saas_sub_${hostId}_${Date.now()}`,
           notes: {
-            purpose: "istay_host_onboarding",
+            purpose: "istay_saas_subscription",
+            plan: "standard",
             hostId,
           },
         }),

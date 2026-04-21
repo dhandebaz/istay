@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1322 notes | Score threshold: >40
+> 1370 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,6 +20,18 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in PricingCheckout.tsx
++ - problem-fix in agent-rules.
+- **gotcha in shared-context.json** — -     }
++     },
+-   ]
++     {
+- }
++       "id": "3ca9f0c7d6350ab6",
++
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in WalletTransaction — reduces initial bundle siz
+- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - > 1318 notes | Score threshold: >40
++ > 1322 notes | Score threshold
 - **gotcha in shared-context.json** — -     }
 +     },
 -   ]
@@ -29,29 +41,17 @@
 +
 - **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 1315 notes | Score threshold: >40
 + > 1318 notes | Score threshold
-- **⚠️ GOTCHA: Added session cookies authentication** — - - Optimized Score — evolves the database schema to support new requi
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "8c4a2a944bad3298",
-+
-- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1300 notes | Score threshold: >40
-+ > 1308 notes | Score threshold
-- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - > 1281 notes | Score threshold: >40
-+ > 1300 notes | Score threshold
 
 ## Project Standards
 
-- Added API key auth authentication — improves module reusability — confirmed 6x
-- Replaced auth Billing — confirmed 3x
-- what-changed in shared-context.json — confirmed 12x
-- Fixed null crash in Notifies — reduces initial bundle size with code splitting — confirmed 4x
-- problem-fix in agent-rules.md — confirmed 6x
+- Updated Header database schema — confirmed 3x
+- what-changed in EarningsCalculator.tsx — confirmed 4x
+- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 9x
+- what-changed in shared-context.json — confirmed 9x
 - Optimized Score — evolves the database schema to support new requirements — confirmed 3x
-- what-changed in pricing.tsx — confirmed 3x
-- Added JWT tokens authentication — confirmed 4x
+- Optimized Fixed — confirmed 6x
+- Fixed null crash in Implementation — confirmed 4x
+- Updated getHost database schema — confirmed 3x
 
 ## Known Fixes
 
@@ -65,8 +65,8 @@
 
 - Optimized Score — evolves the database schema to support new requirements
 - Optimized Score — evolves the database schema to support new requirements
-- Optimized Score — evolves the database schema to support new requirements
 - Optimized Legal — offloads heavy computation off the main thread
+- Optimized Implementation — offloads heavy computation off the main thread
 
 ## Learned Patterns
 

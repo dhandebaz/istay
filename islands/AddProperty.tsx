@@ -92,8 +92,8 @@ function IdleState({ url, onUrlChange, onFetch, isLoading }: IdleStateProps) {
           Add New Property
         </h3>
         <p class="text-xs text-gray-400 leading-relaxed">
-          Paste your Airbnb listing link below and we'll import everything
-          automatically.
+          Paste your OTA listing link (Airbnb, Agoda, or Expedia) and we'll import everything
+          automatically into your dashboard.
         </p>
       </div>
 
@@ -105,18 +105,18 @@ function IdleState({ url, onUrlChange, onFetch, isLoading }: IdleStateProps) {
           value={url}
           onInput={(e) => onUrlChange((e.target as HTMLInputElement).value)}
           onKeyDown={(e) => e.key === "Enter" && url && onFetch()}
-          placeholder="https://airbnb.com/rooms/..."
+          placeholder="https://airbnb.com/rooms/... or Agoda / Expedia URL"
           class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-gray-300 focus:border-teal-400 focus:bg-white focus:outline-none transition-all duration-200"
-          aria-label="Airbnb listing URL"
+          aria-label="OTA listing URL"
           disabled={isLoading}
         />
         <button
           id="fetch-listing-btn"
           onClick={onFetch}
           disabled={!url.trim() || isLoading}
-          class="w-full py-3 rounded-xl bg-teal-500 text-white text-sm font-600 shadow-sm hover:bg-teal-600 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="w-full py-3 rounded-xl bg-teal-500 text-white text-sm font-800 shadow-sm hover:bg-teal-600 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wider"
         >
-          {isLoading ? "Fetching..." : "✨ Fetch from Airbnb"}
+          {isLoading ? "Fetching..." : "✨ Fetch Listing"}
         </button>
       </div>
     </div>

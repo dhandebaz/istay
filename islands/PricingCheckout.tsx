@@ -35,7 +35,7 @@ export default function PricingCheckout({ hostId }: PricingCheckoutProps) {
         amount: data.amount,
         currency: "INR",
         name: "istay",
-        description: "One-time Onboarding Fee",
+        description: "Monthly SaaS Subscription (istay Unified Dashboard)",
         order_id: data.orderId,
         handler: async function (response: any) {
           // 3. Verify payment

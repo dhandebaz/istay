@@ -34,6 +34,20 @@ const PLATFORMS: Platform[] = [
     bg: "bg-orange-50",
     border: "border-orange-200",
   },
+  {
+    name: "Agoda",
+    commission: 0.18,
+    color: "text-blue-700",
+    bg: "bg-blue-50",
+    border: "border-blue-200",
+  },
+  {
+    name: "Expedia",
+    commission: 0.18,
+    color: "text-indigo-700",
+    bg: "bg-indigo-50",
+    border: "border-indigo-200",
+  },
 ];
 
 function formatINR(amount: number): string {
@@ -223,9 +237,7 @@ export default function EarningsCalculator() {
         </div>
         <p class="mt-4 text-xs text-istay-900/80 font-500">
           * Calculation based on gross revenue of{" "}
-          {formatINR(grossRevenue)}/month. istay's one-time ₹{SETUP_FEE
-            .toLocaleString("en-IN")}{" "}
-          setup fee breaks even in your first booking.
+          {formatINR(grossRevenue)}/month. istay's flat ₹1,000 monthly SaaS subscription keeps your direct channel live.
         </p>
       </div>
     </div>
