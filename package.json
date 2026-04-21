@@ -1,0 +1,4 @@
+{
+  "private": true,
+  "description": "Satisfy Prisma root detection in Deno environment"
+}

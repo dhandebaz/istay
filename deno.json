@@ -6,7 +6,7 @@
     "build": "deno task db:generate && deno run -A --unstable-cron --unstable-kv dev.ts build",
     "preview": "deno run -A --unstable-cron --unstable-kv main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
-    "db:generate": "deno run -A npm:prisma@6.4.1 generate",
+    "db:generate": "PRISMA_GENERATE_SKIP_AUTOINSTALL=true deno run -A npm:prisma@6.4.1 generate",
     "db:push": "deno run -A npm:prisma@6.4.1 db push"
   },
   "nodeModulesDir": "auto",
