@@ -913,6 +913,25 @@ export async function getKnowledge(
 }
 
 /**
+ * Scans the secondary prop_index to list all active property IDs and their host IDs.
+ * Used for site-wide background tasks like iCal syncing.
+ */
+export async function listAllPropertyIndices(): Promise<
+  Array<{ propId: string; hostId: string }>
+> {
+  const kv = await getKv();
+  const iter = kv.list<{ hostId: string }>({ prefix: ["prop_index"] });
+  const results: Array<{ propId: string; hostId: string }> = [];
+  for await (const entry of iter) {
+    results.push({
+      propId: entry.key[1] as string,
+      hostId: entry.value.hostId,
+    });
+  }
+  return results;
+}
+
+/**
  * Looks up knowledge base for a property without needing hostId.
  * Uses prop_index to resolve hostId first.
  */
@@ -1336,24 +1355,6 @@ export async function getGlobalStats(): Promise<{
   }
 }
 
-// ── GUEST INTELLIGENCE ─────────────────────────────────────────
-
-/**
- * Retrieves a persistent guest profile by phone number (global intelligence).
- */
-export async function getGuestProfile(phone: string): Promise<GuestProfile | null> {
-  const kv = await getKv();
-  const res = await kv.get<GuestProfile>(["guest_profile", phone]);
-  return res.value;
-}
-
-/**
- * Persists or updates a guest profile.
- */
-export async function saveGuestProfile(data: GuestProfile): Promise<void> {
-  const kv = await getKv();
-  await kv.set(["guest_profile", data.phone], data);
-}
 
 /**
  * Quick check if a host has paid the setup fee.
