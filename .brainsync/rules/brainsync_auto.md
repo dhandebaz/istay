@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1300 notes | Score threshold: >40
+> 1322 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,23 +20,27 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
-- **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 1256 notes | Score threshold: >40
-+ > 1281 notes | Score threshold
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Starter — introduces API versioning for backwa
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Prisma — prevents null/undefined runtime crash
 - **gotcha in shared-context.json** — -     }
 +     },
 -   ]
 +     {
 - }
-+       "id": "a2958601d6806252",
++       "id": "4bf23753650c6f9e",
 +
-- **gotcha in index.js** — File updated (external): generated/client/index.js
-
-Content summary (4
-- **gotcha in edge.js** — File updated (external): generated/client/edge.js
-
-Content summary (38
+- **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 1315 notes | Score threshold: >40
++ > 1318 notes | Score threshold
+- **⚠️ GOTCHA: Added session cookies authentication** — - - Optimized Score — evolves the database schema to support new requi
+- **gotcha in shared-context.json** — -     }
++     },
+-   ]
++     {
+- }
++       "id": "8c4a2a944bad3298",
++
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1300 notes | Score threshold: >40
++ > 1308 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - > 1281 notes | Score threshold: >40
++ > 1300 notes | Score threshold
 
 ## Project Standards
 
@@ -61,8 +65,8 @@ Content summary (38
 
 - Optimized Score — evolves the database schema to support new requirements
 - Optimized Score — evolves the database schema to support new requirements
+- Optimized Score — evolves the database schema to support new requirements
 - Optimized Legal — offloads heavy computation off the main thread
-- Optimized Implementation — offloads heavy computation off the main thread
 
 ## Learned Patterns
 

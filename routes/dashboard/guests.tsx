@@ -27,6 +27,7 @@ export const handler: Handlers<GuestsPageData, DashboardState> = {
     const state = ctx.state as DashboardState;
     const { hostId } = state;
     const kv = await getKv();
+    if (!kv) return ctx.render({ guests: [] });
 
     // Load all bookings and aggregate by guest email
     const guestMap = new Map<string, GuestRecord>();

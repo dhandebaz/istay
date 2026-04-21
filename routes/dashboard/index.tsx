@@ -47,8 +47,11 @@ export const handler: Handlers<OverviewData, DashboardState> = {
   GET: async (_req, ctx) => {
     const { hostId } = ctx.state as DashboardState;
     const kv = await getKv();
-    const hostEntry = await kv.get(["host", hostId]);
-    const setupFeePaid = (hostEntry.value as any)?.setupFeePaid ?? false;
+    let setupFeePaid = false;
+    if (kv) {
+      const hostEntry = await kv.get(["host", hostId]);
+      setupFeePaid = (hostEntry.value as any)?.setupFeePaid ?? false;
+    }
 
     const [stats, allBookings, properties, notifications, ledgerEntries] =
       await Promise.all([

@@ -27,6 +27,7 @@ export const handler: Handlers<BookingsPageData, DashboardState> = {
     const state = ctx.state as DashboardState;
     const { hostId } = state;
     const kv = await getKv();
+    if (!kv) return ctx.render({ bookings: [] });
 
     // Load all bookings for this host
     const bookings: ExtendedBooking[] = [];

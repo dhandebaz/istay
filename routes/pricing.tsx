@@ -6,7 +6,7 @@ import PricingCheckout from "../islands/PricingCheckout.tsx";
 import FaqSearch from "../islands/FaqSearch.tsx";
 import LazyIsland from "../islands/LazyIsland.tsx";
 import SEOMeta from "../components/SEOMeta.tsx";
-import { ArrowRightIcon, CheckIcon } from "../components/Icons.tsx";
+import { ArrowRightIcon, CheckIcon, StarIcon } from "../components/Icons.tsx";
 import { parseCookies } from "../routes/dashboard/_middleware.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 

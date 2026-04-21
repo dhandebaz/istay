@@ -13,6 +13,9 @@ export const handler: Handlers = {
       }
 
       const kv = await getKv();
+      if (!kv) {
+        return Response.json({ error: "Database unavailable" }, { status: 503 });
+      }
       const emailLower = email.toLowerCase();
 
       // Check if user already exists

@@ -20,6 +20,7 @@ export const handler: Handlers<SettingsPageData, DashboardState> = {
     const state = ctx.state as DashboardState;
     const { hostId } = state;
     const kv = await getKv();
+    if (!kv) return ctx.render({ host: null });
 
     const entry = await kv.get<Host>(["host", hostId]);
     return ctx.render({ host: entry.value });
@@ -43,6 +44,10 @@ export const handler: Handlers<SettingsPageData, DashboardState> = {
 
     if (!name || !email) {
       return ctx.render({ host: null });
+    }
+
+    if (!kv) {
+      return new Response("Database unavailable", { status: 503 });
     }
 
     const existing = await kv.get<Host>(["host", hostId]);

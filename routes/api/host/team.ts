@@ -12,6 +12,9 @@ export const handler: Handlers = {
     }
 
     const kv = await getKv();
+    if (!kv) {
+      return Response.json({ error: "Database unavailable" }, { status: 503 });
+    }
     const members: any[] = [];
 
     // Auth records are segmented by email, so we need to iterate or use an index
