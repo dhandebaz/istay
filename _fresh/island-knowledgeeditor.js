@@ -1,4 +1,4 @@
-import{a as C}from"./chunk-W2XFC6QG.js";import{c as k}from"./chunk-OWBRQ5SI.js";import{c as o}from"./chunk-DLHNV2J2.js";import{a as e}from"./chunk-BYRZ2NRM.js";import"./chunk-JP5XG2OT.js";var M=`# \u{1F4F6} WiFi
+import{a as C}from"./chunk-W2XFC6QG.js";import{c as o}from"./chunk-DLHNV2J2.js";import{c as k}from"./chunk-OWBRQ5SI.js";import{a as e}from"./chunk-BYRZ2NRM.js";import"./chunk-JP5XG2OT.js";var M=`# \u{1F4F6} WiFi
 - **Network:** [Your WiFi Name]
 - **Password:** [Your Password]
 

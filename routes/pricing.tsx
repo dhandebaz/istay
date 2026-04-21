@@ -40,18 +40,18 @@ const SCHEMA = JSON.stringify({
     "@type": "Offer",
     price: "1000",
     priceCurrency: "INR",
-    description: "One-time lifetime setup fee. 5% flat commission on bookings.",
+    description: "₹1,000 monthly SaaS subscription. AI usage credits are separate.",
   },
 });
 
 const FAQS = [
   {
-    q: "Is the ₹1,000 fee a one-time payment?",
-    a: "Yes. You pay ₹1,000 once and your booking channel is live forever. There are no monthly or annual subscription fees.",
+    q: "How does the pricing work?",
+    a: "istay charging a simple ₹1,000 monthly SaaS fee to keep your digital concierge and booking channel live. AI token usage (Concierge chats, OCR) is billed separately through a prepaid wallet to ensure you only pay for what you use.",
   },
   {
-    q: "What does the 5% fee cover?",
-    a: "The 5% per-transaction fee covers everything. It includes the 2% Razorpay/Easebuzz payment processing fees, platform hosting, AI concierge compute, and 24/7 support. There are absolutely no hidden charges.",
+    q: "What is the AI Wallet?",
+    a: "The AI Wallet is where you top up credits (₹100, ₹500, or ₹1,000) for advanced AI tasks like autonomous WhatsApp responses and Global Guest Intelligence. We charge a fair rate based on actual tokens used, giving you enterprise-grade AI at warehouse prices.",
   },
   {
     q: "Can I still use Airbnb alongside istay?",
@@ -117,7 +117,7 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                   <div>
                     <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-100 text-istay-900 text-xs font-900 mb-5 tracking-tight uppercase">
-                      ✦ Lifetime Plan
+                      ✦ Monthly Plan
                     </div>
                     <div class="mb-8">
                       <div class="flex items-baseline gap-2 mb-1">
@@ -125,15 +125,15 @@ export default function Pricing({ data }: PageProps<PricingData>) {
                           ₹1,000
                         </span>
                         <span class="text-gray-400 text-sm font-500 uppercase tracking-wide">
-                          one-time
+                          per month
                         </span>
                       </div>
                       <div class="flex items-baseline gap-2">
                         <span class="text-3xl font-800 text-mint-500">
-                          + 5%
+                          + Usage
                         </span>
                         <span class="text-gray-400 text-sm font-500 uppercase tracking-wide">
-                          per booking
+                          AI Wallet
                         </span>
                       </div>
                     </div>

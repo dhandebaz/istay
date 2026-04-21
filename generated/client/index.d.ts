@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type Host = $Result.DefaultSelection<Prisma.$HostPayload>
 /**
+ * Model WalletTransaction
+ * 
+ */
+export type WalletTransaction = $Result.DefaultSelection<Prisma.$WalletTransactionPayload>
+/**
  * Model AuthRecord
  * 
  */
@@ -208,6 +213,16 @@ export class PrismaClient<
     * ```
     */
   get host(): Prisma.HostDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.walletTransaction`: Exposes CRUD operations for the **WalletTransaction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WalletTransactions
+    * const walletTransactions = await prisma.walletTransaction.findMany()
+    * ```
+    */
+  get walletTransaction(): Prisma.WalletTransactionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.authRecord`: Exposes CRUD operations for the **AuthRecord** model.
@@ -759,6 +774,7 @@ export namespace Prisma {
 
   export const ModelName: {
     Host: 'Host',
+    WalletTransaction: 'WalletTransaction',
     AuthRecord: 'AuthRecord',
     Property: 'Property',
     Booking: 'Booking',
@@ -785,7 +801,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "host" | "authRecord" | "property" | "booking" | "calendarBlock" | "ledgerEntry" | "notification" | "guestVerification" | "review" | "guestProfile" | "hostKnowledge" | "waitlist"
+      modelProps: "host" | "walletTransaction" | "authRecord" | "property" | "booking" | "calendarBlock" | "ledgerEntry" | "notification" | "guestVerification" | "review" | "guestProfile" | "hostKnowledge" | "waitlist"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -860,6 +876,80 @@ export namespace Prisma {
           count: {
             args: Prisma.HostCountArgs<ExtArgs>
             result: $Utils.Optional<HostCountAggregateOutputType> | number
+          }
+        }
+      }
+      WalletTransaction: {
+        payload: Prisma.$WalletTransactionPayload<ExtArgs>
+        fields: Prisma.WalletTransactionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.WalletTransactionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.WalletTransactionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          findFirst: {
+            args: Prisma.WalletTransactionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.WalletTransactionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          findMany: {
+            args: Prisma.WalletTransactionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>[]
+          }
+          create: {
+            args: Prisma.WalletTransactionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          createMany: {
+            args: Prisma.WalletTransactionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.WalletTransactionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>[]
+          }
+          delete: {
+            args: Prisma.WalletTransactionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          update: {
+            args: Prisma.WalletTransactionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          deleteMany: {
+            args: Prisma.WalletTransactionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.WalletTransactionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.WalletTransactionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>[]
+          }
+          upsert: {
+            args: Prisma.WalletTransactionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$WalletTransactionPayload>
+          }
+          aggregate: {
+            args: Prisma.WalletTransactionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWalletTransaction>
+          }
+          groupBy: {
+            args: Prisma.WalletTransactionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<WalletTransactionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.WalletTransactionCountArgs<ExtArgs>
+            result: $Utils.Optional<WalletTransactionCountAggregateOutputType> | number
           }
         }
       }
@@ -1762,6 +1852,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     host?: HostOmit
+    walletTransaction?: WalletTransactionOmit
     authRecord?: AuthRecordOmit
     property?: PropertyOmit
     booking?: BookingOmit
@@ -1872,6 +1963,7 @@ export namespace Prisma {
     ledgerEntries: number
     notifications: number
     knowledge: number
+    walletTransactions: number
   }
 
   export type HostCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1880,6 +1972,7 @@ export namespace Prisma {
     ledgerEntries?: boolean | HostCountOutputTypeCountLedgerEntriesArgs
     notifications?: boolean | HostCountOutputTypeCountNotificationsArgs
     knowledge?: boolean | HostCountOutputTypeCountKnowledgeArgs
+    walletTransactions?: boolean | HostCountOutputTypeCountWalletTransactionsArgs
   }
 
   // Custom InputTypes
@@ -1926,6 +2019,13 @@ export namespace Prisma {
    */
   export type HostCountOutputTypeCountKnowledgeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: HostKnowledgeWhereInput
+  }
+
+  /**
+   * HostCountOutputType without action
+   */
+  export type HostCountOutputTypeCountWalletTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WalletTransactionWhereInput
   }
 
 
@@ -2028,8 +2128,18 @@ export namespace Prisma {
 
   export type AggregateHost = {
     _count: HostCountAggregateOutputType | null
+    _avg: HostAvgAggregateOutputType | null
+    _sum: HostSumAggregateOutputType | null
     _min: HostMinAggregateOutputType | null
     _max: HostMaxAggregateOutputType | null
+  }
+
+  export type HostAvgAggregateOutputType = {
+    walletBalance: number | null
+  }
+
+  export type HostSumAggregateOutputType = {
+    walletBalance: number | null
   }
 
   export type HostMinAggregateOutputType = {
@@ -2038,9 +2148,14 @@ export namespace Prisma {
     name: string | null
     phone: string | null
     plan: string | null
+    subscriptionStatus: string | null
+    subscriptionExpiresAt: Date | null
+    walletBalance: number | null
     setupFeePaid: boolean | null
     gatewayVendorId: string | null
     cashfreeVendorId: string | null
+    razorpaySubscriptionId: string | null
+    lastLowBalanceAlert: Date | null
     apiKey: string | null
     legacyApiKey: string | null
     legacyApiKeyExpires: Date | null
@@ -2054,9 +2169,14 @@ export namespace Prisma {
     name: string | null
     phone: string | null
     plan: string | null
+    subscriptionStatus: string | null
+    subscriptionExpiresAt: Date | null
+    walletBalance: number | null
     setupFeePaid: boolean | null
     gatewayVendorId: string | null
     cashfreeVendorId: string | null
+    razorpaySubscriptionId: string | null
+    lastLowBalanceAlert: Date | null
     apiKey: string | null
     legacyApiKey: string | null
     legacyApiKeyExpires: Date | null
@@ -2070,9 +2190,14 @@ export namespace Prisma {
     name: number
     phone: number
     plan: number
+    subscriptionStatus: number
+    subscriptionExpiresAt: number
+    walletBalance: number
     setupFeePaid: number
     gatewayVendorId: number
     cashfreeVendorId: number
+    razorpaySubscriptionId: number
+    lastLowBalanceAlert: number
     apiKey: number
     legacyApiKey: number
     legacyApiKeyExpires: number
@@ -2084,15 +2209,28 @@ export namespace Prisma {
   }
 
 
+  export type HostAvgAggregateInputType = {
+    walletBalance?: true
+  }
+
+  export type HostSumAggregateInputType = {
+    walletBalance?: true
+  }
+
   export type HostMinAggregateInputType = {
     id?: true
     email?: true
     name?: true
     phone?: true
     plan?: true
+    subscriptionStatus?: true
+    subscriptionExpiresAt?: true
+    walletBalance?: true
     setupFeePaid?: true
     gatewayVendorId?: true
     cashfreeVendorId?: true
+    razorpaySubscriptionId?: true
+    lastLowBalanceAlert?: true
     apiKey?: true
     legacyApiKey?: true
     legacyApiKeyExpires?: true
@@ -2106,9 +2244,14 @@ export namespace Prisma {
     name?: true
     phone?: true
     plan?: true
+    subscriptionStatus?: true
+    subscriptionExpiresAt?: true
+    walletBalance?: true
     setupFeePaid?: true
     gatewayVendorId?: true
     cashfreeVendorId?: true
+    razorpaySubscriptionId?: true
+    lastLowBalanceAlert?: true
     apiKey?: true
     legacyApiKey?: true
     legacyApiKeyExpires?: true
@@ -2122,9 +2265,14 @@ export namespace Prisma {
     name?: true
     phone?: true
     plan?: true
+    subscriptionStatus?: true
+    subscriptionExpiresAt?: true
+    walletBalance?: true
     setupFeePaid?: true
     gatewayVendorId?: true
     cashfreeVendorId?: true
+    razorpaySubscriptionId?: true
+    lastLowBalanceAlert?: true
     apiKey?: true
     legacyApiKey?: true
     legacyApiKeyExpires?: true
@@ -2173,6 +2321,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: HostAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: HostSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: HostMinAggregateInputType
@@ -2203,6 +2363,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: HostCountAggregateInputType | true
+    _avg?: HostAvgAggregateInputType
+    _sum?: HostSumAggregateInputType
     _min?: HostMinAggregateInputType
     _max?: HostMaxAggregateInputType
   }
@@ -2213,9 +2375,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan: string
+    subscriptionStatus: string
+    subscriptionExpiresAt: Date | null
+    walletBalance: number
     setupFeePaid: boolean
     gatewayVendorId: string | null
     cashfreeVendorId: string | null
+    razorpaySubscriptionId: string | null
+    lastLowBalanceAlert: Date | null
     apiKey: string | null
     legacyApiKey: string | null
     legacyApiKeyExpires: Date | null
@@ -2224,6 +2391,8 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     _count: HostCountAggregateOutputType | null
+    _avg: HostAvgAggregateOutputType | null
+    _sum: HostSumAggregateOutputType | null
     _min: HostMinAggregateOutputType | null
     _max: HostMaxAggregateOutputType | null
   }
@@ -2248,9 +2417,14 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     plan?: boolean
+    subscriptionStatus?: boolean
+    subscriptionExpiresAt?: boolean
+    walletBalance?: boolean
     setupFeePaid?: boolean
     gatewayVendorId?: boolean
     cashfreeVendorId?: boolean
+    razorpaySubscriptionId?: boolean
+    lastLowBalanceAlert?: boolean
     apiKey?: boolean
     legacyApiKey?: boolean
     legacyApiKeyExpires?: boolean
@@ -2264,6 +2438,7 @@ export namespace Prisma {
     ledgerEntries?: boolean | Host$ledgerEntriesArgs<ExtArgs>
     notifications?: boolean | Host$notificationsArgs<ExtArgs>
     knowledge?: boolean | Host$knowledgeArgs<ExtArgs>
+    walletTransactions?: boolean | Host$walletTransactionsArgs<ExtArgs>
     _count?: boolean | HostCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["host"]>
 
@@ -2273,9 +2448,14 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     plan?: boolean
+    subscriptionStatus?: boolean
+    subscriptionExpiresAt?: boolean
+    walletBalance?: boolean
     setupFeePaid?: boolean
     gatewayVendorId?: boolean
     cashfreeVendorId?: boolean
+    razorpaySubscriptionId?: boolean
+    lastLowBalanceAlert?: boolean
     apiKey?: boolean
     legacyApiKey?: boolean
     legacyApiKeyExpires?: boolean
@@ -2291,9 +2471,14 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     plan?: boolean
+    subscriptionStatus?: boolean
+    subscriptionExpiresAt?: boolean
+    walletBalance?: boolean
     setupFeePaid?: boolean
     gatewayVendorId?: boolean
     cashfreeVendorId?: boolean
+    razorpaySubscriptionId?: boolean
+    lastLowBalanceAlert?: boolean
     apiKey?: boolean
     legacyApiKey?: boolean
     legacyApiKeyExpires?: boolean
@@ -2309,9 +2494,14 @@ export namespace Prisma {
     name?: boolean
     phone?: boolean
     plan?: boolean
+    subscriptionStatus?: boolean
+    subscriptionExpiresAt?: boolean
+    walletBalance?: boolean
     setupFeePaid?: boolean
     gatewayVendorId?: boolean
     cashfreeVendorId?: boolean
+    razorpaySubscriptionId?: boolean
+    lastLowBalanceAlert?: boolean
     apiKey?: boolean
     legacyApiKey?: boolean
     legacyApiKeyExpires?: boolean
@@ -2321,7 +2511,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type HostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phone" | "plan" | "setupFeePaid" | "gatewayVendorId" | "cashfreeVendorId" | "apiKey" | "legacyApiKey" | "legacyApiKeyExpires" | "settings" | "webhooks" | "createdAt" | "updatedAt", ExtArgs["result"]["host"]>
+  export type HostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phone" | "plan" | "subscriptionStatus" | "subscriptionExpiresAt" | "walletBalance" | "setupFeePaid" | "gatewayVendorId" | "cashfreeVendorId" | "razorpaySubscriptionId" | "lastLowBalanceAlert" | "apiKey" | "legacyApiKey" | "legacyApiKeyExpires" | "settings" | "webhooks" | "createdAt" | "updatedAt", ExtArgs["result"]["host"]>
   export type HostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     auth?: boolean | Host$authArgs<ExtArgs>
     properties?: boolean | Host$propertiesArgs<ExtArgs>
@@ -2329,6 +2519,7 @@ export namespace Prisma {
     ledgerEntries?: boolean | Host$ledgerEntriesArgs<ExtArgs>
     notifications?: boolean | Host$notificationsArgs<ExtArgs>
     knowledge?: boolean | Host$knowledgeArgs<ExtArgs>
+    walletTransactions?: boolean | Host$walletTransactionsArgs<ExtArgs>
     _count?: boolean | HostCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type HostIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2343,6 +2534,7 @@ export namespace Prisma {
       ledgerEntries: Prisma.$LedgerEntryPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       knowledge: Prisma.$HostKnowledgePayload<ExtArgs>[]
+      walletTransactions: Prisma.$WalletTransactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2350,9 +2542,14 @@ export namespace Prisma {
       name: string
       phone: string
       plan: string
+      subscriptionStatus: string
+      subscriptionExpiresAt: Date | null
+      walletBalance: number
       setupFeePaid: boolean
       gatewayVendorId: string | null
       cashfreeVendorId: string | null
+      razorpaySubscriptionId: string | null
+      lastLowBalanceAlert: Date | null
       apiKey: string | null
       legacyApiKey: string | null
       legacyApiKeyExpires: Date | null
@@ -2760,6 +2957,7 @@ export namespace Prisma {
     ledgerEntries<T extends Host$ledgerEntriesArgs<ExtArgs> = {}>(args?: Subset<T, Host$ledgerEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LedgerEntryPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     notifications<T extends Host$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Host$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     knowledge<T extends Host$knowledgeArgs<ExtArgs> = {}>(args?: Subset<T, Host$knowledgeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HostKnowledgePayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
+    walletTransactions<T extends Host$walletTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Host$walletTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findMany", ClientOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2794,9 +2992,14 @@ export namespace Prisma {
     readonly name: FieldRef<"Host", 'String'>
     readonly phone: FieldRef<"Host", 'String'>
     readonly plan: FieldRef<"Host", 'String'>
+    readonly subscriptionStatus: FieldRef<"Host", 'String'>
+    readonly subscriptionExpiresAt: FieldRef<"Host", 'DateTime'>
+    readonly walletBalance: FieldRef<"Host", 'Float'>
     readonly setupFeePaid: FieldRef<"Host", 'Boolean'>
     readonly gatewayVendorId: FieldRef<"Host", 'String'>
     readonly cashfreeVendorId: FieldRef<"Host", 'String'>
+    readonly razorpaySubscriptionId: FieldRef<"Host", 'String'>
+    readonly lastLowBalanceAlert: FieldRef<"Host", 'DateTime'>
     readonly apiKey: FieldRef<"Host", 'String'>
     readonly legacyApiKey: FieldRef<"Host", 'String'>
     readonly legacyApiKeyExpires: FieldRef<"Host", 'DateTime'>
@@ -3331,6 +3534,30 @@ export namespace Prisma {
   }
 
   /**
+   * Host.walletTransactions
+   */
+  export type Host$walletTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    where?: WalletTransactionWhereInput
+    orderBy?: WalletTransactionOrderByWithRelationInput | WalletTransactionOrderByWithRelationInput[]
+    cursor?: WalletTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: WalletTransactionScalarFieldEnum | WalletTransactionScalarFieldEnum[]
+  }
+
+  /**
    * Host without action
    */
   export type HostDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3346,6 +3573,1120 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: HostInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model WalletTransaction
+   */
+
+  export type AggregateWalletTransaction = {
+    _count: WalletTransactionCountAggregateOutputType | null
+    _avg: WalletTransactionAvgAggregateOutputType | null
+    _sum: WalletTransactionSumAggregateOutputType | null
+    _min: WalletTransactionMinAggregateOutputType | null
+    _max: WalletTransactionMaxAggregateOutputType | null
+  }
+
+  export type WalletTransactionAvgAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type WalletTransactionSumAggregateOutputType = {
+    amount: number | null
+  }
+
+  export type WalletTransactionMinAggregateOutputType = {
+    id: string | null
+    hostId: string | null
+    amount: number | null
+    type: string | null
+    description: string | null
+    createdAt: Date | null
+  }
+
+  export type WalletTransactionMaxAggregateOutputType = {
+    id: string | null
+    hostId: string | null
+    amount: number | null
+    type: string | null
+    description: string | null
+    createdAt: Date | null
+  }
+
+  export type WalletTransactionCountAggregateOutputType = {
+    id: number
+    hostId: number
+    amount: number
+    type: number
+    description: number
+    meta: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type WalletTransactionAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type WalletTransactionSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type WalletTransactionMinAggregateInputType = {
+    id?: true
+    hostId?: true
+    amount?: true
+    type?: true
+    description?: true
+    createdAt?: true
+  }
+
+  export type WalletTransactionMaxAggregateInputType = {
+    id?: true
+    hostId?: true
+    amount?: true
+    type?: true
+    description?: true
+    createdAt?: true
+  }
+
+  export type WalletTransactionCountAggregateInputType = {
+    id?: true
+    hostId?: true
+    amount?: true
+    type?: true
+    description?: true
+    meta?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type WalletTransactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WalletTransaction to aggregate.
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WalletTransactions to fetch.
+     */
+    orderBy?: WalletTransactionOrderByWithRelationInput | WalletTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: WalletTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WalletTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WalletTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WalletTransactions
+    **/
+    _count?: true | WalletTransactionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WalletTransactionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WalletTransactionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WalletTransactionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WalletTransactionMaxAggregateInputType
+  }
+
+  export type GetWalletTransactionAggregateType<T extends WalletTransactionAggregateArgs> = {
+        [P in keyof T & keyof AggregateWalletTransaction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWalletTransaction[P]>
+      : GetScalarType<T[P], AggregateWalletTransaction[P]>
+  }
+
+
+
+
+  export type WalletTransactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: WalletTransactionWhereInput
+    orderBy?: WalletTransactionOrderByWithAggregationInput | WalletTransactionOrderByWithAggregationInput[]
+    by: WalletTransactionScalarFieldEnum[] | WalletTransactionScalarFieldEnum
+    having?: WalletTransactionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WalletTransactionCountAggregateInputType | true
+    _avg?: WalletTransactionAvgAggregateInputType
+    _sum?: WalletTransactionSumAggregateInputType
+    _min?: WalletTransactionMinAggregateInputType
+    _max?: WalletTransactionMaxAggregateInputType
+  }
+
+  export type WalletTransactionGroupByOutputType = {
+    id: string
+    hostId: string
+    amount: number
+    type: string
+    description: string
+    meta: JsonValue | null
+    createdAt: Date
+    _count: WalletTransactionCountAggregateOutputType | null
+    _avg: WalletTransactionAvgAggregateOutputType | null
+    _sum: WalletTransactionSumAggregateOutputType | null
+    _min: WalletTransactionMinAggregateOutputType | null
+    _max: WalletTransactionMaxAggregateOutputType | null
+  }
+
+  type GetWalletTransactionGroupByPayload<T extends WalletTransactionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<WalletTransactionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WalletTransactionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WalletTransactionGroupByOutputType[P]>
+            : GetScalarType<T[P], WalletTransactionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WalletTransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    hostId?: boolean
+    amount?: boolean
+    type?: boolean
+    description?: boolean
+    meta?: boolean
+    createdAt?: boolean
+    host?: boolean | HostDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["walletTransaction"]>
+
+  export type WalletTransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    hostId?: boolean
+    amount?: boolean
+    type?: boolean
+    description?: boolean
+    meta?: boolean
+    createdAt?: boolean
+    host?: boolean | HostDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["walletTransaction"]>
+
+  export type WalletTransactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    hostId?: boolean
+    amount?: boolean
+    type?: boolean
+    description?: boolean
+    meta?: boolean
+    createdAt?: boolean
+    host?: boolean | HostDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["walletTransaction"]>
+
+  export type WalletTransactionSelectScalar = {
+    id?: boolean
+    hostId?: boolean
+    amount?: boolean
+    type?: boolean
+    description?: boolean
+    meta?: boolean
+    createdAt?: boolean
+  }
+
+  export type WalletTransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "hostId" | "amount" | "type" | "description" | "meta" | "createdAt", ExtArgs["result"]["walletTransaction"]>
+  export type WalletTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    host?: boolean | HostDefaultArgs<ExtArgs>
+  }
+  export type WalletTransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    host?: boolean | HostDefaultArgs<ExtArgs>
+  }
+  export type WalletTransactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    host?: boolean | HostDefaultArgs<ExtArgs>
+  }
+
+  export type $WalletTransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "WalletTransaction"
+    objects: {
+      host: Prisma.$HostPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      hostId: string
+      amount: number
+      type: string
+      description: string
+      meta: Prisma.JsonValue | null
+      createdAt: Date
+    }, ExtArgs["result"]["walletTransaction"]>
+    composites: {}
+  }
+
+  type WalletTransactionGetPayload<S extends boolean | null | undefined | WalletTransactionDefaultArgs> = $Result.GetResult<Prisma.$WalletTransactionPayload, S>
+
+  type WalletTransactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<WalletTransactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: WalletTransactionCountAggregateInputType | true
+    }
+
+  export interface WalletTransactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WalletTransaction'], meta: { name: 'WalletTransaction' } }
+    /**
+     * Find zero or one WalletTransaction that matches the filter.
+     * @param {WalletTransactionFindUniqueArgs} args - Arguments to find a WalletTransaction
+     * @example
+     * // Get one WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends WalletTransactionFindUniqueArgs>(args: SelectSubset<T, WalletTransactionFindUniqueArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findUnique", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find one WalletTransaction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {WalletTransactionFindUniqueOrThrowArgs} args - Arguments to find a WalletTransaction
+     * @example
+     * // Get one WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends WalletTransactionFindUniqueOrThrowArgs>(args: SelectSubset<T, WalletTransactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first WalletTransaction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionFindFirstArgs} args - Arguments to find a WalletTransaction
+     * @example
+     * // Get one WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends WalletTransactionFindFirstArgs>(args?: SelectSubset<T, WalletTransactionFindFirstArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findFirst", ClientOptions> | null, null, ExtArgs, ClientOptions>
+
+    /**
+     * Find the first WalletTransaction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionFindFirstOrThrowArgs} args - Arguments to find a WalletTransaction
+     * @example
+     * // Get one WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends WalletTransactionFindFirstOrThrowArgs>(args?: SelectSubset<T, WalletTransactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findFirstOrThrow", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Find zero or more WalletTransactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WalletTransactions
+     * const walletTransactions = await prisma.walletTransaction.findMany()
+     * 
+     * // Get first 10 WalletTransactions
+     * const walletTransactions = await prisma.walletTransaction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const walletTransactionWithIdOnly = await prisma.walletTransaction.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends WalletTransactionFindManyArgs>(args?: SelectSubset<T, WalletTransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findMany", ClientOptions>>
+
+    /**
+     * Create a WalletTransaction.
+     * @param {WalletTransactionCreateArgs} args - Arguments to create a WalletTransaction.
+     * @example
+     * // Create one WalletTransaction
+     * const WalletTransaction = await prisma.walletTransaction.create({
+     *   data: {
+     *     // ... data to create a WalletTransaction
+     *   }
+     * })
+     * 
+     */
+    create<T extends WalletTransactionCreateArgs>(args: SelectSubset<T, WalletTransactionCreateArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "create", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Create many WalletTransactions.
+     * @param {WalletTransactionCreateManyArgs} args - Arguments to create many WalletTransactions.
+     * @example
+     * // Create many WalletTransactions
+     * const walletTransaction = await prisma.walletTransaction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends WalletTransactionCreateManyArgs>(args?: SelectSubset<T, WalletTransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many WalletTransactions and returns the data saved in the database.
+     * @param {WalletTransactionCreateManyAndReturnArgs} args - Arguments to create many WalletTransactions.
+     * @example
+     * // Create many WalletTransactions
+     * const walletTransaction = await prisma.walletTransaction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many WalletTransactions and only return the `id`
+     * const walletTransactionWithIdOnly = await prisma.walletTransaction.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends WalletTransactionCreateManyAndReturnArgs>(args?: SelectSubset<T, WalletTransactionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "createManyAndReturn", ClientOptions>>
+
+    /**
+     * Delete a WalletTransaction.
+     * @param {WalletTransactionDeleteArgs} args - Arguments to delete one WalletTransaction.
+     * @example
+     * // Delete one WalletTransaction
+     * const WalletTransaction = await prisma.walletTransaction.delete({
+     *   where: {
+     *     // ... filter to delete one WalletTransaction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends WalletTransactionDeleteArgs>(args: SelectSubset<T, WalletTransactionDeleteArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "delete", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Update one WalletTransaction.
+     * @param {WalletTransactionUpdateArgs} args - Arguments to update one WalletTransaction.
+     * @example
+     * // Update one WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends WalletTransactionUpdateArgs>(args: SelectSubset<T, WalletTransactionUpdateArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "update", ClientOptions>, never, ExtArgs, ClientOptions>
+
+    /**
+     * Delete zero or more WalletTransactions.
+     * @param {WalletTransactionDeleteManyArgs} args - Arguments to filter WalletTransactions to delete.
+     * @example
+     * // Delete a few WalletTransactions
+     * const { count } = await prisma.walletTransaction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends WalletTransactionDeleteManyArgs>(args?: SelectSubset<T, WalletTransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WalletTransactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WalletTransactions
+     * const walletTransaction = await prisma.walletTransaction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends WalletTransactionUpdateManyArgs>(args: SelectSubset<T, WalletTransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WalletTransactions and returns the data updated in the database.
+     * @param {WalletTransactionUpdateManyAndReturnArgs} args - Arguments to update many WalletTransactions.
+     * @example
+     * // Update many WalletTransactions
+     * const walletTransaction = await prisma.walletTransaction.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more WalletTransactions and only return the `id`
+     * const walletTransactionWithIdOnly = await prisma.walletTransaction.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends WalletTransactionUpdateManyAndReturnArgs>(args: SelectSubset<T, WalletTransactionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "updateManyAndReturn", ClientOptions>>
+
+    /**
+     * Create or update one WalletTransaction.
+     * @param {WalletTransactionUpsertArgs} args - Arguments to update or create a WalletTransaction.
+     * @example
+     * // Update or create a WalletTransaction
+     * const walletTransaction = await prisma.walletTransaction.upsert({
+     *   create: {
+     *     // ... data to create a WalletTransaction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WalletTransaction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends WalletTransactionUpsertArgs>(args: SelectSubset<T, WalletTransactionUpsertArgs<ExtArgs>>): Prisma__WalletTransactionClient<$Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "upsert", ClientOptions>, never, ExtArgs, ClientOptions>
+
+
+    /**
+     * Count the number of WalletTransactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionCountArgs} args - Arguments to filter WalletTransactions to count.
+     * @example
+     * // Count the number of WalletTransactions
+     * const count = await prisma.walletTransaction.count({
+     *   where: {
+     *     // ... the filter for the WalletTransactions we want to count
+     *   }
+     * })
+    **/
+    count<T extends WalletTransactionCountArgs>(
+      args?: Subset<T, WalletTransactionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WalletTransactionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WalletTransaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WalletTransactionAggregateArgs>(args: Subset<T, WalletTransactionAggregateArgs>): Prisma.PrismaPromise<GetWalletTransactionAggregateType<T>>
+
+    /**
+     * Group by WalletTransaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WalletTransactionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WalletTransactionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WalletTransactionGroupByArgs['orderBy'] }
+        : { orderBy?: WalletTransactionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WalletTransactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWalletTransactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the WalletTransaction model
+   */
+  readonly fields: WalletTransactionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WalletTransaction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__WalletTransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    host<T extends HostDefaultArgs<ExtArgs> = {}>(args?: Subset<T, HostDefaultArgs<ExtArgs>>): Prisma__HostClient<$Result.GetResult<Prisma.$HostPayload<ExtArgs>, T, "findUniqueOrThrow", ClientOptions> | Null, Null, ExtArgs, ClientOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the WalletTransaction model
+   */ 
+  interface WalletTransactionFieldRefs {
+    readonly id: FieldRef<"WalletTransaction", 'String'>
+    readonly hostId: FieldRef<"WalletTransaction", 'String'>
+    readonly amount: FieldRef<"WalletTransaction", 'Float'>
+    readonly type: FieldRef<"WalletTransaction", 'String'>
+    readonly description: FieldRef<"WalletTransaction", 'String'>
+    readonly meta: FieldRef<"WalletTransaction", 'Json'>
+    readonly createdAt: FieldRef<"WalletTransaction", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * WalletTransaction findUnique
+   */
+  export type WalletTransactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which WalletTransaction to fetch.
+     */
+    where: WalletTransactionWhereUniqueInput
+  }
+
+  /**
+   * WalletTransaction findUniqueOrThrow
+   */
+  export type WalletTransactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which WalletTransaction to fetch.
+     */
+    where: WalletTransactionWhereUniqueInput
+  }
+
+  /**
+   * WalletTransaction findFirst
+   */
+  export type WalletTransactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which WalletTransaction to fetch.
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WalletTransactions to fetch.
+     */
+    orderBy?: WalletTransactionOrderByWithRelationInput | WalletTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WalletTransactions.
+     */
+    cursor?: WalletTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WalletTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WalletTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WalletTransactions.
+     */
+    distinct?: WalletTransactionScalarFieldEnum | WalletTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * WalletTransaction findFirstOrThrow
+   */
+  export type WalletTransactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which WalletTransaction to fetch.
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WalletTransactions to fetch.
+     */
+    orderBy?: WalletTransactionOrderByWithRelationInput | WalletTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WalletTransactions.
+     */
+    cursor?: WalletTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WalletTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WalletTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WalletTransactions.
+     */
+    distinct?: WalletTransactionScalarFieldEnum | WalletTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * WalletTransaction findMany
+   */
+  export type WalletTransactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which WalletTransactions to fetch.
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WalletTransactions to fetch.
+     */
+    orderBy?: WalletTransactionOrderByWithRelationInput | WalletTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WalletTransactions.
+     */
+    cursor?: WalletTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WalletTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WalletTransactions.
+     */
+    skip?: number
+    distinct?: WalletTransactionScalarFieldEnum | WalletTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * WalletTransaction create
+   */
+  export type WalletTransactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a WalletTransaction.
+     */
+    data: XOR<WalletTransactionCreateInput, WalletTransactionUncheckedCreateInput>
+  }
+
+  /**
+   * WalletTransaction createMany
+   */
+  export type WalletTransactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many WalletTransactions.
+     */
+    data: WalletTransactionCreateManyInput | WalletTransactionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * WalletTransaction createManyAndReturn
+   */
+  export type WalletTransactionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * The data used to create many WalletTransactions.
+     */
+    data: WalletTransactionCreateManyInput | WalletTransactionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WalletTransaction update
+   */
+  export type WalletTransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a WalletTransaction.
+     */
+    data: XOR<WalletTransactionUpdateInput, WalletTransactionUncheckedUpdateInput>
+    /**
+     * Choose, which WalletTransaction to update.
+     */
+    where: WalletTransactionWhereUniqueInput
+  }
+
+  /**
+   * WalletTransaction updateMany
+   */
+  export type WalletTransactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update WalletTransactions.
+     */
+    data: XOR<WalletTransactionUpdateManyMutationInput, WalletTransactionUncheckedUpdateManyInput>
+    /**
+     * Filter which WalletTransactions to update
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * Limit how many WalletTransactions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * WalletTransaction updateManyAndReturn
+   */
+  export type WalletTransactionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * The data used to update WalletTransactions.
+     */
+    data: XOR<WalletTransactionUpdateManyMutationInput, WalletTransactionUncheckedUpdateManyInput>
+    /**
+     * Filter which WalletTransactions to update
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * Limit how many WalletTransactions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * WalletTransaction upsert
+   */
+  export type WalletTransactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the WalletTransaction to update in case it exists.
+     */
+    where: WalletTransactionWhereUniqueInput
+    /**
+     * In case the WalletTransaction found by the `where` argument doesn't exist, create a new WalletTransaction with this data.
+     */
+    create: XOR<WalletTransactionCreateInput, WalletTransactionUncheckedCreateInput>
+    /**
+     * In case the WalletTransaction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<WalletTransactionUpdateInput, WalletTransactionUncheckedUpdateInput>
+  }
+
+  /**
+   * WalletTransaction delete
+   */
+  export type WalletTransactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
+    /**
+     * Filter which WalletTransaction to delete.
+     */
+    where: WalletTransactionWhereUniqueInput
+  }
+
+  /**
+   * WalletTransaction deleteMany
+   */
+  export type WalletTransactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which WalletTransactions to delete
+     */
+    where?: WalletTransactionWhereInput
+    /**
+     * Limit how many WalletTransactions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * WalletTransaction without action
+   */
+  export type WalletTransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the WalletTransaction
+     */
+    select?: WalletTransactionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the WalletTransaction
+     */
+    omit?: WalletTransactionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: WalletTransactionInclude<ExtArgs> | null
   }
 
 
@@ -15916,9 +17257,14 @@ export namespace Prisma {
     name: 'name',
     phone: 'phone',
     plan: 'plan',
+    subscriptionStatus: 'subscriptionStatus',
+    subscriptionExpiresAt: 'subscriptionExpiresAt',
+    walletBalance: 'walletBalance',
     setupFeePaid: 'setupFeePaid',
     gatewayVendorId: 'gatewayVendorId',
     cashfreeVendorId: 'cashfreeVendorId',
+    razorpaySubscriptionId: 'razorpaySubscriptionId',
+    lastLowBalanceAlert: 'lastLowBalanceAlert',
     apiKey: 'apiKey',
     legacyApiKey: 'legacyApiKey',
     legacyApiKeyExpires: 'legacyApiKeyExpires',
@@ -15929,6 +17275,19 @@ export namespace Prisma {
   };
 
   export type HostScalarFieldEnum = (typeof HostScalarFieldEnum)[keyof typeof HostScalarFieldEnum]
+
+
+  export const WalletTransactionScalarFieldEnum: {
+    id: 'id',
+    hostId: 'hostId',
+    amount: 'amount',
+    type: 'type',
+    description: 'description',
+    meta: 'meta',
+    createdAt: 'createdAt'
+  };
+
+  export type WalletTransactionScalarFieldEnum = (typeof WalletTransactionScalarFieldEnum)[keyof typeof WalletTransactionScalarFieldEnum]
 
 
   export const AuthRecordScalarFieldEnum: {
@@ -16167,13 +17526,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -16188,20 +17540,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -16212,6 +17550,27 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -16241,9 +17600,14 @@ export namespace Prisma {
     name?: StringFilter<"Host"> | string
     phone?: StringFilter<"Host"> | string
     plan?: StringFilter<"Host"> | string
+    subscriptionStatus?: StringFilter<"Host"> | string
+    subscriptionExpiresAt?: DateTimeNullableFilter<"Host"> | Date | string | null
+    walletBalance?: FloatFilter<"Host"> | number
     setupFeePaid?: BoolFilter<"Host"> | boolean
     gatewayVendorId?: StringNullableFilter<"Host"> | string | null
     cashfreeVendorId?: StringNullableFilter<"Host"> | string | null
+    razorpaySubscriptionId?: StringNullableFilter<"Host"> | string | null
+    lastLowBalanceAlert?: DateTimeNullableFilter<"Host"> | Date | string | null
     apiKey?: StringNullableFilter<"Host"> | string | null
     legacyApiKey?: StringNullableFilter<"Host"> | string | null
     legacyApiKeyExpires?: DateTimeNullableFilter<"Host"> | Date | string | null
@@ -16257,6 +17621,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryListRelationFilter
     notifications?: NotificationListRelationFilter
     knowledge?: HostKnowledgeListRelationFilter
+    walletTransactions?: WalletTransactionListRelationFilter
   }
 
   export type HostOrderByWithRelationInput = {
@@ -16265,9 +17630,14 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     plan?: SortOrder
+    subscriptionStatus?: SortOrder
+    subscriptionExpiresAt?: SortOrderInput | SortOrder
+    walletBalance?: SortOrder
     setupFeePaid?: SortOrder
     gatewayVendorId?: SortOrderInput | SortOrder
     cashfreeVendorId?: SortOrderInput | SortOrder
+    razorpaySubscriptionId?: SortOrderInput | SortOrder
+    lastLowBalanceAlert?: SortOrderInput | SortOrder
     apiKey?: SortOrderInput | SortOrder
     legacyApiKey?: SortOrderInput | SortOrder
     legacyApiKeyExpires?: SortOrderInput | SortOrder
@@ -16281,6 +17651,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     knowledge?: HostKnowledgeOrderByRelationAggregateInput
+    walletTransactions?: WalletTransactionOrderByRelationAggregateInput
   }
 
   export type HostWhereUniqueInput = Prisma.AtLeast<{
@@ -16292,9 +17663,14 @@ export namespace Prisma {
     name?: StringFilter<"Host"> | string
     phone?: StringFilter<"Host"> | string
     plan?: StringFilter<"Host"> | string
+    subscriptionStatus?: StringFilter<"Host"> | string
+    subscriptionExpiresAt?: DateTimeNullableFilter<"Host"> | Date | string | null
+    walletBalance?: FloatFilter<"Host"> | number
     setupFeePaid?: BoolFilter<"Host"> | boolean
     gatewayVendorId?: StringNullableFilter<"Host"> | string | null
     cashfreeVendorId?: StringNullableFilter<"Host"> | string | null
+    razorpaySubscriptionId?: StringNullableFilter<"Host"> | string | null
+    lastLowBalanceAlert?: DateTimeNullableFilter<"Host"> | Date | string | null
     apiKey?: StringNullableFilter<"Host"> | string | null
     legacyApiKey?: StringNullableFilter<"Host"> | string | null
     legacyApiKeyExpires?: DateTimeNullableFilter<"Host"> | Date | string | null
@@ -16308,6 +17684,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryListRelationFilter
     notifications?: NotificationListRelationFilter
     knowledge?: HostKnowledgeListRelationFilter
+    walletTransactions?: WalletTransactionListRelationFilter
   }, "id" | "email">
 
   export type HostOrderByWithAggregationInput = {
@@ -16316,9 +17693,14 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     plan?: SortOrder
+    subscriptionStatus?: SortOrder
+    subscriptionExpiresAt?: SortOrderInput | SortOrder
+    walletBalance?: SortOrder
     setupFeePaid?: SortOrder
     gatewayVendorId?: SortOrderInput | SortOrder
     cashfreeVendorId?: SortOrderInput | SortOrder
+    razorpaySubscriptionId?: SortOrderInput | SortOrder
+    lastLowBalanceAlert?: SortOrderInput | SortOrder
     apiKey?: SortOrderInput | SortOrder
     legacyApiKey?: SortOrderInput | SortOrder
     legacyApiKeyExpires?: SortOrderInput | SortOrder
@@ -16327,8 +17709,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: HostCountOrderByAggregateInput
+    _avg?: HostAvgOrderByAggregateInput
     _max?: HostMaxOrderByAggregateInput
     _min?: HostMinOrderByAggregateInput
+    _sum?: HostSumOrderByAggregateInput
   }
 
   export type HostScalarWhereWithAggregatesInput = {
@@ -16340,9 +17724,14 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Host"> | string
     phone?: StringWithAggregatesFilter<"Host"> | string
     plan?: StringWithAggregatesFilter<"Host"> | string
+    subscriptionStatus?: StringWithAggregatesFilter<"Host"> | string
+    subscriptionExpiresAt?: DateTimeNullableWithAggregatesFilter<"Host"> | Date | string | null
+    walletBalance?: FloatWithAggregatesFilter<"Host"> | number
     setupFeePaid?: BoolWithAggregatesFilter<"Host"> | boolean
     gatewayVendorId?: StringNullableWithAggregatesFilter<"Host"> | string | null
     cashfreeVendorId?: StringNullableWithAggregatesFilter<"Host"> | string | null
+    razorpaySubscriptionId?: StringNullableWithAggregatesFilter<"Host"> | string | null
+    lastLowBalanceAlert?: DateTimeNullableWithAggregatesFilter<"Host"> | Date | string | null
     apiKey?: StringNullableWithAggregatesFilter<"Host"> | string | null
     legacyApiKey?: StringNullableWithAggregatesFilter<"Host"> | string | null
     legacyApiKeyExpires?: DateTimeNullableWithAggregatesFilter<"Host"> | Date | string | null
@@ -16350,6 +17739,73 @@ export namespace Prisma {
     webhooks?: JsonNullableWithAggregatesFilter<"Host">
     createdAt?: DateTimeWithAggregatesFilter<"Host"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Host"> | Date | string
+  }
+
+  export type WalletTransactionWhereInput = {
+    AND?: WalletTransactionWhereInput | WalletTransactionWhereInput[]
+    OR?: WalletTransactionWhereInput[]
+    NOT?: WalletTransactionWhereInput | WalletTransactionWhereInput[]
+    id?: StringFilter<"WalletTransaction"> | string
+    hostId?: StringFilter<"WalletTransaction"> | string
+    amount?: FloatFilter<"WalletTransaction"> | number
+    type?: StringFilter<"WalletTransaction"> | string
+    description?: StringFilter<"WalletTransaction"> | string
+    meta?: JsonNullableFilter<"WalletTransaction">
+    createdAt?: DateTimeFilter<"WalletTransaction"> | Date | string
+    host?: XOR<HostScalarRelationFilter, HostWhereInput>
+  }
+
+  export type WalletTransactionOrderByWithRelationInput = {
+    id?: SortOrder
+    hostId?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    meta?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    host?: HostOrderByWithRelationInput
+  }
+
+  export type WalletTransactionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: WalletTransactionWhereInput | WalletTransactionWhereInput[]
+    OR?: WalletTransactionWhereInput[]
+    NOT?: WalletTransactionWhereInput | WalletTransactionWhereInput[]
+    hostId?: StringFilter<"WalletTransaction"> | string
+    amount?: FloatFilter<"WalletTransaction"> | number
+    type?: StringFilter<"WalletTransaction"> | string
+    description?: StringFilter<"WalletTransaction"> | string
+    meta?: JsonNullableFilter<"WalletTransaction">
+    createdAt?: DateTimeFilter<"WalletTransaction"> | Date | string
+    host?: XOR<HostScalarRelationFilter, HostWhereInput>
+  }, "id">
+
+  export type WalletTransactionOrderByWithAggregationInput = {
+    id?: SortOrder
+    hostId?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    meta?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: WalletTransactionCountOrderByAggregateInput
+    _avg?: WalletTransactionAvgOrderByAggregateInput
+    _max?: WalletTransactionMaxOrderByAggregateInput
+    _min?: WalletTransactionMinOrderByAggregateInput
+    _sum?: WalletTransactionSumOrderByAggregateInput
+  }
+
+  export type WalletTransactionScalarWhereWithAggregatesInput = {
+    AND?: WalletTransactionScalarWhereWithAggregatesInput | WalletTransactionScalarWhereWithAggregatesInput[]
+    OR?: WalletTransactionScalarWhereWithAggregatesInput[]
+    NOT?: WalletTransactionScalarWhereWithAggregatesInput | WalletTransactionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"WalletTransaction"> | string
+    hostId?: StringWithAggregatesFilter<"WalletTransaction"> | string
+    amount?: FloatWithAggregatesFilter<"WalletTransaction"> | number
+    type?: StringWithAggregatesFilter<"WalletTransaction"> | string
+    description?: StringWithAggregatesFilter<"WalletTransaction"> | string
+    meta?: JsonNullableWithAggregatesFilter<"WalletTransaction">
+    createdAt?: DateTimeWithAggregatesFilter<"WalletTransaction"> | Date | string
   }
 
   export type AuthRecordWhereInput = {
@@ -17264,9 +18720,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -17280,6 +18741,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutHostInput
     notifications?: NotificationCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionCreateNestedManyWithoutHostInput
   }
 
   export type HostUncheckedCreateInput = {
@@ -17288,9 +18750,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -17304,6 +18771,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutHostInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeUncheckedCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionUncheckedCreateNestedManyWithoutHostInput
   }
 
   export type HostUpdateInput = {
@@ -17312,9 +18780,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17328,6 +18801,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUpdateManyWithoutHostNestedInput
     notifications?: NotificationUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUpdateManyWithoutHostNestedInput
   }
 
   export type HostUncheckedUpdateInput = {
@@ -17336,9 +18810,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17352,6 +18831,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutHostNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUncheckedUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUncheckedUpdateManyWithoutHostNestedInput
   }
 
   export type HostCreateManyInput = {
@@ -17360,9 +18840,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -17378,9 +18863,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17396,9 +18886,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17406,6 +18901,75 @@ export namespace Prisma {
     webhooks?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletTransactionCreateInput = {
+    id?: string
+    amount: number
+    type: string
+    description: string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    host: HostCreateNestedOneWithoutWalletTransactionsInput
+  }
+
+  export type WalletTransactionUncheckedCreateInput = {
+    id?: string
+    hostId: string
+    amount: number
+    type: string
+    description: string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type WalletTransactionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    host?: HostUpdateOneRequiredWithoutWalletTransactionsNestedInput
+  }
+
+  export type WalletTransactionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hostId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletTransactionCreateManyInput = {
+    id?: string
+    hostId: string
+    amount: number
+    type: string
+    description: string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type WalletTransactionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletTransactionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hostId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AuthRecordCreateInput = {
@@ -18429,6 +19993,28 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -18447,17 +20033,6 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
   export type JsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -18529,6 +20104,12 @@ export namespace Prisma {
     none?: HostKnowledgeWhereInput
   }
 
+  export type WalletTransactionListRelationFilter = {
+    every?: WalletTransactionWhereInput
+    some?: WalletTransactionWhereInput
+    none?: WalletTransactionWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -18554,15 +20135,24 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type WalletTransactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type HostCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     phone?: SortOrder
     plan?: SortOrder
+    subscriptionStatus?: SortOrder
+    subscriptionExpiresAt?: SortOrder
+    walletBalance?: SortOrder
     setupFeePaid?: SortOrder
     gatewayVendorId?: SortOrder
     cashfreeVendorId?: SortOrder
+    razorpaySubscriptionId?: SortOrder
+    lastLowBalanceAlert?: SortOrder
     apiKey?: SortOrder
     legacyApiKey?: SortOrder
     legacyApiKeyExpires?: SortOrder
@@ -18572,15 +20162,24 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type HostAvgOrderByAggregateInput = {
+    walletBalance?: SortOrder
+  }
+
   export type HostMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
     phone?: SortOrder
     plan?: SortOrder
+    subscriptionStatus?: SortOrder
+    subscriptionExpiresAt?: SortOrder
+    walletBalance?: SortOrder
     setupFeePaid?: SortOrder
     gatewayVendorId?: SortOrder
     cashfreeVendorId?: SortOrder
+    razorpaySubscriptionId?: SortOrder
+    lastLowBalanceAlert?: SortOrder
     apiKey?: SortOrder
     legacyApiKey?: SortOrder
     legacyApiKeyExpires?: SortOrder
@@ -18594,14 +20193,23 @@ export namespace Prisma {
     name?: SortOrder
     phone?: SortOrder
     plan?: SortOrder
+    subscriptionStatus?: SortOrder
+    subscriptionExpiresAt?: SortOrder
+    walletBalance?: SortOrder
     setupFeePaid?: SortOrder
     gatewayVendorId?: SortOrder
     cashfreeVendorId?: SortOrder
+    razorpaySubscriptionId?: SortOrder
+    lastLowBalanceAlert?: SortOrder
     apiKey?: SortOrder
     legacyApiKey?: SortOrder
     legacyApiKeyExpires?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type HostSumOrderByAggregateInput = {
+    walletBalance?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -18620,6 +20228,36 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -18646,20 +20284,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -18707,6 +20331,42 @@ export namespace Prisma {
     isNot?: HostWhereInput
   }
 
+  export type WalletTransactionCountOrderByAggregateInput = {
+    id?: SortOrder
+    hostId?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    meta?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type WalletTransactionAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type WalletTransactionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    hostId?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type WalletTransactionMinOrderByAggregateInput = {
+    id?: SortOrder
+    hostId?: SortOrder
+    amount?: SortOrder
+    type?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type WalletTransactionSumOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
   export type AuthRecordCountOrderByAggregateInput = {
     hostId?: SortOrder
     email?: SortOrder
@@ -18741,17 +20401,6 @@ export namespace Prisma {
     verifyToken?: SortOrder
     resetToken?: SortOrder
     resetTokenExpires?: SortOrder
-  }
-
-  export type FloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type StringNullableListFilter<$PrismaModel = never> = {
@@ -18844,22 +20493,6 @@ export namespace Prisma {
 
   export type PropertySumOrderByAggregateInput = {
     basePrice?: SortOrder
-  }
-
-  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -19324,6 +20957,13 @@ export namespace Prisma {
     connect?: HostKnowledgeWhereUniqueInput | HostKnowledgeWhereUniqueInput[]
   }
 
+  export type WalletTransactionCreateNestedManyWithoutHostInput = {
+    create?: XOR<WalletTransactionCreateWithoutHostInput, WalletTransactionUncheckedCreateWithoutHostInput> | WalletTransactionCreateWithoutHostInput[] | WalletTransactionUncheckedCreateWithoutHostInput[]
+    connectOrCreate?: WalletTransactionCreateOrConnectWithoutHostInput | WalletTransactionCreateOrConnectWithoutHostInput[]
+    createMany?: WalletTransactionCreateManyHostInputEnvelope
+    connect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+  }
+
   export type AuthRecordUncheckedCreateNestedOneWithoutHostInput = {
     create?: XOR<AuthRecordCreateWithoutHostInput, AuthRecordUncheckedCreateWithoutHostInput>
     connectOrCreate?: AuthRecordCreateOrConnectWithoutHostInput
@@ -19365,8 +21005,27 @@ export namespace Prisma {
     connect?: HostKnowledgeWhereUniqueInput | HostKnowledgeWhereUniqueInput[]
   }
 
+  export type WalletTransactionUncheckedCreateNestedManyWithoutHostInput = {
+    create?: XOR<WalletTransactionCreateWithoutHostInput, WalletTransactionUncheckedCreateWithoutHostInput> | WalletTransactionCreateWithoutHostInput[] | WalletTransactionUncheckedCreateWithoutHostInput[]
+    connectOrCreate?: WalletTransactionCreateOrConnectWithoutHostInput | WalletTransactionCreateOrConnectWithoutHostInput[]
+    createMany?: WalletTransactionCreateManyHostInputEnvelope
+    connect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -19375,10 +21034,6 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -19465,6 +21120,20 @@ export namespace Prisma {
     deleteMany?: HostKnowledgeScalarWhereInput | HostKnowledgeScalarWhereInput[]
   }
 
+  export type WalletTransactionUpdateManyWithoutHostNestedInput = {
+    create?: XOR<WalletTransactionCreateWithoutHostInput, WalletTransactionUncheckedCreateWithoutHostInput> | WalletTransactionCreateWithoutHostInput[] | WalletTransactionUncheckedCreateWithoutHostInput[]
+    connectOrCreate?: WalletTransactionCreateOrConnectWithoutHostInput | WalletTransactionCreateOrConnectWithoutHostInput[]
+    upsert?: WalletTransactionUpsertWithWhereUniqueWithoutHostInput | WalletTransactionUpsertWithWhereUniqueWithoutHostInput[]
+    createMany?: WalletTransactionCreateManyHostInputEnvelope
+    set?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    disconnect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    delete?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    connect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    update?: WalletTransactionUpdateWithWhereUniqueWithoutHostInput | WalletTransactionUpdateWithWhereUniqueWithoutHostInput[]
+    updateMany?: WalletTransactionUpdateManyWithWhereWithoutHostInput | WalletTransactionUpdateManyWithWhereWithoutHostInput[]
+    deleteMany?: WalletTransactionScalarWhereInput | WalletTransactionScalarWhereInput[]
+  }
+
   export type AuthRecordUncheckedUpdateOneWithoutHostNestedInput = {
     create?: XOR<AuthRecordCreateWithoutHostInput, AuthRecordUncheckedCreateWithoutHostInput>
     connectOrCreate?: AuthRecordCreateOrConnectWithoutHostInput
@@ -19545,6 +21214,34 @@ export namespace Prisma {
     deleteMany?: HostKnowledgeScalarWhereInput | HostKnowledgeScalarWhereInput[]
   }
 
+  export type WalletTransactionUncheckedUpdateManyWithoutHostNestedInput = {
+    create?: XOR<WalletTransactionCreateWithoutHostInput, WalletTransactionUncheckedCreateWithoutHostInput> | WalletTransactionCreateWithoutHostInput[] | WalletTransactionUncheckedCreateWithoutHostInput[]
+    connectOrCreate?: WalletTransactionCreateOrConnectWithoutHostInput | WalletTransactionCreateOrConnectWithoutHostInput[]
+    upsert?: WalletTransactionUpsertWithWhereUniqueWithoutHostInput | WalletTransactionUpsertWithWhereUniqueWithoutHostInput[]
+    createMany?: WalletTransactionCreateManyHostInputEnvelope
+    set?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    disconnect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    delete?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    connect?: WalletTransactionWhereUniqueInput | WalletTransactionWhereUniqueInput[]
+    update?: WalletTransactionUpdateWithWhereUniqueWithoutHostInput | WalletTransactionUpdateWithWhereUniqueWithoutHostInput[]
+    updateMany?: WalletTransactionUpdateManyWithWhereWithoutHostInput | WalletTransactionUpdateManyWithWhereWithoutHostInput[]
+    deleteMany?: WalletTransactionScalarWhereInput | WalletTransactionScalarWhereInput[]
+  }
+
+  export type HostCreateNestedOneWithoutWalletTransactionsInput = {
+    create?: XOR<HostCreateWithoutWalletTransactionsInput, HostUncheckedCreateWithoutWalletTransactionsInput>
+    connectOrCreate?: HostCreateOrConnectWithoutWalletTransactionsInput
+    connect?: HostWhereUniqueInput
+  }
+
+  export type HostUpdateOneRequiredWithoutWalletTransactionsNestedInput = {
+    create?: XOR<HostCreateWithoutWalletTransactionsInput, HostUncheckedCreateWithoutWalletTransactionsInput>
+    connectOrCreate?: HostCreateOrConnectWithoutWalletTransactionsInput
+    upsert?: HostUpsertWithoutWalletTransactionsInput
+    connect?: HostWhereUniqueInput
+    update?: XOR<XOR<HostUpdateToOneWithWhereWithoutWalletTransactionsInput, HostUpdateWithoutWalletTransactionsInput>, HostUncheckedUpdateWithoutWalletTransactionsInput>
+  }
+
   export type HostCreateNestedOneWithoutAuthInput = {
     create?: XOR<HostCreateWithoutAuthInput, HostUncheckedCreateWithoutAuthInput>
     connectOrCreate?: HostCreateOrConnectWithoutAuthInput
@@ -19623,14 +21320,6 @@ export namespace Prisma {
     connectOrCreate?: HostKnowledgeCreateOrConnectWithoutPropertyInput | HostKnowledgeCreateOrConnectWithoutPropertyInput[]
     createMany?: HostKnowledgeCreateManyPropertyInputEnvelope
     connect?: HostKnowledgeWhereUniqueInput | HostKnowledgeWhereUniqueInput[]
-  }
-
-  export type FloatFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type PropertyUpdateamenitiesInput = {
@@ -20038,6 +21727,28 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -20055,17 +21766,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -20107,6 +21807,47 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -20130,31 +21871,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -20192,33 +21908,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
-  }
-
-  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedFloatFilter<$PrismaModel>
-    _min?: NestedFloatFilter<$PrismaModel>
-    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -20499,6 +22188,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type WalletTransactionCreateWithoutHostInput = {
+    id?: string
+    amount: number
+    type: string
+    description: string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type WalletTransactionUncheckedCreateWithoutHostInput = {
+    id?: string
+    amount: number
+    type: string
+    description: string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+  }
+
+  export type WalletTransactionCreateOrConnectWithoutHostInput = {
+    where: WalletTransactionWhereUniqueInput
+    create: XOR<WalletTransactionCreateWithoutHostInput, WalletTransactionUncheckedCreateWithoutHostInput>
+  }
+
+  export type WalletTransactionCreateManyHostInputEnvelope = {
+    data: WalletTransactionCreateManyHostInput | WalletTransactionCreateManyHostInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AuthRecordUpsertWithoutHostInput = {
     update: XOR<AuthRecordUpdateWithoutHostInput, AuthRecordUncheckedUpdateWithoutHostInput>
     create: XOR<AuthRecordCreateWithoutHostInput, AuthRecordUncheckedCreateWithoutHostInput>
@@ -20705,15 +22422,181 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"HostKnowledge"> | Date | string
   }
 
+  export type WalletTransactionUpsertWithWhereUniqueWithoutHostInput = {
+    where: WalletTransactionWhereUniqueInput
+    update: XOR<WalletTransactionUpdateWithoutHostInput, WalletTransactionUncheckedUpdateWithoutHostInput>
+    create: XOR<WalletTransactionCreateWithoutHostInput, WalletTransactionUncheckedCreateWithoutHostInput>
+  }
+
+  export type WalletTransactionUpdateWithWhereUniqueWithoutHostInput = {
+    where: WalletTransactionWhereUniqueInput
+    data: XOR<WalletTransactionUpdateWithoutHostInput, WalletTransactionUncheckedUpdateWithoutHostInput>
+  }
+
+  export type WalletTransactionUpdateManyWithWhereWithoutHostInput = {
+    where: WalletTransactionScalarWhereInput
+    data: XOR<WalletTransactionUpdateManyMutationInput, WalletTransactionUncheckedUpdateManyWithoutHostInput>
+  }
+
+  export type WalletTransactionScalarWhereInput = {
+    AND?: WalletTransactionScalarWhereInput | WalletTransactionScalarWhereInput[]
+    OR?: WalletTransactionScalarWhereInput[]
+    NOT?: WalletTransactionScalarWhereInput | WalletTransactionScalarWhereInput[]
+    id?: StringFilter<"WalletTransaction"> | string
+    hostId?: StringFilter<"WalletTransaction"> | string
+    amount?: FloatFilter<"WalletTransaction"> | number
+    type?: StringFilter<"WalletTransaction"> | string
+    description?: StringFilter<"WalletTransaction"> | string
+    meta?: JsonNullableFilter<"WalletTransaction">
+    createdAt?: DateTimeFilter<"WalletTransaction"> | Date | string
+  }
+
+  export type HostCreateWithoutWalletTransactionsInput = {
+    id?: string
+    email: string
+    name: string
+    phone: string
+    plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
+    setupFeePaid?: boolean
+    gatewayVendorId?: string | null
+    cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
+    apiKey?: string | null
+    legacyApiKey?: string | null
+    legacyApiKeyExpires?: Date | string | null
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    webhooks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    auth?: AuthRecordCreateNestedOneWithoutHostInput
+    properties?: PropertyCreateNestedManyWithoutHostInput
+    bookings?: BookingCreateNestedManyWithoutHostInput
+    ledgerEntries?: LedgerEntryCreateNestedManyWithoutHostInput
+    notifications?: NotificationCreateNestedManyWithoutHostInput
+    knowledge?: HostKnowledgeCreateNestedManyWithoutHostInput
+  }
+
+  export type HostUncheckedCreateWithoutWalletTransactionsInput = {
+    id?: string
+    email: string
+    name: string
+    phone: string
+    plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
+    setupFeePaid?: boolean
+    gatewayVendorId?: string | null
+    cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
+    apiKey?: string | null
+    legacyApiKey?: string | null
+    legacyApiKeyExpires?: Date | string | null
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    webhooks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    auth?: AuthRecordUncheckedCreateNestedOneWithoutHostInput
+    properties?: PropertyUncheckedCreateNestedManyWithoutHostInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutHostInput
+    ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutHostInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutHostInput
+    knowledge?: HostKnowledgeUncheckedCreateNestedManyWithoutHostInput
+  }
+
+  export type HostCreateOrConnectWithoutWalletTransactionsInput = {
+    where: HostWhereUniqueInput
+    create: XOR<HostCreateWithoutWalletTransactionsInput, HostUncheckedCreateWithoutWalletTransactionsInput>
+  }
+
+  export type HostUpsertWithoutWalletTransactionsInput = {
+    update: XOR<HostUpdateWithoutWalletTransactionsInput, HostUncheckedUpdateWithoutWalletTransactionsInput>
+    create: XOR<HostCreateWithoutWalletTransactionsInput, HostUncheckedCreateWithoutWalletTransactionsInput>
+    where?: HostWhereInput
+  }
+
+  export type HostUpdateToOneWithWhereWithoutWalletTransactionsInput = {
+    where?: HostWhereInput
+    data: XOR<HostUpdateWithoutWalletTransactionsInput, HostUncheckedUpdateWithoutWalletTransactionsInput>
+  }
+
+  export type HostUpdateWithoutWalletTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
+    setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
+    gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    apiKey?: NullableStringFieldUpdateOperationsInput | string | null
+    legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
+    legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    webhooks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auth?: AuthRecordUpdateOneWithoutHostNestedInput
+    properties?: PropertyUpdateManyWithoutHostNestedInput
+    bookings?: BookingUpdateManyWithoutHostNestedInput
+    ledgerEntries?: LedgerEntryUpdateManyWithoutHostNestedInput
+    notifications?: NotificationUpdateManyWithoutHostNestedInput
+    knowledge?: HostKnowledgeUpdateManyWithoutHostNestedInput
+  }
+
+  export type HostUncheckedUpdateWithoutWalletTransactionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
+    setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
+    gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    apiKey?: NullableStringFieldUpdateOperationsInput | string | null
+    legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
+    legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settings?: NullableJsonNullValueInput | InputJsonValue
+    webhooks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auth?: AuthRecordUncheckedUpdateOneWithoutHostNestedInput
+    properties?: PropertyUncheckedUpdateManyWithoutHostNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutHostNestedInput
+    ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutHostNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutHostNestedInput
+    knowledge?: HostKnowledgeUncheckedUpdateManyWithoutHostNestedInput
+  }
+
   export type HostCreateWithoutAuthInput = {
     id?: string
     email: string
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -20726,6 +22609,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutHostInput
     notifications?: NotificationCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionCreateNestedManyWithoutHostInput
   }
 
   export type HostUncheckedCreateWithoutAuthInput = {
@@ -20734,9 +22618,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -20749,6 +22638,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutHostInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeUncheckedCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionUncheckedCreateNestedManyWithoutHostInput
   }
 
   export type HostCreateOrConnectWithoutAuthInput = {
@@ -20773,9 +22663,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20788,6 +22683,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUpdateManyWithoutHostNestedInput
     notifications?: NotificationUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUpdateManyWithoutHostNestedInput
   }
 
   export type HostUncheckedUpdateWithoutAuthInput = {
@@ -20796,9 +22692,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20811,6 +22712,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutHostNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUncheckedUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUncheckedUpdateManyWithoutHostNestedInput
   }
 
   export type HostCreateWithoutPropertiesInput = {
@@ -20819,9 +22721,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -20834,6 +22741,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutHostInput
     notifications?: NotificationCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionCreateNestedManyWithoutHostInput
   }
 
   export type HostUncheckedCreateWithoutPropertiesInput = {
@@ -20842,9 +22750,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -20857,6 +22770,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutHostInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeUncheckedCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionUncheckedCreateNestedManyWithoutHostInput
   }
 
   export type HostCreateOrConnectWithoutPropertiesInput = {
@@ -21021,9 +22935,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21036,6 +22955,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUpdateManyWithoutHostNestedInput
     notifications?: NotificationUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUpdateManyWithoutHostNestedInput
   }
 
   export type HostUncheckedUpdateWithoutPropertiesInput = {
@@ -21044,9 +22964,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21059,6 +22984,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutHostNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUncheckedUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUncheckedUpdateManyWithoutHostNestedInput
   }
 
   export type BookingUpsertWithWhereUniqueWithoutPropertyInput = {
@@ -21208,9 +23134,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -21223,6 +23154,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutHostInput
     notifications?: NotificationCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionCreateNestedManyWithoutHostInput
   }
 
   export type HostUncheckedCreateWithoutBookingsInput = {
@@ -21231,9 +23163,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -21246,6 +23183,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutHostInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeUncheckedCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionUncheckedCreateNestedManyWithoutHostInput
   }
 
   export type HostCreateOrConnectWithoutBookingsInput = {
@@ -21392,9 +23330,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21407,6 +23350,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUpdateManyWithoutHostNestedInput
     notifications?: NotificationUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUpdateManyWithoutHostNestedInput
   }
 
   export type HostUncheckedUpdateWithoutBookingsInput = {
@@ -21415,9 +23359,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21430,6 +23379,7 @@ export namespace Prisma {
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutHostNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUncheckedUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUncheckedUpdateManyWithoutHostNestedInput
   }
 
   export type LedgerEntryUpsertWithWhereUniqueWithoutBookingInput = {
@@ -21652,9 +23602,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -21667,6 +23622,7 @@ export namespace Prisma {
     bookings?: BookingCreateNestedManyWithoutHostInput
     notifications?: NotificationCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionCreateNestedManyWithoutHostInput
   }
 
   export type HostUncheckedCreateWithoutLedgerEntriesInput = {
@@ -21675,9 +23631,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -21690,6 +23651,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedCreateNestedManyWithoutHostInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeUncheckedCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionUncheckedCreateNestedManyWithoutHostInput
   }
 
   export type HostCreateOrConnectWithoutLedgerEntriesInput = {
@@ -21775,9 +23737,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21790,6 +23757,7 @@ export namespace Prisma {
     bookings?: BookingUpdateManyWithoutHostNestedInput
     notifications?: NotificationUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUpdateManyWithoutHostNestedInput
   }
 
   export type HostUncheckedUpdateWithoutLedgerEntriesInput = {
@@ -21798,9 +23766,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21813,6 +23786,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedUpdateManyWithoutHostNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUncheckedUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUncheckedUpdateManyWithoutHostNestedInput
   }
 
   export type HostCreateWithoutNotificationsInput = {
@@ -21821,9 +23795,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -21836,6 +23815,7 @@ export namespace Prisma {
     bookings?: BookingCreateNestedManyWithoutHostInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionCreateNestedManyWithoutHostInput
   }
 
   export type HostUncheckedCreateWithoutNotificationsInput = {
@@ -21844,9 +23824,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -21859,6 +23844,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedCreateNestedManyWithoutHostInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutHostInput
     knowledge?: HostKnowledgeUncheckedCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionUncheckedCreateNestedManyWithoutHostInput
   }
 
   export type HostCreateOrConnectWithoutNotificationsInput = {
@@ -21883,9 +23869,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21898,6 +23889,7 @@ export namespace Prisma {
     bookings?: BookingUpdateManyWithoutHostNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUpdateManyWithoutHostNestedInput
   }
 
   export type HostUncheckedUpdateWithoutNotificationsInput = {
@@ -21906,9 +23898,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -21921,6 +23918,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedUpdateManyWithoutHostNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutHostNestedInput
     knowledge?: HostKnowledgeUncheckedUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUncheckedUpdateManyWithoutHostNestedInput
   }
 
   export type BookingCreateWithoutVerificationInput = {
@@ -22153,9 +24151,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -22168,6 +24171,7 @@ export namespace Prisma {
     bookings?: BookingCreateNestedManyWithoutHostInput
     ledgerEntries?: LedgerEntryCreateNestedManyWithoutHostInput
     notifications?: NotificationCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionCreateNestedManyWithoutHostInput
   }
 
   export type HostUncheckedCreateWithoutKnowledgeInput = {
@@ -22176,9 +24180,14 @@ export namespace Prisma {
     name: string
     phone: string
     plan?: string
+    subscriptionStatus?: string
+    subscriptionExpiresAt?: Date | string | null
+    walletBalance?: number
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -22191,6 +24200,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedCreateNestedManyWithoutHostInput
     ledgerEntries?: LedgerEntryUncheckedCreateNestedManyWithoutHostInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutHostInput
+    walletTransactions?: WalletTransactionUncheckedCreateNestedManyWithoutHostInput
   }
 
   export type HostCreateOrConnectWithoutKnowledgeInput = {
@@ -22266,9 +24276,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22281,6 +24296,7 @@ export namespace Prisma {
     bookings?: BookingUpdateManyWithoutHostNestedInput
     ledgerEntries?: LedgerEntryUpdateManyWithoutHostNestedInput
     notifications?: NotificationUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUpdateManyWithoutHostNestedInput
   }
 
   export type HostUncheckedUpdateWithoutKnowledgeInput = {
@@ -22289,9 +24305,14 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     phone?: StringFieldUpdateOperationsInput | string
     plan?: StringFieldUpdateOperationsInput | string
+    subscriptionStatus?: StringFieldUpdateOperationsInput | string
+    subscriptionExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    walletBalance?: FloatFieldUpdateOperationsInput | number
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22304,6 +24325,7 @@ export namespace Prisma {
     bookings?: BookingUncheckedUpdateManyWithoutHostNestedInput
     ledgerEntries?: LedgerEntryUncheckedUpdateManyWithoutHostNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutHostNestedInput
+    walletTransactions?: WalletTransactionUncheckedUpdateManyWithoutHostNestedInput
   }
 
   export type PropertyUpsertWithoutKnowledgeInput = {
@@ -22434,6 +24456,15 @@ export namespace Prisma {
     propertyId: string
     content: string
     updatedAt?: Date | string
+  }
+
+  export type WalletTransactionCreateManyHostInput = {
+    id?: string
+    amount: number
+    type: string
+    description: string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
   }
 
   export type PropertyUpdateWithoutHostInput = {
@@ -22665,6 +24696,33 @@ export namespace Prisma {
     propertyId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletTransactionUpdateWithoutHostInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletTransactionUncheckedUpdateWithoutHostInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WalletTransactionUncheckedUpdateManyWithoutHostInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    meta?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingCreateManyPropertyInput = {

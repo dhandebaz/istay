@@ -19,10 +19,15 @@ model Host {
   email            String   @unique
   name             String
   phone            String
-  plan             String   @default("lifetime")
+  plan             String   @default("monthly") // "monthly" or "lifetime"
+  subscriptionStatus String @default("expired") // "active", "expired", "trailing"
+  subscriptionExpiresAt DateTime?
+  walletBalance    Float    @default(0)
   setupFeePaid     Boolean  @default(false)
   gatewayVendorId  String?
   cashfreeVendorId String?
+  razorpaySubscriptionId String?
+  lastLowBalanceAlert DateTime?
   apiKey           String?
   legacyApiKey     String?
   legacyApiKeyExpires DateTime?
@@ -38,6 +43,19 @@ model Host {
   ledgerEntries LedgerEntry[]
   notifications Notification[]
   knowledge     HostKnowledge[]
+  walletTransactions WalletTransaction[]
+}
+
+model WalletTransaction {
+  id          String   @id @default(uuid())
+  hostId      String
+  amount      Float    // Positive for top-up, negative for usage
+  type        String   // "topup", "ai_usage"
+  description String
+  meta        Json?    // { tokens: { in, out }, model, etc. }
+  createdAt   DateTime @default(now())
+
+  host        Host     @relation(fields: [hostId], references: [id])
 }
 
 model AuthRecord {

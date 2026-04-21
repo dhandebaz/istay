@@ -10,6 +10,9 @@ import * as $api_auth_login from "./routes/api/auth/login.ts";
 import * as $api_auth_logout from "./routes/api/auth/logout.ts";
 import * as $api_auth_register from "./routes/api/auth/register.ts";
 import * as $api_auth_resend_verification from "./routes/api/auth/resend-verification.ts";
+import * as $api_billing_pay from "./routes/api/billing/pay.ts";
+import * as $api_billing_subscription from "./routes/api/billing/subscription.ts";
+import * as $api_billing_verify from "./routes/api/billing/verify.ts";
 import * as $api_bookings from "./routes/api/bookings.ts";
 import * as $api_caretaker_ready from "./routes/api/caretaker/ready.ts";
 import * as $api_caretaker_supply from "./routes/api/caretaker/supply.ts";
@@ -44,6 +47,7 @@ import * as $care_token_ from "./routes/care/[token].tsx";
 import * as $contact from "./routes/contact.tsx";
 import * as $dashboard_layout from "./routes/dashboard/_layout.tsx";
 import * as $dashboard_middleware from "./routes/dashboard/_middleware.ts";
+import * as $dashboard_billing from "./routes/dashboard/billing.tsx";
 import * as $dashboard_bookings from "./routes/dashboard/bookings.tsx";
 import * as $dashboard_guests from "./routes/dashboard/guests.tsx";
 import * as $dashboard_index from "./routes/dashboard/index.tsx";
@@ -69,6 +73,7 @@ import * as $verify from "./routes/verify.tsx";
 import * as $widget_propId_ from "./routes/widget/[propId].tsx";
 import * as $widgets_book_now_propId_ from "./routes/widgets/book-now/[propId].tsx";
 import * as $AddProperty from "./islands/AddProperty.tsx";
+import * as $BillingManager from "./islands/BillingManager.tsx";
 import * as $BookingCalendar from "./islands/BookingCalendar.tsx";
 import * as $BookingFlow from "./islands/BookingFlow.tsx";
 import * as $CaretakerChecklist from "./islands/CaretakerChecklist.tsx";
@@ -118,6 +123,9 @@ const manifest = {
     "./routes/api/auth/logout.ts": $api_auth_logout,
     "./routes/api/auth/register.ts": $api_auth_register,
     "./routes/api/auth/resend-verification.ts": $api_auth_resend_verification,
+    "./routes/api/billing/pay.ts": $api_billing_pay,
+    "./routes/api/billing/subscription.ts": $api_billing_subscription,
+    "./routes/api/billing/verify.ts": $api_billing_verify,
     "./routes/api/bookings.ts": $api_bookings,
     "./routes/api/caretaker/ready.ts": $api_caretaker_ready,
     "./routes/api/caretaker/supply.ts": $api_caretaker_supply,
@@ -152,6 +160,7 @@ const manifest = {
     "./routes/contact.tsx": $contact,
     "./routes/dashboard/_layout.tsx": $dashboard_layout,
     "./routes/dashboard/_middleware.ts": $dashboard_middleware,
+    "./routes/dashboard/billing.tsx": $dashboard_billing,
     "./routes/dashboard/bookings.tsx": $dashboard_bookings,
     "./routes/dashboard/guests.tsx": $dashboard_guests,
     "./routes/dashboard/index.tsx": $dashboard_index,
@@ -179,6 +188,7 @@ const manifest = {
   },
   islands: {
     "./islands/AddProperty.tsx": $AddProperty,
+    "./islands/BillingManager.tsx": $BillingManager,
     "./islands/BookingCalendar.tsx": $BookingCalendar,
     "./islands/BookingFlow.tsx": $BookingFlow,
     "./islands/CaretakerChecklist.tsx": $CaretakerChecklist,

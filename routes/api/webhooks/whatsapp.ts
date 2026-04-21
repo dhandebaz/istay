@@ -371,6 +371,15 @@ export const handler: Handlers = {
               jsonMode: true,
             });
 
+            // Deduct Wallet Cost
+            const { deductAiWalletCost } = await import("../../../utils/db.ts");
+            await deductAiWalletCost(booking.hostId, {
+              prompt: ocrResponse.inputTokens || 0,
+              completion: ocrResponse.outputTokens || 0,
+              model: "gemini-1.5-flash", // Using 1.5 flash for vision
+              useCase: "id_verification_ocr",
+            });
+
             const ocrResult = JSON.parse(ocrResponse.text);
 
             if (ocrResult && ocrResult.match_score > 85) {
@@ -441,6 +450,22 @@ export const handler: Handlers = {
           parts: m.parts,
         }));
 
+        // ── Wallet & Subscription Check ──────────────────────────
+        const { getHost, notifyHostLowBalance } = await import("../../../utils/db.ts");
+        const host = await getHost(booking.hostId);
+        
+        if (!host || host.walletBalance <= 0) {
+          console.warn(`[whatsapp] Insufficient balance for Host ${booking.hostId}`);
+          await Promise.all([
+            sendWhatsAppMessage(
+              guestPhone,
+              "Our AI Concierge is currently resting! 😴 Please contact the property manager directly for assistance. 📱"
+            ),
+            host ? notifyHostLowBalance(host.id, host.phone, true) : Promise.resolve()
+          ]);
+          return new Response("OK", { status: 200 });
+        }
+
         try {
           const response = await callGemini({
             prompt: userText,
@@ -448,8 +473,15 @@ export const handler: Handlers = {
             history: history.length > 0 ? history : undefined,
             tools: TOOLS as any,
             temperature: 0.2,
-
             maxOutputTokens: 512,
+          });
+
+          // Deduct Wallet Cost
+          await deductAiWalletCost(host.id, {
+            prompt: response.inputTokens || 0,
+            completion: response.outputTokens || 0,
+            model: "gemini-2.0-flash-lite",
+            useCase: "concierge_chat",
           });
 
           // 1. Handle Tool Calls
@@ -608,7 +640,7 @@ export const handler: Handlers = {
         
         // ── Autonomous Reflection ─────────────────────────────
         // (Non-blocking) extracted newly learned preferences
-        reflectOnGuestSession(guestPhone, session.messages).catch(err => 
+        reflectOnGuestSession(guestPhone, session.messages, booking.hostId).catch(err => 
           console.error("[whatsapp] Reflection trigger failed:", err)
         );
 

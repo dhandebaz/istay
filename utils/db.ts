@@ -534,14 +534,16 @@ export async function saveBooking(data: Booking): Promise<void> {
   // Track confirmed earnings in KV for high-speed dashboard telemetry
   if (data.status === "confirmed") {
     const kv = await getKv();
-    const month = data.createdAt.slice(0, 7); // YYYY-MM
-    const tallyKey = ["earnings_month", data.hostId, month];
-    const current = await kv.get<number>(tallyKey);
-    const prev = current.value ?? 0;
-    await kv.set(
-      tallyKey,
-      Math.round((prev + data.amount * 0.95) * 100) / 100,
-    );
+    if (kv) {
+      const month = data.createdAt.slice(0, 7); // YYYY-MM
+      const tallyKey = ["earnings_month", data.hostId, month];
+      const current = await kv.get<number>(tallyKey);
+      const prev = current.value ?? 0;
+      await kv.set(
+        tallyKey,
+        Math.round((prev + data.amount * 0.95) * 100) / 100,
+      );
+    }
   }
 }
 
@@ -553,6 +555,7 @@ export async function getBookingByPhone(
   phone: string,
 ): Promise<Booking | null> {
   const kv = await getKv();
+  if (!kv) return null;
   const idx = await kv.get<string>(["booking_phone", phone]);
   if (!idx.value) return null;
   return getBookingById(idx.value);
@@ -560,10 +563,12 @@ export async function getBookingByPhone(
 
 export async function listBookings(hostId: string): Promise<Booking[]> {
   const kv = await getKv();
-  const iter = kv.list<Booking>({ prefix: ["booking", hostId] });
   const bookings: Booking[] = [];
-  for await (const entry of iter) {
-    bookings.push(entry.value);
+  if (kv) {
+    const iter = kv.list<Booking>({ prefix: ["booking", hostId] });
+    for await (const entry of iter) {
+      bookings.push(entry.value);
+    }
   }
   return bookings.sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
@@ -575,11 +580,13 @@ export async function listBookingsByProperty(
   propertyId: string,
 ): Promise<Booking[]> {
   const kv = await getKv();
-  const iter = kv.list<Booking>({ prefix: ["booking", hostId] });
   const bookings: Booking[] = [];
-  for await (const entry of iter) {
-    if (entry.value.propertyId === propertyId) {
-      bookings.push(entry.value);
+  if (kv) {
+    const iter = kv.list<Booking>({ prefix: ["booking", hostId] });
+    for await (const entry of iter) {
+      if (entry.value.propertyId === propertyId) {
+        bookings.push(entry.value);
+      }
     }
   }
   return bookings.sort(
@@ -1040,6 +1047,7 @@ export async function savePrivateVerification(
   data: PrivateVerification,
 ): Promise<void> {
   const kv = await getKv();
+  if (!kv) return;
 
   // Encrypt sensitive fields before saving
   const encrypted = {
@@ -1056,6 +1064,7 @@ export async function getPrivateVerification(
   bookingId: string,
 ): Promise<PrivateVerification | null> {
   const kv = await getKv();
+  if (!kv) return null;
   const entry = await kv.get<PrivateVerification>(
     ["private_verification", bookingId],
   );
@@ -1135,6 +1144,7 @@ export async function addWebhook(
   webhook: WebhookConfig,
 ): Promise<void> {
   const kv = await getKv();
+  if (!kv) throw new Error("KV database is unavailable.");
   const entry = await kv.get<Host>(["host", hostId]);
   if (!entry.value) throw new Error(`Host not found: ${hostId}`);
 
@@ -1161,6 +1171,7 @@ export async function removeWebhook(
   webhookId: string,
 ): Promise<void> {
   const kv = await getKv();
+  if (!kv) throw new Error("KV database is unavailable.");
   const entry = await kv.get<Host>(["host", hostId]);
   if (!entry.value) throw new Error(`Host not found: ${hostId}`);
 
@@ -1182,6 +1193,7 @@ export async function removeWebhook(
 
 export async function recordPropertyView(propId: string): Promise<void> {
   const kv = await getKv();
+  if (!kv) return;
   const dateStr = new Date().toISOString().slice(0, 10);
   const key = ["prop_view", propId, dateStr];
 
@@ -1196,6 +1208,7 @@ export async function getPropertyViewsLast7Days(
 ): Promise<number> {
   const kv = await getKv();
   let total = 0;
+  if (!kv) return total;
   const today = new Date();
 
   for (let i = 0; i < 7; i++) {
@@ -1221,6 +1234,7 @@ export async function getPropertyViewsDaily(
 ): Promise<Array<{ date: string; views: number }>> {
   const kv = await getKv();
   const results: Array<{ date: string; views: number }> = [];
+  if (!kv) return results;
   const today = new Date();
 
   for (let i = days - 1; i >= 0; i--) {
@@ -1308,6 +1322,7 @@ export async function saveSurveyToken(
   bookingId: string,
 ): Promise<void> {
   const kv = await getKv();
+  if (!kv) return;
   await kv.set(["survey_tokens", token], {
     bookingId,
     createdAt: new Date().toISOString(),
@@ -1318,6 +1333,7 @@ export async function getSurveyToken(
   token: string,
 ): Promise<{ bookingId: string } | null> {
   const kv = await getKv();
+  if (!kv) return null;
   const res = await kv.get<{ bookingId: string }>(["survey_tokens", token]);
   return res.value;
 }
@@ -1397,4 +1413,171 @@ export async function isHostPaid(hostId: string): Promise<boolean> {
     select: { setupFeePaid: true },
   });
   return host?.setupFeePaid ?? false;
+}
+// ── BILLING & WALLET ──────────────────────────────────────────
+
+/**
+ * Adds balance to a host's wallet and records the transaction.
+ */
+export async function topupWallet(
+  hostId: string,
+  amount: number,
+  txId: string,
+): Promise<void> {
+  const prisma = getPrisma();
+  await prisma.$transaction([
+    prisma.host.update({
+      where: { id: hostId },
+      data: { walletBalance: { increment: amount } },
+    }),
+    prisma.walletTransaction.create({
+      data: {
+        id: txId,
+        hostId,
+        amount,
+        type: "topup",
+        description: `Wallet top-up (Easebuzz: ${txId})`,
+      },
+    }),
+  ]);
+}
+
+/**
+ * Deducts cost from wallet based on token usage.
+ * Pricing: ₹200 per 1M tokens (combined in/out).
+ */
+export async function deductAiWalletCost(
+  hostId: string,
+  usageMeta: { prompt: number; completion: number; model: string; useCase: string },
+): Promise<void> {
+  const prisma = getPrisma();
+  
+  const totalTokens = usageMeta.prompt + usageMeta.completion;
+  const inrCost = (totalTokens / 1_000_000) * 200; 
+  const roundedCost = Math.max(0.01, Math.round(inrCost * 100) / 100);
+
+  // ── Check Current Balance ──
+  const host = await prisma.host.findUnique({ where: { id: hostId } });
+  if (!host) return;
+
+  if (host.walletBalance < roundedCost) {
+    console.warn(`[db] Host ${hostId} has insufficient balance. Cost: ${roundedCost}, Balance: ${host.walletBalance}`);
+    if (host.walletBalance <= 0) {
+      await notifyHostLowBalance(hostId, host.phone, true);
+    }
+    throw new Error("Insufficient AI wallet balance");
+  }
+
+  // ── Perform Deduction ──
+  await prisma.$transaction([
+    prisma.host.update({
+      where: { id: hostId },
+      data: { walletBalance: { decrement: roundedCost } },
+    }),
+    prisma.walletTransaction.create({
+      data: {
+        hostId,
+        amount: -roundedCost,
+        type: "ai_usage",
+        description: `AI Usage: ${usageMeta.useCase}`,
+        meta: {
+          tokens: usageMeta,
+          model: usageMeta.model,
+          rate: 200, 
+        },
+      },
+    }),
+  ]);
+
+  // ── Threshold Check (₹20) ──
+  const updatedHost = await prisma.host.findUnique({ where: { id: hostId } });
+  if (updatedHost && updatedHost.walletBalance < 20) {
+    await notifyHostLowBalance(hostId, updatedHost.phone);
+  }
+}
+
+/**
+ * Renews or starts a monthly subscription.
+ */
+export async function updateSubscription(
+  hostId: string,
+  months = 1,
+): Promise<void> {
+  const prisma = getPrisma();
+  const host = await getHost(hostId);
+  if (!host) return;
+
+  const currentExpiry = host.subscriptionExpiresAt
+    ? new Date(host.subscriptionExpiresAt)
+    : new Date();
+  
+  const baseDate = currentExpiry > new Date() ? currentExpiry : new Date();
+  const newExpiry = new Date(baseDate);
+  newExpiry.setMonth(newExpiry.getMonth() + months);
+
+  await prisma.host.update({
+    where: { id: hostId },
+    data: {
+      plan: "monthly",
+      subscriptionStatus: "active",
+      subscriptionExpiresAt: newExpiry,
+    },
+  });
+}
+
+/**
+ * Retrieves the wallet transaction history for a host.
+ */
+export async function listWalletTransactions(
+  hostId: string,
+): Promise<WalletTransaction[]> {
+  const prisma = getPrisma();
+  const transactions = await prisma.walletTransaction.findMany({
+    where: { hostId },
+    orderBy: { createdAt: "desc" },
+  });
+  return transactions as WalletTransaction[];
+}
+
+/**
+ * Notifies the host via WhatsApp when balance is low.
+ * Includes a Razorpay Payment Link for instant top-up.
+ */
+export async function notifyHostLowBalance(
+  hostId: string,
+  phone: string,
+  critical = false,
+): Promise<void> {
+  const prisma = getPrisma();
+  const host = await prisma.host.findUnique({ where: { id: hostId } });
+  if (!host) return;
+
+  const now = new Date();
+  const lastAlert = host.lastLowBalanceAlert;
+
+  // Rate limit: 24 hours
+  if (lastAlert && (now.getTime() - new Date(lastAlert).getTime()) < 24 * 60 * 60 * 1000) {
+    return;
+  }
+
+  try {
+    const { createPaymentLink } = await import("./razorpay.ts");
+    const { sendWhatsAppText } = await import("./whatsapp.ts");
+
+    // Setting a default top-up amount for the link (₹500 as discussed)
+    const paymentLink = await createPaymentLink(hostId, 500, "AI Wallet Emergency Top-up");
+    
+    const message = critical
+      ? `🚨 *CRITICAL:* Your istay AI Wallet is empty. AI Concierge is currently disabled for your guests. Top up now to resume: ${paymentLink}`
+      : `⚠️ *Low Balance:* Your istay AI Wallet balance is below ₹20. Top up now to avoid interruption: ${paymentLink}`;
+
+    await sendWhatsAppText(phone, message);
+
+    await prisma.host.update({
+      where: { id: hostId },
+      data: { lastLowBalanceAlert: now },
+    });
+  } catch (err) {
+    console.error("[db] notifyHostLowBalance failed:", err);
+  }
 }

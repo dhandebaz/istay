@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1174 notes | Score threshold: >40
+> 1300 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,20 +20,34 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
-- **gotcha in agent-rules.md** — File updated (external): .brainsync/agent-rules.md
+- **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 1256 notes | Score threshold: >40
++ > 1281 notes | Score threshold
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Starter — introduces API versioning for backwa
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Fixed null crash in Prisma — prevents null/undefined runtime crash
+- **gotcha in shared-context.json** — -     }
++     },
+-   ]
++     {
+- }
++       "id": "a2958601d6806252",
++
+- **gotcha in index.js** — File updated (external): generated/client/index.js
 
-Content summary (8
+Content summary (4
+- **gotcha in edge.js** — File updated (external): generated/client/edge.js
+
+Content summary (38
 
 ## Project Standards
 
+- Added API key auth authentication — improves module reusability — confirmed 6x
+- Replaced auth Billing — confirmed 3x
+- what-changed in shared-context.json — confirmed 12x
+- Fixed null crash in Notifies — reduces initial bundle size with code splitting — confirmed 4x
+- problem-fix in agent-rules.md — confirmed 6x
+- Optimized Score — evolves the database schema to support new requirements — confirmed 3x
+- what-changed in pricing.tsx — confirmed 3x
 - Added JWT tokens authentication — confirmed 4x
-- what-changed in shared-context.json — confirmed 3x
-- convention in shared-context.json
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Added JWT tokens authentication — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
 
 ## Known Fixes
 
@@ -45,16 +59,16 @@ Content summary (8
 
 ## Recent Decisions
 
+- Optimized Score — evolves the database schema to support new requirements
+- Optimized Score — evolves the database schema to support new requirements
 - Optimized Legal — offloads heavy computation off the main thread
 - Optimized Implementation — offloads heavy computation off the main thread
-- Optimized Score — evolves the database schema to support new requirements
-- Optimized Score — evolves the database schema to support new requirements
 
 ## Learned Patterns
 
 - Always: Updated schema Score — evolves the database schema to support new requirements — confirmed 3x (seen 2x)
-- Always: what-changed in brainsync_auto.md — confirmed 3x (seen 2x)
 - Always: what-changed in brainsync_auto.md — confirmed 3x (seen 3x)
+- Always: what-changed in brainsync_auto.md — confirmed 3x (seen 4x)
 - Agent generates new migration for every change (squash related changes)
 - Agent installs packages without checking if already installed
 

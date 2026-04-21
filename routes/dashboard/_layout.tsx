@@ -168,7 +168,14 @@ export default function DashboardLayout(
                 <p class="text-sm font-600 text-gray-800 leading-tight">
                   {hostName}
                 </p>
-                <p class="text-xs text-gray-400 leading-tight">Lifetime Plan</p>
+                <div class="flex items-center gap-1.5 mt-0.5">
+                  <p class="text-[10px] bg-istay-50 text-istay-600 px-1.5 py-0.5 rounded border border-istay-100 uppercase tracking-tighter font-800 leading-none">
+                    {state?.plan === "lifetime" ? "Lifetime" : "Monthly"}
+                  </p>
+                  <p class="text-[10px] bg-mint-50 text-mint-700 px-1.5 py-0.5 rounded border border-mint-100 uppercase tracking-tighter font-800 leading-none">
+                    ₹{(state as any)?.walletBalance ?? 0} Cr
+                  </p>
+                </div>
               </div>
             </div>
 

@@ -123,17 +123,50 @@ export const handler: Handlers = {
       return Response.json({ ok: true, status });
     }
 
+    // ── SUBSCRIPTION FLOW ──────────────────────────────────────
+    if (udf2 === "subscription") {
+      const hostId = udf1;
+      const host = await getHost(hostId);
+      if (host) {
+        const { updateSubscription } = await import("../../../utils/db.ts");
+        await updateSubscription(hostId);
+        console.log(`[webhook] Subscription renewed for Host ${hostId}`);
+
+        const msg = `Your iStay SaaS subscription has been successfully renewed! 🚀 Your account is active for another 30 days.`;
+        await sendWhatsAppMessage(host.phone, msg);
+      }
+      return Response.json({ ok: true, type: "subscription" });
+    }
+
+    // ── WALLET TOPUP FLOW ──────────────────────────────────────
+    if (udf2 === "wallet_topup") {
+      const hostId = udf1;
+      const host = await getHost(hostId);
+      if (host) {
+        const { topupWallet } = await import("../../../utils/db.ts");
+        await topupWallet(hostId, amount, txnid);
+        console.log(`[webhook] Wallet topped up for Host ${hostId}: ₹${amount}`);
+
+        const msg = `Wallet Top-up Successful! ₹${amount} has been added to your iStay credits. You can now continue using AI concierge features. 🤖`;
+        await sendWhatsAppMessage(host.phone, msg);
+      }
+      return Response.json({ ok: true, type: "wallet_topup" });
+    }
+
     // ── ONBOARDING FLOW ───────────────────────────────────────
     if (udf2 === "onboarding") {
       const hostId = udf1;
       const host = await getHost(hostId);
       if (host) {
+        const { saveHost, updateSubscription } = await import("../../../utils/db.ts");
         await saveHost({ ...host, setupFeePaid: true });
-        console.log(`[webhook] Host ${hostId} verified — Setup Fee Paid.`);
+        // Also start their first month of subscription
+        await updateSubscription(hostId);
+        
+        console.log(`[webhook] Host ${hostId} verified — Setup Fee Paid & Subscription Started.`);
 
-        // WhatsApp Welcome Dispatch
         const welcomeMsg =
-          `Welcome to iStay, ${host.name}! 🚀 Your lifetime account is now verified. Next step: Sync your first property iCal in the dashboard to go live.`;
+          `Welcome to iStay, ${host.name}! 🚀 Your monthly SaaS account is now verified. Next step: Sync your first property iCal in the dashboard to go live.`;
         await sendWhatsAppMessage(host.phone, welcomeMsg);
       }
       return Response.json({ ok: true, type: "onboarding" });

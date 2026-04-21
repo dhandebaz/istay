@@ -20,9 +20,9 @@ import {
 const FEATURES = [
   {
     icon: <WalletIcon class="text-teal-600" />,
-    title: "One-Time Setup. Forever.",
+    title: "Monthly SaaS. No Hidden Cuts.",
     desc:
-      "Pay ₹1,000 once. Own your booking channel forever. No monthly SaaS fees eating into your revenue.",
+      "₹1,000 per month for unlimited properties and direct management. We don't take double-digit cuts from your revenue.",
   },
   {
     icon: <AIStarIcon class="text-teal-600" />,
@@ -95,7 +95,7 @@ const SCHEMA = JSON.stringify({
       "@type": "PriceSpecification",
       price: "1000",
       priceCurrency: "INR",
-      description: "One-time lifetime setup fee",
+      description: "Monthly SaaS subscription fee",
     },
   },
   aggregateRating: {

@@ -9,8 +9,14 @@ export interface Host {
   email: string;
   name: string;
   phone: string;
-  /** Always "lifetime" — one-time ₹1,000 setup */
-  plan: "lifetime";
+  /** Plan type: "monthly" (₹1,000/mo) or "lifetime" (legacy) */
+  plan: "monthly" | "lifetime";
+  /** Subscription state */
+  subscriptionStatus: "active" | "expired" | "trailing";
+  /** ISO 8601 expiry timestamp */
+  subscriptionExpiresAt?: string;
+  /** Prepaid balance in INR for AI usage */
+  walletBalance: number;
   setupFeePaid: boolean;
   /** Payment gateway vendor/sub-merchant ID (Easebuzz/Cashfree) */
   gatewayVendorId?: string;

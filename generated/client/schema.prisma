@@ -15,29 +15,47 @@ datasource db {
 // ── CORE ENTITIES ─────────────────────────────────────────────
 
 model Host {
-  id                  String    @id @default(uuid())
-  email               String    @unique
-  name                String
-  phone               String
-  plan                String    @default("lifetime")
-  setupFeePaid        Boolean   @default(false)
-  gatewayVendorId     String?
-  cashfreeVendorId    String?
-  apiKey              String?
-  legacyApiKey        String?
-  legacyApiKeyExpires DateTime?
-  settings            Json? // logoUrl, gstin, businessName, etc.
-  webhooks            Json? // Array of WebhookConfig
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  id                     String    @id @default(uuid())
+  email                  String    @unique
+  name                   String
+  phone                  String
+  plan                   String    @default("monthly") // "monthly" or "lifetime"
+  subscriptionStatus     String    @default("expired") // "active", "expired", "trailing"
+  subscriptionExpiresAt  DateTime?
+  walletBalance          Float     @default(0)
+  setupFeePaid           Boolean   @default(false)
+  gatewayVendorId        String?
+  cashfreeVendorId       String?
+  razorpaySubscriptionId String?
+  lastLowBalanceAlert    DateTime?
+  apiKey                 String?
+  legacyApiKey           String?
+  legacyApiKeyExpires    DateTime?
+  settings               Json? // logoUrl, gstin, businessName, etc.
+  webhooks               Json? // Array of WebhookConfig
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
 
   // Relations
-  auth          AuthRecord?
-  properties    Property[]
-  bookings      Booking[]
-  ledgerEntries LedgerEntry[]
-  notifications Notification[]
-  knowledge     HostKnowledge[]
+  auth               AuthRecord?
+  properties         Property[]
+  bookings           Booking[]
+  ledgerEntries      LedgerEntry[]
+  notifications      Notification[]
+  knowledge          HostKnowledge[]
+  walletTransactions WalletTransaction[]
+}
+
+model WalletTransaction {
+  id          String   @id @default(uuid())
+  hostId      String
+  amount      Float // Positive for top-up, negative for usage
+  type        String // "topup", "ai_usage"
+  description String
+  meta        Json? // { tokens: { in, out }, model, etc. }
+  createdAt   DateTime @default(now())
+
+  host Host @relation(fields: [hostId], references: [id])
 }
 
 model AuthRecord {

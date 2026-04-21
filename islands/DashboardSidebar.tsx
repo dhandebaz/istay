@@ -186,6 +186,40 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
       ),
     },
     {
+      href: "/dashboard/billing",
+      label: "Billing & Wallet",
+      icon: (
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          aria-hidden="true"
+        >
+          <rect
+            x="2"
+            y="4"
+            width="14"
+            height="10"
+            rx="2"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <path
+            d="M2 7H16"
+            stroke="currentColor"
+            stroke-width="1.5"
+          />
+          <path
+            d="M12 10.5H13"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      ),
+    },
+    {
       href: "/dashboard/settings",
       label: "Settings",
       icon: (

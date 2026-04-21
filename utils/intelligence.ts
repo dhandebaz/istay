@@ -27,6 +27,7 @@ function sanitizeLLMJson(raw: string): string {
 export async function reflectOnGuestSession(
   phone: string,
   messages: ChatMessage[],
+  hostId: string,
 ): Promise<void> {
   if (messages.length < 3) return; // Not enough context to reflect
 
@@ -74,7 +75,16 @@ Return ONLY a JSON object:
     // Resilient JSON parsing: strip markdown fences before parsing
     const intelligence = JSON.parse(sanitizeLLMJson(res.text));
 
-    // 2. Upsert Profile
+    // 2. Wallet Deduction
+    const { deductAiWalletCost } = await import("./db.ts");
+    await deductAiWalletCost(hostId, {
+      prompt: res.inputTokens || 0,
+      completion: res.outputTokens || 0,
+      model: "gemini-1.5-flash",
+      useCase: "autonomous_reflection",
+    });
+
+    // 3. Upsert Profile
     const names = existingProfile?.names || [];
     if (intelligence.name && !names.includes(intelligence.name)) {
       names.push(intelligence.name);

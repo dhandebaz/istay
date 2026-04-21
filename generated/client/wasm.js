@@ -123,9 +123,14 @@ exports.Prisma.HostScalarFieldEnum = {
   name: 'name',
   phone: 'phone',
   plan: 'plan',
+  subscriptionStatus: 'subscriptionStatus',
+  subscriptionExpiresAt: 'subscriptionExpiresAt',
+  walletBalance: 'walletBalance',
   setupFeePaid: 'setupFeePaid',
   gatewayVendorId: 'gatewayVendorId',
   cashfreeVendorId: 'cashfreeVendorId',
+  razorpaySubscriptionId: 'razorpaySubscriptionId',
+  lastLowBalanceAlert: 'lastLowBalanceAlert',
   apiKey: 'apiKey',
   legacyApiKey: 'legacyApiKey',
   legacyApiKeyExpires: 'legacyApiKeyExpires',
@@ -133,6 +138,16 @@ exports.Prisma.HostScalarFieldEnum = {
   webhooks: 'webhooks',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.WalletTransactionScalarFieldEnum = {
+  id: 'id',
+  hostId: 'hostId',
+  amount: 'amount',
+  type: 'type',
+  description: 'description',
+  meta: 'meta',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.AuthRecordScalarFieldEnum = {
@@ -306,6 +321,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   Host: 'Host',
+  WalletTransaction: 'WalletTransaction',
   AuthRecord: 'AuthRecord',
   Property: 'Property',
   Booking: 'Booking',
