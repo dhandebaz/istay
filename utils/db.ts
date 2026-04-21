@@ -41,8 +41,7 @@ import type {
   WebhookConfig,
 } from "./types.ts";
 // Use the standard Prisma Client from the npm package with Deno-compatible import.
-import PrismaClientPkg from "@prisma/client";
-const PrismaClient = (PrismaClientPkg as any).PrismaClient || PrismaClientPkg;
+import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 

@@ -8,7 +8,6 @@
     "jsr:@std/path@^1.0.6": "1.1.4",
     "npm:@prisma/adapter-pg@*": "6.4.1_pg@8.13.3",
     "npm:@prisma/adapter-pg@6.4.1": "6.4.1_pg@8.13.3",
-    "npm:@prisma/client@6.4.1": "6.4.1_prisma@6.4.1",
     "npm:pg@*": "8.13.3",
     "npm:pg@8.13.3": "8.13.3",
     "npm:prisma@*": "6.4.1",
@@ -177,16 +176,6 @@
         "pg",
         "postgres-array@3.0.2"
       ]
-    },
-    "@prisma/client@6.4.1_prisma@6.4.1": {
-      "integrity": "sha512-A7Mwx44+GVZVexT5e2GF/WcKkEkNNKbgr059xpr5mn+oUm2ZW1svhe+0TRNBwCdzhfIZ+q23jEgsNPvKD9u+6g==",
-      "dependencies": [
-        "prisma"
-      ],
-      "optionalPeers": [
-        "prisma"
-      ],
-      "scripts": true
     },
     "@prisma/debug@6.4.1": {
       "integrity": "sha512-Q9xk6yjEGIThjSD8zZegxd5tBRNHYd13GOIG0nLsanbTXATiPXCLyvlYEfvbR2ft6dlRsziQXfQGxAgv7zcMUA=="
@@ -757,7 +746,6 @@
   "workspace": {
     "dependencies": [
       "npm:@prisma/adapter-pg@6.4.1",
-      "npm:@prisma/client@6.4.1",
       "npm:pg@8.13.3"
     ]
   }

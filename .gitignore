@@ -14,5 +14,5 @@ CLAUDE.md
 .gemini/
 .cline/
 
-/generated/prisma
+/generated/client
 node_modules

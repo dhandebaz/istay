@@ -3,7 +3,7 @@
   "tasks": {
     "check": "deno check --unstable-cron --unstable-kv **/*.ts **/*.tsx",
     "start": "deno run -A --unstable-cron --unstable-kv --watch=static/,routes/ dev.ts",
-    "build": "deno run -A --unstable-cron --unstable-kv dev.ts build",
+    "build": "deno task db:generate && deno run -A --unstable-cron --unstable-kv dev.ts build",
     "preview": "deno run -A --unstable-cron --unstable-kv main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
     "db:generate": "deno run -A npm:prisma@6.4.1 generate",
@@ -25,7 +25,7 @@
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
     "s3_lite_client": "https://deno.land/x/s3_lite_client@0.7.0/mod.ts",
-    "@prisma/client": "npm:@prisma/client@6.4.1",
+    "@prisma/client": "./generated/client/deno/edge.ts",
     "@prisma/adapter-pg": "npm:@prisma/adapter-pg@6.4.1",
     "pg": "npm:pg@8.13.3"
   },
