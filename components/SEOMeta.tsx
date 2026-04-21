@@ -1,30 +1,25 @@
 import { Head } from "$fresh/runtime.ts";
+import { getPageMetadata, SEOConfig } from "../utils/seo.ts";
 
-interface SEOMetaProps {
-  title?: string;
-  description?: string;
-  image?: string;
-  url?: string;
-  type?: "website" | "article";
-  schema?: string;
-  canonical?: string;
-}
-
-export default function SEOMeta({
-  title = "istay — Direct Booking Platform for Property Hosts",
-  description = "Stop paying 15–18% to OTAs. istay lets you accept direct bookings with a flat 5% fee and AI-powered guest management.",
-  image = "/og-home.png",
-  url = "https://istay.space",
-  type = "website",
-  schema,
-  canonical,
-}: SEOMetaProps) {
-  const fullImageUrl = image.startsWith("http") ? image : `https://istay.space${image}`;
+export default function SEOMeta(config: SEOConfig) {
+  const {
+    title,
+    description,
+    canonical,
+    ogImage,
+    schema,
+    noIndex,
+  } = getPageMetadata(config);
+  
+  const fullImageUrl = ogImage.startsWith("http") ? ogImage : `https://istay.space${ogImage}`;
+  const url = canonical;
+  const type = "website";
   
   return (
     <Head>
       <title>{title}</title>
       <meta name="description" content={description} />
+      {noIndex && <meta name="robots" content="noindex" />}
       
       {/* Open Graph */}
       <meta property="og:type" content={type} />

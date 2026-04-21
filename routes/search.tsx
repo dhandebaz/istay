@@ -1,5 +1,6 @@
 import { type Handlers, type PageProps } from "$fresh/server.ts";
 import PropertyGrid from "../islands/PropertyGrid.tsx";
+import LazyIsland from "../islands/LazyIsland.tsx";
 import SEOMeta from "../components/SEOMeta.tsx";
 import { HomeIcon, SearchIcon, SparklesIcon } from "../components/Icons.tsx";
 import {
@@ -184,12 +185,14 @@ export default function SearchPage({ data }: PageProps<SearchData>) {
             </h2>
           </div>
 
-          <PropertyGrid 
-            initialQuery={query}
-            initialVibe={vibe}
-            initialCheckIn={checkIn}
-            initialCheckOut={checkOut}
-          />
+          <LazyIsland placeholderHeight="600px">
+            <PropertyGrid 
+              initialQuery={query}
+              initialVibe={vibe}
+              initialCheckIn={checkIn}
+              initialCheckOut={checkOut}
+            />
+          </LazyIsland>
         </div>
       </div>
     </>

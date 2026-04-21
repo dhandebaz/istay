@@ -1,5 +1,5 @@
 {
-  "build_id": "bdd57497e2ff8cff8d98cdcaa7e7e5c57b06a576",
+  "build_id": "6435e6d29db32f43abbdccc1a1ff8755121cce9f",
   "files": {
     "island-teammanagement.js": [
       "chunk-OWBRQ5SI.js",
@@ -23,7 +23,7 @@
       "chunk-JP5XG2OT.js"
     ],
     "island-registerform.js": [
-      "chunk-BNYJ7DO6.js",
+      "chunk-T55Y3GIO.js",
       "chunk-DLHNV2J2.js",
       "chunk-BYRZ2NRM.js",
       "chunk-JP5XG2OT.js"
@@ -109,13 +109,13 @@
       "chunk-JP5XG2OT.js"
     ],
     "island-header.js": [
-      "chunk-BNYJ7DO6.js",
+      "chunk-T55Y3GIO.js",
       "chunk-APTOAIYK.js",
       "chunk-OWBRQ5SI.js",
       "chunk-BYRZ2NRM.js",
       "chunk-JP5XG2OT.js"
     ],
-    "chunk-BNYJ7DO6.js": [
+    "chunk-T55Y3GIO.js": [
       "chunk-BYRZ2NRM.js"
     ],
     "chunk-APTOAIYK.js": [

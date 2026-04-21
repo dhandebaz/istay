@@ -78,18 +78,44 @@ export default function RegisterForm() {
 
   if (step.value === "submitting") {
     return (
-      <div class="flex flex-col items-center justify-center py-12 gap-4">
-        <div class="relative w-14 h-14">
+      <div class="flex flex-col items-center justify-center py-20 gap-6">
+        <div class="relative w-16 h-16">
           <div class="absolute inset-0 rounded-full border-4 border-gray-100" />
-          <div class="absolute inset-0 rounded-full border-4 border-mint-500 border-t-transparent animate-spin" />
+          <div class="absolute inset-0 rounded-full border-4 border-teal-500 border-t-transparent animate-spin" />
         </div>
-        <p class="text-sm font-700 text-gray-900">Creating your account...</p>
+        <div class="text-center">
+          <p class="text-lg font-900 text-gray-900">Setting up your channel...</p>
+          <p class="text-sm font-500 text-gray-500 mt-1">Bringing your properties to life.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} class="space-y-5" novalidate>
+    <div class="space-y-8">
+      {/* ── Step Indicator ─────────────────────────────────────── */}
+      <div class="flex items-center justify-between max-w-xs mx-auto mb-8">
+        {[
+          { icon: "👤", label: "Details", active: true },
+          { icon: "💳", label: "Pay", active: false },
+          { icon: "🏘️", label: "Start", active: false }
+        ].map((s, i) => (
+          <div key={i} class="flex flex-col items-center gap-2">
+            <div class={`w-10 h-10 rounded-xl flex items-center justify-center text-lg shadow-sm transition-all ${
+              s.active ? "bg-teal-600 text-white shadow-teal-100 rotate-3" : "bg-gray-50 text-gray-400 grayscale opacity-50"
+            }`}>
+              {s.icon}
+            </div>
+            <span class={`text-[10px] font-900 uppercase tracking-widest ${
+              s.active ? "text-teal-700" : "text-gray-400"
+            }`}>
+              {s.label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <form onSubmit={handleSubmit} class="space-y-5" novalidate>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
           <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">
@@ -230,6 +256,7 @@ export default function RegisterForm() {
           ← Try again
         </button>
       )}
-    </form>
+      </form>
+    </div>
   );
 }
