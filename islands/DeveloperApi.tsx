@@ -530,6 +530,116 @@ export default function DeveloperApi(
           </form>
         </div>
       </div>
+
+      {/* Widget Generator Section */}
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-base font-700 text-gray-900">Direct Booking Widget</h2>
+            <p class="text-xs text-gray-400">
+              Embed a "Book Now" button on your personal website or blog
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[10px] font-800 uppercase tracking-wider">
+              No Fee
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-4">
+            <div>
+              <label class="text-[10px] uppercase font-800 text-gray-400 mb-1.5 block">
+                Widget Accent Color
+              </label>
+              <div class="flex items-center gap-2">
+                <input
+                  type="color"
+                  id="widget-color"
+                  value="#0d9488"
+                  class="w-10 h-10 rounded-lg cursor-pointer border-0 p-0"
+                />
+                <input
+                  type="text"
+                  id="widget-color-hex"
+                  value="0d9488"
+                  class="flex-1 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-mono"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="text-[10px] uppercase font-800 text-gray-400 mb-1.5 block">
+                Button Label
+              </label>
+              <input
+                type="text"
+                id="widget-label"
+                defaultValue="Book Direct & Save"
+                class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-600"
+              />
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex-1">
+                <label class="text-[10px] uppercase font-800 text-gray-400 mb-1.5 block">
+                  Theme
+                </label>
+                <select id="widget-theme" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-600">
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </div>
+              <div class="flex-1">
+                <label class="text-[10px] uppercase font-800 text-gray-400 mb-1.5 block">
+                  Size
+                </label>
+                <select id="widget-size" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-600">
+                  <option value="sm">Small</option>
+                  <option value="md" selected>Medium</option>
+                  <option value="lg">Large</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <label class="text-[10px] uppercase font-800 text-gray-400 mb-1.5 block">
+              Embed Snippet
+            </label>
+            <div class="relative group h-full">
+              <textarea
+                readonly
+                id="widget-snippet"
+                class="w-full h-[120px] px-4 py-3 rounded-xl bg-gray-900 border border-gray-800 font-mono text-[11px] text-gray-300 focus:outline-none resize-none"
+                value={`<!-- istay Direct Booking Widget -->\n<iframe \n  src="https://istay.space/widgets/book-now/${hostId}?accent=0d9488&label=Book+Direct+&+Save"\n  width="240"\n  height="60"\n  frameborder="0"\n  scrolling="no"\n></iframe>`}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  const color = (document.getElementById("widget-color-hex") as HTMLInputElement).value;
+                  const label = encodeURIComponent((document.getElementById("widget-label") as HTMLInputElement).value);
+                  const theme = (document.getElementById("widget-theme") as HTMLSelectElement).value;
+                  const size = (document.getElementById("widget-size") as HTMLSelectElement).value;
+                  
+                  const snippet = `<!-- istay Direct Booking Widget -->\n<iframe \n  src="https://istay.space/widgets/book-now/${hostId}?accent=${color}&label=${label}&theme=${theme}&size=${size}"\n  width="${size === 'lg' ? '280' : size === 'sm' ? '200' : '240'}"\n  height="${size === 'lg' ? '70' : size === 'sm' ? '50' : '60'}"\n  frameborder="0"\n  scrolling="no"\n></iframe>`;
+                  
+                  navigator.clipboard.writeText(snippet);
+                  showToast("Widget snippet copied to clipboard", "success");
+                }}
+                class="absolute right-3 top-3 p-2 text-gray-500 hover:text-white transition-colors"
+                title="Copy to clipboard"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

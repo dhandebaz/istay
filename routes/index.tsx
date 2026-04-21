@@ -119,8 +119,13 @@ const SCHEMA = JSON.stringify({
 
 export const handler: Handlers = {
   async GET(_req, ctx) {
-    const stats = await getGlobalStats();
-    return ctx.render({ stats });
+    try {
+      const stats = await getGlobalStats();
+      return ctx.render({ stats });
+    } catch (err) {
+      console.error("[homepage-handler] Failed to fetch stats:", err);
+      return ctx.render({ stats: null });
+    }
   },
 };
 

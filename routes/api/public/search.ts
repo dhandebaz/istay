@@ -4,6 +4,7 @@ import {
   listAllPropertyIndices,
   listBlockedDates,
 } from "../../../utils/db.ts";
+import { getDynamicPrice } from "../../../utils/pricing.ts";
 import type { Property } from "../../../utils/types.ts";
 
 export const handler: Handlers = {
@@ -81,25 +82,45 @@ export const handler: Handlers = {
       filtered.map(async (p) => {
         let isAvailable = true;
         let matchReason = "";
+        let dynamicPrice = p.basePrice;
+        let isSurge = false;
 
         if (checkIn && checkOut) {
           const blocks = await listBlockedDates(p.id);
           const blockedSet = new Set(blocks.map((b) => b.date));
           let cur = new Date(checkIn + "T00:00:00Z");
           const end = new Date(checkOut + "T00:00:00Z");
+          
+          let totalDynamic = 0;
+          let daysCount = 0;
+
           while (cur < end) {
-            if (blockedSet.has(cur.toISOString().slice(0, 10))) {
+            const dateStr = cur.toISOString().slice(0, 10);
+            if (blockedSet.has(dateStr)) {
               isAvailable = false;
               matchReason = "Selected dates unavailable, but highly recommended!";
-              break;
             }
+            
+            // Calculate dynamic price for this day
+            const dailyPrice = getDynamicPrice(p, dateStr, 2); // Assume 2 guests for preview
+            totalDynamic += dailyPrice;
+            daysCount++;
+
             cur.setUTCDate(cur.getUTCDate() + 1);
           }
+
+          if (daysCount > 0) {
+            dynamicPrice = Math.round(totalDynamic / daysCount);
+            isSurge = dynamicPrice > p.basePrice;
+          }
         }
+
         return {
           ...p,
           isAvailable,
           matchReason,
+          dynamicPrice,
+          isSurge,
         };
       }),
     );

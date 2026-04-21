@@ -13,3 +13,6 @@ CLAUDE.md
 .windsurfrules
 .gemini/
 .cline/
+
+/generated/prisma
+node_modules

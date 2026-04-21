@@ -1,8 +1,10 @@
 import {
   getBookingsCheckingOutIn,
+  getPropertyById,
   saveSurveyToken,
 } from "../../../utils/db.ts";
 import { sendEmail } from "../../../utils/email.ts";
+import { sendWhatsAppText, WHATSAPP_MANUAL_TEMPLATES } from "../../../utils/whatsapp.ts";
 
 export const handler = async (_req: Request) => {
   try {
@@ -44,6 +46,21 @@ export const handler = async (_req: Request) => {
       });
 
       console.log(`[cron/reviews] Survey sent to ${booking.guestEmail}`);
+
+      // 3. Send WhatsApp Review Request (if phone available)
+      if (booking.guestPhone) {
+        const prop = await getPropertyById(booking.propertyId);
+        const propName = prop?.name || "the property";
+        
+        const message = `Hi ${booking.guestName.split(" ")[0]}! Hope you enjoyed your stay at ${propName}. Would you mind leaving us a quick review? It takes less than a minute: ${surveyUrl}`;
+        
+        const waResult = await sendWhatsAppText(booking.guestPhone, message);
+        if (waResult.ok) {
+          console.log(`[cron/reviews] WhatsApp survey sent to ${booking.guestPhone}`);
+        } else {
+          console.log(`[cron/reviews] WhatsApp failed for ${booking.guestPhone}: ${waResult.error}`);
+        }
+      }
     }
 
     return new Response("Cron completed successfully", { status: 200 });

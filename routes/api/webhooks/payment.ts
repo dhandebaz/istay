@@ -173,6 +173,40 @@ export const handler: Handlers = {
       checkOut: booking.checkOut,
     });
     await saveBooking(confirmedBooking);
+    
+    // ── Global Guest Intelligence ─────────────────────────────
+    try {
+      const existingProfile = await getGuestProfile(booking.guestPhone || "");
+      const property = await getPropertyById(booking.propertyId);
+      
+      const newHistory = {
+        propertyId: booking.propertyId,
+        propertyName: property?.name || "Unknown Property",
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+      };
+
+      const profile: GuestProfile = existingProfile ? {
+        ...existingProfile,
+        names: [...new Set([...existingProfile.names, booking.guestName])],
+        emails: [...new Set([...existingProfile.emails, booking.guestEmail])],
+        stayHistory: [...existingProfile.stayHistory, newHistory],
+        updatedAt: new Date().toISOString(),
+      } : {
+        phone: booking.guestPhone || "unknown",
+        names: [booking.guestName],
+        emails: [booking.guestEmail],
+        preferences: [],
+        stayHistory: [newHistory],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      await saveGuestProfile(profile);
+      console.log(`[webhook] GuestProfile updated for ${booking.guestPhone}`);
+    } catch (err) {
+      console.error("[webhook] GuestProfile upsert failed:", err);
+    }
 
     // ── Dispatch Caretaker ─────────────────────────────────────
     dispatchCaretakerMission(confirmedBooking).catch((e) =>

@@ -58,6 +58,7 @@ RULES:
 - Answer ONLY from context or tool outputs. Never hallucinate.
 - If unknown, say: "I don't have that info — please contact your host directly! 📱"
 - ESCALATION: If the guest mentions "refund", "dispute", "legal", or is extremely angry, trigger "support_escalation" immediately.
+- If this is a returning guest (check Stay History), ALWAYS start the interaction with a "Welcome Back" personalized greeting acknowledging their loyalty.
 - Use emojis naturally. Respond in the guest's language.
 
 TOOLS:
@@ -604,6 +605,12 @@ export const handler: Handlers = {
         session.messages.push(modelMsg);
         session.lastActivity = modelMsg.timestamp;
         await saveChatSession(session);
+        
+        // ── Autonomous Reflection ─────────────────────────────
+        // (Non-blocking) extracted newly learned preferences
+        reflectOnGuestSession(guestPhone, session.messages).catch(err => 
+          console.error("[whatsapp] Reflection trigger failed:", err)
+        );
 
         // ── Dispatch Reply to Meta ──
         await sendWhatsAppMessage(guestPhone, reply);

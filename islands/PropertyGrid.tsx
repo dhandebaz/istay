@@ -11,6 +11,8 @@ interface PropertyGridProps {
 type ExtendedProperty = Property & {
   isAvailable: boolean;
   matchReason?: string;
+  dynamicPrice?: number;
+  isSurge?: boolean;
   _vibeScore?: number;
   _vibeReason?: string;
 };
@@ -193,12 +195,20 @@ export default function PropertyGrid({
             </div>
 
             <div class="mt-auto pt-5 flex items-center justify-between">
-              <div>
-                <p class="text-[10px] font-700 text-gray-400 uppercase tracking-wider mb-0.5">Starting at</p>
-                <span class="text-xl font-900 text-teal-600">
-                  {formatINR(prop.basePrice)}
-                </span>
-                <span class="text-xs font-600 text-gray-400 ml-1">/ night</span>
+              <div class="flex-1">
+                <p class="text-[10px] font-700 text-gray-400 uppercase tracking-wider mb-0.5">
+                  {initialCheckIn ? "Average / night" : "Starting at"}
+                </p>
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-900 text-teal-600">
+                    {formatINR(prop.dynamicPrice || prop.basePrice)}
+                  </span>
+                  {prop.isSurge && (
+                    <span class="px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-600 text-[9px] font-900 uppercase animate-pulse">
+                      Surge
+                    </span>
+                  )}
+                </div>
               </div>
               <div class="px-4 py-2 rounded-xl bg-teal-50 text-teal-600 group-hover:bg-teal-500 group-hover:text-white transition-all text-xs font-900 uppercase tracking-wider flex items-center gap-2">
                 Book

@@ -30,52 +30,52 @@ export async function handler(
   req: Request,
   ctx: FreshContext,
 ) {
-  const url = new URL(req.url);
-
-  // Exclude static files from processing to keep latency minimal
-  if (url.pathname.includes(".") || url.pathname.startsWith("/_frsh")) {
-    return await ctx.next();
-  }
-
-  console.log(`[request] ${req.method} ${url.pathname}`);
-
-  // ── IP-based Rate Limiting for /api/* ──────────────────────
-  if (url.pathname.startsWith("/api/")) {
-    try {
-      const { getKv } = await import("../utils/db.ts");
-      const kv = await getKv();
-      const ip = getClientIp(req, ctx);
-      const windowKey = Math.floor(Date.now() / RATE_LIMIT_WINDOW_MS)
-        .toString();
-      const kvKey: Deno.KvKey = ["rate_limit", ip, windowKey];
-
-      const current = await kv.get<number>(kvKey);
-      const count = (current.value ?? 0) + 1;
-
-      // Update counter with 2-minute expiry (auto-cleanup)
-      await kv.set(kvKey, count, { expireIn: 2 * 60 * 1000 });
-
-      if (count > RATE_LIMIT_MAX) {
-        const retryAfter = Math.ceil(RATE_LIMIT_WINDOW_MS / 1000);
-        return new Response(
-          JSON.stringify({ error: "Too many requests. Please slow down." }),
-          {
-            status: 429,
-            headers: {
-              "Content-Type": "application/json",
-              "Retry-After": String(retryAfter),
-              ...SECURITY_HEADERS,
-            },
-          },
-        );
-      }
-    } catch (err) {
-      // Rate limiting is non-critical — log and continue if KV fails
-      console.warn("[rate-limit] Error checking rate limit:", err);
-    }
-  }
-
   try {
+    const url = new URL(req.url);
+
+    // Exclude static files from processing to keep latency minimal
+    if (url.pathname.includes(".") || url.pathname.startsWith("/_fresh")) {
+      return await ctx.next();
+    }
+
+    console.log(`[request] ${req.method} ${url.pathname}`);
+
+    // ── IP-based Rate Limiting for /api/* ──────────────────────
+    if (url.pathname.startsWith("/api/")) {
+      try {
+        const { getKv } = await import("../utils/db.ts");
+        const kv = await getKv();
+        const ip = getClientIp(req, ctx);
+        const windowKey = Math.floor(Date.now() / RATE_LIMIT_WINDOW_MS)
+          .toString();
+        const kvKey: Deno.KvKey = ["rate_limit", ip, windowKey];
+
+        const current = await kv.get<number>(kvKey);
+        const count = (current.value ?? 0) + 1;
+
+        // Update counter with 2-minute expiry (auto-cleanup)
+        await kv.set(kvKey, count, { expireIn: 2 * 60 * 1000 });
+
+        if (count > RATE_LIMIT_MAX) {
+          const retryAfter = Math.ceil(RATE_LIMIT_WINDOW_MS / 1000);
+          return new Response(
+            JSON.stringify({ error: "Too many requests. Please slow down." }),
+            {
+              status: 429,
+              headers: {
+                "Content-Type": "application/json",
+                "Retry-After": String(retryAfter),
+                ...SECURITY_HEADERS,
+              },
+            },
+          );
+        }
+      } catch (err) {
+        // Rate limiting is non-critical — log and continue if KV fails
+        console.warn("[rate-limit] Error checking rate limit:", err);
+      }
+    }
+
     const resp = await ctx.next();
 
     if (resp.status === 403) {
@@ -90,7 +90,7 @@ export async function handler(
 
     return secureResp;
   } catch (err) {
-    console.error(`[request-error] ${url.pathname}:`, err);
-    throw err;
+    console.error(`[root-middleware-crash] Critical failure:`, err);
+    return await ctx.next(); // Fallback: try to continue even if middleware fails
   }
 }

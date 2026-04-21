@@ -1,3 +1,4 @@
+import { useState, useEffect } from "preact/hooks";
 import MobileMenu from "./MobileMenu.tsx";
 import { ArrowRightIcon, ChevronDownIcon } from "../components/Icons.tsx";
 
@@ -18,6 +19,8 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const ASSET_VERSION = "1.0.1";
+
   return (
     <header
       class={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
@@ -35,7 +38,7 @@ export default function Header() {
             aria-label="istay — Home"
           >
             <img
-              src="/logo.svg"
+              src={`/logo.svg?v=${ASSET_VERSION}`}
               alt="iStay Platform Logo"
               width="36"
               height="36"

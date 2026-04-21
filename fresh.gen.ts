@@ -67,6 +67,7 @@ import * as $search from "./routes/search.tsx";
 import * as $sitemap_xml from "./routes/sitemap.xml.ts";
 import * as $verify from "./routes/verify.tsx";
 import * as $widget_propId_ from "./routes/widget/[propId].tsx";
+import * as $widgets_book_now_propId_ from "./routes/widgets/book-now/[propId].tsx";
 import * as $AddProperty from "./islands/AddProperty.tsx";
 import * as $BookingCalendar from "./islands/BookingCalendar.tsx";
 import * as $BookingFlow from "./islands/BookingFlow.tsx";
@@ -174,6 +175,7 @@ const manifest = {
     "./routes/sitemap.xml.ts": $sitemap_xml,
     "./routes/verify.tsx": $verify,
     "./routes/widget/[propId].tsx": $widget_propId_,
+    "./routes/widgets/book-now/[propId].tsx": $widgets_book_now_propId_,
   },
   islands: {
     "./islands/AddProperty.tsx": $AddProperty,

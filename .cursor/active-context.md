@@ -1,558 +1,400 @@
 > **BrainSync Context Pumper** 🧠
-> Dynamically loaded for active file: `islands\DeveloperApi.tsx` (Domain: **Frontend (React/UI)**)
+> Dynamically loaded for active file: `utils\db.ts` (Domain: **Generic Logic**)
 
-### 🔴 Frontend (React/UI) Gotchas
-- **⚠️ GOTCHA: Fixed null crash in ProofOfCleanUploader — avoids unnecessary re-renders in R...**: - import { useState, useRef, useMemo } from "preact/hooks";
-+ import { useMemo, useRef, useState } from "preact/hooks";
-- export default function ProofOfCleanUploader({ bookingId, guestName }: ProofOfCleanUploaderProps) {
-+ export default function ProofOfCleanUploader(
--   const [_file, setFile] = useState<File | null>(null);
-+   { bookingId, guestName }: ProofOfCleanUploaderProps,
--   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-+ ) {
--   const [isUploading, setIsUploading] = useState(false);
-+   const [_file, setFile] = useState<File | null>(null);
--   const [uploadProgress, setUploadProgress] = useState(0);
-+   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
--   const [success, setSuccess] = useState(false);
-+   const [isUploading, setIsUploading] = useState(false);
--   const [error, setError] = useState<string | null>(null);
-+   const [uploadProgress, setUploadProgress] = useState(0);
--   const [checklist, setChecklist] = useState<Record<string, boolean>>({});
-+   const [success, setSuccess] = useState(false);
--   const [isCompressing, setIsCompressing] = useState(false);
-+   const [error, setError] = useState<string | null>(null);
--   const fileInputRef = useRef<HTMLInputElement>(null);
-+   const [checklist, setChecklist] = useState<Record<string, boolean>>({});
-- 
-+   const [isCompressing, setIsCompressing] = useState(false);
--   const checklistComplete = useMemo(() => {
-+   const fileInputRef = useRef<HTMLInputElement>(null);
--     return Object.keys(checklist).length > 0 && Object.values(checklist).every(Boolean);
-+ 
--   }, [checklist]);
-+   const checklistComplete = useMemo(() => {
-- 
-+     return Object.keys(checklist).length > 0 &&
--   const handleFileChange = (e: Event) => {
-+       Object.values(checklist).every(Boolean);
--     const input = e.target as HTMLInputElement;
-+   }, [checklist]);
--     if (input.files && input.files[0]) {
-+ 
--       const selectedFile = input.files[0];
-+   const handleFileChange = (e:
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [ProofOfCleanUploaderProps, ProofOfCleanUploaderProps, COMPRESS_TIMEOUT_MS, COMPRESS_TIMEOUT_MS, ProofOfCleanUploader]
-
-### 📐 Frontend (React/UI) Conventions & Fixes
-- **[problem-fix] Fixed null crash in LedgerEntry — avoids unnecessary re-renders in React**: - /** @jsx h */
-+ import { useCallback, useMemo, useState } from "preact/hooks";
-- import { h } from "preact";
-+ import type { LedgerEntry } from "../utils/types.ts";
-- import { useCallback, useMemo, useState } from "preact/hooks";
-+ 
-- import type { LedgerEntry } from "../utils/types.ts";
-+ interface FinancialLedgerProps {
-- 
-+   entries: LedgerEntry[];
-- interface FinancialLedgerProps {
+### 📐 Generic Logic Conventions & Fixes
+- **[what-changed] Replaced auth Review**: - export interface Review {
++ export async function saveReview(review: Review): Promise<void> {
+-   id: string;
++   const kv = await getKv();
+-   bookingId: string;
++   await kv.set(["reviews", review.propertyId, review.id], review);
+-   propertyId: string;
 + }
--   entries: LedgerEntry[];
+-   rating: number; // 1-5
 + 
+-   comment?: string;
++ export async function listReviews(propertyId: string): Promise<Review[]> {
+-   createdAt: string;
++   const kv = await getKv();
 - }
-+ const PAGE_SIZE = 20;
-- const PAGE_SIZE = 20;
-+ export default function FinancialLedger({ entries }: FinancialLedgerProps) {
++   const iter = kv.list<Review>({ prefix: ["reviews", propertyId] });
 - 
-+   const [filter, setFilter] = useState<"all" | "settled" | "pending">("all");
-- export default function FinancialLedger({ entries }: FinancialLedgerProps) {
-+   const [currentPage, setCurrentPage] = useState(1);
--   const [filter, setFilter] = useState<"all" | "settled" | "pending">("all");
-+   const [dateFrom, setDateFrom] = useState("");
--   const [currentPage, setCurrentPage] = useState(1);
-+   const [dateTo, setDateTo] = useState("");
--   const [dateFrom, setDateFrom] = useState("");
-+ 
--   const [dateTo, setDateTo] = useState("");
-+   // ── Filtered + date-ranged entries (memoized) ──────────────
-- 
-+   const filtered = useMemo(() => {
--   // ── Filtered + date-ranged entries (memoized) ──────────────
-+     let result = entries;
--   const filtered = useMemo(() => {
-+ 
--     let result = entries;
-+     // Status filter
-- 
-+     if (filter !== "all") {
--     // Status filter
-+       result = result.filter((e) => e.status === filter);
--     if (filter !== "all") {
-+     }
--       result = result.filter((e) => e.status === filter);
-+ 
--     }
-+     // Date range filter
-- 
-+     if (dateFrom) {
--     // Date range filter
-+       result = result.filter((e) => e.createdAt.slice(0, 10) >= dateFrom);
--     if (dateFrom) {
-+     }
--       result = result.filter((e) => e.createdAt.slice(0, 10) >= dateFrom);
-+     if (dateTo) {
--     }
-+       result = result.filter((e) => e.createdAt.slice(0, 10) <= dateTo);
--     if (d
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [FinancialLedgerProps, FinancialLedgerProps, PAGE_SIZE, PAGE_SIZE, FinancialLedger]
-- **[problem-fix] problem-fix in EarningsCalculator.tsx**: -             <div class="border-t border-current border-opacity-10 pt-3 space-y-1">
-+             {/* Visual Bar */}
--               <div class="flex justify-between text-xs text-gray-500">
-+             <div class="w-full h-2 bg-gray-100 rounded-full mb-4 overflow-hidden flex">
--                 <span>Commission</span>
-+               <div 
--                 <span class="font-600">{(commission * 100).toFixed(0)}%</span>
-+                 class={`h-full ${name === 'istay' ? 'bg-mint-500' : 'bg-gray-300'}`} 
--               </div>
-+                 style={{ width: `${(1 - commission) * 100}%` }}
--               <div class="flex justify-between text-xs text-gray-500">
-+               />
--                 <span>Platform fee</span>
-+               <div 
--                 <span class="font-600 text-rose-500">
-+                 class={`h-full ${name === 'istay' ? 'bg-mint-200' : 'bg-rose-400'}`} 
--                   -{formatINR(fee)}
-+                 style={{ width: `${commission * 100}%` }}
--                 </span>
-+               />
--               </div>
-+             </div>
--             </div>
-+ 
--           </div>
-+             <div class="border-t border-current border-opacity-10 pt-3 space-y-1">
--         ))}
-+               <div class="flex justify-between text-xs text-gray-500">
--       </div>
-+                 <span>Commission</span>
-- 
-+                 <span class="font-600">{(commission * 100).toFixed(0)}%</span>
--       {/* ── SAVINGS BANNER ──────────────────────────────── */}
-+               </div>
--       <div class="rounded-2xl bg-gradient-to-r from-mint-500 to-emerald-400 p-5 sm:p-6 text-istay-900 shadow-md">
-+               <div class="flex justify-between text-xs text-gray-500">
--         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-+                 <span>Platform fee</span>
--           <div>
-+                 <span class="font-600 text-rose-500">
--             <p class="text-sm font-800 text-istay-900/80 mb-1"
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [SETUP_FEE, SETUP_FEE, Platform, Platform, PLATFORMS]
-- **[problem-fix] problem-fix in ErrorBoundary.tsx**: -   static getDerivedStateFromError(error: Error) {
-+   static override getDerivedStateFromError(error: Error) {
-
-📌 IDE AST Context: Modified symbols likely include [Props, Props, State, State, ErrorBoundary]
-- **[what-changed] what-changed in OtaSavingsChart.tsx**: - interface SavingsData {
-+ export interface SavingsData {
-
-📌 IDE AST Context: Modified symbols likely include [SavingsData, SavingsData, OtaSavingsChartProps, OtaSavingsChartProps, OtaSavingsChart]
-- **[problem-fix] problem-fix in ErrorBoundary.tsx**: -           <h3 class="text-sm font-700 text-gray-900 mb-1">Component Failed to Load</h3>
-+           <h3 class="text-sm font-700 text-gray-900 mb-1">
--           <p class="text-xs text-gray-500 max-w-sm">
-+             Component Failed to Load
--             Something went wrong while rendering this section. Please refresh the page.
-+           </h3>
--           </p>
-+           <p class="text-xs text-gray-500 max-w-sm">
--         </div>
-+             Something went wrong while rendering this section. Please refresh
--       );
-+             the page.
--     }
-+           </p>
-- 
-+         </div>
--     return this.props.children;
-+       );
--   }
-+     }
-- }
-+ 
-- 
-+     return this.props.children;
++   const reviews: Review[] = [];
+- export async function saveReview(review: Review): Promise<void> {
++   for await (const entry of iter) {
+-   const kv = await getKv();
++     reviews.push(entry.value);
+-   await kv.set(["reviews", review.propertyId, review.id], review);
 +   }
-+ }
-+ 
-
-📌 IDE AST Context: Modified symbols likely include [Props, Props, State, State, ErrorBoundary]
-- **[decision] Optimized Date — avoids unnecessary re-renders in React**: - import { useState, useCallback, useMemo } from "preact/hooks";
-+ import { useCallback, useMemo, useState } from "preact/hooks";
--     const headers = ["Date", "Transaction ID", "Booking Ref", "Gross Amount", "iStay Fee", "Net Payout", "Status"];
-+     const headers = [
--     const rows = filtered.map((e) => [
-+       "Date",
--       new Date(e.createdAt).toISOString().slice(0, 10),
-+       "Transaction ID",
--       e.gatewayOrderId,
-+       "Booking Ref",
--       e.bookingId,
-+       "Gross Amount",
--       e.grossAmount.toString(),
-+       "iStay Fee",
--       e.istayAmount.toString(),
-+       "Net Payout",
--       e.hostAmount.toString(),
-+       "Status",
--       e.status,
-+     ];
--     ]);
-+     const rows = filtered.map((e) => [
-- 
-+       new Date(e.createdAt).toISOString().slice(0, 10),
--     const csvContent = [
-+       e.gatewayOrderId,
--       headers.join(","),
-+       e.bookingId,
--       ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
-+       e.grossAmount.toString(),
--     ].join("\n");
-+       e.istayAmount.toString(),
-- 
-+       e.hostAmount.toString(),
--     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-+       e.status,
--     const url = URL.createObjectURL(blob);
-+     ]);
--     const link = document.createElement("a");
-+ 
--     link.href = url;
-+     const csvContent = [
--     link.download = `istay-ledger-${filter}-${new Date().toISOString().slice(0, 10)}.csv`;
-+       headers.join(","),
--     link.click();
-+       ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
--     URL.revokeObjectURL(url);
-+     ].join("\n");
--   }, [filtered, filter]);
-+ 
-- 
-+     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
--   return (
-+     const url = URL.createObjectURL(blob);
--     <div class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden mt-8">
-+     const link = document.createElement("a");
--       <div class="px-8 py-6 border-b border-gray-50 flex fle
-… [diff truncated]
-
-📌 IDE AST Context: Modified symbols likely include [FinancialLedgerProps, FinancialLedgerProps, PAGE_SIZE, PAGE_SIZE, FinancialLedger]
-- **[decision] Optimized Record — avoids unnecessary re-renders in React**: - import { useState, useMemo } from "preact/hooks";
-+ import { useMemo, useState } from "preact/hooks";
--   onComplete: (checklist: Record<string, boolean>, photoBase64?: string) => void;
-+   onComplete: (
--   disabled?: boolean;
-+     checklist: Record<string, boolean>,
 - }
-+     photoBase64?: string,
++   return reviews.sort((a, b) =>
 - 
-+   ) => void;
-- const CHECKLIST_ITEMS = [
-+   disabled?: boolean;
--   { id: "ac_lights_off", label: "AC/Lights Off" },
++     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+- export async function listReviews(propertyId: string): Promise<Review[]> {
++   );
+-   const kv = await getKv();
 + }
--   { id: "windows_locked", label: "Windows Locked" },
+-   const iter = kv.list<Review>({ prefix: ["reviews", propertyId] });
 + 
--   { id: "geyser_off", label: "Geyser Off" },
-+ const CHECKLIST_ITEMS = [
--   { id: "key_returned", label: "Key Returned" },
-+   { id: "ac_lights_off", label: "AC/Lights Off" },
-- ] as const;
-+   { id: "windows_locked", label: "Windows Locked" },
+-   const reviews: Review[] = [];
++ export async function saveSurveyToken(
+-   for await (const entry of iter) {
++   token: string,
+-     reviews.push(entry.value);
++   bookingId: string,
+-   }
++ ): Promise<void> {
+-   return reviews;
++   const kv = await getKv();
+- }
++   await kv.set(["survey_tokens", token], {
 - 
-+   { id: "geyser_off", label: "Geyser Off" },
-- export default function CaretakerChecklist({ bookingId: _bookingId, onComplete, disabled }: CaretakerChecklistProps) {
-+   { id: "key_returned", label: "Key Returned" },
--   const [state, setState] = useState<Record<string, boolean>>({
-+ ] as const;
--     ac_lights_off: false,
++     bookingId,
+- export async function saveSurveyToken(
++     createdAt: new Date().toISOString(),
+-   token: string,
++   }, { expireIn: 7 * 24 * 60 * 60 * 1000 }); // 7 days
+-   bookingId: string,
++ }
+- ): Promise<void> {
 + 
--     windows_locked: false,
-+ export default function CaretakerChecklist(
--     geyser_off: false,
-+   { bookingId: _bookingId, onComplete, disabled }: CaretakerChecklistProps,
--     key_returned: false,
-+ ) {
--   });
-+   const [state, setState] = useState<Record<string, boolean>>({
--   const [photo, setPhoto] = useState<string | null>(null);
-+     ac_lights_off: false,
-- 
-+     windows_locked: false,
--   const allChecked = useMemo(() => {
-+     geyser_off: false,
--     return Object.values(state).every(Boolean) && !!photo;
-+     key_returned: false,
--   }, [state, photo]);
-+   });
-- 
-+   const [photo, setPhoto] = useState<string | null>(null);
--   const toggle = (id: string) => {
-+ 
--     if (disabled) return;
-+   const allChecked = useMemo(() => {
--     const newState = { ...state, [id]: !state[id] };
-+     return Object.values(state).every(Boolean) && !!photo;
--     setState(newState);
-+   }, [state, photo]);
--  
+-   const kv = await getKv();
++ export async function getSurveyToken(
+-   await kv.set(["survey_tokens", token], {
++   token: string,
+-     bookingId,
++ ): Promise<{ bookingId: string } | null> {
+-     createdAt: new Date().toISOString(),
++   const kv = await getKv();
+-   }, { expireIn: 7 * 24 * 60 * 60 * 1000 }); // 7 days
++   const res = await kv
 … [diff truncated]
 
-📌 IDE AST Context: Modified symbols likely include [CaretakerChecklistProps, CaretakerChecklistProps, CHECKLIST_ITEMS, CHECKLIST_ITEMS, CaretakerChecklist]
-- **[trade-off] trade-off in OtaSavingsChart.tsx**: -     1
-+     1,
--           <p class="text-xs text-gray-400 mt-0.5">Estimated commissions retained vs Airbnb/Booking.com</p>
-+           <p class="text-xs text-gray-400 mt-0.5">
--         </div>
-+             Estimated commissions retained vs Airbnb/Booking.com
-- 
-+           </p>
--         {/* Summary pills */}
-+         </div>
--         <div class="flex items-center gap-3">
+📌 IDE AST Context: Modified symbols likely include [_kv, _kv, getKv, getKv, ENCRYPTION_KEY]
+- **[problem-fix] Patched security issue Export**: - /**
++ // Export as alias for broader compatibility across the codebase
+-  * Generates a pre-filled wa.me link for manual host actions.
++ export { sendWhatsAppText as sendWhatsAppMessage };
+-  * Used when the automated API is not needed or for quick overrides.
 + 
--           <div class="flex items-center gap-1.5 px-3 py-1.5 bg-mint-50 rounded-lg">
-+         {/* Summary pills */}
--             <span class="w-2.5 h-2.5 rounded-full bg-mint-500 animate-pulse" />
-+         <div class="flex items-center gap-3">
--             <span class="text-xs font-800 text-mint-700">
-+           <div class="flex items-center gap-1.5 px-3 py-1.5 bg-mint-50 rounded-lg">
--               ₹{totalSavings.toLocaleString("en-IN")} Total Saved
-+             <span class="w-2.5 h-2.5 rounded-full bg-mint-500 animate-pulse" />
--             </span>
-+             <span class="text-xs font-800 text-mint-700">
--           </div>
-+               ₹{totalSavings.toLocaleString("en-IN")} Total Saved
--         </div>
-+             </span>
--       </div>
-+           </div>
+-  */
++ /**
+- export function getWhatsAppLink(phone: string, message: string): string {
++  * Generates a pre-filled wa.me link for manual host actions.
+-   const cleanPhone = phone.replace(/\D/g, "");
++  * Used when the automated API is not needed or for quick overrides.
+-   const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
++  */
+-   return `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
++ export function getWhatsAppLink(phone: string, message: string): string {
+- }
++   const cleanPhone = phone.replace(/\D/g, "");
 - 
-+         </div>
--       {/* Chart Grid */}
-+       </div>
--       <div class="relative">
++   const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+- /**
++   return `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+-  * Standard message text for manual WhatsApp links.
++ }
+-  */
 + 
--         <div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
-+       {/* Chart Grid */}
--           {[0, 1, 2, 3].map((i) => (
-+       <div class="relative">
--             <div key={i} class="border-b border-gray-50 w-full h-0" />
-+         <div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
--           ))}
-+           {[0, 1, 2, 3].map((i) => (
--         </div>
-+             <div key={i} class="border-b border-gray-50 w-full h-0" />
+- export const WHATSAPP_MANUAL_TEMPLATES = {
++ /**
+-   REVIEW_REQUEST: (guestName: string, propertyName: string, reviewUrl: string) =>
++  * Standard message text for manual WhatsApp links.
+-     `Hi ${guestName}! Hope you enjoyed your stay at ${propertyName}. Would you mind leaving us a quick review? It takes less than a minute: ${reviewUrl}`,
++  */
+-   BOOKING_CONFIRMED: (guestName: string, propertyName: string, guideUrl: string) =>
++ export const WHATSAPP_MANUAL_TEMPLATES = {
+-     `Hi ${guestName}, your booking at ${propertyName} is confirmed! View your check-in guide here: ${guideUrl}`,
++   REVIEW_REQUEST: (guestName: string, propertyName: string, reviewUrl: string) =>
+- };
++     `Hi ${guestName}! Hope you enjoyed your stay at ${propertyName}. Would you mind leaving us a quick review? It takes less than a minute: ${reviewUrl}`,
 - 
-+           ))}
--         {/* Bars */}
-+         </div>
--         <div class="relative flex items-end justify-between gap-4 sm:gap-6 h-44">
-+ 
--           {data.map((month) => {
-+         {/* Bars */}
--             const barHeight = ma
++   BOOKING_CONFIRMED: (guestName: string, propertyName: string, guid
 … [diff truncated]
 
-📌 IDE AST Context: Modified symbols likely include [SavingsData, SavingsData, OtaSavingsChartProps, OtaSavingsChartProps, OtaSavingsChart]
-- **[what-changed] Replaced preact/hooks with preact/hooks — avoids unnecessary re-renders in React**: - import { useState, useCallback } from "preact/hooks";
-+ import { useCallback, useState } from "preact/hooks";
-- export default function SettingsTabs({ initialTab = "general", tabs, children }: SettingsTabsProps) {
-+ export default function SettingsTabs(
--   const [activeTab, setActiveTab] = useState(initialTab);
-+   { initialTab = "general", tabs, children }: SettingsTabsProps,
+📌 IDE AST Context: Modified symbols likely include [WHATSAPP_TOKEN, WHATSAPP_TOKEN, WHATSAPP_PHONE_ID, WHATSAPP_PHONE_ID, sendWhatsApp]
+- **[what-changed] Added session cookies authentication — formalizes the data contract with expl...**: -   /** OCR match score (0-100) */
++   /** Extracted for Form C compliance */
+-   matchScore: number;
++   gender?: "male" | "female" | "other" | "not_visible";
+-   /** AI confidence flags */
++   nationality?: string;
+-   flags: string[];
++   idExpiry?: string;
+-   /** Raw Gemini response (for debugging/audit) */
++   /** Specifically for foreign guest compliance */
+-   rawResponse?: string;
++   visaDetails?: {
+-   createdAt: string;
++     number?: string;
+- }
++     expiry?: string;
 - 
-+ ) {
--   // Update URL without refresh
-+   const [activeTab, setActiveTab] = useState(initialTab);
--   const switchTab = useCallback((id: string) => {
-+ 
--     setActiveTab(id);
-+   // Update URL without refresh
--     const url = new URL(globalThis.location.href);
-+   const switchTab = useCallback((id: string) => {
--     url.searchParams.set("tab", id);
-+     setActiveTab(id);
--     globalThis.history.pushState({}, "", url);
-+     const url = new URL(globalThis.location.href);
--   }, []);
-+     url.searchParams.set("tab", id);
++     entryDate?: string;
+- // ── AI / CONCIERGE ────────────────────────────────────────────
++   };
 - 
-+     globalThis.history.pushState({}, "", url);
--   return (
-+   }, []);
--     <div class="space-y-6">
++   /** OCR match score (0-100) */
+- /**
++   matchScore: number;
+-  * HostKnowledge — Markdown knowledge base written by hosts.
++   /** AI confidence flags */
+-  * Injected as system context for the AI concierge.
++   flags: string[];
+-  */
++   /** Raw Gemini response (for debugging/audit) */
+- export interface HostKnowledge {
++   rawResponse?: string;
+-   hostId: string;
++   createdAt: string;
+-   propertyId: string;
++ }
+-   /** Markdown content with WiFi, rules, check-in instructions, etc. */
 + 
--       {/* Tab Navigation */}
-+   return (
--       <div class="flex items-center gap-1 p-1 bg-gray-100 rounded-2xl w-fit overflow-x-auto no-scrollbar">
-+     <div class="space-y-6">
--         {tabs.map((tab) => (
-+       {/* Tab Navigation */}
--           <button
-+       <div class="flex items-center gap-1 p-1 bg-gray-100 rounded-2xl w-fit overflow-x-auto no-scrollbar">
--             type="button"
-+         {tabs.map((tab) => (
--             key={tab.id}
-+           <button
--             onClick={() => switchTab(tab.id)}
-+             type="button"
--             class={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-700 transition-all whitespace-nowrap ${
-+             key={tab.id}
--               activeTab === tab.id
-+             onClick={() => switchTab(tab.id)}
--                 ? "bg-white text-gray-900 shadow-sm"
-+             class={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-700 transition-all whitespace-nowrap ${
--  
+-   content: string;
++ // ── AI / CONCIERGE ────────────────────────────────────────────
+-   updatedAt: string;
++ 
+- }
++ /**
+- 
++  * HostKnowledge — Markdown knowledge base written by hosts.
+- /** A single message in a guest chat session */
++  * Injected as system context for the AI concierge.
+- export interface ChatMessage {
++  */
+-   role: "user" | "model" | "function";
++ export interface HostKnowledge {
+-   content: string;
++   hostId: string;
+-   /** Gemini-compatible parts (for tool calls/results) */
++   propertyId: string;
+-   parts?: any[];
++   /** Markdown content with WiFi, rules, check-in instructions, etc. */
+-   timestamp: string;
++   content: string;
+- }
++   updatedAt: string;
+- 
++ }
+- /**
++ 
+-  * ChatSession — Persisted in KV for multi-turn conversation.
++ /** A single message in a guest chat session */
+-  * Expires/soft-deleted after 24 hours for KV hygiene.
++ export interface 
 … [diff truncated]
 
-📌 IDE AST Context: Modified symbols likely include [Tab, Tab, SettingsTabsProps, SettingsTabsProps, SettingsTabs]
-- **[what-changed] Refactored Step logic**: - import { useState, useEffect } from "preact/hooks";
-+ import { useEffect, useState } from "preact/hooks";
--            <span class={`text-[10px] sm:text-xs text-gray-500 font-mono overflow-hidden whitespace-nowrap transition-opacity duration-300 ${step >= 1 ? 'opacity-100' : 'opacity-0'}`}>
-+           <span
--              https://airbnb.com/h/beautiful-villa-stay
-+             class={`text-[10px] sm:text-xs text-gray-500 font-mono overflow-hidden whitespace-nowrap transition-opacity duration-300 ${
--            </span>
-+               step >= 1 ? "opacity-100" : "opacity-0"
--         </div>
-+             }`}
--       </div>
-+           >
+📌 IDE AST Context: Modified symbols likely include [Host, Host, WebhookConfig, WebhookConfig, AuthRecord]
+- **[convention] Added session cookies authentication — formalizes the data contract with expl... — confirmed 3x**: -   createdAt: string;
++   /** Dynamic pricing rules defined by the host */
+-   updatedAt: string;
++   pricingSettings?: {
+- }
++     weekendSurcharge?: number; // decimal e.g. 0.15 for 15%
 - 
-+             https://airbnb.com/h/beautiful-villa-stay
--       <div class="flex-1 relative flex flex-col items-center justify-center p-6 bg-white overflow-hidden">
-+           </span>
--         
-+         </div>
--         {/* Step 0: Idle/Waiting */}
-+       </div>
--         <div class={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-out ${step === 0 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
++     seasonalAdjustments?: Array<{
+- export interface Booking {
++       startDate: string; // MM-DD
+-   id: string;
++       endDate: string; // MM-DD
+-   propertyId: string;
++       adjustment: number; // decimal e.g. 0.20 for +20%
+-   hostId: string;
++       label: string;
+-   guestName: string;
++     }>;
+-   guestEmail: string;
++     minPrice?: number;
+-   guestPhone?: string;
++     maxPrice?: number;
+-   /** Government ID reference (last 4 digits, from OCR) */
++   };
+-   guestIdRef?: string;
++   createdAt: string;
+-   checkIn: string; // YYYY-MM-DD
++   updatedAt: string;
+-   checkOut: string; // YYYY-MM-DD
++ }
+-   checkoutChecklist?: Record<string, boolean>;
 + 
--           <div class="w-16 h-16 rounded-2xl bg-mint-50 text-mint-600 flex items-center justify-center mb-4 border border-mint-100 shadow-sm">
-+       <div class="flex-1 relative flex flex-col items-center justify-center p-6 bg-white overflow-hidden">
--             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-+         {/* Step 0: Idle/Waiting */}
--               <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-+         <div
--               <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-+           class={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-out ${
--             </svg>
-+             step === 0
--           </div>
-+               ? "opac
+-   cleanProofUrl?: string;
++ export interface Booking {
+-   nights: number;
++   id: string;
+-   /** Total gross booking amount in INR */
++   propertyId: string;
+-   amount: number;
++   hostId: string;
+-   status:
++   guestName: string;
+-     | "pending"
++   guestEmail: string;
+-     | "confirmed"
++   guestPhone?: string;
+-     | "room_ready"
++   /** Government ID reference (last 4 digits, from OCR) */
+-     | "cancelled"
++   guestIdRef?: string;
+-     | "refunded"
++   checkIn: string; // YYYY-MM-DD
+-     | "needs_review";
++   checkOut: string; // YYYY-MM-DD
+-   /** Gateway Order ID (txnid) */
++   checkoutChecklist?: Record<string, boolean>;
+-   gatewayOrderId?: string;
++   cleanProofUrl?: string;
+-   /** Gateway Payment Session / Access Key */
++   nights: number;
+-   paymentSessionId?: string;
++   /** Total gross booking amount in INR */
+-   /** Whether guest ID has been verified */
++   amount: number;
+-   idVerified?: boolean;
++   status:
+-   caretakerPhone?: string;
++     | "pending"
+-   caretakerName?: string;
++     | "confirmed"
+-   createdAt: string;
++     | "room_ready"
+-   updatedAt: string;
++     | "cancelle
 … [diff truncated]
 
-📌 IDE AST Context: Modified symbols likely include [MagicScraperAnimation, MagicScraperAnimation]
-- **[discovery] discovery in AddProperty.tsx**: File updated (external): islands/AddProperty.tsx
+📌 IDE AST Context: Modified symbols likely include [Host, Host, WebhookConfig, WebhookConfig, AuthRecord]
+- **[convention] Added API key auth authentication — improves module reusability — confirmed 4x**: - import * as $OtaSavingsChart from "./islands/OtaSavingsChart.tsx";
++ import * as $OfflineNotice from "./islands/OfflineNotice.tsx";
+- import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
++ import * as $OtaSavingsChart from "./islands/OtaSavingsChart.tsx";
+- import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
++ import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
+- import * as $PropertyGrid from "./islands/PropertyGrid.tsx";
++ import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
+- import * as $RegisterForm from "./islands/RegisterForm.tsx";
++ import * as $PropertyGrid from "./islands/PropertyGrid.tsx";
+- import * as $ResendVerificationBtn from "./islands/ResendVerificationBtn.tsx";
++ import * as $RegisterForm from "./islands/RegisterForm.tsx";
+- import * as $ScraperPreview from "./islands/ScraperPreview.tsx";
++ import * as $ResendVerificationBtn from "./islands/ResendVerificationBtn.tsx";
+- import * as $ScrollToTop from "./islands/ScrollToTop.tsx";
++ import * as $ScraperPreview from "./islands/ScraperPreview.tsx";
+- import * as $SettingsTabs from "./islands/SettingsTabs.tsx";
++ import * as $ScrollToTop from "./islands/ScrollToTop.tsx";
+- import * as $SupplyRequest from "./islands/SupplyRequest.tsx";
++ import * as $SettingsTabs from "./islands/SettingsTabs.tsx";
+- import * as $TeamManagement from "./islands/TeamManagement.tsx";
++ import * as $SupplyRequest from "./islands/SupplyRequest.tsx";
+- import type { Manifest } from "$fresh/server.ts";
++ import * as $TeamManagement from "./islands/TeamManagement.tsx";
+- 
++ import type { Manifest } from "$fresh/server.ts";
+- const manifest = {
++ 
+-   routes: {
++ const manifest = {
+-     "./routes/_404.tsx": $_404,
++   routes: {
+-     "./routes/_app.tsx": $_app,
++     "./routes/_404.tsx": $_404,
+-     "./routes/_middleware.ts": $_middleware,
++     "./routes/_app.tsx": $_app,
+-     "./routes/api/auth/forgot.ts": $api_auth_forgot,
++     "./routes/_middle
+… [diff truncated]
 
-Content summary (494 lines):
-import { useSignal } from "@preact/signals";
-import type { ScrapedListing } from "../utils/types.ts";
+📌 IDE AST Context: Modified symbols likely include [manifest, manifest, default, default]
+- **[convention] Fixed null crash in JSON — prevents null/undefined runtime crashes — confirmed 4x**: -       address: ocrResult.address !== "not visible"
++       address: ocrResult.address !== "not visible" ? ocrResult.address : undefined,
+-         ? ocrResult.address
++       gender: (ocrResult.gender as any) || "not_visible",
+-         : undefined,
++       nationality: ocrResult.nationality,
+-       matchScore,
++       idExpiry: ocrResult.id_expiry,
+-       flags,
++       visaDetails: ocrResult.visa_details ? {
+-       rawResponse: JSON.stringify(ocrResult),
++         number: ocrResult.visa_details.number,
+-       createdAt: now,
++         expiry: ocrResult.visa_details.expiry,
+-     };
++         entryDate: ocrResult.visa_details.entry_date,
+-     await savePrivateVerification(privateData);
++       } : undefined,
+- 
++       matchScore,
+-     // ── Update booking if verified ─────────────────────────────
++       flags,
+-     if (isVerified) {
++       rawResponse: JSON.stringify(ocrResult),
+-       await saveBooking({
++       createdAt: now,
+-         ...booking,
++     };
+-         guestIdRef: updatedVerification.extractedData?.idLast4,
++     await savePrivateVerification(privateData);
+-         idVerified: true,
++ 
+-         updatedAt: now,
++     // ── Update booking if verified ─────────────────────────────
+-       });
++     if (isVerified) {
+-     }
++       await saveBooking({
+- 
++         ...booking,
+-     // If not verified, notify the host to review manually
++         guestIdRef: updatedVerification.extractedData?.idLast4,
+-     if (!isVerified) {
++         idVerified: true,
+-       const reviewNotification: Notification = {
++         updatedAt: now,
+-         id: crypto.randomUUID().replace(/-/g, "").slice(0, 12),
++       });
+-         hostId: booking.hostId,
++     }
+-         type: "verification_complete" as Notification["type"],
++ 
+-         title: matchScore >= 70 ? "ID Partial Match" : "ID Verification Failed",
++     // If not verified, notify the host to review manually
+-         message: `Guest ${guestName.trim()} (booking #${
++     if (!isVerified) {
 
-// ── Step State Machine ────────────────────────────────────────
-type Step = "idle" | "loading" | "preview" | "saving" | "success" | "error";
+… [diff truncated]
 
-// ── Skeleton Loader ───────────────────────────────────────────
-function SkeletonPulse({ class: cls }: { class: string }) {
-  return (
-    <div
-      class={`animate-pulse bg-gray-200 rounded-xl ${cls}`}
-      aria-hidden="true"
-    />
-  );
-}
+📌 IDE AST Context: Modified symbols likely include [ALLOWED_ID_TYPES, ALLOWED_ID_TYPES, IdType, IdType, MATCH_THRESHOLD]
+- **[convention] Added API key auth authentication — improves module reusability — confirmed 3x**: - import * as $api_scrape from "./routes/api/scrape.ts";
++ import * as $api_public_search from "./routes/api/public/search.ts";
+- import * as $api_verify_index from "./routes/api/verify/index.ts";
++ import * as $api_scrape from "./routes/api/scrape.ts";
+- import * as $api_verify_status from "./routes/api/verify/status.ts";
++ import * as $api_verify_index from "./routes/api/verify/index.ts";
+- import * as $api_webhooks_payment from "./routes/api/webhooks/payment.ts";
++ import * as $api_verify_status from "./routes/api/verify/status.ts";
+- import * as $api_webhooks_whatsapp from "./routes/api/webhooks/whatsapp.ts";
++ import * as $api_webhooks_payment from "./routes/api/webhooks/payment.ts";
+- import * as $blog_slug_ from "./routes/blog/[slug].tsx";
++ import * as $api_webhooks_whatsapp from "./routes/api/webhooks/whatsapp.ts";
+- import * as $blog_index from "./routes/blog/index.tsx";
++ import * as $blog_slug_ from "./routes/blog/[slug].tsx";
+- import * as $care_token_ from "./routes/care/[token].tsx";
++ import * as $blog_index from "./routes/blog/index.tsx";
+- import * as $contact from "./routes/contact.tsx";
++ import * as $care_token_ from "./routes/care/[token].tsx";
+- import * as $dashboard_layout from "./routes/dashboard/_layout.tsx";
++ import * as $contact from "./routes/contact.tsx";
+- import * as $dashboard_middleware from "./routes/dashboard/_middleware.ts";
++ import * as $dashboard_layout from "./routes/dashboard/_layout.tsx";
+- import * as $dashboard_bookings from "./routes/dashboard/bookings.tsx";
++ import * as $dashboard_middleware from "./routes/dashboard/_middleware.ts";
+- import * as $dashboard_guests from "./routes/dashboard/guests.tsx";
++ import * as $dashboard_bookings from "./routes/dashboard/bookings.tsx";
+- import * as $dashboard_index from "./routes/dashboard/index.tsx";
++ import * as $dashboard_guests from "./routes/dashboard/guests.tsx";
+- import * as $dashboard_knowledge from "./routes/dashboard/knowledge.tsx";
++ import * as $dashboard_index fr
+… [diff truncated]
 
-functio
-- **[what-changed] what-changed in BookingCalendar.tsx**: File updated (external): islands/BookingCalendar.tsx
-
-Content summary (407 lines):
-import { computed, useSignal } from "@preact/signals";
-import { useEffect } from "preact/hooks";
-
-interface BookingCalendarProps {
-  /** ISO date strings (YYYY-MM-DD) that are blocked/unavailable */
-  blockedDates: string[];
-  /** Nightly rate in INR */
-  basePrice: number;
-  /** Property ID for linking to checkout */
-  propId: string;
-}
-
-// Days header (Monday-start)
-const DAY_LABELS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-
-- **[problem-fix] problem-fix in CheckoutForm.tsx**: File updated (external): islands/CheckoutForm.tsx
-
-Content summary (316 lines):
-import { useSignal } from "@preact/signals";
-
-interface CheckoutFormProps {
-  propId: string;
-  checkIn: string;
-  checkOut: string;
-  nights: number;
-  amount: number;
-  propertyName: string;
-}
-
-type FormStep = "details" | "submitting" | "redirecting" | "error";
-
-function FloatingInput({
-  id,
-  label,
-  type = "text",
-  value,
-  onInput,
-  required = true,
-  pattern,
-  autocomplete,
-}: {
-  id: string;
-  label: string;
-  type?: string;
-  value: string;
-  onInput: (v: string) => void;
-  required
-- **[what-changed] what-changed in DashboardSidebar.tsx**: File updated (external): islands/DashboardSidebar.tsx
-
-Content summary (383 lines):
-import { useEffect, useState } from "preact/hooks";
-import { type ComponentChildren } from "preact";
-
-interface NavItem {
-  href: string;
-  label: string;
-  icon: ComponentChildren;
-  exact?: boolean;
-}
-
-interface SidebarProps {
-  currentPath: string;
-}
-
-const LEGAL_LINKS = [
-  { href: "/legal/terms", label: "Terms & Conditions" },
-  { href: "/legal/privacy", label: "Privacy Policy" },
-];
-
-export default function DashboardSidebar({ currentPath }: SidebarProps) {
-  const [activePath, setActivePat
+📌 IDE AST Context: Modified symbols likely include [manifest, manifest, default, default]

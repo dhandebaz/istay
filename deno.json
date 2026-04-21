@@ -5,14 +5,17 @@
     "start": "deno run -A --unstable-cron --unstable-kv --watch=static/,routes/ dev.ts",
     "build": "deno run -A --unstable-cron --unstable-kv dev.ts build",
     "preview": "deno run -A --unstable-cron --unstable-kv main.ts",
-    "update": "deno run -A -r https://fresh.deno.dev/update ."
+    "update": "deno run -A -r https://fresh.deno.dev/update .",
+    "db:generate": "deno run -A npm:prisma@6.4.1 generate",
+    "db:push": "deno run -A npm:prisma@6.4.1 db push"
   },
+  "nodeModulesDir": "auto",
   "lint": {
     "rules": {
       "tags": ["fresh", "recommended"]
     }
   },
-  "exclude": ["**/_fresh/*"],
+  "exclude": ["**/_fresh/*", "node_modules"],
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
     "preact": "https://esm.sh/preact@10.22.0",
@@ -21,7 +24,8 @@
     "@preact/signals-core": "https://esm.sh/@preact/signals-core@1.5.1",
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
-    "s3_lite_client": "https://deno.land/x/s3_lite_client@0.7.0/mod.ts"
+    "s3_lite_client": "https://deno.land/x/s3_lite_client@0.7.0/mod.ts",
+    "@prisma/client": "npm:@prisma/client@6.4.1"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
