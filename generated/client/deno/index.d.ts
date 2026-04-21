@@ -2154,6 +2154,8 @@ export namespace Prisma {
     setupFeePaid: boolean | null
     gatewayVendorId: string | null
     cashfreeVendorId: string | null
+    razorpaySubscriptionId: string | null
+    lastLowBalanceAlert: Date | null
     apiKey: string | null
     legacyApiKey: string | null
     legacyApiKeyExpires: Date | null
@@ -2173,6 +2175,8 @@ export namespace Prisma {
     setupFeePaid: boolean | null
     gatewayVendorId: string | null
     cashfreeVendorId: string | null
+    razorpaySubscriptionId: string | null
+    lastLowBalanceAlert: Date | null
     apiKey: string | null
     legacyApiKey: string | null
     legacyApiKeyExpires: Date | null
@@ -2192,6 +2196,8 @@ export namespace Prisma {
     setupFeePaid: number
     gatewayVendorId: number
     cashfreeVendorId: number
+    razorpaySubscriptionId: number
+    lastLowBalanceAlert: number
     apiKey: number
     legacyApiKey: number
     legacyApiKeyExpires: number
@@ -2223,6 +2229,8 @@ export namespace Prisma {
     setupFeePaid?: true
     gatewayVendorId?: true
     cashfreeVendorId?: true
+    razorpaySubscriptionId?: true
+    lastLowBalanceAlert?: true
     apiKey?: true
     legacyApiKey?: true
     legacyApiKeyExpires?: true
@@ -2242,6 +2250,8 @@ export namespace Prisma {
     setupFeePaid?: true
     gatewayVendorId?: true
     cashfreeVendorId?: true
+    razorpaySubscriptionId?: true
+    lastLowBalanceAlert?: true
     apiKey?: true
     legacyApiKey?: true
     legacyApiKeyExpires?: true
@@ -2261,6 +2271,8 @@ export namespace Prisma {
     setupFeePaid?: true
     gatewayVendorId?: true
     cashfreeVendorId?: true
+    razorpaySubscriptionId?: true
+    lastLowBalanceAlert?: true
     apiKey?: true
     legacyApiKey?: true
     legacyApiKeyExpires?: true
@@ -2369,6 +2381,8 @@ export namespace Prisma {
     setupFeePaid: boolean
     gatewayVendorId: string | null
     cashfreeVendorId: string | null
+    razorpaySubscriptionId: string | null
+    lastLowBalanceAlert: Date | null
     apiKey: string | null
     legacyApiKey: string | null
     legacyApiKeyExpires: Date | null
@@ -2409,6 +2423,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: boolean
     cashfreeVendorId?: boolean
+    razorpaySubscriptionId?: boolean
+    lastLowBalanceAlert?: boolean
     apiKey?: boolean
     legacyApiKey?: boolean
     legacyApiKeyExpires?: boolean
@@ -2438,6 +2454,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: boolean
     cashfreeVendorId?: boolean
+    razorpaySubscriptionId?: boolean
+    lastLowBalanceAlert?: boolean
     apiKey?: boolean
     legacyApiKey?: boolean
     legacyApiKeyExpires?: boolean
@@ -2459,6 +2477,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: boolean
     cashfreeVendorId?: boolean
+    razorpaySubscriptionId?: boolean
+    lastLowBalanceAlert?: boolean
     apiKey?: boolean
     legacyApiKey?: boolean
     legacyApiKeyExpires?: boolean
@@ -2480,6 +2500,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: boolean
     cashfreeVendorId?: boolean
+    razorpaySubscriptionId?: boolean
+    lastLowBalanceAlert?: boolean
     apiKey?: boolean
     legacyApiKey?: boolean
     legacyApiKeyExpires?: boolean
@@ -2489,7 +2511,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type HostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phone" | "plan" | "subscriptionStatus" | "subscriptionExpiresAt" | "walletBalance" | "setupFeePaid" | "gatewayVendorId" | "cashfreeVendorId" | "apiKey" | "legacyApiKey" | "legacyApiKeyExpires" | "settings" | "webhooks" | "createdAt" | "updatedAt", ExtArgs["result"]["host"]>
+  export type HostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phone" | "plan" | "subscriptionStatus" | "subscriptionExpiresAt" | "walletBalance" | "setupFeePaid" | "gatewayVendorId" | "cashfreeVendorId" | "razorpaySubscriptionId" | "lastLowBalanceAlert" | "apiKey" | "legacyApiKey" | "legacyApiKeyExpires" | "settings" | "webhooks" | "createdAt" | "updatedAt", ExtArgs["result"]["host"]>
   export type HostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     auth?: boolean | Host$authArgs<ExtArgs>
     properties?: boolean | Host$propertiesArgs<ExtArgs>
@@ -2526,6 +2548,8 @@ export namespace Prisma {
       setupFeePaid: boolean
       gatewayVendorId: string | null
       cashfreeVendorId: string | null
+      razorpaySubscriptionId: string | null
+      lastLowBalanceAlert: Date | null
       apiKey: string | null
       legacyApiKey: string | null
       legacyApiKeyExpires: Date | null
@@ -2974,6 +2998,8 @@ export namespace Prisma {
     readonly setupFeePaid: FieldRef<"Host", 'Boolean'>
     readonly gatewayVendorId: FieldRef<"Host", 'String'>
     readonly cashfreeVendorId: FieldRef<"Host", 'String'>
+    readonly razorpaySubscriptionId: FieldRef<"Host", 'String'>
+    readonly lastLowBalanceAlert: FieldRef<"Host", 'DateTime'>
     readonly apiKey: FieldRef<"Host", 'String'>
     readonly legacyApiKey: FieldRef<"Host", 'String'>
     readonly legacyApiKeyExpires: FieldRef<"Host", 'DateTime'>
@@ -17237,6 +17263,8 @@ export namespace Prisma {
     setupFeePaid: 'setupFeePaid',
     gatewayVendorId: 'gatewayVendorId',
     cashfreeVendorId: 'cashfreeVendorId',
+    razorpaySubscriptionId: 'razorpaySubscriptionId',
+    lastLowBalanceAlert: 'lastLowBalanceAlert',
     apiKey: 'apiKey',
     legacyApiKey: 'legacyApiKey',
     legacyApiKeyExpires: 'legacyApiKeyExpires',
@@ -17578,6 +17606,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFilter<"Host"> | boolean
     gatewayVendorId?: StringNullableFilter<"Host"> | string | null
     cashfreeVendorId?: StringNullableFilter<"Host"> | string | null
+    razorpaySubscriptionId?: StringNullableFilter<"Host"> | string | null
+    lastLowBalanceAlert?: DateTimeNullableFilter<"Host"> | Date | string | null
     apiKey?: StringNullableFilter<"Host"> | string | null
     legacyApiKey?: StringNullableFilter<"Host"> | string | null
     legacyApiKeyExpires?: DateTimeNullableFilter<"Host"> | Date | string | null
@@ -17606,6 +17636,8 @@ export namespace Prisma {
     setupFeePaid?: SortOrder
     gatewayVendorId?: SortOrderInput | SortOrder
     cashfreeVendorId?: SortOrderInput | SortOrder
+    razorpaySubscriptionId?: SortOrderInput | SortOrder
+    lastLowBalanceAlert?: SortOrderInput | SortOrder
     apiKey?: SortOrderInput | SortOrder
     legacyApiKey?: SortOrderInput | SortOrder
     legacyApiKeyExpires?: SortOrderInput | SortOrder
@@ -17637,6 +17669,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFilter<"Host"> | boolean
     gatewayVendorId?: StringNullableFilter<"Host"> | string | null
     cashfreeVendorId?: StringNullableFilter<"Host"> | string | null
+    razorpaySubscriptionId?: StringNullableFilter<"Host"> | string | null
+    lastLowBalanceAlert?: DateTimeNullableFilter<"Host"> | Date | string | null
     apiKey?: StringNullableFilter<"Host"> | string | null
     legacyApiKey?: StringNullableFilter<"Host"> | string | null
     legacyApiKeyExpires?: DateTimeNullableFilter<"Host"> | Date | string | null
@@ -17665,6 +17699,8 @@ export namespace Prisma {
     setupFeePaid?: SortOrder
     gatewayVendorId?: SortOrderInput | SortOrder
     cashfreeVendorId?: SortOrderInput | SortOrder
+    razorpaySubscriptionId?: SortOrderInput | SortOrder
+    lastLowBalanceAlert?: SortOrderInput | SortOrder
     apiKey?: SortOrderInput | SortOrder
     legacyApiKey?: SortOrderInput | SortOrder
     legacyApiKeyExpires?: SortOrderInput | SortOrder
@@ -17694,6 +17730,8 @@ export namespace Prisma {
     setupFeePaid?: BoolWithAggregatesFilter<"Host"> | boolean
     gatewayVendorId?: StringNullableWithAggregatesFilter<"Host"> | string | null
     cashfreeVendorId?: StringNullableWithAggregatesFilter<"Host"> | string | null
+    razorpaySubscriptionId?: StringNullableWithAggregatesFilter<"Host"> | string | null
+    lastLowBalanceAlert?: DateTimeNullableWithAggregatesFilter<"Host"> | Date | string | null
     apiKey?: StringNullableWithAggregatesFilter<"Host"> | string | null
     legacyApiKey?: StringNullableWithAggregatesFilter<"Host"> | string | null
     legacyApiKeyExpires?: DateTimeNullableWithAggregatesFilter<"Host"> | Date | string | null
@@ -18688,6 +18726,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -18716,6 +18756,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -18744,6 +18786,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18772,6 +18816,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18800,6 +18846,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -18821,6 +18869,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -18842,6 +18892,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20099,6 +20151,8 @@ export namespace Prisma {
     setupFeePaid?: SortOrder
     gatewayVendorId?: SortOrder
     cashfreeVendorId?: SortOrder
+    razorpaySubscriptionId?: SortOrder
+    lastLowBalanceAlert?: SortOrder
     apiKey?: SortOrder
     legacyApiKey?: SortOrder
     legacyApiKeyExpires?: SortOrder
@@ -20124,6 +20178,8 @@ export namespace Prisma {
     setupFeePaid?: SortOrder
     gatewayVendorId?: SortOrder
     cashfreeVendorId?: SortOrder
+    razorpaySubscriptionId?: SortOrder
+    lastLowBalanceAlert?: SortOrder
     apiKey?: SortOrder
     legacyApiKey?: SortOrder
     legacyApiKeyExpires?: SortOrder
@@ -20143,6 +20199,8 @@ export namespace Prisma {
     setupFeePaid?: SortOrder
     gatewayVendorId?: SortOrder
     cashfreeVendorId?: SortOrder
+    razorpaySubscriptionId?: SortOrder
+    lastLowBalanceAlert?: SortOrder
     apiKey?: SortOrder
     legacyApiKey?: SortOrder
     legacyApiKeyExpires?: SortOrder
@@ -22405,6 +22463,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -22432,6 +22492,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -22475,6 +22537,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22502,6 +22566,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22529,6 +22595,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -22556,6 +22624,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -22599,6 +22669,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22626,6 +22698,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22653,6 +22727,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -22680,6 +22756,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -22863,6 +22941,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22890,6 +22970,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23058,6 +23140,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -23085,6 +23169,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -23250,6 +23336,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23277,6 +23365,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23518,6 +23608,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -23545,6 +23637,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -23649,6 +23743,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23676,6 +23772,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23703,6 +23801,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -23730,6 +23830,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -23773,6 +23875,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23800,6 +23904,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24051,6 +24157,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -24078,6 +24186,8 @@ export namespace Prisma {
     setupFeePaid?: boolean
     gatewayVendorId?: string | null
     cashfreeVendorId?: string | null
+    razorpaySubscriptionId?: string | null
+    lastLowBalanceAlert?: Date | string | null
     apiKey?: string | null
     legacyApiKey?: string | null
     legacyApiKeyExpires?: Date | string | null
@@ -24172,6 +24282,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24199,6 +24311,8 @@ export namespace Prisma {
     setupFeePaid?: BoolFieldUpdateOperationsInput | boolean
     gatewayVendorId?: NullableStringFieldUpdateOperationsInput | string | null
     cashfreeVendorId?: NullableStringFieldUpdateOperationsInput | string | null
+    razorpaySubscriptionId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastLowBalanceAlert?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     apiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKey?: NullableStringFieldUpdateOperationsInput | string | null
     legacyApiKeyExpires?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
