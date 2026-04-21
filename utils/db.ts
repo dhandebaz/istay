@@ -46,12 +46,13 @@ import { PrismaClient } from "../generated/client/deno/edge.ts";
 
 let _kv: Deno.Kv | null = null;
 
-export async function getKv(): Promise<Deno.Kv> {
+export async function getKv(): Promise<Deno.Kv | null> {
   if (!_kv) {
     if (typeof Deno.openKv !== "function") {
-      throw new Error(
-        "Deno.openKv is not available. Please ensure you are running with the --unstable-kv flag.",
+      console.warn(
+        "[db] Deno.openKv is not available. Background KV features (chat sessions, ical sync) may be limited.",
       );
+      return null;
     }
     _kv = await Deno.openKv();
   }
@@ -619,6 +620,7 @@ export async function getMonthlyEarnings(
 
 export async function blockDate(block: CalendarBlock): Promise<void> {
   const kv = await getKv();
+  if (!kv) return;
   await kv.set(["calendar", block.propertyId, block.date], block);
 }
 
@@ -627,6 +629,7 @@ export async function unblockDate(
   date: string,
 ): Promise<void> {
   const kv = await getKv();
+  if (!kv) return;
   await kv.delete(["calendar", propertyId, date]);
 }
 
@@ -634,6 +637,7 @@ export async function listBlockedDates(
   propertyId: string,
 ): Promise<CalendarBlock[]> {
   const kv = await getKv();
+  if (!kv) return [];
   const iter = kv.list<CalendarBlock>({ prefix: ["calendar", propertyId] });
   const blocks: CalendarBlock[] = [];
   for await (const entry of iter) {
@@ -758,6 +762,7 @@ export async function markNotificationRead(
 
 export async function saveCaretakerToken(data: CaretakerToken): Promise<void> {
   const kv = await getKv();
+  if (!kv) return;
   await kv.set(["caretaker_token", data.token], data);
 }
 
@@ -765,6 +770,7 @@ export async function getCaretakerToken(
   token: string,
 ): Promise<CaretakerToken | null> {
   const kv = await getKv();
+  if (!kv) return null;
   const entry = await kv.get<CaretakerToken>(["caretaker_token", token]);
   return entry.value;
 }
@@ -920,15 +926,25 @@ export async function listAllPropertyIndices(): Promise<
   Array<{ propId: string; hostId: string }>
 > {
   const kv = await getKv();
-  const iter = kv.list<{ hostId: string }>({ prefix: ["prop_index"] });
-  const results: Array<{ propId: string; hostId: string }> = [];
-  for await (const entry of iter) {
-    results.push({
-      propId: entry.key[1] as string,
-      hostId: entry.value.hostId,
-    });
+  if (kv) {
+    const iter = kv.list<{ hostId: string }>({ prefix: ["prop_index"] });
+    const results: Array<{ propId: string; hostId: string }> = [];
+    for await (const entry of iter) {
+      results.push({
+        propId: entry.key[1] as string,
+        hostId: entry.value.hostId,
+      });
+    }
+    if (results.length > 0) return results;
   }
-  return results;
+
+  // Fallback to Prisma if KV is empty or unavailable
+  const prisma = getPrisma();
+  const properties = await prisma.property.findMany({
+    where: { status: "active" },
+    select: { id: true, hostId: true },
+  });
+  return properties.map((p) => ({ propId: p.id, hostId: p.hostId }));
 }
 
 /**
@@ -939,15 +955,29 @@ export async function getKnowledgeByPropId(
   propertyId: string,
 ): Promise<HostKnowledge | null> {
   const kv = await getKv();
-  const idx = await kv.get<{ hostId: string }>(["prop_index", propertyId]);
-  if (!idx.value) return null;
-  return getKnowledge(propertyId);
+  if (kv) {
+    const idx = await kv.get<{ hostId: string }>(["prop_index", propertyId]);
+    if (idx.value) {
+      return getKnowledge(idx.value.hostId, propertyId);
+    }
+  }
+
+  // Fallback to Prisma to resolve hostId
+  const prisma = getPrisma();
+  const prop = await prisma.property.findUnique({
+    where: { id: propertyId },
+    select: { hostId: true },
+  });
+  if (!prop) return null;
+
+  return getKnowledge(prop.hostId, propertyId);
 }
 
 // ── CHAT SESSIONS ─────────────────────────────────────────────
 
 export async function saveChatSession(data: ChatSession): Promise<void> {
   const kv = await getKv();
+  if (!kv) return;
   await kv.set(["chat_session", data.sessionId], data);
 }
 
@@ -955,6 +985,7 @@ export async function getChatSession(
   sessionId: string,
 ): Promise<ChatSession | null> {
   const kv = await getKv();
+  if (!kv) return null;
   const entry = await kv.get<ChatSession>(["chat_session", sessionId]);
   return entry.value;
 }
