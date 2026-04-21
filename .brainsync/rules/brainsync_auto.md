@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1568 notes | Score threshold: >40
+> 1620 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,29 +20,29 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - > 1584 notes | Score threshold: >40
++ > 1598 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - > 1573 notes | Score threshold: >40
++ > 1584 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication** — - > 1568 notes | Score threshold: >40
++ > 1573 notes | Score threshold
 - **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1554 notes | Score threshold: >40
 + > 1560 notes | Score threshold
 - **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: problem-fix in agent-rules.md
 + - ⚠️ GOTCHA: Added JWT 
 - **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1533 notes | Score threshold: >40
 + > 1554 notes | Score threshold
-- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1530 notes | Score threshold: >40
-+ > 1533 notes | Score threshold
-- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 1501 notes | Score threshold: >40
-+ > 1530 notes | Score threshold
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in shared-context.json
-+ - problem-fix in agent-rules.
 
 ## Project Standards
 
-- Added JWT tokens authentication — confirmed 4x
-- Optimized Fixed — confirmed 4x
-- what-changed in shared-context.json — confirmed 5x
-- Fixed null crash in PrismaClientPkg — uses a proper password hashing algorithm — confirmed 3x
-- Updated schema DLDl — hardens HTTP security headers — confirmed 3x
-- Added session cookies authentication — confirmed 3x
-- what-changed in shared-context.json — confirmed 8x
+- what-changed in brainsync_auto.md — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
 - Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
+- Updated schema DLDl — hardens HTTP security headers — confirmed 4x
+- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 3x
+- what-changed in shared-context.json — confirmed 3x
+- Updated schema DLDl — hardens HTTP security headers — confirmed 7x
 
 ## Known Fixes
 
@@ -62,8 +62,8 @@
 ## Learned Patterns
 
 - Always: Updated schema Score — evolves the database schema to support new requirements — confirmed 3x (seen 2x)
-- Always: what-changed in brainsync_auto.md — confirmed 3x (seen 3x)
 - Always: what-changed in brainsync_auto.md — confirmed 3x (seen 6x)
+- Decision: Optimized Score (seen 2x)
 - Agent generates new migration for every change (squash related changes)
 - Agent installs packages without checking if already installed
 

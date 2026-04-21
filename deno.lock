@@ -6,12 +6,13 @@
     "jsr:@std/encoding@^1.0.5": "1.0.10",
     "jsr:@std/internal@^1.0.12": "1.0.12",
     "jsr:@std/path@^1.0.6": "1.1.4",
+    "npm:@preact/signals@1.2.3": "1.2.3_preact@10.22.0",
     "npm:@prisma/adapter-pg@*": "6.4.1_pg@8.13.3",
     "npm:@prisma/adapter-pg@6.4.1": "6.4.1_pg@8.13.3",
     "npm:@prisma/client@6.4.1": "6.4.1_prisma@6.4.1",
     "npm:pg@*": "8.13.3",
     "npm:pg@8.13.3": "8.13.3",
-    "npm:prisma@*": "6.4.1",
+    "npm:preact@10.22.0": "10.22.0",
     "npm:prisma@6.4.1": "6.4.1"
   },
   "jsr": {
@@ -169,6 +170,16 @@
       "integrity": "sha512-pEl1bO9mfAmIC+tW5btTmrKaujg3zGtUmWNdCw/xs70FBjwAL3o9OEKNHvNmnyylD6ubxUERiEhdsL0xBQ9efw==",
       "os": ["win32"],
       "cpu": ["x64"]
+    },
+    "@preact/signals-core@1.14.1": {
+      "integrity": "sha512-vxPpfXqrwUe9lpjqfYNjAF/0RF/eFGeLgdJzdmIIZjpOnTmGmAB4BjWone562mJGMRP4frU6iZ6ei3PDsu52Ng=="
+    },
+    "@preact/signals@1.2.3_preact@10.22.0": {
+      "integrity": "sha512-M2DXse3Wi8HwjI1d2vQWOLJ3lHogvqTsJYvl4ofXRXgMFQzJ7kmlZvlt5i8x5S5VwgZu0ghru4HkLqOoFfU2JQ==",
+      "dependencies": [
+        "@preact/signals-core",
+        "preact"
+      ]
     },
     "@prisma/adapter-pg@6.4.1_pg@8.13.3": {
       "integrity": "sha512-alwRFNHawfeFfjbErMOUbLRgoxBSTCdcGpxV66oKSwsgNPQHjAqBb+xxD5Xg2Y4oyhP2ul1d5GT5vfWgTBzQPg==",
@@ -342,6 +353,9 @@
       "dependencies": [
         "xtend"
       ]
+    },
+    "preact@10.22.0": {
+      "integrity": "sha512-RRurnSjJPj4rp5K6XoP45Ui33ncb7e4H7WiOHVpjbkvqvA3U+N8Z6Qbo0AE6leGYBV66n8EhEaFixvIu3SkxFw=="
     },
     "prisma@6.4.1": {
       "integrity": "sha512-q2uJkgXnua/jj66mk6P9bX/zgYJFI/jn4Yp0aS6SPRrjH/n6VyOV7RDe1vHD0DX8Aanx4MvgmUPPoYnR6MJnPg==",
@@ -732,6 +746,8 @@
     "https://esm.sh/@babel/helper-validator-identifier@7.22.20/denonext/helper-validator-identifier.mjs": "f765fd69eb4fd81b839b76bf60f227caac4fe4d41b4c646cc08aa7b8d948fe17",
     "https://esm.sh/@preact/signals-core@1.14.1/denonext/signals-core.mjs": "644e1e3553b67408f1cff8c4dc2fd40bbe22c827f0dc74c34fd9886c9e3c9e81",
     "https://esm.sh/@preact/signals-core@1.14.1?target=denonext": "83dccb6ee2b734997e09f16f1b99f5748084978828e5cb2051d437e9f7290cf5",
+    "https://esm.sh/@preact/signals-core@1.5.1": "6478c582dacefbd710cb0857e346d7d4eb303a5b406867bcf238451a5b4e3370",
+    "https://esm.sh/@preact/signals-core@1.5.1/denonext/signals-core.mjs": "aef7e41046f10bfd789833d60bb18b07a75530d3f1f9e56de63e87fd4e88f07b",
     "https://esm.sh/@preact/signals@1.2.3": "51c9c8edff86dcc0f4d79ac65026af57daa6d2ab3e97249b8c381c87844823c4",
     "https://esm.sh/@preact/signals@1.2.3/denonext/signals.mjs": "d86e2a29ea4c994e18987485025f2c91b209e6d83d16e728222768bbef0807e3",
     "https://esm.sh/preact@10.22.0": "0fb9b89617c3a27b6be4eee74bd07b845e92900e6b7fdb757bc3a498a6ec9065",
@@ -761,7 +777,11 @@
     ],
     "packageJson": {
       "dependencies": [
+        "npm:@preact/signals@1.2.3",
+        "npm:@prisma/adapter-pg@6.4.1",
         "npm:@prisma/client@6.4.1",
+        "npm:pg@8.13.3",
+        "npm:preact@10.22.0",
         "npm:prisma@6.4.1"
       ]
     }

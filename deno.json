@@ -3,18 +3,13 @@
   "tasks": {
     "check": "deno check --unstable-cron --unstable-kv **/*.ts **/*.tsx",
     "start": "deno run -A --unstable-cron --unstable-kv --watch=static/,routes/ dev.ts",
-    "build": "deno task db:generate && deno run -A --unstable-cron --unstable-kv dev.ts build",
+    "build": "PRISMA_GENERATE_SKIP_AUTOINSTALL=true deno run -A npm:prisma@6.4.1 generate && deno run -A --unstable-cron --unstable-kv dev.ts build",
     "preview": "deno run -A --unstable-cron --unstable-kv main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
     "db:generate": "PRISMA_GENERATE_SKIP_AUTOINSTALL=true deno run -A npm:prisma@6.4.1 generate",
     "db:push": "deno run -A npm:prisma@6.4.1 db push"
   },
   "nodeModulesDir": "auto",
-  "lint": {
-    "rules": {
-      "tags": ["fresh", "recommended"]
-    }
-  },
   "exclude": ["**/_fresh/*", "node_modules"],
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.7.3/",
