@@ -1,20 +1,14 @@
-import { useSignal } from "@preact/signals";
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 import { CheckIcon } from "../components/Icons.tsx";
 
 export default function RegisterForm() {
-  const step = useSignal<"details" | "submitting" | "error">("details");
-  const errorMsg = useSignal("");
+  const [step, setStep] = useState<"details" | "submitting" | "error">("details");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const name = useSignal("");
-  const email = useSignal("");
-  const phone = useSignal("");
-  const password = useSignal("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
 
   const isEmailValid = (e: string) => /^\S+@\S+\.\S+$/.test(e);
   const passwordStrength = (pass: string) => {
@@ -27,50 +21,50 @@ export default function RegisterForm() {
     return Math.min(strength, 4);
   };
 
-  const strength = passwordStrength(password.value);
+  const strength = passwordStrength(password);
   const strengthLabel = ["", "Weak", "Fair", "Good", "Strong"][strength];
   const strengthColor = ["bg-gray-200", "bg-rose-500", "bg-amber-400", "bg-mint-500", "bg-emerald-500"][strength];
 
-  const acceptTerms = useSignal(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   async function handleSubmit(e: Event) {
     e.preventDefault();
 
-    if (!name.value || !email.value || !phone.value || !password.value) {
-      errorMsg.value = "All fields are required.";
+    if (!name || !email || !phone || !password) {
+      setErrorMsg("All fields are required.");
       return;
     }
 
-    if (password.value.length < 8) {
-      errorMsg.value = "Password must be at least 8 characters.";
+    if (password.length < 8) {
+      setErrorMsg("Password must be at least 8 characters.");
       return;
     }
 
-    if (!acceptTerms.value) {
-      errorMsg.value = "Please accept the Terms and Privacy Policy.";
+    if (!acceptTerms) {
+      setErrorMsg("Please accept the Terms and Privacy Policy.");
       return;
     }
 
-    step.value = "submitting";
-    errorMsg.value = "";
+    setStep("submitting");
+    setErrorMsg("");
 
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: name.value,
-          email: email.value,
-          phone: phone.value,
-          password: password.value,
+          name,
+          email,
+          phone,
+          password,
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        step.value = "error";
-        errorMsg.value = data.error || "Failed to create account.";
+        setStep("error");
+        setErrorMsg(data.error || "Failed to create account.");
         return;
       }
 
@@ -79,14 +73,12 @@ export default function RegisterForm() {
         window.location.href = "/pricing";
       }
     } catch {
-      step.value = "error";
-      errorMsg.value = "Network error. Please try again.";
+      setStep("error");
+      setErrorMsg("Network error. Please try again.");
     }
   }
 
-  if (!mounted) return null;
-
-  if (step.value === "submitting") {
+  if (step === "submitting") {
     return (
       <div class="flex flex-col items-center justify-center py-20 gap-6">
         <div class="relative w-16 h-16">
@@ -133,8 +125,8 @@ export default function RegisterForm() {
           </label>
           <input
             type="text"
-            value={name.value}
-            onInput={(e) => (name.value = (e.target as HTMLInputElement).value)}
+            value={name}
+            onInput={(e) => setName((e.target as HTMLInputElement).value)}
             required
             class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"
             placeholder="John Doe"
@@ -146,10 +138,8 @@ export default function RegisterForm() {
           </label>
           <input
             type="tel"
-            value={phone.value}
-            onInput={(
-              e,
-            ) => (phone.value = (e.target as HTMLInputElement).value)}
+            value={phone}
+            onInput={(e) => setPhone((e.target as HTMLInputElement).value)}
             required
             class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"
             placeholder="9876543210"
@@ -164,17 +154,17 @@ export default function RegisterForm() {
         <div class="relative">
           <input
             type="email"
-            value={email.value}
-            onInput={(e) => (email.value = (e.target as HTMLInputElement).value)}
+            value={email}
+            onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
             required
             class={`w-full px-4 py-3 rounded-xl border bg-gray-50 text-gray-900 text-sm focus:bg-white focus:outline-none transition-all duration-200 ${
-              email.value && !isEmailValid(email.value)
+              email && !isEmailValid(email)
                 ? "border-rose-400 focus:border-rose-500"
                 : "border-gray-200 focus:border-mint-400"
             }`}
             placeholder="john@example.com"
           />
-          {email.value && isEmailValid(email.value) && (
+          {email && isEmailValid(email) && (
             <div class="absolute right-4 top-1/2 -translate-y-1/2 text-mint-500">
               <CheckIcon class="w-4 h-4" strokeWidth="3" />
             </div>
@@ -186,7 +176,7 @@ export default function RegisterForm() {
           <label class="block text-xs font-700 text-gray-700">
             Password
           </label>
-          {password.value && (
+          {password && (
             <span class={`text-[10px] font-800 uppercase tracking-widest ${
               strength <= 1 ? "text-rose-500" : strength === 2 ? "text-amber-500" : "text-mint-600"
             }`}>
@@ -196,10 +186,8 @@ export default function RegisterForm() {
         </div>
         <input
           type="password"
-          value={password.value}
-          onInput={(
-            e,
-          ) => (password.value = (e.target as HTMLInputElement).value)}
+          value={password}
+          onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
           required
           minlength={8}
           class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"
@@ -211,7 +199,7 @@ export default function RegisterForm() {
             <div 
               key={level} 
               class={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
-                password.value && strength >= level ? strengthColor : "bg-gray-200"
+                password && strength >= level ? strengthColor : "bg-gray-200"
               }`} 
             />
           ))}
@@ -223,8 +211,8 @@ export default function RegisterForm() {
         <label class="relative flex items-center cursor-pointer">
           <input
             type="checkbox"
-            checked={acceptTerms.value}
-            onChange={(e) => (acceptTerms.value = (e.target as HTMLInputElement).checked)}
+            checked={acceptTerms}
+            onChange={(e) => setAcceptTerms((e.target as HTMLInputElement).checked)}
             class="peer sr-only"
           />
           <div class="w-5 h-5 border-2 border-gray-200 rounded-lg bg-gray-50 peer-checked:bg-mint-500 peer-checked:border-mint-500 transition-all duration-200" />
@@ -240,10 +228,10 @@ export default function RegisterForm() {
         </span>
       </div>
 
-      {errorMsg.value && (
+      {errorMsg && (
         <div class="flex items-center gap-2 p-3 rounded-xl bg-rose-50 border border-rose-200">
           <span class="text-rose-500 text-sm">⚠️</span>
-          <p class="text-xs font-600 text-rose-700">{errorMsg.value}</p>
+          <p class="text-xs font-600 text-rose-700">{errorMsg}</p>
         </div>
       )}
 
@@ -254,12 +242,12 @@ export default function RegisterForm() {
         Continue to Setup
       </button>
 
-      {step.value === "error" && (
+      {step === "error" && (
         <button
           type="button"
           onClick={() => {
-            step.value = "details";
-            errorMsg.value = "";
+            setStep("details");
+            setErrorMsg("");
           }}
           class="w-full mt-2 py-2 text-xs font-600 text-gray-500 hover:text-gray-700 transition-colors"
         >

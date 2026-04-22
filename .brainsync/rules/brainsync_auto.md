@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1843 notes | Score threshold: >40
+> 1895 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,40 +20,36 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "d59e2136a0498c5b",
-+
-- **⚠️ GOTCHA: Fixed null crash in LoginForm — improves module reusability** — - 
-+ import { useEffect, useState } from "preact/hooks";
-- export defa
-- **⚠️ GOTCHA: Fixed null crash in Math** — -   const name = useSignal("");
-+   const [mounted, setMounted] = useS
-- **gotcha in agent-rules.md** — File updated (external): .brainsync/agent-rules.md
-
-Content summary (8
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in scratchpad_rfsy3sbo.md
++ - problem-fix in agent-rul
+- **⚠️ GOTCHA: Fixed null crash in ForgotPasswordForm — improves module reusability** — - import { useSignal } from "@preact/signals";
++ import { useState } f
+- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: Replaced auth Audit
++ - ⚠️ GOTCHA: Added JWT tokens aut
+- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: Replaced auth Audit
++ - ⚠️ GOTCHA: Added JWT tokens aut
+- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: problem-fix in agent-rules.md
++ - ⚠️ GOTCHA: Replaced a
+- **⚠️ GOTCHA: Replaced auth Audit** — - - [x] Audit /register (localhost:8000) - FAILED (Hydration/Render er
 
 ## Project Standards
 
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Added JWT tokens authentication — evolves the database schema to support new ... — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- what-changed in brainsync_auto.md — confirmed 3x
-- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 3x
+- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 4x
+- Optimized Recreate — confirmed 3x
+- Replaced auth Patched — confirmed 3x
+- Updated schema deno — confirmed 3x
+- Replaced auth Fixed — confirmed 5x
+- Fixed null crash in LoginForm — improves module reusability — confirmed 6x
+- what-changed in deno.json — confirmed 3x
+- what-changed in shared-context.json — confirmed 7x
 
 ## Known Fixes
 
 - ❌ - - ⚠️ GOTCHA: Fixed null crash in ProofOfCleanUploader — avoids unnecessary re-renders in R... → ✅ problem-fix in agent-rules.md
 - ❌ -   const [error, setError] = useState<string | null>(null); → ✅ problem-fix in BillingManager.tsx
+- ❌ - - Fixed null crash in Math → ✅ problem-fix in agent-rules.md
 - ❌ - - Fixed null crash in Users — prevents null/undefined runtime crashes → ✅ problem-fix in agent-rules.md
 - ❌ - - Fixed null crash in CryptoKey — uses a proper password hashing algorithm → ✅ problem-fix in agent-rules.md
-- ❌ const step = useSignal<"details" | "submitting" | "success" | "error">( → ✅ problem-fix in ForgotPasswordForm.tsx
 
 ## Recent Decisions
 

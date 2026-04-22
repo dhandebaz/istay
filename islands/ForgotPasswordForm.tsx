@@ -1,50 +1,40 @@
-import { useSignal } from "@preact/signals";
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 
 export default function ForgotPasswordForm() {
-  const step = useSignal<"details" | "submitting" | "success" | "error">(
-    "details",
-  );
-  const errorMsg = useSignal("");
-  const email = useSignal("");
-
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const [step, setStep] = useState<"details" | "submitting" | "success" | "error">("details");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [email, setEmail] = useState("");
 
   async function handleSubmit(e: Event) {
     e.preventDefault();
 
-    if (!email.value) {
-      errorMsg.value = "Email is required.";
+    if (!email) {
+      setErrorMsg("Email is required.");
       return;
     }
 
-    step.value = "submitting";
-    errorMsg.value = "";
+    setStep("submitting");
+    setErrorMsg("");
 
     try {
       const res = await fetch("/api/auth/forgot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.value }),
+        body: JSON.stringify({ email }),
       });
 
       if (!res.ok) {
         throw new Error("Failed");
       }
 
-      step.value = "success";
+      setStep("success");
     } catch {
-      step.value = "error";
-      errorMsg.value = "Network error. Please try again.";
+      setStep("error");
+      setErrorMsg("Network error. Please try again.");
     }
   }
 
-  if (!mounted) return null;
-
-  if (step.value === "submitting") {
+  if (step === "submitting") {
     return (
       <div class="flex flex-col items-center justify-center py-12 gap-4">
         <div class="relative w-14 h-14">
@@ -56,7 +46,7 @@ export default function ForgotPasswordForm() {
     );
   }
 
-  if (step.value === "success") {
+  if (step === "success") {
     return (
       <div class="flex flex-col items-center justify-center py-6 gap-4 text-center">
         <div class="w-16 h-16 rounded-full bg-mint-50 flex items-center justify-center text-mint-500 mb-2 border border-mint-100">
@@ -77,7 +67,7 @@ export default function ForgotPasswordForm() {
         <h3 class="text-lg font-900 text-gray-900">Check Your Email</h3>
         <p class="text-sm text-gray-500">
           If an account exists for{" "}
-          {email.value}, we have sent a secure password reset link.
+          {email}, we have sent a secure password reset link.
         </p>
 
         {/* DEV HINT NOTE */}
@@ -107,18 +97,18 @@ export default function ForgotPasswordForm() {
         </label>
         <input
           type="email"
-          value={email.value}
-          onInput={(e) => (email.value = (e.target as HTMLInputElement).value)}
+          value={email}
+          onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
           required
           class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"
           placeholder="john@example.com"
         />
       </div>
 
-      {errorMsg.value && (
+      {errorMsg && (
         <div class="flex items-center gap-2 p-3 rounded-xl bg-rose-50 border border-rose-200">
           <span class="text-rose-500 text-sm">⚠️</span>
-          <p class="text-xs font-600 text-rose-700">{errorMsg.value}</p>
+          <p class="text-xs font-600 text-rose-700">{errorMsg}</p>
         </div>
       )}
 
@@ -129,12 +119,12 @@ export default function ForgotPasswordForm() {
         Send Reset Link
       </button>
 
-      {step.value === "error" && (
+      {step === "error" && (
         <button
           type="button"
           onClick={() => {
-            step.value = "details";
-            errorMsg.value = "";
+            setStep("details");
+            setErrorMsg("");
           }}
           class="w-full mt-2 py-2 text-xs font-600 text-gray-500 hover:text-gray-700 transition-colors"
         >
