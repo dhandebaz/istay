@@ -1,9 +1,15 @@
 import { useSignal } from "@preact/signals";
+import { useEffect, useState } from "preact/hooks";
 import { CheckIcon } from "../components/Icons.tsx";
 
 export default function RegisterForm() {
   const step = useSignal<"details" | "submitting" | "error">("details");
   const errorMsg = useSignal("");
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const name = useSignal("");
   const email = useSignal("");
@@ -77,6 +83,8 @@ export default function RegisterForm() {
       errorMsg.value = "Network error. Please try again.";
     }
   }
+
+  if (!mounted) return null;
 
   if (step.value === "submitting") {
     return (

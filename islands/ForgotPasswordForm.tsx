@@ -1,4 +1,5 @@
 import { useSignal } from "@preact/signals";
+import { useEffect, useState } from "preact/hooks";
 
 export default function ForgotPasswordForm() {
   const step = useSignal<"details" | "submitting" | "success" | "error">(
@@ -6,6 +7,11 @@ export default function ForgotPasswordForm() {
   );
   const errorMsg = useSignal("");
   const email = useSignal("");
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   async function handleSubmit(e: Event) {
     e.preventDefault();
@@ -35,6 +41,8 @@ export default function ForgotPasswordForm() {
       errorMsg.value = "Network error. Please try again.";
     }
   }
+
+  if (!mounted) return null;
 
   if (step.value === "submitting") {
     return (

@@ -1,4 +1,5 @@
 import { useSignal } from "@preact/signals";
+import { useEffect, useState } from "preact/hooks";
 
 export default function LoginForm() {
   const step = useSignal<"details" | "submitting" | "error">("details");
@@ -6,6 +7,11 @@ export default function LoginForm() {
 
   const email = useSignal("");
   const password = useSignal("");
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   async function handleSubmit(e: Event) {
     e.preventDefault();
@@ -42,6 +48,8 @@ export default function LoginForm() {
       errorMsg.value = "Network error. Please try again.";
     }
   }
+
+  if (!mounted) return null;
 
   if (step.value === "submitting") {
     return (
