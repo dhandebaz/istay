@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 2126 notes | Score threshold: >40
+> 2142 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,6 +20,13 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **⚠️ GOTCHA: Added JWT tokens authentication** — - - gotcha in agent-rules.md
++ - ⚠️ GOTCHA: problem-fix in agent-rules
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Patched security issue SbqKolb
++ - problem-fix in island-scrolltot
+- **gotcha in agent-rules.md** — File updated (external): .brainsync/agent-rules.md
+
+Content summary (8
 - **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 2096 notes | Score threshold: >40
 + > 2123 notes | Score threshold
 - **⚠️ GOTCHA: Added JWT tokens authentication** — - - ⚠️ GOTCHA: Added JWT tokens authentication — evolves the database 
@@ -30,40 +37,32 @@
 - }
 +       "id": "28c26772f4eeb6a0",
 +
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in db.ts
-+ - problem-fix in agent-rules.md
-- - problem
-- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 2030 notes | Score threshold: >40
-+ > 2096 notes | Score threshold
-- **gotcha in wasm.js** — File updated (external): generated/client/wasm.js
-
-Content summary (39
 
 ## Project Standards
 
+- convention in fresh.gen.ts
+- Added JWT tokens authentication — confirmed 3x
 - what-changed in shared-context.json — confirmed 9x
 - Strengthened types NotificationFeed — parallelizes async operations for speed
 - problem-fix in agent-rules.md — confirmed 3x
 - what-changed in shared-context.json — confirmed 15x
 - Fixed null crash in Date — parallelizes async operations for speed — confirmed 3x
 - Added JWT tokens authentication — confirmed 4x
-- what-changed in wasm.js — confirmed 3x
-- what-changed in schema.prisma — confirmed 4x
 
 ## Known Fixes
 
 - ❌ - - ⚠️ GOTCHA: Fixed null crash in ProofOfCleanUploader — avoids unnecessary re-renders in R... → ✅ problem-fix in agent-rules.md
 - ❌ -   const [error, setError] = useState<string | null>(null); → ✅ problem-fix in BillingManager.tsx
+- ❌ - - Fixed null crash in Promise — wraps unsafe operation in error boundary → ✅ problem-fix in agent-rules.md
 - ❌ - - Fixed null crash in Math → ✅ problem-fix in agent-rules.md
 - ❌ - - Fixed null crash in Users — prevents null/undefined runtime crashes → ✅ problem-fix in agent-rules.md
-- ❌ - - Fixed null crash in CryptoKey — uses a proper password hashing algorithm → ✅ problem-fix in agent-rules.md
 
 ## Recent Decisions
 
+- Optimized Score — evolves the database schema to support new requirements
 - Optimized Project — offloads heavy computation off the main thread
 - decision in index.tsx
 - decision in styles.css
-- Optimized Head — optimizes data fetching with relational query instead of N+1...
 
 ## Learned Patterns
 

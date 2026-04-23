@@ -1079,31 +1079,7 @@ export async function listAllPropertyIndices(): Promise<
   return properties.map((p) => ({ propId: p.id, hostId: p.hostId }));
 }
 
-/**
- * Looks up knowledge base for a property without needing hostId.
- * Uses prop_index to resolve hostId first.
- */
-export async function getKnowledgeByPropId(
-  propertyId: string,
-): Promise<HostKnowledge | null> {
-  const kv = await getKv();
-  if (kv) {
-    const idx = await kv.get<{ hostId: string }>(["prop_index", propertyId]);
-    if (idx.value) {
-      return getKnowledge(idx.value.hostId, propertyId);
-    }
-  }
 
-  // Fallback to Prisma to resolve hostId
-  const prisma = getPrisma();
-  const prop = await prisma.property.findUnique({
-    where: { id: propertyId },
-    select: { hostId: true },
-  });
-  if (!prop) return null;
-
-  return getKnowledge(prop.hostId, propertyId);
-}
 
 // ── CHAT SESSIONS ─────────────────────────────────────────────
 

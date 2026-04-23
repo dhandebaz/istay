@@ -333,8 +333,11 @@ export default function KnowledgeEditor({
               </div>
               <button
                 onClick={() => (showTestChat.value = false)}
-                    stroke-linecap="round"
-                  />
+                class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 border-[3px] border-gray-900 hover:bg-rose-50 hover:text-rose-600 transition-all group"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </button>
             </div>

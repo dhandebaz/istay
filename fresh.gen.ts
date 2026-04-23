@@ -30,6 +30,7 @@ import * as $api_ical_propId_ from "./routes/api/ical/[propId].ts";
 import * as $api_invoice_bookingId_ from "./routes/api/invoice/[bookingId].ts";
 import * as $api_knowledge from "./routes/api/knowledge.ts";
 import * as $api_knowledge_ocr from "./routes/api/knowledge/ocr.ts";
+import * as $api_notifications_read from "./routes/api/notifications/read.ts";
 import * as $api_onboard_pay from "./routes/api/onboard/pay.ts";
 import * as $api_onboard_verify from "./routes/api/onboard/verify.ts";
 import * as $api_pay from "./routes/api/pay.ts";
@@ -99,6 +100,7 @@ import * as $ListingCarousel from "./islands/ListingCarousel.tsx";
 import * as $LoginForm from "./islands/LoginForm.tsx";
 import * as $MagicScraperAnimation from "./islands/MagicScraperAnimation.tsx";
 import * as $MobileMenu from "./islands/MobileMenu.tsx";
+import * as $NotificationFeed from "./islands/NotificationFeed.tsx";
 import * as $OfflineNotice from "./islands/OfflineNotice.tsx";
 import * as $OtaSavingsChart from "./islands/OtaSavingsChart.tsx";
 import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
@@ -144,6 +146,7 @@ const manifest = {
     "./routes/api/invoice/[bookingId].ts": $api_invoice_bookingId_,
     "./routes/api/knowledge.ts": $api_knowledge,
     "./routes/api/knowledge/ocr.ts": $api_knowledge_ocr,
+    "./routes/api/notifications/read.ts": $api_notifications_read,
     "./routes/api/onboard/pay.ts": $api_onboard_pay,
     "./routes/api/onboard/verify.ts": $api_onboard_verify,
     "./routes/api/pay.ts": $api_pay,
@@ -215,6 +218,7 @@ const manifest = {
     "./islands/LoginForm.tsx": $LoginForm,
     "./islands/MagicScraperAnimation.tsx": $MagicScraperAnimation,
     "./islands/MobileMenu.tsx": $MobileMenu,
+    "./islands/NotificationFeed.tsx": $NotificationFeed,
     "./islands/OfflineNotice.tsx": $OfflineNotice,
     "./islands/OtaSavingsChart.tsx": $OtaSavingsChart,
     "./islands/PricingCheckout.tsx": $PricingCheckout,
