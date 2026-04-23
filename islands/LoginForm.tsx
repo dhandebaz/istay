@@ -10,7 +10,7 @@ export default function LoginForm() {
     e.preventDefault();
 
     if (!email || !password) {
-      setErrorMsg("PROTOCOL_MISSING_CREDENTIALS");
+      setErrorMsg("Please enter your email and password.");
       return;
     }
 
@@ -28,7 +28,7 @@ export default function LoginForm() {
 
       if (!res.ok) {
         setStep("error");
-        setErrorMsg(data.error || "AUTHENTICATION_FAILED");
+        setErrorMsg(data.error || "Invalid email or password. Please try again.");
         return;
       }
 
@@ -37,80 +37,76 @@ export default function LoginForm() {
       }
     } catch {
       setStep("error");
-      setErrorMsg("SIGNAL_NETWORK_FAILURE");
+      setErrorMsg("A network error occurred. Please check your connection.");
     }
   }
 
   if (step === "submitting") {
     return (
-      <div class="flex flex-col items-center justify-center py-20 gap-10">
-        <div class="w-24 h-24 rounded-[2.5rem] bg-mint-400 border-[5px] border-gray-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center animate-pulse-brutal">
-          <span class="text-4xl">⚡</span>
+      <div class="flex flex-col items-center justify-center py-20 gap-8 animate-fade-in">
+        <div class="relative w-20 h-20 rounded-3xl bg-emerald-500/10 flex items-center justify-center">
+          <div class="absolute inset-0 rounded-3xl border-2 border-emerald-500/20 animate-ping" />
+          <span class="text-3xl">✨</span>
         </div>
-        <div class="text-center">
-           <p class="text-[11px] font-950 text-gray-900 uppercase tracking-[0.4em] mb-3">SYNCHRONIZING_CREDENTIALS...</p>
-           <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest leading-relaxed">SECURE_HANDSHAKE_IN_PROGRESS</p>
+        <div class="text-center space-y-2">
+           <p class="text-sm font-bold text-gray-900">Signing you in...</p>
+           <p class="text-xs text-gray-400 font-medium tracking-wide">Securely authenticating your session</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div class="space-y-12">
-      <form onSubmit={handleSubmit} class="space-y-10" novalidate>
-        <div class="space-y-10">
+    <div class="space-y-8 animate-fade-in">
+      <form onSubmit={handleSubmit} class="space-y-6">
+        <div class="space-y-5">
           {/* Email Address */}
-          <div class="space-y-4">
-            <label class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em] ml-4">HOST_IDENTIFIER</label>
+          <div class="space-y-2">
+            <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
             <input
               type="email"
               value={email}
               onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
               required
-              placeholder="YOU@DOMAIN.EXT"
-              class="w-full px-8 py-5 rounded-[2rem] border-[4px] border-gray-900 font-950 text-gray-900 bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:bg-mint-50 focus:translate-x-[-2px] focus:translate-y-[-2px] focus:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-all placeholder:text-gray-200 uppercase tracking-widest text-xs"
+              placeholder="alex@example.com"
+              class="w-full px-6 py-4 rounded-2xl border border-gray-100 bg-gray-50/50 font-medium text-gray-900 focus:outline-none focus:bg-white focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all placeholder:text-gray-300 text-sm"
             />
           </div>
 
           {/* Password */}
-          <div class="space-y-4">
-            <div class="flex items-center justify-between px-4">
-              <label class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em]">SECURE_KEY</label>
-              <a href="/forgot-password" class="text-[9px] font-950 text-mint-500 hover:text-mint-600 transition-colors uppercase tracking-widest border-b-2 border-mint-500">RECOVER_KEY</a>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between px-1">
+              <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Password</label>
+              <a href="/forgot-password" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-700 transition-colors uppercase tracking-widest">Forgot password?</a>
             </div>
             <input
               type="password"
               value={password}
               onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
               required
-              placeholder="********"
-              class="w-full px-8 py-5 rounded-[2rem] border-[4px] border-gray-900 font-950 text-gray-900 bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:bg-mint-50 focus:translate-x-[-2px] focus:translate-y-[-2px] focus:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-all placeholder:text-gray-200 uppercase tracking-widest text-xs"
+              placeholder="••••••••"
+              class="w-full px-6 py-4 rounded-2xl border border-gray-100 bg-gray-50/50 font-medium text-gray-900 focus:outline-none focus:bg-white focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all placeholder:text-gray-300 text-sm"
             />
           </div>
         </div>
 
         {errorMsg && (
-          <div class="p-6 bg-rose-50 border-[3px] border-rose-900 rounded-[1.5rem] shadow-[6px_6px_0px_0px_#9f1239] animate-shake">
-            <p class="text-[10px] font-950 text-rose-900 uppercase tracking-[0.2em] flex items-center gap-3">
-              <span class="text-lg">⚠️</span> ACCESS_DENIED: {errorMsg}
+          <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl animate-shake">
+            <p class="text-xs font-bold text-rose-700 flex items-center gap-2">
+              <span class="text-sm">⚠️</span> {errorMsg}
             </p>
           </div>
         )}
 
         <button
           type="submit"
-          class="w-full py-6 bg-gray-900 text-mint-400 text-sm font-950 uppercase tracking-[0.4em] rounded-[2rem] border-[4px] border-gray-900 shadow-[10px_10px_0px_0px_#4ade80] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all active:scale-[0.98]"
+          class="w-full py-4 bg-gray-900 text-white text-sm font-bold rounded-2xl shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 transition-all active:scale-[0.98]"
         >
-          {step === "submitting" ? "AUTHORIZING..." : "INITIATE_SESSION"}
+          {step === "submitting" ? "Signing in..." : "Sign In"}
         </button>
       </form>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes pulse-brutal {
-          0%, 100% { transform: scale(1); filter: brightness(1); }
-          50% { transform: scale(1.05); filter: brightness(1.2); }
-        }
-        .animate-pulse-brutal { animation: pulse-brutal 1.5s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
           25% { transform: translateX(-4px); }

@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 2142 notes | Score threshold: >40
+> 2155 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,6 +20,10 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
+- **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 2142 notes | Score threshold: >40
++ > 2147 notes | Score threshold
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Patched security issue Cnadk
++ - problem-fix in island-scrolltotop
 - **⚠️ GOTCHA: Added JWT tokens authentication** — - - gotcha in agent-rules.md
 + - ⚠️ GOTCHA: problem-fix in agent-rules
 - **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Patched security issue SbqKolb
@@ -29,25 +33,17 @@
 Content summary (8
 - **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 2096 notes | Score threshold: >40
 + > 2123 notes | Score threshold
-- **⚠️ GOTCHA: Added JWT tokens authentication** — - - ⚠️ GOTCHA: Added JWT tokens authentication — evolves the database 
-- **gotcha in shared-context.json** — -     }
-+     },
--   ]
-+     {
-- }
-+       "id": "28c26772f4eeb6a0",
-+
 
 ## Project Standards
 
+- Added JWT tokens authentication — confirmed 3x
+- what-changed in shared-context.json — confirmed 7x
+- Patched security issue Cnadk — confirmed 3x
 - convention in fresh.gen.ts
 - Added JWT tokens authentication — confirmed 3x
 - what-changed in shared-context.json — confirmed 9x
 - Strengthened types NotificationFeed — parallelizes async operations for speed
 - problem-fix in agent-rules.md — confirmed 3x
-- what-changed in shared-context.json — confirmed 15x
-- Fixed null crash in Date — parallelizes async operations for speed — confirmed 3x
-- Added JWT tokens authentication — confirmed 4x
 
 ## Known Fixes
 
@@ -60,9 +56,9 @@ Content summary (8
 ## Recent Decisions
 
 - Optimized Score — evolves the database schema to support new requirements
+- Optimized Score — evolves the database schema to support new requirements
 - Optimized Project — offloads heavy computation off the main thread
 - decision in index.tsx
-- decision in styles.css
 
 ## Learned Patterns
 
