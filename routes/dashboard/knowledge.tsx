@@ -1,8 +1,5 @@
 // ================================================================
 // routes/dashboard/knowledge.tsx — Host AI Knowledge Base Editor
-//
-// Dashboard page where hosts write/edit their property knowledge base.
-// The AI Concierge uses this content to answer guest questions.
 // ================================================================
 
 import { type Handlers, type PageProps } from "$fresh/server.ts";
@@ -10,7 +7,6 @@ import { Head } from "$fresh/runtime.ts";
 import { getKnowledge, listProperties } from "../../utils/db.ts";
 import type {
   DashboardState,
-  HostKnowledge,
   Property,
 } from "../../utils/types.ts";
 import KnowledgeEditor from "../../islands/KnowledgeEditor.tsx";
@@ -57,99 +53,78 @@ export default function KnowledgePage(
         <meta name="robots" content="noindex" />
       </Head>
 
-      <div class="space-y-8">
+      <div class="space-y-12 pb-20">
         {/* Page Header */}
-        <div>
-          <div class="flex items-center gap-3 mb-1">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white shadow-sm">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M10 2C6.68629 2 4 4.68629 4 8C4 10.22 5.21 12.16 7 13.2V15C7 15.55 7.45 16 8 16H12C12.55 16 13 15.55 13 15V13.2C14.79 12.16 16 10.22 16 8C16 4.68629 13.3137 2 10 2Z"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M8 18H12"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M10 2V4"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-              </svg>
+        <section class="flex flex-col lg:flex-row items-end justify-between gap-8">
+          <div>
+            <div class="flex items-center gap-4 mb-4">
+              <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.2em] rounded-full border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80]">
+                COGNITIVE_ENGINE
+              </div>
+              <div class="h-[2px] w-24 bg-gray-100" />
             </div>
+            <h2 class="text-4xl sm:text-7xl font-950 text-gray-900 tracking-tighter uppercase leading-[0.8]">
+              AI <br/> <span class="text-mint-500">Knowledge.</span>
+            </h2>
+          </div>
+          <div class="bg-white p-8 rounded-[2.5rem] border-[4px] border-gray-900 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] flex items-center gap-8 group hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
             <div>
-              <h1 class="text-xl font-800 text-gray-900">
-                AI Knowledge Base
-              </h1>
-              <p class="text-sm text-gray-400">
-                Your AI concierge answers guests using only this information
+              <p class="text-[9px] font-950 text-gray-400 uppercase tracking-[0.3em] mb-2">SYSTEM_ACCURACY</p>
+              <p class="text-4xl font-950 text-gray-900 tracking-tighter">100%</p>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-purple-400 border-[3px] border-gray-900 flex items-center justify-center text-3xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:rotate-[-5deg] transition-transform">
+              🧠
+            </div>
+          </div>
+        </section>
+
+        {/* Info Banner */}
+        <div class="p-10 bg-purple-50 rounded-[2.5rem] border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_#a855f7]">
+          <div class="flex items-start gap-6">
+            <span class="text-4xl">🤖</span>
+            <div class="space-y-2">
+              <h3 class="text-sm font-950 text-gray-900 uppercase tracking-widest">PROTOCOL_INSTRUCTIONS</h3>
+              <p class="text-xs text-purple-900/60 font-800 uppercase leading-relaxed tracking-widest">
+                Write your property details below — WiFi passwords, check-in
+                instructions, house rules, nearby restaurants, caretaker number.
+                Your guests will see a chat bubble on the booking page and can ask
+                questions 24/7. The AI will <strong class="text-purple-600">only</strong> use the info you provide. No hallucinations.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Info Banner */}
-        <div class="flex items-start gap-3 p-4 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100">
-          <span class="text-xl mt-0.5">🤖</span>
-          <div>
-            <p class="text-sm font-700 text-purple-800">
-              How the AI Concierge works
-            </p>
-            <p class="text-xs text-purple-600 mt-1 leading-relaxed">
-              Write your property details below — WiFi passwords, check-in
-              instructions, house rules, nearby restaurants, caretaker number.
-              Your guests will see a chat bubble on the booking page and can ask
-              questions 24/7. The AI will
-              <strong>only</strong> use the info you provide. No hallucinations.
-            </p>
-          </div>
-        </div>
-
         {/* No properties state */}
         {properties.length === 0 && (
-          <div class="flex flex-col items-center justify-center py-16 text-center">
-            <span class="text-5xl mb-4">🏠</span>
-            <p class="text-base font-700 text-gray-900 mb-1">
-              No properties yet
-            </p>
-            <p class="text-sm text-gray-400 mb-4">
-              Add a property first, then set up its AI knowledge base.
-            </p>
+          <div class="bg-white border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] p-32 flex flex-col items-center justify-center text-center rounded-[3rem]">
+            <span class="text-8xl mb-8">🏠</span>
+            <h3 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">Registry_Empty</h3>
+            <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em] mt-4 mb-10">Add a property first, then set up its AI knowledge base.</p>
             <a
               href="/dashboard/properties"
-              class="px-5 py-2.5 rounded-xl bg-istay-900 text-white text-sm font-700 hover:bg-istay-800 transition-colors"
+              class="px-10 py-5 bg-mint-400 text-gray-900 text-[11px] font-950 uppercase tracking-[0.2em] rounded-2xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
             >
-              → Go to Properties
+              GO_TO_PROPERTIES
             </a>
           </div>
         )}
 
         {/* Property Editors */}
-        {properties.map((prop) => (
-          <div
-            key={prop.id}
-            class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6"
-          >
-            <KnowledgeEditor
-              hostId={hostId}
-              propertyId={prop.id}
-              propertyName={prop.name}
-              initialContent={knowledgeMap[prop.id]}
-            />
-          </div>
-        ))}
+        <div class="space-y-12">
+          {properties.map((prop) => (
+            <div
+              key={prop.id}
+              class="bg-white rounded-[3rem] border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] p-12"
+            >
+              <KnowledgeEditor
+                hostId={hostId}
+                propertyId={prop.id}
+                propertyName={prop.name}
+                initialContent={knowledgeMap[prop.id]}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );

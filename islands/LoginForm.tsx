@@ -10,7 +10,7 @@ export default function LoginForm() {
     e.preventDefault();
 
     if (!email || !password) {
-      setErrorMsg("All fields are required.");
+      setErrorMsg("PROTOCOL_MISSING_CREDENTIALS");
       return;
     }
 
@@ -28,94 +28,96 @@ export default function LoginForm() {
 
       if (!res.ok) {
         setStep("error");
-        setErrorMsg(data.error || "Login failed.");
+        setErrorMsg(data.error || "AUTHENTICATION_FAILED");
         return;
       }
 
-      // Backend tells us where to route (dashboard if paid, pricing if not)
       if (typeof window !== "undefined") {
         window.location.href = data.redirectUrl || "/dashboard";
       }
     } catch {
       setStep("error");
-      setErrorMsg("Network error. Please try again.");
+      setErrorMsg("SIGNAL_NETWORK_FAILURE");
     }
   }
 
   if (step === "submitting") {
     return (
-      <div class="flex flex-col items-center justify-center py-12 gap-4">
-        <div class="relative w-14 h-14">
-          <div class="absolute inset-0 rounded-full border-4 border-gray-100" />
-          <div class="absolute inset-0 rounded-full border-4 border-mint-500 border-t-transparent animate-spin" />
+      <div class="flex flex-col items-center justify-center py-20 gap-10">
+        <div class="w-24 h-24 rounded-[2.5rem] bg-mint-400 border-[5px] border-gray-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center animate-pulse-brutal">
+          <span class="text-4xl">⚡</span>
         </div>
-        <p class="text-sm font-700 text-gray-900">Signing in...</p>
+        <div class="text-center">
+           <p class="text-[11px] font-950 text-gray-900 uppercase tracking-[0.4em] mb-3">SYNCHRONIZING_CREDENTIALS...</p>
+           <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest leading-relaxed">SECURE_HANDSHAKE_IN_PROGRESS</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} class="space-y-5" novalidate>
-      <div>
-        <label class="block text-xs font-700 text-gray-700 mb-1.5 ml-1">
-          Email Address
-        </label>
-        <input
-          type="email"
-          value={email}
-          onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
-          required
-          class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"
-          placeholder="john@example.com"
-        />
-      </div>
+    <div class="space-y-12">
+      <form onSubmit={handleSubmit} class="space-y-10" novalidate>
+        <div class="space-y-10">
+          {/* Email Address */}
+          <div class="space-y-4">
+            <label class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em] ml-4">HOST_IDENTIFIER</label>
+            <input
+              type="email"
+              value={email}
+              onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
+              required
+              placeholder="YOU@DOMAIN.EXT"
+              class="w-full px-8 py-5 rounded-[2rem] border-[4px] border-gray-900 font-950 text-gray-900 bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:bg-mint-50 focus:translate-x-[-2px] focus:translate-y-[-2px] focus:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-all placeholder:text-gray-200 uppercase tracking-widest text-xs"
+            />
+          </div>
 
-      <div>
-        <div class="flex items-center justify-between mb-1.5 px-1">
-          <label class="text-xs font-700 text-gray-700">Password</label>
-          <a
-            href="/forgot-password"
-            class="text-xs font-600 text-mint-600 hover:text-mint-500 transition-colors"
-          >
-            Forgot?
-          </a>
+          {/* Password */}
+          <div class="space-y-4">
+            <div class="flex items-center justify-between px-4">
+              <label class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em]">SECURE_KEY</label>
+              <a href="/forgot-password" class="text-[9px] font-950 text-mint-500 hover:text-mint-600 transition-colors uppercase tracking-widest border-b-2 border-mint-500">RECOVER_KEY</a>
+            </div>
+            <input
+              type="password"
+              value={password}
+              onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
+              required
+              placeholder="********"
+              class="w-full px-8 py-5 rounded-[2rem] border-[4px] border-gray-900 font-950 text-gray-900 bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:bg-mint-50 focus:translate-x-[-2px] focus:translate-y-[-2px] focus:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] transition-all placeholder:text-gray-200 uppercase tracking-widest text-xs"
+            />
+          </div>
         </div>
-        <input
-          type="password"
-          value={password}
-          onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
-          required
-          class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm focus:bg-white focus:border-mint-400 focus:outline-none transition-all duration-200"
-          placeholder="••••••••"
-        />
-      </div>
 
-      {errorMsg && (
-        <div class="flex items-center gap-2 p-3 rounded-xl bg-rose-50 border border-rose-200">
-          <span class="text-rose-500 text-sm">⚠️</span>
-          <p class="text-xs font-600 text-rose-700">{errorMsg}</p>
-        </div>
-      )}
+        {errorMsg && (
+          <div class="p-6 bg-rose-50 border-[3px] border-rose-900 rounded-[1.5rem] shadow-[6px_6px_0px_0px_#9f1239] animate-shake">
+            <p class="text-[10px] font-950 text-rose-900 uppercase tracking-[0.2em] flex items-center gap-3">
+              <span class="text-lg">⚠️</span> ACCESS_DENIED: {errorMsg}
+            </p>
+          </div>
+        )}
 
-      <button
-        type="submit"
-        class="w-full mt-4 py-3.5 rounded-xl bg-mint-500 text-istay-900 font-900 text-sm shadow-sm hover:bg-mint-400 active:scale-95 transition-all duration-150"
-      >
-        Sign in
-      </button>
-
-      {step === "error" && (
         <button
-          type="button"
-          onClick={() => {
-            setStep("details");
-            setErrorMsg("");
-          }}
-          class="w-full mt-2 py-2 text-xs font-600 text-gray-500 hover:text-gray-700 transition-colors"
+          type="submit"
+          class="w-full py-6 bg-gray-900 text-mint-400 text-sm font-950 uppercase tracking-[0.4em] rounded-[2rem] border-[4px] border-gray-900 shadow-[10px_10px_0px_0px_#4ade80] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all active:scale-[0.98]"
         >
-          ← Try again
+          {step === "submitting" ? "AUTHORIZING..." : "INITIATE_SESSION"}
         </button>
-      )}
-    </form>
+      </form>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes pulse-brutal {
+          0%, 100% { transform: scale(1); filter: brightness(1); }
+          50% { transform: scale(1.05); filter: brightness(1.2); }
+        }
+        .animate-pulse-brutal { animation: pulse-brutal 1.5s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-4px); }
+          75% { transform: translateX(4px); }
+        }
+        .animate-shake { animation: shake 0.4s ease-in-out; }
+      ` }} />
+    </div>
   );
 }

@@ -29,88 +29,41 @@ export default function MobileMenu({ links }: MobileMenuProps) {
 
   return (
     <div class="md:hidden">
-      {/* Hamburger Button */}
       <button
-        id="mobile-menu-toggle"
         onClick={toggle}
-        aria-expanded={open}
-        aria-controls="mobile-menu-panel"
-        aria-label={open ? "Close navigation menu" : "Open navigation menu"}
-        class="p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-all duration-200"
+        class="w-12 h-12 bg-white border-[3px] border-gray-900 rounded-xl flex items-center justify-center text-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all"
       >
-        {open
-          ? (
-            /* X icon */
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M4 4L16 16M16 4L4 16"
-                stroke="currentColor"
-                stroke-width="1.75"
-                stroke-linecap="round"
-              />
-            </svg>
-          )
-          : (
-            /* Hamburger icon */
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M3 5H17M3 10H17M3 15H17"
-                stroke="currentColor"
-                stroke-width="1.75"
-                stroke-linecap="round"
-              />
-            </svg>
-          )}
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          {open ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M4 8h16M4 16h16" />}
+        </svg>
       </button>
 
-      {/* Mobile Menu Panel */}
       {open && (
-        <div
-          id="mobile-menu-panel"
-          class="absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-2xl animate-fade-in z-[100]"
-          role="dialog"
-          aria-label="Mobile navigation"
-        >
-          <nav class="max-w-7xl mx-auto flex flex-col">
-            <div class="px-4 py-4 flex flex-col gap-1">
-              {links.map(({ href, label }) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={close}
-                  class="px-4 py-3 text-base font-500 text-gray-700 rounded-xl hover:text-gray-900 hover:bg-gray-50 transition-all duration-150"
-                >
-                  {label}
-                </a>
-              ))}
+        <div class="fixed inset-0 top-[88px] z-[90] bg-white border-t-[4px] border-gray-900 animate-fade-in">
+          <nav class="flex flex-col p-8 space-y-4">
+            {links.map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                onClick={close}
+                class="flex items-center justify-between px-8 py-6 rounded-2xl border-[3px] border-gray-900 bg-white text-base font-950 text-gray-900 uppercase tracking-widest shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 transition-all"
+              >
+                {label}
+                <span class="text-mint-500">→</span>
+              </a>
+            ))}
+            <div class="pt-8 grid grid-cols-2 gap-4">
               <a
                 href="/login"
-                class="block px-4 py-3 text-base font-600 text-istay-900 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                class="flex items-center justify-center py-5 rounded-2xl border-[3px] border-gray-900 bg-white text-[11px] font-950 text-gray-900 uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
               >
-                Login
+                LOGIN
               </a>
-            </div>
-
-            <div class="p-6 bg-white border-t border-gray-100">
               <a
                 href="/register"
-                class="flex items-center justify-center w-full px-6 py-3.5 rounded-xl bg-mint-500 text-istay-900 text-sm font-800 shadow-sm active:scale-[0.98] transition-all"
+                class="flex items-center justify-center py-5 rounded-2xl border-[3px] border-gray-900 bg-mint-400 text-[11px] font-950 text-gray-900 uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
               >
-                Start Hosting
+                SIGN_UP
               </a>
             </div>
           </nav>

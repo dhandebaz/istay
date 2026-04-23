@@ -65,12 +65,12 @@ export default function KnowledgeUploader(
   };
 
   return (
-    <div class="mb-6">
+    <div class="mb-10">
       <div
-        class={`relative flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-2xl transition-all duration-300 ${
+        class={`relative flex flex-col items-center justify-center p-12 border-[4px] border-dashed rounded-[2.5rem] transition-all duration-300 group shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] ${
           isScanning
-            ? "border-mint-400 bg-mint-50/50"
-            : "border-gray-200 bg-gray-50 hover:bg-gray-100 hover:border-mint-300"
+            ? "border-mint-500 bg-mint-50/50 shadow-[12px_12px_0px_0px_#4ade80]"
+            : "border-gray-200 bg-gray-50 hover:bg-white hover:border-mint-400 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[16px_16px_0px_0px_rgba(0,0,0,1)]"
         }`}
       >
         <input
@@ -79,44 +79,44 @@ export default function KnowledgeUploader(
           ref={fileInputRef}
           onChange={handleFileChange}
           disabled={isScanning}
-          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+          class="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
           title="Upload physical house rules"
         />
 
         {isScanning
           ? (
             <div class="flex flex-col items-center justify-center text-center">
-              <span class="inline-flex w-12 h-12 items-center justify-center mb-4">
-                <span class="w-8 h-8 border-4 border-mint-500 border-t-transparent rounded-full animate-spin" />
-              </span>
-              <p class="text-sm font-700 text-mint-700">
-                AI is scanning document...
+              <div class="w-20 h-20 border-[6px] border-gray-900 border-t-mint-500 rounded-full animate-spin mb-6" />
+              <p class="text-xs font-950 text-gray-900 uppercase tracking-[0.3em]">
+                SCANNING_DOCUMENT...
               </p>
-              <p class="text-xs text-mint-600/70 mt-1">
-                Extracting WiFi and rules
+              <p class="text-[10px] text-mint-600 font-800 uppercase tracking-widest mt-2">
+                EXTRACTING_KNOWLEDGE_KERNEL
               </p>
             </div>
           )
           : (
             <div class="flex flex-col items-center justify-center text-center pointer-events-none">
-              <div class="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 text-2xl">
+              <div class="w-20 h-20 rounded-[2rem] bg-white border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center mb-6 text-4xl group-hover:rotate-[-5deg] transition-transform">
                 📷
               </div>
-              <p class="text-sm font-700 text-gray-900">
-                Scan Rules from Photo
-              </p>
-              <p class="text-xs text-gray-500 mt-1 max-w-[200px]">
-                Tap to upload a photo of your physical house rules card or WiFi
-                sign
+              <h4 class="text-sm font-950 text-gray-900 uppercase tracking-widest mb-2">
+                Scan_Rules_Protocol
+              </h4>
+              <p class="text-[10px] text-gray-400 font-800 uppercase tracking-widest max-w-[250px] leading-relaxed">
+                UPLOAD A PHOTO OF PHYSICAL HOUSE RULES OR WIFI SIGN FOR AUTOMATED INGESTION.
               </p>
             </div>
           )}
       </div>
 
       {error && (
-        <p class="mt-3 text-xs font-600 text-rose-500 text-center bg-rose-50 py-2 rounded-lg">
-          {error}
-        </p>
+        <div class="mt-6 p-6 rounded-2xl bg-rose-50 border-[3px] border-rose-900 shadow-[6px_6px_0px_0px_#9f1239] animate-shake">
+          <p class="text-[10px] font-950 text-rose-900 uppercase tracking-widest flex items-center justify-center gap-3">
+             <span class="text-lg">⚠️</span>
+             SCAN_FAILURE: {error}
+          </p>
+        </div>
       )}
     </div>
   );

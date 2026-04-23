@@ -1,60 +1,42 @@
-import { useCallback, useState } from "preact/hooks";
-import type { ComponentChildren } from "preact";
-
-interface Tab {
-  id: string;
-  label: string;
-  icon: string;
-}
+import { useState } from "preact/hooks";
 
 interface SettingsTabsProps {
-  initialTab?: string;
-  tabs: Tab[];
-  children: ComponentChildren;
+  activeTab: string;
 }
 
-export default function SettingsTabs(
-  { initialTab = "general", tabs, children }: SettingsTabsProps,
-) {
-  const [activeTab, setActiveTab] = useState(initialTab);
+export default function SettingsTabs({ activeTab }: SettingsTabsProps) {
+  const tabs = [
+    { id: "general", label: "GENERAL_CORE", icon: "⚙️" },
+    { id: "compliance", label: "LEGAL_SYNC", icon: "⚖️" },
+    { id: "notifications", label: "SIGNAL_LOCK", icon: "🔔" },
+    { id: "team", label: "UNIT_SYNC", icon: "👥" },
+    { id: "developers", label: "API_BRIDGE", icon: "🔌" },
+    { id: "billing", label: "CAPITAL_HUB", icon: "💳" },
+  ];
 
-  // Update URL without refresh
-  const switchTab = useCallback((id: string) => {
-    setActiveTab(id);
-    if (typeof globalThis.location !== "undefined") {
-      const url = new URL(globalThis.location.href);
-      url.searchParams.set("tab", id);
-      globalThis.history.pushState({}, "", url);
-    }
-  }, []);
+  const switchTab = (id: string) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", id);
+    window.location.href = url.toString();
+  };
 
   return (
-    <div class="space-y-6">
-      {/* Tab Navigation */}
-      <div class="flex items-center gap-1 p-1 bg-gray-100 rounded-2xl w-fit overflow-x-auto no-scrollbar">
+    <div class="px-12 py-8 bg-gray-50 border-b-[4px] border-gray-900 overflow-x-auto no-scrollbar">
+      <div class="flex items-center gap-6 min-w-max">
         {tabs.map((tab) => (
           <button
-            type="button"
             key={tab.id}
             onClick={() => switchTab(tab.id)}
-            class={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-700 transition-all whitespace-nowrap ${
+            class={`flex items-center gap-3 px-8 py-4 rounded-2xl text-[9px] font-950 uppercase tracking-[0.2em] transition-all border-[3px] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none ${
               activeTab === tab.id
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700 hover:bg-gray-50/50"
+                ? "bg-mint-400 text-gray-900 border-gray-900"
+                : "bg-white text-gray-400 border-gray-900 grayscale hover:grayscale-0"
             }`}
           >
-            <span class="text-base">{tab.icon}</span>
+            <span class="text-xl">{tab.icon}</span>
             {tab.label}
           </button>
         ))}
-      </div>
-
-      {/* Tab Content — renders children but only shows the active tab's content */}
-      <div class="relative">
-        {/* Pass activeTab via data attribute for parent-side visibility control */}
-        <div id="settings-content-wrapper" data-active-tab={activeTab}>
-          {children}
-        </div>
       </div>
     </div>
   );

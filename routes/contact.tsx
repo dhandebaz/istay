@@ -1,3 +1,4 @@
+import { PageProps } from "$fresh/server.ts";
 import Header from "../islands/Header.tsx";
 import Footer from "../components/Footer.tsx";
 import SEOMeta from "../components/SEOMeta.tsx";
@@ -10,243 +11,95 @@ const SCHEMA = JSON.stringify({
   url: "https://istay.space",
   email: "support@istay.space",
   description: "Direct booking SaaS for property hosts. Operated by istay",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Ghaffar Manzil, Okhla",
-    addressLocality: "New Delhi",
-    addressRegion: "Delhi",
-    postalCode: "110025",
-    addressCountry: "IN",
-  },
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "customer support",
-    email: "support@istay.space",
-    availableLanguage: ["English", "Hindi"],
-  },
 });
 
 export default function Contact({ url }: PageProps) {
   const isSuccess = url.searchParams.get("success") === "true";
+  
   return (
     <>
       <SEOMeta 
-        title="Contact Us | istay — Direct Booking Platform"
-        description="Reach out to istay support at support@istay.space. We're here to help you with onboarding, billing, and any technical questions."
-        schema={SCHEMA}
+        title="CONTACT_SUPPORT | ISTAY — DIRECT_BOOKING_STACK"
+        description="REACH OUT TO ISTAY SUPPORT AT SUPPORT@ISTAY.SPACE. WE'RE HERE TO HELP YOU WITH ONBOARDING, BILLING, AND ANY TECHNICAL QUESTIONS."
       />
 
       <Header />
 
-      <main class="min-h-screen">
-        {/* Page Header */}
-        <section class="bg-white border-b border-gray-100 py-16">
-          <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="max-w-2xl">
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-istay-50 border border-istay-100 text-istay-800 text-xs font-600 uppercase tracking-wider mb-4">
-                Support
-              </div>
-              <h1 class="text-4xl sm:text-5xl font-800 text-gray-900 tracking-tight leading-tight">
-                We're here to help.
-              </h1>
-              <p class="mt-4 text-lg text-gray-500 leading-relaxed">
-                Whether you're onboarding your first property or troubleshooting
-                a booking — our team responds within 24–48 hours.
-              </p>
-            </div>
-          </div>
+      <main class="bg-white pt-24">
+        {/* ── HERO ────────────────────────────────────────── */}
+        <section class="bg-gray-900 py-32 px-5 text-center relative overflow-hidden">
+           <div class="relative z-10 max-w-7xl mx-auto">
+             <span class="inline-block px-5 py-2 bg-white text-gray-900 text-[10px] font-950 uppercase tracking-[0.3em] mb-8 rounded-xl">SUPPORT_KERNEL_V1</span>
+             <h1 class="text-6xl sm:text-8xl font-950 text-white tracking-tighter leading-[0.9] uppercase mb-10">
+               QUERY_THE_STACK.<br />
+               <span class="text-mint-400">SUPPORT_ONLINE.</span>
+             </h1>
+             <p class="text-lg sm:text-xl font-800 text-gray-400 uppercase max-w-2xl mx-auto leading-relaxed">
+               WHETHER YOU ARE ONBOARDING YOUR FIRST PROPERTY OR SCALING TO FIFTY, OUR TEAM RESPONDS WITHIN 24 BUSINESS HOURS.
+             </p>
+           </div>
         </section>
 
-        {/* Content Grid */}
-        <section class="py-16">
-          <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
-              {/* Left Column — Contact Info */}
-              <div class="lg:col-span-2 space-y-8">
-                {/* Email */}
-                <div class="group">
-                  <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-istay-50 border border-istay-100 flex items-center justify-center group-hover:bg-istay-100 transition-colors duration-200">
-                      <MailIcon class="w-5 h-5 text-istay-700" />
-                    </div>
-                    <div>
-                      <h2 class="text-sm font-700 text-gray-500 uppercase tracking-wider mb-1">
-                        Email Support
-                      </h2>
-                      <a
-                        href="mailto:support@istay.space"
-                        class="text-lg font-600 text-istay-900 hover:text-istay-800 transition-colors duration-200"
-                      >
-                        support@istay.space
-                      </a>
-                      <p class="mt-1 text-sm text-gray-400">
-                        Response within 24–48 business hours
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Response Time */}
-                <div class="rounded-2xl bg-amber-50 border border-amber-100 p-5">
-                  <h3 class="text-sm font-700 text-amber-800 mb-2">
-                    ⏱ Response Times
-                  </h3>
-                  <ul class="space-y-1.5 text-sm text-amber-700">
-                    <li class="flex justify-between">
-                      <span>General enquiries</span>
-                      <span class="font-600">24–48 hrs</span>
-                    </li>
-                    <li class="flex justify-between">
-                      <span>Billing issues</span>
-                      <span class="font-600">12–24 hrs</span>
-                    </li>
-                    <li class="flex justify-between">
-                      <span>Technical / bugs</span>
-                      <span class="font-600">4–12 hrs</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Physical Address */}
-                <div class="flex items-start gap-4">
-                  <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center">
-                    <MapPinIcon class="w-5 h-5 text-gray-400" />
+        {/* ── CONTACT GRID ────────────────────────────────── */}
+        <section class="py-32 px-5 bg-white">
+          <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-16 lg:gap-24">
+              {/* Left Column — Info */}
+              <div class="lg:col-span-2 space-y-12">
+                <div class="p-10 bg-white border-[4px] border-gray-900 rounded-[3rem] shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] flex items-start gap-8">
+                  <div class="flex-shrink-0 w-16 h-16 rounded-[1.5rem] bg-mint-400 border-[3px] border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center">
+                    <MailIcon class="w-8 h-8 text-gray-900" />
                   </div>
                   <div>
-                    <h2 class="text-sm font-700 text-gray-500 uppercase tracking-wider mb-1">
-                      Registered Office
-                    </h2>
-                    <address class="not-italic text-sm text-gray-600 leading-relaxed">
-                      istay
-                      <br />
-                      Ghaffar Manzil, Okhla,
-                      <br />
-                      New Delhi, Delhi 110025
-                      <br />
-                      India
-                    </address>
+                    <h2 class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em] mb-4">PROTOCOL_EMAIL</h2>
+                    <a href="mailto:support@istay.space" class="text-xl sm:text-2xl font-950 text-gray-900 hover:text-mint-500 transition-colors tracking-tighter uppercase">support@istay.space</a>
+                    <p class="mt-4 text-[10px] font-950 text-gray-400 uppercase tracking-widest">EST_RESPONSE: 24-48_HRS</p>
                   </div>
+                </div>
+
+                <div class="p-10 bg-gray-900 border-[4px] border-gray-900 rounded-[3rem] shadow-[12px_12px_0px_0px_#4ade80]">
+                   <h3 class="text-[10px] font-950 text-mint-400 uppercase tracking-[0.3em] mb-10 flex items-center gap-3">
+                     <span class="w-2 h-2 rounded-full bg-mint-400 animate-pulse" />
+                     SLA_RESPONSE_TIMES
+                   </h3>
+                   <div class="space-y-6">
+                     {[
+                       { label: "GENERAL_ENQUIRIES", time: "24-48_HRS" },
+                       { label: "BILLING_PROTOCOLS", time: "12-24_HRS" },
+                       { label: "TECHNICAL_DEBUG", time: "4-12_HRS" },
+                     ].map((sla) => (
+                       <div key={sla.label} class="flex justify-between items-center border-b-[2px] border-white/5 pb-4">
+                         <span class="text-[10px] font-950 text-gray-400 tracking-widest uppercase">{sla.label}</span>
+                         <span class="text-[10px] font-950 text-white tracking-widest uppercase">{sla.time}</span>
+                       </div>
+                     ))}
+                   </div>
                 </div>
               </div>
 
-              {/* Right Column — Contact Form */}
+              {/* Right Column — Form Context */}
               <div class="lg:col-span-3">
-                <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-8 sm:p-10 relative overflow-hidden">
-                  {isSuccess && (
-                    <div class="absolute top-0 left-0 right-0 bg-mint-500 text-istay-900 py-3 px-6 text-sm font-800 flex items-center justify-center gap-2 animate-slide-down">
-                      <CheckIcon class="w-4.5 h-4.5" strokeWidth="3" />
-                      Message sent successfully! We'll reply within 24 hours.
-                    </div>
-                  )}
-                  <h2 class={`text-xl font-700 text-gray-900 mb-6 ${isSuccess ? 'mt-6' : ''}`}>
-                    Send us a message
-                  </h2>
+                 <div class="p-12 bg-white border-[4px] border-gray-900 rounded-[3rem] shadow-[20px_20px_0px_0px_rgba(0,0,0,1)]">
+                   <span class="inline-block px-5 py-2 bg-gray-900 text-white text-[10px] font-950 uppercase tracking-[0.3em] mb-10 rounded-xl">MESSAGE_TRANSMISSION</span>
+                   <h3 class="text-4xl font-950 text-gray-900 uppercase tracking-tighter mb-12 leading-none">SUBMIT_A_PROTOCOL_REQUEST.</h3>
+                   
+                   <p class="text-lg font-800 text-gray-400 uppercase leading-snug mb-12">
+                     PLEASE INCLUDE YOUR HOST_ID FOR EXPEDITED VERIFICATION. OUR KERNEL TEAM MONITORS INCOMING SIGNALS 24/7.
+                   </p>
 
-                  <form
-                    id="contact-form"
-                    method="POST"
-                    action="/api/contact"
-                    class="space-y-6"
-                    noValidate
-                  >
-                    {/* Name + Email row */}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      {/* Floating Label — Name */}
-                      <div class="relative">
-                        <input
-                          type="text"
-                          id="contact-name"
-                          name="name"
-                          placeholder=" "
-                          required
-                          class="peer block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:border-teal-400 focus:bg-white focus:outline-none transition-all duration-200"
-                        />
-                        <label
-                          for="contact-name"
-                          class="absolute left-4 top-2 text-xs text-gray-400 font-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-istay-700"
-                        >
-                          Full Name *
-                        </label>
-                      </div>
+                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-12">
+                     <div class="p-8 bg-gray-50 border-[3px] border-gray-900 rounded-[2rem] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                       <p class="text-[10px] font-950 text-gray-400 uppercase tracking-widest mb-4">WHATSAPP_CHANNEL</p>
+                       <p class="text-xl font-950 text-gray-900">+91 99999 99999</p>
+                     </div>
+                     <div class="p-8 bg-gray-50 border-[3px] border-gray-900 rounded-[2rem] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                       <p class="text-[10px] font-950 text-gray-400 uppercase tracking-widest mb-4">X_SIGNAL</p>
+                       <p class="text-xl font-950 text-gray-900">@ISTAY_OS</p>
+                     </div>
+                   </div>
 
-                      {/* Floating Label — Email */}
-                      <div class="relative">
-                        <input
-                          type="email"
-                          id="contact-email"
-                          name="email"
-                          placeholder=" "
-                          required
-                          class="peer block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:border-teal-400 focus:bg-white focus:outline-none transition-all duration-200"
-                        />
-                        <label
-                          for="contact-email"
-                          class="absolute left-4 top-2 text-xs text-gray-400 font-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-istay-700"
-                        >
-                          Email Address *
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Floating Label — Property Link */}
-                    <div class="relative">
-                      <input
-                        type="url"
-                        id="contact-property"
-                        name="propertyLink"
-                        placeholder=" "
-                        class="peer block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:border-teal-400 focus:bg-white focus:outline-none transition-all duration-200"
-                      />
-                      <label
-                        for="contact-property"
-                        class="absolute left-4 top-2 text-xs text-gray-400 font-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-teal-600"
-                      >
-                        Property URL (e.g., airbnb.com/rooms/12345678)
-                      </label>
-                    </div>
-
-                    {/* Floating Label — Message */}
-                    <div class="relative">
-                      <textarea
-                        id="contact-message"
-                        name="message"
-                        rows={5}
-                        placeholder=" "
-                        required
-                        class="peer block w-full rounded-xl border border-gray-200 bg-gray-50 px-4 pt-5 pb-2 text-sm text-gray-900 placeholder-transparent focus:border-teal-400 focus:bg-white focus:outline-none resize-none transition-all duration-200"
-                      />
-                      <label
-                        for="contact-message"
-                        class="absolute left-4 top-2 text-xs text-gray-400 font-500 transition-all duration-200 peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-teal-600"
-                      >
-                        Message *
-                      </label>
-                    </div>
-
-                    <button
-                      type="submit"
-                      id="contact-submit"
-                      class="w-full py-3.5 rounded-full bg-istay-900 text-white font-600 text-sm shadow-sm hover:bg-istay-800 hover:shadow-md active:scale-95 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
-                    >
-                      Send Message →
-                    </button>
-
-                    <p class="text-[10px] text-gray-400 text-center flex items-center justify-center gap-1">
-                      <span class="w-1.5 h-1.5 rounded-full bg-mint-500 animate-pulse" />
-                      Your data is end-to-end encrypted and used only for response.
-                    </p>
-                    <p class="text-xs text-gray-400 text-center">
-                      By submitting, you agree to our{" "}
-                      <a
-                        href="/legal/privacy"
-                        class="text-teal-600 hover:underline"
-                      >
-                        Privacy Policy
-                      </a>
-                      .
-                    </p>
-                  </form>
-                </div>
+                   <a href="mailto:support@istay.space" class="block w-full py-6 bg-mint-400 text-gray-900 font-950 text-xs uppercase tracking-[0.2em] rounded-2xl border-[4px] border-gray-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center">TRANSMIT_EMAIL_PACKET</a>
+                 </div>
               </div>
             </div>
           </div>

@@ -12,16 +12,10 @@ interface SidebarProps {
   currentPath: string;
 }
 
-const LEGAL_LINKS = [
-  { href: "/legal/terms", label: "Terms & Conditions" },
-  { href: "/legal/privacy", label: "Privacy Policy" },
-];
-
 export default function DashboardSidebar({ currentPath }: SidebarProps) {
   const [activePath, setActivePath] = useState(currentPath);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Sync active state with client-side navigation
   useEffect(() => {
     if (typeof globalThis.location !== "undefined") {
       setActivePath(globalThis.location.pathname);
@@ -36,410 +30,162 @@ export default function DashboardSidebar({ currentPath }: SidebarProps) {
   const NAV_ITEMS: NavItem[] = [
     {
       href: "/dashboard",
-      label: "Overview",
+      label: "OVERVIEW",
       exact: true,
       icon: (
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          aria-hidden="true"
-        >
-          <rect
-            x="2"
-            y="2"
-            width="6"
-            height="6"
-            rx="1.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <rect
-            x="10"
-            y="2"
-            width="6"
-            height="6"
-            rx="1.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <rect
-            x="2"
-            y="10"
-            width="6"
-            height="6"
-            rx="1.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <rect
-            x="10"
-            y="10"
-            width="6"
-            height="6"
-            rx="1.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
         </svg>
       ),
     },
     {
       href: "/dashboard/properties",
-      label: "Properties",
+      label: "PROPERTIES",
       icon: (
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M9 2L2 7.5V16H7V11H11V16H16V7.5L9 2Z"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linejoin="round"
-          />
-        </svg>
-      ),
-    },
-    {
-      href: "/dashboard/knowledge",
-      label: "AI Knowledge",
-      icon: (
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M9 2C6.24 2 4 4.24 4 7C4 8.96 5.08 10.66 6.69 11.52V13.5C6.69 14.05 7.14 14.5 7.69 14.5H10.31C10.86 14.5 11.31 14.05 11.31 13.5V11.52C12.92 10.66 14 8.96 14 7C14 4.24 11.76 2 9 2Z"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M7.5 16.5H10.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-          />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
         </svg>
       ),
     },
     {
       href: "/dashboard/bookings",
-      label: "Bookings",
+      label: "BOOKINGS",
       icon: (
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          aria-hidden="true"
-        >
-          <rect
-            x="2.5"
-            y="3.5"
-            width="13"
-            height="12"
-            rx="1.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <path
-            d="M6 2V5M12 2V5M2.5 7.5H15.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-          />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
         </svg>
       ),
     },
     {
       href: "/dashboard/guests",
-      label: "Guests",
+      label: "GUESTS",
       icon: (
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          aria-hidden="true"
-        >
-          <circle
-            cx="9"
-            cy="6"
-            r="3"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <path
-            d="M3 16C3 13.2386 5.68629 11 9 11C12.3137 11 15 13.2386 15 16"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-          />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
         </svg>
       ),
     },
     {
       href: "/dashboard/billing",
-      label: "Billing & Wallet",
+      label: "WALLET",
       icon: (
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          aria-hidden="true"
-        >
-          <rect
-            x="2"
-            y="4"
-            width="14"
-            height="10"
-            rx="2"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <path
-            d="M2 7H16"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <path
-            d="M12 10.5H13"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <rect x="2" y="5" width="20" height="14" rx="2" />
+          <line x1="2" y1="10" x2="22" y2="10" />
         </svg>
       ),
     },
     {
       href: "/dashboard/settings",
-      label: "Settings",
+      label: "SETTINGS",
       icon: (
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 18 18"
-          fill="none"
-          aria-hidden="true"
-        >
-          <circle
-            cx="9"
-            cy="9"
-            r="2.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-          />
-          <path
-            d="M9 1.5V3M9 15V16.5M16.5 9H15M3 9H1.5M14.364 3.636L13.243 4.757M4.757 13.243L3.636 14.364M14.364 14.364L13.243 13.243M4.757 4.757L3.636 3.636"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-          />
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
         </svg>
       ),
     },
   ];
 
-  const SidebarContent = () => (
-    <div class="flex flex-col h-full bg-slate-900/95 backdrop-blur-xl">
-      {/* Logo */}
-      <div class="flex items-center px-6 h-20 border-b border-white/5 flex-shrink-0">
-        <a
-          href="/"
-          class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95"
-        >
-          <img
-            src="/logo.svg"
-            alt="istay logo"
-            class="h-8 w-auto brightness-0 invert"
-          />
-        </a>
-      </div>
-
-      {/* Navigation */}
-      <nav
-        class="flex-1 overflow-y-auto px-4 py-6 space-y-1"
-        aria-label="Dashboard navigation"
-      >
-        {NAV_ITEMS.map((item) => {
-          const active = isActive(item);
-          return (
-            <a
-              key={item.href}
-              href={item.href}
-              onClick={() => {
-                setActivePath(item.href);
-                setMobileOpen(false);
-              }}
-              aria-current={active ? "page" : undefined}
-              class={`
-                flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-600 transition-all duration-200
-                cursor-pointer border border-transparent
-                ${
-                active
-                  ? "bg-gradient-to-r from-teal-500/20 to-teal-600/10 text-teal-400 border-teal-500/20 shadow-[0_0_20px_rgba(20,184,166,0.1)]"
-                  : "text-gray-400 hover:text-gray-100 hover:bg-white/5 active:bg-white/10"
-              }
-              `}
-            >
-              <span
-                class={active
-                  ? "text-teal-400"
-                  : "text-gray-500 transition-colors group-hover:text-gray-300"}
-              >
-                {item.icon}
-              </span>
-              <span class="flex-1">{item.label}</span>
-              {active && (
-                <div class="w-1.5 h-1.5 rounded-full bg-teal-400 shadow-[0_0_10px_rgba(20,184,166,0.8)]" />
-              )}
-            </a>
-          );
-        })}
-      </nav>
-
-      {/* Bottom Section */}
-      <div class="flex-shrink-0 border-t border-white/5 px-4 py-6 space-y-4 bg-black/20">
-        {/* Legal links */}
-        <div class="px-4">
-          <p class="text-[10px] font-800 uppercase tracking-widest text-gray-500 mb-3 ml-1">
-            Global Compliance
-          </p>
-          <div class="flex flex-wrap gap-x-4 gap-y-1">
-            {LEGAL_LINKS.map(({ href, label }) => (
-              <a
-                key={href}
-                href={href}
-                class="text-[11px] text-gray-500 hover:text-teal-400 transition-colors duration-200"
-              >
-                {label}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Account state badge */}
-        <div class="px-4 mx-2 py-3 rounded-2xl bg-teal-500/5 border border-teal-500/10 group cursor-default">
-          <div class="flex items-center justify-between mb-1">
-            <span class="text-xs text-gray-500 font-500">Service Status</span>
-            <span class="flex h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
-          </div>
-          <p class="text-[11px] font-600 text-gray-400">
-            All Systems Operational
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <>
-      {/* Desktop Sidebar */}
-      <aside
-        class="hidden md:flex flex-shrink-0 w-64 flex-col bg-slate-900 border-r border-white/5 shadow-2xl z-30"
-        aria-label="Sidebar"
+      {/* Mobile Menu Toggle */}
+      <button
+        onClick={() => setMobileOpen(!mobileOpen)}
+        class="lg:hidden fixed top-6 left-6 z-[60] w-12 h-12 bg-gray-900 border-[3px] border-gray-900 rounded-2xl flex items-center justify-center text-mint-400 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all"
+        aria-label="Toggle Menu"
       >
-        <SidebarContent />
-      </aside>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          {mobileOpen ? (
+            <path d="M18 6L6 18M6 6l12 12" />
+          ) : (
+            <path d="M4 8h16M4 16h16" />
+          )}
+        </svg>
+      </button>
 
-      {/* Mobile: Hamburger button */}
-      <div class="md:hidden fixed top-4 left-4 z-50">
-        <button
-          onClick={() => setMobileOpen((v) => !v)}
-          class="flex items-center justify-center w-9 h-9 rounded-xl bg-white border border-gray-200 shadow-sm text-gray-600"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-        >
-          {mobileOpen
-            ? (
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M3 3L13 13M13 3L3 13"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-              </svg>
-            )
-            : (
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M2 4H14M2 8H14M2 12H14"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                />
-              </svg>
-            )}
-        </button>
-      </div>
+      {/* Sidebar Container */}
+      <aside
+        class={`fixed inset-y-0 left-0 z-50 w-[300px] bg-white border-r-[4px] border-gray-900 transition-all duration-300 transform lg:translate-x-0 ${
+          mobileOpen ? "translate-x-0 shadow-[16px_0px_0px_0px_rgba(0,0,0,0.1)]" : "-translate-x-full"
+        } lg:relative flex flex-col h-screen`}
+      >
+        {/* Logo Section */}
+        <div class="p-10 border-b-[4px] border-gray-900">
+          <a href="/dashboard" class="flex items-center gap-3 group">
+            <div class="w-12 h-12 bg-gray-900 border-[3px] border-gray-900 rounded-2xl flex items-center justify-center text-mint-400 shadow-[4px_4px_0px_0px_#4ade80] group-hover:rotate-[-5deg] transition-transform">
+              <span class="text-2xl font-950 italic">i</span>
+            </div>
+            <span class="text-2xl font-950 text-gray-900 tracking-tighter uppercase">iStay_OS</span>
+          </a>
+        </div>
 
-      {/* Mobile Drawer */}
-      {mobileOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            class="md:hidden fixed inset-0 z-40 bg-black/30 backdrop-blur-sm"
-            onClick={() => setMobileOpen(false)}
-            aria-hidden="true"
-          />
-          {/* Drawer */}
-          <aside
-            class="md:hidden fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl flex flex-col"
-            aria-label="Mobile sidebar"
-          >
-            {/* Logo Mobile */}
-            <div class="flex items-center px-6 h-20 border-b border-gray-100 flex-shrink-0">
-              <a href="/" class="flex items-center gap-2">
-                <img src="/logo.svg" alt="istay logo" class="h-8 w-auto" />
+        {/* Navigation Items */}
+        <nav class="flex-1 px-6 py-10 space-y-3 overflow-y-auto no-scrollbar">
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(item);
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                class={`flex items-center gap-4 px-6 py-4 rounded-2xl border-[3px] transition-all group ${
+                  active
+                    ? "bg-gray-900 border-gray-900 text-white shadow-[6px_6px_0px_0px_#4ade80]"
+                    : "bg-white border-transparent text-gray-400 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-900"
+                }`}
+              >
+                <span class={`text-xl transition-transform group-hover:scale-110 ${active ? "text-mint-400" : ""}`}>
+                  {item.icon}
+                </span>
+                <span class="text-[10px] font-950 uppercase tracking-[0.3em]">{item.label}</span>
+              </a>
+            );
+          })}
+        </nav>
+
+        {/* Support Card / Footer */}
+        <div class="p-8 border-t-[4px] border-gray-900 bg-gray-50">
+          <div class="p-6 bg-white border-[3px] border-gray-900 rounded-[2rem] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden group">
+            <div class="relative z-10">
+              <p class="text-[9px] font-950 text-mint-500 uppercase tracking-widest mb-2">SYSTEM_HEALTH</p>
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse border-[1px] border-gray-900" />
+                <p class="text-[10px] font-950 text-gray-900 uppercase">ALL_ENGINES_GO</p>
+              </div>
+              <a
+                href="/support"
+                class="block w-full py-3 bg-gray-900 text-white text-[9px] font-950 uppercase text-center rounded-xl border-[2px] border-gray-900 shadow-[4px_4px_0px_0px_#4ade80] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+              >
+                Get_Support
               </a>
             </div>
+          </div>
+          
+          <div class="mt-8 flex items-center justify-between px-2">
+            <a href="/api/auth/logout" class="text-[10px] font-950 text-gray-400 uppercase tracking-widest hover:text-rose-500 transition-colors">
+              Exit_Kernel
+            </a>
+            <span class="text-[8px] font-900 text-gray-200 uppercase">v2.4.0-BOLD</span>
+          </div>
+        </div>
+      </aside>
 
-            {/* Navigation Mobile */}
-            <nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
-              {NAV_ITEMS.map((item) => {
-                const active = isActive(item);
-                return (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => {
-                      setActivePath(item.href);
-                      setMobileOpen(false);
-                    }}
-                    class={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-600 transition-all ${
-                      active ? "bg-teal-50 text-teal-600" : "text-gray-500 hover:bg-gray-50"
-                    }`}
-                  >
-                    <span>{item.icon}</span>
-                    <span>{item.label}</span>
-                  </a>
-                );
-              })}
-            </nav>
-          </aside>
-        </>
+      {/* Mobile Overlay */}
+      {mobileOpen && (
+        <div
+          onClick={() => setMobileOpen(false)}
+          class="fixed inset-0 z-40 bg-gray-900/40 backdrop-blur-sm lg:hidden"
+        />
       )}
     </>
   );

@@ -760,6 +760,7 @@
   "workspace": {
     "dependencies": [
       "npm:@prisma/adapter-pg@6.4.1",
+      "npm:@prisma/client@6.4.1",
       "npm:pg@8.13.3"
     ],
     "packageJson": {

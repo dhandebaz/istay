@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 1895 notes | Score threshold: >40
+> 2126 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,28 +20,35 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in scratchpad_rfsy3sbo.md
-+ - problem-fix in agent-rul
-- **⚠️ GOTCHA: Fixed null crash in ForgotPasswordForm — improves module reusability** — - import { useSignal } from "@preact/signals";
-+ import { useState } f
-- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: Replaced auth Audit
-+ - ⚠️ GOTCHA: Added JWT tokens aut
-- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: Replaced auth Audit
-+ - ⚠️ GOTCHA: Added JWT tokens aut
-- **⚠️ GOTCHA: Added JWT tokens authentication — introduces API versioning for backward comp...** — - - ⚠️ GOTCHA: problem-fix in agent-rules.md
-+ - ⚠️ GOTCHA: Replaced a
-- **⚠️ GOTCHA: Replaced auth Audit** — - - [x] Audit /register (localhost:8000) - FAILED (Hydration/Render er
+- **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 2096 notes | Score threshold: >40
++ > 2123 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication** — - - ⚠️ GOTCHA: Added JWT tokens authentication — evolves the database 
+- **gotcha in shared-context.json** — -     }
++     },
+-   ]
++     {
+- }
++       "id": "28c26772f4eeb6a0",
++
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in db.ts
++ - problem-fix in agent-rules.md
+- - problem
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 2030 notes | Score threshold: >40
++ > 2096 notes | Score threshold
+- **gotcha in wasm.js** — File updated (external): generated/client/wasm.js
+
+Content summary (39
 
 ## Project Standards
 
-- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 4x
-- Optimized Recreate — confirmed 3x
-- Replaced auth Patched — confirmed 3x
-- Updated schema deno — confirmed 3x
-- Replaced auth Fixed — confirmed 5x
-- Fixed null crash in LoginForm — improves module reusability — confirmed 6x
-- what-changed in deno.json — confirmed 3x
-- what-changed in shared-context.json — confirmed 7x
+- what-changed in shared-context.json — confirmed 9x
+- Strengthened types NotificationFeed — parallelizes async operations for speed
+- problem-fix in agent-rules.md — confirmed 3x
+- what-changed in shared-context.json — confirmed 15x
+- Fixed null crash in Date — parallelizes async operations for speed — confirmed 3x
+- Added JWT tokens authentication — confirmed 4x
+- what-changed in wasm.js — confirmed 3x
+- what-changed in schema.prisma — confirmed 4x
 
 ## Known Fixes
 
@@ -53,10 +60,10 @@
 
 ## Recent Decisions
 
-- decision in MobileMenu.tsx
-- Optimized package — offloads heavy computation off the main thread
-- Optimized package — offloads heavy computation off the main thread
-- decision in shared-context.json
+- Optimized Project — offloads heavy computation off the main thread
+- decision in index.tsx
+- decision in styles.css
+- Optimized Head — optimizes data fetching with relational query instead of N+1...
 
 ## Learned Patterns
 

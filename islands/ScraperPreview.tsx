@@ -8,8 +8,6 @@ export default function ScraperPreview() {
   const [error, setError] = useState<string | null>(null);
   const [showKnowledge, setShowKnowledge] = useState(false);
 
-  const [isHovered, setIsHovered] = useState(false);
-
   const handleScrape = async (e: Event) => {
     e.preventDefault();
     if (!url) return;
@@ -40,152 +38,102 @@ export default function ScraperPreview() {
     <div class="w-full max-w-xl mx-auto">
       {!data
         ? (
-          <form onSubmit={handleScrape} class="relative group">
-            <div class="absolute -inset-1 bg-gradient-to-r from-mint-400 to-emerald-500 rounded-2xl blur opacity-25 group-focus-within:opacity-50 transition duration-1000 group-focus-within:duration-200">
-            </div>
-            <div class="relative flex flex-col sm:flex-row gap-2 bg-white/90 backdrop-blur-xl border border-gray-100 p-2 rounded-2xl shadow-xl">
-              <div class="flex-1 flex items-center gap-3 px-4 py-2.5">
-                <span class="text-xl">🔗</span>
+          <form onSubmit={handleScrape} class="relative">
+            <div class="relative flex flex-col sm:flex-row gap-0 bg-white border-[4px] border-gray-900 rounded-[2rem] shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] overflow-hidden transition-all focus-within:translate-x-[-2px] focus-within:translate-y-[-2px] focus-within:shadow-[16px_16px_0px_0px_rgba(0,0,0,1)]">
+              <div class="flex-1 flex items-center gap-4 px-8 py-5 bg-white border-b-[4px] sm:border-b-0 sm:border-r-[4px] border-gray-900">
+                <span class="text-2xl">🔗</span>
                 <input
                   type="url"
                   value={url}
                   onInput={(e) => setUrl(e.currentTarget.value)}
-                  placeholder="Paste your Property URL..."
-                  class="w-full bg-transparent text-gray-900 font-600 focus:outline-none placeholder:font-400 placeholder:text-gray-400"
+                  placeholder="Paste Airbnb/Booking.com link..."
+                  class="w-full bg-transparent text-gray-900 font-950 uppercase tracking-widest text-xs focus:outline-none placeholder:text-gray-300"
                   required
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                class="px-8 py-3 rounded-xl bg-mint-500 text-istay-900 font-800 transition-all hover:bg-mint-400 active:scale-95 disabled:opacity-50"
+                class="px-10 py-5 bg-mint-400 text-gray-900 font-950 uppercase tracking-[0.2em] text-xs transition-all hover:bg-white active:translate-x-[1px] active:translate-y-[1px] disabled:opacity-50"
               >
-                {loading ? "Scraping..." : "Try it Free"}
+                {loading ? "PROCESSING..." : "IMPORT_VIBE"}
               </button>
             </div>
             {error && (
-              <p class="mt-4 text-sm font-600 text-rose-500 text-center animate-shake">
-                ⚠️ {error}
-              </p>
-            )}
-            
-            {/* Play/Hover indicator */}
-            <div 
-              class="absolute -top-12 -right-6 md:-right-12 text-mint-500 opacity-60 flex flex-col items-center animate-bounce"
-              style={{ display: "none" /* Decorative element for user context */ }}
-            >
-              <div class="w-10 h-10 bg-mint-100 rounded-full flex items-center justify-center">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              <div class="mt-6 p-6 bg-rose-50 border-[3px] border-rose-900 rounded-2xl shadow-[6px_6px_0px_0px_#9f1239] animate-shake">
+                <p class="text-[10px] font-950 text-rose-900 uppercase tracking-widest flex items-center gap-3">
+                  <span class="text-lg">⚠️</span> PROTOCOL_ERROR: {error}
+                </p>
               </div>
-              <span class="text-xs font-700 mt-1 uppercase tracking-widest">Magic</span>
-            </div>
+            )}
           </form>
         )
         : (
           <div class="animate-scale-in">
-            <div class="relative bg-white rounded-3xl border border-gray-100 shadow-2xl overflow-hidden group">
+            <div class="relative bg-white rounded-[3rem] border-[4px] border-gray-900 shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] overflow-hidden group">
               {/* istay Branding Ribbon */}
-              <div class="absolute top-4 right-4 z-10">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-mint-500 text-istay-900 text-[10px] font-900 uppercase tracking-widest shadow-lg">
-                  <span class="w-1.5 h-1.5 rounded-full bg-istay-900 animate-pulse" />
-                  istay Verified
+              <div class="absolute top-8 right-8 z-10">
+                <span class="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.2em] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] border-[3px] border-gray-900">
+                  <span class="w-2.5 h-2.5 rounded-full bg-mint-400 animate-pulse" />
+                  AI_SYNTHESIZED
                 </span>
               </div>
 
-              <div class="aspect-video bg-gray-100 overflow-hidden">
+              <div class="aspect-video bg-gray-100 overflow-hidden border-b-[4px] border-gray-900">
                 <img
                   src={data.imageUrl}
                   alt={data.name}
-                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  class="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-700"
                 />
               </div>
 
-              <div class="p-8">
-                <h3 class="text-xl font-800 text-gray-900 leading-tight">
+              <div class="p-10 sm:p-12">
+                <h3 class="text-3xl font-950 text-gray-900 leading-[1] uppercase tracking-tighter mb-6">
                   {data.name}
                 </h3>
-                <p class="mt-3 text-sm text-gray-500 line-clamp-2 leading-relaxed">
+                <p class="text-xs text-gray-500 font-800 uppercase tracking-widest line-clamp-3 leading-relaxed mb-10">
                   {data.description}
                 </p>
 
-                {/* ── Amenities Badges ─────────────────────────── */}
+                {/* Amenities Badges */}
                 {data.amenities && data.amenities.length > 0 && (
-                  <div class="mt-5 flex flex-wrap gap-2">
-                    {data.amenities.map((amenity, i) => (
-                      <span
-                        key={i}
-                        class="px-3 py-1 rounded-full bg-teal-50 border border-teal-100 text-[11px] font-700 text-teal-700"
-                      >
-                        {amenity}
+                  <div class="flex flex-wrap gap-3 mb-10">
+                    {data.amenities.slice(0, 4).map((a) => (
+                      <span key={a} class="px-4 py-2 bg-gray-50 border-[2px] border-gray-900 rounded-xl text-[9px] font-950 text-gray-900 uppercase tracking-widest shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                        {a}
                       </span>
                     ))}
-                  </div>
-                )}
-
-                {/* ── AI Knowledge Preview ─────────────────────── */}
-                {data.aiKnowledge && (
-                  <div class="mt-5">
-                    <button
-                      type="button"
-                      onClick={() => setShowKnowledge(!showKnowledge)}
-                      class="flex items-center gap-2 text-xs font-700 text-istay-600 hover:text-istay-800 transition-colors"
-                    >
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        class={`transition-transform ${
-                          showKnowledge ? "rotate-90" : ""
-                        }`}
-                      >
-                        <path d="M9 18l6-6-6-6" />
-                      </svg>
-                      AI Knowledge Base Preview
-                    </button>
-
-                    {showKnowledge && (
-                      <div class="mt-3 p-4 rounded-xl bg-gray-50 border border-gray-100 max-h-48 overflow-y-auto">
-                        <pre class="text-xs text-gray-600 whitespace-pre-wrap font-mono leading-relaxed">
-                        {data.aiKnowledge}
-                        </pre>
-                      </div>
+                    {data.amenities.length > 4 && (
+                      <span class="px-4 py-2 bg-mint-50 border-[2px] border-mint-900 rounded-xl text-[9px] font-950 text-mint-900 uppercase tracking-widest">
+                        +{data.amenities.length - 4}_MORE
+                      </span>
                     )}
                   </div>
                 )}
 
-                <div class="mt-8 pt-8 border-t border-gray-50 flex flex-col sm:flex-row items-center justify-between gap-6">
-                  <div>
-                    <p class="text-[10px] font-800 text-gray-400 uppercase tracking-[0.2em] mb-1">
-                      Your direct price
-                    </p>
-                    <p class="text-2xl font-900 text-teal-600">
-                      ₹ 4,750{" "}
-                      <span class="text-sm font-600 text-gray-400">
-                        / night
-                      </span>
-                    </p>
-                  </div>
-                  <a
-                    href={`/register?importUrl=${encodeURIComponent(url)}`}
-                    class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-[#0d9488] text-white font-900 text-base hover:bg-[#0f766e] transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group"
-                  >
-                    Import to Dashboard
-                    <span class="group-hover:translate-x-1 transition-transform">
-                      →
-                    </span>
-                  </a>
+                <div class="pt-10 border-t-[3px] border-gray-100 flex items-center justify-between gap-6">
+                   <button 
+                    onClick={() => setShowKnowledge(!showKnowledge)}
+                    class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.2em] hover:text-gray-900 transition-colors"
+                   >
+                     {showKnowledge ? "[ HIDE_LOGIC ]" : "[ VIEW_AI_LOGIC ]"}
+                   </button>
+                   <button 
+                    onClick={() => setData(null)}
+                    class="px-8 py-3 bg-gray-900 text-white text-[10px] font-950 uppercase tracking-widest rounded-xl border-[3px] border-gray-900 shadow-[4px_4px_0px_0px_#4ade80] active:translate-x-[1px] active:translate-y-[1px]"
+                   >
+                     RESET_CORE
+                   </button>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setData(null)}
-                  class="mt-6 w-full text-xs flex justify-center items-center font-700 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  ← Import a different link
-                </button>
+                {showKnowledge && data.aiKnowledge && (
+                   <div class="mt-10 p-8 bg-gray-50 border-[4px] border-gray-900 rounded-[2rem] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] animate-slide-up">
+                      <p class="text-[9px] font-950 text-mint-600 uppercase tracking-[0.3em] mb-6">AI_KNOWLEDGE_KERNEL</p>
+                      <div class="text-[11px] font-800 text-gray-500 uppercase leading-loose font-mono whitespace-pre-wrap">
+                        {data.aiKnowledge}
+                      </div>
+                   </div>
+                )}
               </div>
             </div>
           </div>

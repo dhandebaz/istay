@@ -44,174 +44,65 @@ export default function DashboardLayout(
   const unreadCount = data?.unreadCount ?? 0;
 
   return (
-    <div class="flex h-screen overflow-hidden bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden bg-white font-sans selection:bg-mint-400 selection:text-gray-900">
       {/* ── Sidebar ──────────────────────────────────────────── */}
       <DashboardSidebar currentPath={currentPath} />
 
       {/* ── Main Panel ───────────────────────────────────────── */}
-      <div class="flex flex-col flex-1 overflow-hidden">
-        {/* Legal Update Banner */}
-        <div class="bg-istay-900 px-6 py-2.5 flex items-center justify-between shadow-md z-10 overflow-hidden relative group">
-          <div class="absolute inset-0 bg-gradient-to-r from-mint-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
-          <div class="flex items-center gap-3 relative z-10">
-            <span class="flex-shrink-0 text-mint-500">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-            </span>
-            <p class="text-[11px] font-700 text-white tracking-wide uppercase">
-              <span class="text-mint-500">Updated:</span> Our host agreement and direct booking terms were updated on April 15, 2026.
-            </p>
+      <div class="flex flex-col flex-1 overflow-hidden relative">
+        {/* Top Header */}
+        <header class="flex-shrink-0 bg-white border-b-[4px] border-gray-900 px-8 py-5 flex items-center justify-between z-20">
+          <div class="flex items-center gap-4">
+            <h1 class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.4em]">
+              ISTAY_CORE // {currentPath.split("/").pop()?.toUpperCase() || "OVERVIEW"}
+            </h1>
           </div>
-          <a
-            href="/legal/terms"
-            class="relative z-10 text-[10px] font-900 bg-white/10 text-white px-3 py-1 rounded-full border border-white/20 hover:bg-white hover:text-istay-900 transition-all uppercase tracking-widest"
-          >
-            Review Changes
-          </a>
-        </div>
 
-        {/* Email Verification Banner */}
-        {state?.emailVerified === false && (
-          <div class="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center justify-between shadow-sm z-10 transition-all">
-            <div class="flex items-center gap-3">
-              <span class="flex-shrink-0 text-amber-500">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
-                  </path>
-                  <line x1="12" y1="9" x2="12" y2="13"></line>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          <div class="flex items-center gap-6">
+            {/* Notifications */}
+            <a href="/dashboard/notifications" class="relative group">
+              <div class="w-11 h-11 rounded-2xl border-[3px] border-gray-900 flex items-center justify-center transition-all group-hover:bg-mint-400 group-hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
                 </svg>
-              </span>
-              <div>
-                <p class="text-sm font-700 text-amber-900">
-                  Email Verification Required
-                </p>
-                <p class="text-xs text-amber-700 mt-0.5">
-                  Please check your inbox and verify your email to fully
-                  activate your live booking links.
-                </p>
+                {unreadCount > 0 && (
+                  <span class="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 rounded-full text-[10px] text-white flex items-center justify-center font-bold">
+                    {unreadCount}
+                  </span>
+                )}
               </div>
-            </div>
-            {/* Resend button */}
-            <ResendVerificationBtn email={state.hostEmail} name={hostName} />
-          </div>
-        )}
-
-        {/* Top Bar */}
-        <header class="flex-shrink-0 h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 shadow-sm">
-          {/* Page breadcrumb */}
-          <div class="flex items-center gap-2.5 min-w-0">
-            <div class="hidden md:flex items-center gap-1.5 text-sm text-gray-400">
-              <span class="text-istay-900 font-700">istay</span>
-              <span aria-hidden="true">/</span>
-              <span class="text-gray-600 font-500 capitalize">
-                {currentPath.split("/").filter(Boolean).slice(-1)[0] ||
-                  "overview"}
-              </span>
-            </div>
-          </div>
-
-          {/* Right side — Host info + actions */}
-          <div class="flex items-center gap-3">
-            {/* Notification bell */}
-            <a
-              href="/dashboard/bookings"
-              class="relative p-2 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors duration-150"
-              aria-label={`Notifications${
-                unreadCount > 0 ? ` (${unreadCount} unread)` : ""
-              }`}
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M9 1.5C6.51 1.5 4.5 3.51 4.5 6V10.5L3 12V12.75H15V12L13.5 10.5V6C13.5 3.51 11.49 1.5 9 1.5ZM9 16.5C9.825 16.5 10.5 15.825 10.5 15H7.5C7.5 15.825 8.175 16.5 9 16.5Z"
-                  fill="currentColor"
-                />
-              </svg>
-              {/* Indicator dot — only shown when there are unread notifications */}
-              {unreadCount > 0 && (
-                <span
-                  class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-mint-500 ring-2 ring-white"
-                  aria-hidden="true"
-                />
-              )}
             </a>
 
-            {/* Divider */}
-            <div class="w-px h-6 bg-gray-100" aria-hidden="true" />
-
-            {/* Host Avatar + Name */}
-            <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-istay-900 to-istay-700 flex items-center justify-center text-white text-sm font-700 shadow-sm">
+            {/* Profile */}
+            <div class="flex items-center gap-4 pl-6 border-l-[3px] border-gray-100">
+              <p class="text-[10px] font-950 text-gray-900 uppercase tracking-tighter">{hostName}</p>
+              <div class="w-11 h-11 rounded-2xl bg-gray-900 border-[3px] border-gray-900 flex items-center justify-center text-mint-400 font-950 text-base">
                 {hostInitial}
               </div>
-              <div class="hidden sm:block">
-                <p class="text-sm font-600 text-gray-800 leading-tight">
-                  {hostName}
-                </p>
-                <div class="flex items-center gap-1.5 mt-0.5">
-                  <p class="text-[10px] bg-istay-50 text-istay-600 px-1.5 py-0.5 rounded border border-istay-100 uppercase tracking-tighter font-800 leading-none">
-                    {state?.plan === "lifetime" ? "Lifetime" : "SaaS"}
-                  </p>
-                  <p class="text-[10px] bg-mint-50 text-mint-700 px-1.5 py-0.5 rounded border border-mint-100 uppercase tracking-tighter font-800 leading-none">
-                    ₹{state?.walletBalance?.toFixed(2) ?? "0.00"} Cr
-                  </p>
-                </div>
-              </div>
             </div>
-
-            {/* Logout */}
-            <a
-              href="/api/auth/logout"
-              class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-500 text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors duration-150"
-              aria-label="Sign out"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M5.25 12.25H2.625C2.279 12.25 2 11.971 2 11.625V2.375C2 2.029 2.279 1.75 2.625 1.75H5.25M9.625 10L12.25 7M12.25 7L9.625 4M12.25 7H5.25"
-                  stroke="currentColor"
-                  stroke-width="1.25"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              Sign out
-            </a>
           </div>
         </header>
 
-        {/* Main Content Area */}
-        <main class="flex-1 overflow-y-auto">
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 lg:py-8">
-            <ErrorBoundary>
-              <Component />
-            </ErrorBoundary>
-          </div>
+        {/* ── Content Viewport ─────────────────────────────────── */}
+        <main class="flex-1 overflow-y-auto px-8 py-10 relative">
+          {/* Verification Banner */}
+          {!state.emailVerified && (
+            <div class="mb-10 p-6 bg-rose-50 border-[4px] border-gray-900 rounded-[2.5rem] shadow-[8px_8px_0px_0px_#9f1239] flex flex-col sm:flex-row items-center justify-between gap-6 animate-pulse">
+              <div class="flex items-center gap-5 text-center sm:text-left">
+                <span class="text-3xl">🛡️</span>
+                <div>
+                  <p class="text-sm font-950 text-rose-900 uppercase tracking-tighter leading-none mb-1">UNVERIFIED ENGINE</p>
+                  <p class="text-[10px] font-800 text-rose-700/60 uppercase tracking-widest">Verify your profile to unlock the AI concierge and payments.</p>
+                </div>
+              </div>
+              <ResendVerificationBtn email={state.hostEmail} name={hostName} />
+            </div>
+          )}
+
+          <ErrorBoundary>
+            <Component />
+          </ErrorBoundary>
         </main>
       </div>
     </div>

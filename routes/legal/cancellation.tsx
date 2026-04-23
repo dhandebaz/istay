@@ -2,13 +2,13 @@ import { Head } from "$fresh/runtime.ts";
 import Header from "../../islands/Header.tsx";
 import Footer from "../../components/Footer.tsx";
 
-const LAST_UPDATED = "April 11, 2026";
+const LAST_UPDATED = "APRIL 11, 2026";
 
 export default function Cancellation() {
   return (
     <>
       <Head>
-        <title>Cancellation & Refund Policy | istay</title>
+        <title>Refund Logic | iStay</title>
         <meta
           name="description"
           content="istay Cancellation & Refund Policy. The ₹1,000 Host setup fee is non-refundable. Guest booking refunds are subject to each Host's individual policy."
@@ -16,7 +16,7 @@ export default function Cancellation() {
         <meta property="og:type" content="website" />
         <meta
           property="og:title"
-          content="Cancellation & Refund Policy | istay"
+          content="Refund Logic | istay"
         />
         <meta
           property="og:description"
@@ -27,171 +27,90 @@ export default function Cancellation() {
 
       <Header />
 
-      <main class="py-16 sm:py-24">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="mb-10 pb-8 border-b border-gray-100">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-600 uppercase tracking-wider mb-4">
-              Legal
+      <main class="bg-white pt-32 pb-24 selection:bg-mint-400">
+        {/* Page Header */}
+        <section class="max-w-7xl mx-auto px-5 sm:px-8 mb-20">
+          <div class="flex items-center gap-4 mb-8">
+            <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.2em] rounded-full border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80]">
+              REFUND_LOGIC
             </div>
-            <h1 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight">
-              Cancellation & Refund Policy
-            </h1>
-            <p class="mt-3 text-sm text-gray-400">
-              Last updated: {LAST_UPDATED} · Operated by istay
-            </p>
+            <div class="h-[2px] flex-1 bg-gray-100" />
           </div>
+          
+          <h1 class="text-5xl sm:text-7xl font-950 text-gray-900 tracking-tighter uppercase leading-[0.85] mb-8">
+            REVERSAL_<br />
+            <span class="text-mint-500">PROTOCOLS.</span>
+          </h1>
+          <p class="text-xs text-gray-400 font-800 uppercase tracking-widest">
+            LAST_REVISION: {LAST_UPDATED} // OPERATED_BY_ISTAY
+          </p>
+        </section>
 
-          <div class="prose-legal">
-            <p>
-              This Cancellation & Refund Policy applies to all transactions
-              processed through the istay platform, operated by Sheikh Arsalan
-              Ullah Chishti (istay). Please read this policy carefully before
-              making any payment.
-            </p>
-
-            {/* Section A */}
-            <div class="my-8 rounded-2xl border-l-4 border-teal-400 bg-teal-50 px-6 py-5">
-              <h2 class="!mt-0 !text-teal-800">
-                A. Host SaaS Subscription Fees
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-3 gap-16">
+          {/* Commitment Sidebar */}
+          <aside class="lg:col-span-1">
+            <div class="sticky top-40 bg-rose-50 border-[4px] border-gray-900 rounded-[2.5rem] p-10 shadow-[12px_12px_0px_0px_#f43f5e]">
+              <h2 class="text-gray-900 font-950 text-xl uppercase tracking-tighter mb-8 flex items-center gap-3">
+                <span class="text-2xl">⚠️</span>
+                CRITICAL_INFO
               </h2>
-              <p class="!text-teal-700">
-                This section applies to fees paid by property owners and
-                managers ("Hosts") for access to the istay platform.
+              <ul class="space-y-6">
+                {[
+                  "Host setup fees (₹1,000) are strictly non-reversible.",
+                  "Guest booking refunds are governed by host-specific policies.",
+                  "iStay protocol fees (5%) follow host refund logic.",
+                  "Transaction disputes are resolved via Easebuzz arbitration."
+                ].map((item) => (
+                  <li class="flex items-start gap-4">
+                    <span class="w-2 h-2 rounded-full bg-rose-500 mt-2 shrink-0" />
+                    <p class="text-[10px] font-950 text-gray-900 uppercase tracking-widest leading-relaxed">
+                      {item}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+
+          {/* Main Cancellation Content */}
+          <div class="lg:col-span-2 space-y-16">
+            <div class="prose-brutalist">
+              <section class="space-y-8">
+                <h2 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">01. HOST_SUBSCRIPTION</h2>
+                
+                <div class="p-8 bg-gray-900 rounded-3xl border-[3px] border-gray-900 shadow-[8px_8px_0px_0px_#4ade80]">
+                  <h3 class="text-xs font-950 text-mint-400 uppercase tracking-[0.2em] mb-4">SETUP_FEE (₹1,000)</h3>
+                  <p class="text-sm text-gray-300 font-700 leading-relaxed uppercase tracking-tight">
+                    THE ONE-TIME PLATFORM SETUP FEE IS NON-REFUNDABLE ONCE ACCOUNT ACTIVATION IS FINALIZED. THIS COVERS PROVISIONING AND INFRASTRUCTURE OVERHEAD.
+                  </p>
+                </div>
+
+                <p class="text-sm text-gray-500 font-600 leading-relaxed">
+                  <strong>Exception Clause:</strong> If iStay fails to activate the system within 3 business days of payment without technical cause from the host side, a full reversal may be requested within 7 days of the transaction.
+                </p>
+              </section>
+
+              <section class="space-y-6 pt-16 border-t-[4px] border-gray-100">
+                <h2 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">02. PROTOCOL_FEE_REVERSAL</h2>
+                <p class="text-sm text-gray-500 font-600 leading-relaxed">
+                  The 5% infrastructure fee is linked to the primary transaction. If a host initiates a full guest refund, the iStay protocol fee will also be credited back to the host's settlement account, minus any gateway processing charges levied by Easebuzz.
+                </p>
+              </section>
+
+              <section class="space-y-6 pt-16 border-t-[4px] border-gray-100">
+                <h2 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">03. GUEST_CANCELLATIONS</h2>
+                <p class="text-sm text-gray-500 font-600 leading-relaxed">
+                  iStay is a software layer. Refund eligibility for guests is determined by the specific cancellation policy configured by the Host for each property. Guests must initiate refund requests through the Host's dashboard or support coordinates.
+                </p>
+              </section>
+            </div>
+            
+            <div class="p-10 bg-gray-50 rounded-[2.5rem] border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+              <p class="text-[10px] font-950 text-gray-900 uppercase tracking-[0.3em] mb-4">ARBITRATION_SIGNAL</p>
+              <p class="text-sm text-gray-700 font-700 leading-relaxed">
+                ALL DISPUTES ARE SUBJECT TO THE JURISDICTION OF NEW DELHI COURTS. iSTAY ACTS AS A NEUTRAL TECHNOLOGY FACILITATOR IN ALL FINANCIAL REVERSAL PROCESSES.
               </p>
             </div>
-
-            <h2>A1. One-Time Setup Fee (₹1,000)</h2>
-            <p>
-              The ₹1,000 one-time platform setup fee is{" "}
-              <strong>strictly non-refundable</strong>{" "}
-              once your account has been activated and your booking page has
-              been made live. This fee covers the cost of account provisioning,
-              system configuration, onboarding support, and lifetime access to
-              the platform.
-            </p>
-            <p>
-              <strong>Exception:</strong>{" "}
-              If istay fails to activate your account within 3 business days of
-              payment and no technical issues are attributable to the Host, you
-              may request a full refund within 7 days of payment by emailing
-              {" "}
-              <a href="mailto:support@istay.space">support@istay.space</a>{" "}
-              with your payment reference number.
-            </p>
-
-            <h2>A2. Transaction Commission (5%)</h2>
-            <p>
-              The 5% per-booking commission is deducted automatically at
-              settlement and is non-refundable once a booking has been confirmed
-              and funds have been settled. If a booking is cancelled and the
-              Guest receives a refund per the Host's cancellation policy, the 5%
-              commission will also be refunded to the Host's settlement account.
-            </p>
-
-            <h2>A3. Account Cancellation by Host</h2>
-            <p>
-              Hosts may close their account at any time by contacting
-              support@istay.space. Closure of the account does not entitle the
-              Host to a refund of any setup fees already paid. Any pending
-              settlements for confirmed bookings will be processed as normal
-              before the account is deactivated.
-            </p>
-
-            {/* Section B */}
-            <div class="my-8 rounded-2xl border-l-4 border-amber-400 bg-amber-50 px-6 py-5">
-              <h2 class="!mt-0 !text-amber-800">
-                B. Guest Booking Refunds
-              </h2>
-              <p class="!text-amber-700">
-                This section applies to travellers and guests who have booked
-                accommodation through an istay-powered booking page.
-              </p>
-            </div>
-
-            <h2>B1. Host-Determined Policies</h2>
-            <p>
-              <strong>
-                istay is a technology platform — we are not the accommodation
-                provider.
-              </strong>{" "}
-              Each Host independently sets their own cancellation and refund
-              policy for guest bookings. The applicable policy (e.g., Flexible,
-              Moderate, Strict) is displayed prominently on each booking page
-              before payment is taken.
-            </p>
-            <p>
-              Guest refund eligibility — including whether a full, partial, or
-              zero refund applies — is entirely determined by the individual
-              Host's announced policy at the time of booking.
-            </p>
-
-            <h2>B2. Requesting a Guest Refund</h2>
-            <p>To request a refund for a guest booking, Guests should:</p>
-            <ul>
-              <li>
-                First contact the Host directly at the email address provided in
-                their booking confirmation.
-              </li>
-              <li>
-                If the Host is unresponsive within 48 hours or a dispute arises,
-                Guests may escalate to{" "}
-                <a href="mailto:support@istay.space">support@istay.space</a>
-                {" "}
-                with their booking reference number and details of the issue.
-              </li>
-            </ul>
-            <p>
-              istay will mediate in good faith but final refund decisions for
-              guest bookings rest with the Host, consistent with their declared
-              policy.
-            </p>
-
-            <h2>B3. Refund Processing Timeline</h2>
-            <p>
-              Approved refunds are processed within{" "}
-              <strong>5–7 business days</strong>{" "}
-              of confirmation. Refunds are credited to the original payment
-              method used at the time of booking. Processing timelines may vary
-              depending on the Guest's bank.
-            </p>
-
-            <h2>C. Chargebacks & Disputes</h2>
-            <p>
-              Unauthorised chargebacks initiated without first attempting
-              resolution through istay support may result in account suspension
-              and recovery of disputed amounts plus processing fees. We
-              encourage all parties to resolve disputes amicably through our
-              support channel first.
-            </p>
-
-            <h2>D. Contact</h2>
-            <p>
-              For cancellation or refund requests, please email{" "}
-              <a href="mailto:support@istay.space">support@istay.space</a>{" "}
-              with your order/booking reference number. Our team responds within
-              24–48 business hours.
-            </p>
-          </div>
-
-          <div class="mt-12 pt-6 border-t border-gray-100 flex flex-wrap gap-4 text-xs text-gray-400">
-            <a
-              href="/legal/terms"
-              class="hover:text-teal-600 transition-colors"
-            >
-              Terms & Conditions
-            </a>
-            <a
-              href="/legal/privacy"
-              class="hover:text-teal-600 transition-colors"
-            >
-              Privacy Policy
-            </a>
-            <a
-              href="/legal/shipping"
-              class="hover:text-teal-600 transition-colors"
-            >
-              Shipping Policy
-            </a>
           </div>
         </div>
       </main>

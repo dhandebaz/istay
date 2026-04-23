@@ -1,9 +1,5 @@
 // ================================================================
 // islands/LinkPerformanceChart.tsx — 7-Day Views vs Bookings Chart
-//
-// Pure CSS bar chart rendered as a Preact island.
-// Uses the Electric Mint (#00E676) accent for views bars and
-// purple for bookings bars. Zero external dependencies.
 // ================================================================
 
 interface DayData {
@@ -23,129 +19,86 @@ export default function LinkPerformanceChart({
   totalViews,
   totalBookings,
 }: LinkPerformanceChartProps) {
-  // Find the max value for scaling bars
   const maxVal = Math.max(
     ...data.map((d) => Math.max(d.views, d.bookings)),
-    1, // prevent division by zero
+    1, 
   );
 
   const conversionRate = totalViews > 0
     ? ((totalBookings / totalViews) * 100).toFixed(1)
     : "0.0";
 
-  // Format date to short day name
   const formatDay = (iso: string) => {
     const d = new Date(iso + "T00:00:00");
-    return d.toLocaleDateString("en-IN", { weekday: "short" });
+    return d.toLocaleDateString("en-IN", { weekday: "short" }).toUpperCase();
   };
 
   const formatDateShort = (iso: string) => {
     const d = new Date(iso + "T00:00:00");
-    return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+    return d.toLocaleDateString("en-IN", { day: "numeric", month: "short" }).toUpperCase();
   };
 
   return (
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+    <div class="bg-white rounded-[2.5rem] border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] p-10 h-full flex flex-col group transition-all">
       {/* Header */}
-      <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center justify-between mb-12">
         <div>
-          <h3 class="text-base font-700 text-gray-900">Link Performance</h3>
-          <p class="text-xs text-gray-400 mt-0.5">
-            Views vs Bookings — Last 7 days
-          </p>
+           <div class="flex items-center gap-3 mb-2">
+             <div class="px-3 py-0.5 bg-gray-900 text-mint-400 text-[8px] font-950 uppercase tracking-[0.2em] rounded border-2 border-gray-900 shadow-[2px_2px_0px_0px_#4ade80]">TRAFFIC_ANALYSIS</div>
+           </div>
+           <h3 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter">Signal_Performance</h3>
         </div>
 
-        {/* Summary pills */}
-        <div class="flex items-center gap-3">
-          <div class="flex items-center gap-1.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-mint-500" />
-            <span class="text-xs font-600 text-gray-600">
-              {totalViews} views
-            </span>
+        <div class="flex items-center gap-6">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded bg-mint-500 border-2 border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" />
+            <span class="text-[9px] font-950 text-gray-400 uppercase tracking-widest">{totalViews}_VIEWS</span>
           </div>
-          <div class="flex items-center gap-1.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-purple-500" />
-            <span class="text-xs font-600 text-gray-600">
-              {totalBookings} bookings
-            </span>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded bg-purple-500 border-2 border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" />
+            <span class="text-[9px] font-950 text-gray-400 uppercase tracking-widest">{totalBookings}_CONV</span>
           </div>
         </div>
       </div>
 
       {/* Chart Grid */}
-      <div class="relative">
-        {/* Horizontal grid lines */}
-        <div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+      <div class="relative flex-1 min-h-[220px] flex flex-col justify-end">
+        <div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-14">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} class="border-b border-gray-50 w-full h-0" />
+            <div key={i} class="border-b-[2px] border-gray-50 w-full h-0" />
           ))}
         </div>
 
         {/* Bars */}
-        <div class="relative flex items-end justify-between gap-2 sm:gap-4 h-44">
+        <div class="relative flex items-end justify-between gap-4 h-48 pb-10">
           {data.map((day) => {
             const viewsHeight = maxVal > 0 ? (day.views / maxVal) * 100 : 0;
-            const bookingsHeight = maxVal > 0
-              ? (day.bookings / maxVal) * 100
-              : 0;
+            const bookingsHeight = maxVal > 0 ? (day.bookings / maxVal) * 100 : 0;
 
             return (
-              <div
-                key={day.date}
-                class="flex-1 flex flex-col items-center gap-1 group"
-              >
-                {/* Bar Cluster */}
-                <div class="flex items-end gap-1 w-full justify-center h-36">
-                  {/* Views bar */}
+              <div key={day.date} class="flex-1 flex flex-col items-center gap-4 group/bar">
+                <div class="flex items-end gap-1.5 w-full justify-center h-full">
                   <div
-                    class="w-3 sm:w-4 rounded-t-md transition-all duration-500 ease-out relative group-hover:opacity-90"
-                    style={{
-                      height: `${Math.max(viewsHeight, 3)}%`,
-                      background:
-                        "linear-gradient(180deg, #00E676 0%, #00b35c 100%)",
-                      boxShadow: viewsHeight > 0
-                        ? "0 2px 8px rgba(0, 230, 118, 0.25)"
-                        : "none",
-                    }}
-                    title={`${day.views} views`}
+                    class="w-4 sm:w-6 rounded-t-lg bg-mint-400 border-[2px] border-gray-900 shadow-[4px_0px_0px_0px_rgba(0,0,0,1)] transition-all duration-700 animate-grow"
+                    style={{ height: `${Math.max(viewsHeight, 5)}%` }}
                   >
-                    {/* Hover tooltip */}
-                    <div class="absolute -top-7 left-1/2 -translate-x-1/2 hidden group-hover:block">
-                      <span class="px-1.5 py-0.5 rounded bg-gray-800 text-white text-[9px] font-700 whitespace-nowrap shadow-lg">
-                        {day.views}
-                      </span>
+                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 hidden group-hover/bar:block z-10">
+                      <span class="px-2 py-1 rounded bg-gray-900 text-white text-[8px] font-950 uppercase tracking-widest shadow-[3px_3px_0px_0px_#4ade80]">{day.views}</span>
                     </div>
                   </div>
-
-                  {/* Bookings bar */}
                   <div
-                    class="w-3 sm:w-4 rounded-t-md transition-all duration-500 ease-out relative group-hover:opacity-90"
-                    style={{
-                      height: `${Math.max(bookingsHeight, 3)}%`,
-                      background:
-                        "linear-gradient(180deg, #a855f7 0%, #7c3aed 100%)",
-                      boxShadow: bookingsHeight > 0
-                        ? "0 2px 8px rgba(168, 85, 247, 0.25)"
-                        : "none",
-                    }}
-                    title={`${day.bookings} bookings`}
+                    class="w-4 sm:w-6 rounded-t-lg bg-purple-400 border-[2px] border-gray-900 shadow-[4px_0px_0px_0px_rgba(0,0,0,1)] transition-all duration-700 animate-grow-delay"
+                    style={{ height: `${Math.max(bookingsHeight, 5)}%` }}
                   >
-                    <div class="absolute -top-7 left-1/2 -translate-x-1/2 hidden group-hover:block">
-                      <span class="px-1.5 py-0.5 rounded bg-gray-800 text-white text-[9px] font-700 whitespace-nowrap shadow-lg">
-                        {day.bookings}
-                      </span>
+                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 hidden group-hover/bar:block z-10">
+                      <span class="px-2 py-1 rounded bg-gray-900 text-white text-[8px] font-950 uppercase tracking-widest shadow-[3px_3px_0px_0px_#a855f7]">{day.bookings}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Day label */}
-                <div class="text-center mt-1">
-                  <p class="text-[10px] font-700 text-gray-500 leading-none">
-                    {formatDay(day.date)}
-                  </p>
-                  <p class="text-[8px] text-gray-300 mt-0.5">
-                    {formatDateShort(day.date)}
-                  </p>
+                <div class="text-center">
+                  <p class="text-[9px] font-950 text-gray-400 uppercase tracking-widest group-hover/bar:text-gray-900 transition-colors">{formatDay(day.date)}</p>
+                  <p class="text-[7px] text-gray-300 font-950 uppercase mt-1">{formatDateShort(day.date)}</p>
                 </div>
               </div>
             );
@@ -153,42 +106,28 @@ export default function LinkPerformanceChart({
         </div>
       </div>
 
-      {/* Conversion Rate Footer */}
-      <div class="mt-5 pt-4 border-t border-gray-50 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-mint-50 to-emerald-50 flex items-center justify-center">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M2 11L6 7L9 10L14 4"
-                stroke="#00E676"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M10 4H14V8"
-                stroke="#00E676"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <div>
-            <p class="text-xs font-700 text-gray-900">
-              {conversionRate}% Conversion
-            </p>
-            <p class="text-[10px] text-gray-400">Views → Bookings</p>
-          </div>
-        </div>
-        <span class="text-[10px] text-gray-300 font-500">Updated live</span>
+      {/* Footer */}
+      <div class="mt-8 pt-8 border-t-[3px] border-gray-50 flex items-center justify-between">
+         <div class="flex items-center gap-5">
+           <div class="w-12 h-12 rounded-2xl bg-gray-900 border-[2px] border-gray-900 flex items-center justify-center shadow-[4px_4px_0px_0px_#4ade80]">
+             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3">
+               <path d="M22 11L12 21L2 11" stroke-linecap="round" stroke-linejoin="round"/>
+               <path d="M12 21V3" stroke-linecap="round" stroke-linejoin="round"/>
+             </svg>
+           </div>
+           <div>
+             <p class="text-lg font-950 text-gray-900 tracking-tighter leading-none">{conversionRate}%_CONVERSION</p>
+             <p class="text-[9px] font-950 text-gray-400 uppercase tracking-widest mt-2">TRAFFIC_TO_RESERVATION_FLOW</p>
+           </div>
+         </div>
+         <span class="text-[9px] font-950 text-gray-300 uppercase tracking-widest">REAL_TIME_SYNC</span>
       </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes grow { from { height: 0%; } }
+        .animate-grow { animation: grow 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-grow-delay { animation: grow 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; }
+      ` }} />
     </div>
   );
 }

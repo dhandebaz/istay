@@ -12,8 +12,13 @@ export default function App({ Component, url }: PageProps) {
     <html lang="en" class="scroll-smooth">
       <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="theme-color" content="#0C4D4D" />
+
+        {/* iOS PWA Tags */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="istay" />
 
         {/* Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -25,10 +30,10 @@ export default function App({ Component, url }: PageProps) {
         <link 
           rel="preload" 
           as="style" 
-          href={`https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap&v=${ASSET_VERSION}`} 
+          href={`https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,400&display=swap&v=${ASSET_VERSION}`} 
         />
         <link
-          href={`https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap&v=${ASSET_VERSION}`}
+          href={`https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,400&display=swap&v=${ASSET_VERSION}`}
           rel="stylesheet"
         />
 

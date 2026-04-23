@@ -1,3 +1,4 @@
+import { useEffect } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 
 interface EmbedWidgetModalProps {
@@ -11,11 +12,12 @@ export default function EmbedWidgetModal({ propId, propertyName }: EmbedWidgetMo
   const origin = useSignal("");
 
   useEffect(() => {
-    origin.value = window.location.origin;
+    if (typeof window !== "undefined") {
+      origin.value = window.location.origin;
+    }
   }, []);
 
-  const embedCode = `<div class="istay-widget" data-prop-id="${propId}"></div>
-<script src="${origin.value || ""}/widget.js"></script>`;
+  const embedCode = `<div class="istay-widget" data-prop-id="${propId}"></div>\n<script src="${origin.value || ""}/widget.js"></script>`;
 
   const copyCode = async () => {
     if (!origin.value) return;
@@ -32,80 +34,94 @@ export default function EmbedWidgetModal({ propId, propertyName }: EmbedWidgetMo
     <>
       <button
         onClick={() => (isOpen.value = true)}
-        class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-mint-50 text-mint-700 hover:bg-mint-100 transition-colors text-xs font-700"
+        class="w-full py-4 bg-white text-gray-900 text-[10px] font-950 uppercase text-center rounded-2xl border-[3px] border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all flex items-center justify-center gap-3"
         title="Get embed code"
       >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="16 18 22 12 16 6"></polyline>
-          <polyline points="8 6 2 12 8 18"></polyline>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
         </svg>
-        Embed
+        EMBED_BOOKING_CORE
       </button>
 
       {isOpen.value && (
-        <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm animate-fade-in">
+        <div 
+          class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-gray-900/40 backdrop-blur-sm animate-fade-in"
+          onClick={() => (isOpen.value = false)}
+        >
           <div 
-            class="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-slide-up"
+            class="bg-white rounded-[3rem] border-[4px] border-gray-900 shadow-[24px_24px_0px_0px_rgba(0,0,0,1)] w-full max-w-2xl overflow-hidden animate-slide-up relative"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div class="px-8 py-6 border-b border-gray-100 flex items-center justify-between">
+            <div class="px-12 py-10 border-b-[4px] border-gray-900 flex items-center justify-between bg-gray-50">
               <div>
-                <h2 class="text-xl font-800 text-gray-900 leading-tight">Embed Direct Booking</h2>
-                <p class="text-xs text-gray-400 mt-1">For {propertyName}</p>
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[9px] font-950 uppercase tracking-widest rounded-lg border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80]">
+                    DEPLOY_PROTOCOL
+                  </div>
+                </div>
+                <h2 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">Widget_Integration</h2>
+                <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest mt-2">ASSET_IDENTIFIER: {propertyName}</p>
               </div>
               <button 
                 onClick={() => (isOpen.value = false)}
-                class="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors"
+                class="w-12 h-12 rounded-2xl border-[3px] border-gray-900 flex items-center justify-center text-gray-900 hover:bg-rose-500 hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
 
             {/* Modal Body */}
-            <div class="p-8 space-y-6">
-              <div class="space-y-3">
-                <label class="block text-sm font-700 text-gray-700">Copy this snippet</label>
-                <p class="text-xs text-gray-500 leading-relaxed">
-                  Paste this code anywhere on your website. The widget is fully responsive and optimized for speed.
-                </p>
+            <div class="p-12 space-y-10">
+              <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                  <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest">WIDGET_SNIPPET_V2</label>
+                  <span class="text-[9px] font-950 text-mint-500 uppercase tracking-widest animate-pulse">OPTIMIZED_FOR_PERFORMANCE</span>
+                </div>
+                
                 <div class="relative group">
-                  <pre class="w-full p-4 rounded-xl bg-gray-900 text-gray-300 text-[11px] font-mono whitespace-pre-wrap break-all leading-relaxed overflow-x-auto border border-gray-800">
+                  <div class="absolute -inset-2 bg-gray-900 rounded-[2rem] opacity-5 group-hover:opacity-10 transition-opacity" />
+                  <pre class="relative w-full p-8 rounded-[2rem] bg-gray-900 text-mint-400 text-[11px] font-mono whitespace-pre-wrap break-all leading-relaxed overflow-x-auto border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,0.1)]">
                     {embedCode}
                   </pre>
                   <button
                     onClick={copyCode}
-                    class="absolute top-3 right-3 px-3 py-1.5 rounded-lg bg-gray-800 text-white text-[10px] font-700 opacity-0 group-hover:opacity-100 transition-opacity border border-gray-700 hover:bg-gray-700 shadow-xl"
+                    class={`absolute top-6 right-6 px-6 py-2.5 rounded-xl text-[10px] font-950 uppercase tracking-widest transition-all border-[2px] border-gray-900 shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] ${
+                      copied.value ? "bg-emerald-500 text-white" : "bg-white text-gray-900 hover:bg-mint-400"
+                    }`}
                   >
-                    {copied.value ? "Copied!" : "Copy Code"}
+                    {copied.value ? "COPIED_TO_CLIPBOARD" : "COPY_PROTOCOL"}
                   </button>
                 </div>
               </div>
 
-              <div class="p-4 rounded-2xl bg-mint-50 border border-mint-100 space-y-2">
-                <div class="flex items-center gap-2 text-mint-900 font-800 text-xs">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                  Pro Tip: Zero Commission
+              <div class="p-8 rounded-[2rem] bg-mint-50 border-[3px] border-gray-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex items-start gap-6">
+                <div class="w-12 h-12 bg-white border-[2px] border-gray-900 rounded-xl flex items-center justify-center text-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] shrink-0">
+                  ⚡
                 </div>
-                <p class="text-[11px] text-mint-700 leading-relaxed font-500">
-                  Using this widget on your personal website removes the 15-20% platform commission you pay to OTAs. Every booking made through this snippet goes directly to your wallet.
-                </p>
+                <div class="space-y-2">
+                  <p class="text-[10px] font-950 text-gray-900 uppercase tracking-widest">PRO_PROTOCOL: ZERO_COMMISSION</p>
+                  <p class="text-[10px] text-mint-900/60 font-800 uppercase leading-relaxed tracking-widest">
+                    PASTE THIS CODE INTO YOUR PERSONAL WEBSITE TO BYPASS THE 20% OTA COMMISSION TRAP. EVERY TRANSACTION FLOWS DIRECTLY INTO YOUR CONNECTED WALLET CORE.
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Modal Footer */}
-            <div class="px-8 py-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+            <div class="px-12 py-10 bg-gray-50 border-t-[4px] border-gray-900 flex justify-end gap-6">
               <button
                 onClick={() => (isOpen.value = false)}
-                class="px-6 py-2.5 rounded-xl bg-white border border-gray-200 text-gray-600 text-sm font-700 hover:bg-gray-100 transition-colors"
+                class="px-8 py-4 rounded-2xl bg-white border-[3px] border-gray-900 text-gray-400 text-[10px] font-950 uppercase tracking-widest shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all"
               >
-                Close
+                ABORT_MODAL
               </button>
               <button
                 onClick={copyCode}
-                class="px-6 py-2.5 rounded-xl bg-mint-500 text-white text-sm font-700 shadow-sm hover:bg-mint-600 transition-colors"
+                class="px-10 py-4 rounded-2xl bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-widest shadow-[6px_6px_0px_0px_#4ade80] border-[3px] border-gray-900 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all"
               >
-                {copied.value ? "Copied!" : "Copy Snippet"}
+                {copied.value ? "SUCCESSFULLY_COPIED" : "INITIALIZE_COPY"}
               </button>
             </div>
           </div>
@@ -114,9 +130,9 @@ export default function EmbedWidgetModal({ propId, propertyName }: EmbedWidgetMo
 
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .animate-fade-in { animation: fade-in 0.2s ease-out; }
-        .animate-slide-up { animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slide-up { from { transform: translateY(40px) rotate(2deg); opacity: 0; } to { transform: translateY(0) rotate(0); opacity: 1; } }
+        .animate-fade-in { animation: fade-in 0.3s ease-out; }
+        .animate-slide-up { animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
       ` }} />
     </>
   );

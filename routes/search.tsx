@@ -57,43 +57,37 @@ export default function SearchPage({ data }: PageProps<SearchData>) {
         title={query ? `Stays in ${query} | istay` : "Discover Stays | istay"}
         description="Discover direct-booking properties via istay with zero OTA commission. Book exactly what you want."
       />
+      <style dangerouslySetInnerHTML={{ __html: `.hero-dark{background:#060d0d} .grad-text{background:linear-gradient(135deg,#00E676,#2dd4bf,#14b8a6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}` }} />
 
-      <div class="min-h-screen bg-[#FAFAFA] font-sans pb-20">
+      <div class="min-h-screen bg-gray-50 font-sans pb-20">
         {/* Soft Tech Header */}
-        <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100/50 shadow-sm">
-          <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <header class="sticky top-0 z-30 bg-white border-b border-gray-100 shadow-sm">
+          <div class="max-w-6xl mx-auto px-5 sm:px-6 py-4 flex items-center justify-between">
             <a
               href="/"
-              class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95"
+              class="flex items-center gap-2 group transition-transform hover:scale-105 active:scale-95"
             >
-              <span class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center shadow-lg shadow-teal-500/30">
-                <HomeIcon class="w-4.5 h-4.5 text-white" />
-              </span>
-              <span class="font-900 text-xl tracking-tight text-gray-900 group-hover:text-teal-600 transition-colors">
-                istay
-              </span>
+              <img src="/logo.svg" alt="istay" class="h-8 w-auto" width="32" height="32" />
             </a>
           </div>
         </header>
 
-        {/* Hero Section */}
-        <div class="max-w-6xl mx-auto px-6 pt-16 pb-12">
-          <div class="text-center max-w-2xl mx-auto space-y-6">
-            <h1 class="text-4xl sm:text-5xl font-900 text-gray-900 tracking-tight leading-tight">
-              Find your next{" "}
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-emerald-400">
-                Perfect Stay
-              </span>
-            </h1>
-            <p class="text-lg text-gray-500 font-500">
-              Zero platform commissions. Direct host bookings.
-            </p>
+        <div class="relative hero-dark overflow-hidden">
+          <div class="max-w-6xl mx-auto px-5 sm:px-6 pt-16 pb-12">
+            <div class="text-center max-w-2xl mx-auto space-y-6" style="position:relative;z-index:2">
+              <h1 class="text-4xl sm:text-5xl font-900 text-white tracking-tight leading-tight">
+                Find your next{" "}
+                <span class="grad-text">
+                  Perfect Stay
+                </span>
+              </h1>
+              <p class="text-lg text-gray-400 font-500">
+                Zero platform commissions. Direct host bookings.
+              </p>
 
             {/* Smart Search Bar */}
             <form class="mt-8 relative group" action="/search" method="GET">
-              <div class="absolute inset-0 bg-teal-500/5 rounded-3xl blur-xl group-focus-within:bg-teal-500/10 transition-colors">
-              </div>
-              <div class="relative bg-white/90 backdrop-blur-sm border border-gray-200 shadow-xl rounded-3xl p-2 flex flex-col sm:flex-row gap-2">
+              <div class="relative bg-white border border-gray-200 shadow-xl rounded-2xl p-2 flex flex-col sm:flex-row gap-2">
                 <div class="flex-1 px-4 py-3 border-b sm:border-b-0 sm:border-r border-gray-100 flex items-center gap-3">
                   <svg
                     width="20"
@@ -173,6 +167,7 @@ export default function SearchPage({ data }: PageProps<SearchData>) {
               ))}
             </div>
           </div>
+        </div>
         </div>
 
         {/* Results Grid */}

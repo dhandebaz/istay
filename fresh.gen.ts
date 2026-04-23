@@ -104,6 +104,7 @@ import * as $OtaSavingsChart from "./islands/OtaSavingsChart.tsx";
 import * as $PricingCheckout from "./islands/PricingCheckout.tsx";
 import * as $ProofOfCleanUploader from "./islands/ProofOfCleanUploader.tsx";
 import * as $PropertyGrid from "./islands/PropertyGrid.tsx";
+import * as $PwaInstallPrompt from "./islands/PwaInstallPrompt.tsx";
 import * as $RegisterForm from "./islands/RegisterForm.tsx";
 import * as $ResendVerificationBtn from "./islands/ResendVerificationBtn.tsx";
 import * as $ScraperPreview from "./islands/ScraperPreview.tsx";
@@ -219,6 +220,7 @@ const manifest = {
     "./islands/PricingCheckout.tsx": $PricingCheckout,
     "./islands/ProofOfCleanUploader.tsx": $ProofOfCleanUploader,
     "./islands/PropertyGrid.tsx": $PropertyGrid,
+    "./islands/PwaInstallPrompt.tsx": $PwaInstallPrompt,
     "./islands/RegisterForm.tsx": $RegisterForm,
     "./islands/ResendVerificationBtn.tsx": $ResendVerificationBtn,
     "./islands/ScraperPreview.tsx": $ScraperPreview,

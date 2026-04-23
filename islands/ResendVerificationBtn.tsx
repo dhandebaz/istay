@@ -5,58 +5,52 @@ interface ResendVerificationBtnProps {
   name: string;
 }
 
-export default function ResendVerificationBtn(
-  { email, name }: ResendVerificationBtnProps,
-) {
+export default function ResendVerificationBtn({ email, name }: ResendVerificationBtnProps) {
   const status = useSignal<"idle" | "sending" | "sent" | "error">("idle");
   const errorMsg = useSignal("");
 
   async function handleResend() {
     status.value = "sending";
     errorMsg.value = "";
-
     try {
       const res = await fetch("/api/auth/resend-verification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, name }),
       });
-
       if (res.ok) {
         status.value = "sent";
-        setTimeout(() => {
-          if (status.value === "sent") status.value = "idle";
-        }, 5000);
+        setTimeout(() => { if (status.value === "sent") status.value = "idle"; }, 5000);
       } else {
         const data = await res.json();
         status.value = "error";
-        errorMsg.value = data.error || "Failed to resend.";
+        errorMsg.value = data.error || "FAILED_TO_RESEND";
       }
     } catch {
       status.value = "error";
-      errorMsg.value = "Network error. Try again.";
+      errorMsg.value = "PROTOCOL_NETWORK_ERROR";
     }
   }
 
   if (status.value === "sent") {
     return (
-      <span class="text-xs font-700 text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
-        Email Sent! ✓
+      <span class="px-6 py-3 bg-mint-400 border-[2px] border-gray-900 rounded-xl text-[10px] font-950 text-gray-900 uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        SIGN_SENT_SUCCESS ✓
       </span>
     );
   }
 
   return (
-    <div class="flex items-center gap-2">
+    <div class="flex flex-col sm:flex-row items-center gap-4">
       <button
         onClick={handleResend}
         disabled={status.value === "sending"}
-        class="text-xs font-700 bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg shadow-sm transition-all shadow-amber-500/20 active:scale-95 disabled:opacity-50"
+        class="px-8 py-3 bg-gray-900 text-white text-[10px] font-950 rounded-xl border-[2px] border-gray-900 shadow-[4px_4px_0px_0px_#4ade80] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all uppercase tracking-[0.2em]"
       >
-        {status.value === "sending" ? "Sending..." : "Resend Link"}
+        {status.value === "sending" ? "TRANSMITTING..." : "RESEND_PROTOCOL"}
       </button>
       {status.value === "error" && (
-        <span class="text-[10px] text-rose-600 font-600">{errorMsg.value}</span>
+        <span class="text-[9px] text-rose-500 font-950 uppercase tracking-widest">{errorMsg.value}</span>
       )}
     </div>
   );

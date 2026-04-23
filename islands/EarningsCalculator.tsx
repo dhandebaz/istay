@@ -1,52 +1,36 @@
 import { useState } from "preact/hooks";
 
-const SETUP_FEE = 1000;
-
-interface Platform {
-  name: string;
-  commission: number;
-  color: string;
-  bg: string;
-  border: string;
-  badge?: string;
-}
-
-const PLATFORMS: Platform[] = [
+const PLATFORMS = [
   {
     name: "istay",
     commission: 0.05,
-    color: "text-teal-700",
-    bg: "bg-teal-50",
-    border: "border-teal-300",
-    badge: "Best",
+    color: "text-mint-500",
+    bg: "bg-gray-900",
+    border: "border-gray-900",
+    shadow: "shadow-[12px_12px_0px_0px_#4ade80]",
+    labelColor: "text-white",
+    subColor: "text-gray-400",
+    badge: "WINNER_CORE",
   },
   {
     name: "Airbnb",
     commission: 0.15,
-    color: "text-rose-700",
-    bg: "bg-rose-50",
-    border: "border-rose-200",
+    color: "text-rose-600",
+    bg: "bg-white",
+    border: "border-gray-900",
+    shadow: "shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]",
+    labelColor: "text-gray-900",
+    subColor: "text-gray-400",
   },
   {
-    name: "MakeMyTrip",
-    commission: 0.18,
-    color: "text-orange-700",
-    bg: "bg-orange-50",
-    border: "border-orange-200",
-  },
-  {
-    name: "Agoda",
-    commission: 0.18,
-    color: "text-blue-700",
-    bg: "bg-blue-50",
-    border: "border-blue-200",
-  },
-  {
-    name: "Expedia",
-    commission: 0.18,
-    color: "text-indigo-700",
-    bg: "bg-indigo-50",
-    border: "border-indigo-200",
+    name: "Booking.com",
+    commission: 0.20,
+    color: "text-blue-600",
+    bg: "bg-white",
+    border: "border-gray-900",
+    shadow: "shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]",
+    labelColor: "text-gray-900",
+    subColor: "text-gray-400",
   },
 ];
 
@@ -70,175 +54,89 @@ export default function EarningsCalculator() {
     takehome: grossRevenue * (1 - p.commission),
   }));
 
-  const istaySavingsVsAirbnb = grossRevenue * (0.15 - 0.05); // 10% difference
-  const istaySavingsVsMMT = grossRevenue * (0.18 - 0.05); // 13% difference
-
   return (
-    <div
-      id="earnings-calculator"
-      class="bg-white rounded-3xl border border-gray-100 shadow-md p-6 sm:p-8 lg:p-10"
-    >
-      <div class="mb-8">
-        <h3 class="text-xl sm:text-2xl font-800 text-gray-900 mb-1">
-          Earnings Calculator
+    <div class="bg-white rounded-[3rem] border-[4px] border-gray-900 shadow-[24px_24px_0px_0px_rgba(0,0,0,1)] p-10 sm:p-20 overflow-hidden relative group">
+      <div class="mb-24">
+        <div class="flex items-center gap-4 mb-6">
+           <span class="px-5 py-2 rounded-xl bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.3em] border-[2px] border-gray-900 shadow-[4px_4px_0px_0px_#4ade80]">REVENUE_SIMULATOR_V4</span>
+           <div class="h-[2px] flex-1 bg-gray-100" />
+        </div>
+        <h3 class="text-6xl sm:text-8xl font-950 text-gray-900 leading-[0.85] uppercase tracking-tighter">
+          Visualizing <br/> <span class="text-mint-500">Margin_Leak.</span>
         </h3>
-        <p class="text-sm text-gray-400">
-          Drag the sliders to see how much you keep with each platform.
-        </p>
       </div>
 
-      {/* ── SLIDERS ─────────────────────────────────────── */}
-      <div class="space-y-7 mb-10">
-        {/* Nightly Rate */}
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <label
-              for="slider-nightly-rate"
-              class="text-sm font-600 text-gray-700"
-            >
-              Average Nightly Rate
-            </label>
-            <span class="text-base font-800 text-teal-600">
-              {formatINR(nightlyRate)}
-            </span>
-          </div>
-          <input
-            id="slider-nightly-rate"
-            type="range"
-            min={500}
-            max={25000}
-            step={500}
-            value={nightlyRate}
-            onInput={(e) =>
-              setNightlyRate(Number((e.target as HTMLInputElement).value))}
-            aria-label="Average nightly rate in rupees"
-          />
-          <div class="flex justify-between text-xs text-gray-400 mt-1.5">
-            <span>₹500</span>
-            <span>₹25,000</span>
-          </div>
-        </div>
-
-        {/* Booked Nights */}
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <label
-              for="slider-booked-nights"
-              class="text-sm font-600 text-gray-700"
-            >
-              Booked Nights per Month
-            </label>
-            <span class="text-base font-800 text-teal-600">
-              {bookedNights} nights
-            </span>
-          </div>
-          <input
-            id="slider-booked-nights"
-            type="range"
-            min={1}
-            max={30}
-            step={1}
-            value={bookedNights}
-            onInput={(e) =>
-              setBookedNights(Number((e.target as HTMLInputElement).value))}
-            aria-label="Booked nights per month"
-          />
-          <div class="flex justify-between text-xs text-gray-400 mt-1.5">
-            <span>1 night</span>
-            <span>30 nights</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ── GROSS REVENUE BADGE ─────────────────────────── */}
-      <div class="flex items-center justify-between bg-gray-50 rounded-2xl px-5 py-4 mb-7">
-        <span class="text-sm text-gray-500 font-500">
-          Gross Monthly Revenue
-        </span>
-        <span class="text-2xl font-800 text-gray-900">
-          {formatINR(grossRevenue)}
-        </span>
-      </div>
-
-      {/* ── PLATFORM CARDS ──────────────────────────────── */}
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        {results.map((
-          { name, commission, fee, takehome, color, bg, border, badge },
-        ) => (
-          <div
-            key={name}
-            class={`relative rounded-2xl border-2 p-5 transition-transform hover:-translate-y-1 duration-200 ${bg} ${border}`}
-          >
-            {badge && (
-              <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-mint-500 text-istay-900 text-xs font-900 shadow-sm">
-                {badge}
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 mb-24">
+        <div class="space-y-20">
+          <div class="space-y-8">
+            <div class="flex items-end justify-between">
+              <div>
+                <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest block mb-2">NIGHTLY_UNIT_RATE</label>
+                <span class="text-5xl font-950 text-gray-900 tracking-tighter">{formatINR(nightlyRate)}</span>
               </div>
+            </div>
+            <div class="relative h-4 w-full bg-gray-100 border-[3px] border-gray-900 rounded-full overflow-hidden">
+              <input
+                type="range"
+                min={500}
+                max={25000}
+                step={500}
+                value={nightlyRate}
+                onInput={(e) => setNightlyRate(Number((e.target as HTMLInputElement).value))}
+                class="absolute inset-0 w-full opacity-0 cursor-pointer z-10"
+              />
+              <div class="h-full bg-mint-400 border-r-[3px] border-gray-900 transition-all duration-300" style={{ width: `${(nightlyRate / 25000) * 100}%` }} />
+            </div>
+          </div>
+
+          <div class="space-y-8">
+            <div class="flex items-end justify-between">
+              <div>
+                <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest block mb-2">MONTHLY_UNIT_VOLUME</label>
+                <span class="text-5xl font-950 text-gray-900 tracking-tighter">{bookedNights} <span class="text-base font-950 text-gray-300">NIGHTS_SOLO</span></span>
+              </div>
+            </div>
+            <div class="relative h-4 w-full bg-gray-100 border-[3px] border-gray-900 rounded-full overflow-hidden">
+              <input
+                type="range"
+                min={1}
+                max={30}
+                step={1}
+                value={bookedNights}
+                onInput={(e) => setBookedNights(Number((e.target as HTMLInputElement).value))}
+                class="absolute inset-0 w-full opacity-0 cursor-pointer z-10"
+              />
+              <div class="h-full bg-purple-400 border-r-[3px] border-gray-900 transition-all duration-300" style={{ width: `${(bookedNights / 30) * 100}%` }} />
+            </div>
+          </div>
+        </div>
+
+        <div class="p-12 bg-gray-900 rounded-[3rem] border-[4px] border-gray-900 flex flex-col justify-center text-center sm:text-left shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
+           <div class="absolute -right-6 -top-6 text-9xl opacity-5">💰</div>
+           <p class="text-[10px] font-950 text-mint-400 uppercase tracking-[0.3em] mb-6">GROSS_MONTHLY_CAPITAL</p>
+           <p class="text-7xl sm:text-8xl font-950 text-white tracking-tighter leading-none">{formatINR(grossRevenue)}</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {results.map((p) => (
+          <div key={p.name} class={`p-10 rounded-[2.5rem] border-[4px] transition-all hover:scale-[1.02] ${p.border} ${p.bg} ${p.shadow}`}>
+            {p.badge && (
+               <div class="inline-block px-3 py-1 bg-white border-2 border-gray-900 rounded-lg text-[8px] font-950 text-gray-900 uppercase tracking-widest mb-6">
+                 {p.badge}
+               </div>
             )}
-            <div
-              class={`text-xs font-700 uppercase tracking-wider ${color} mb-3`}
-            >
-              {name}
-            </div>
-
-            <div class="mb-3">
-              <div class="text-xs text-gray-400 mb-0.5">You keep</div>
-              <div class={`text-2xl font-800 ${color}`}>
-                {formatINR(takehome)}
-              </div>
-            </div>
-
-            {/* Visual Bar */}
-            <div class="w-full h-2 bg-gray-100 rounded-full mb-4 overflow-hidden flex">
-              <div 
-                class={`h-full ${name === 'istay' ? 'bg-mint-500' : 'bg-gray-300'}`} 
-                style={{ width: `${(1 - commission) * 100}%` }}
-              />
-              <div 
-                class={`h-full ${name === 'istay' ? 'bg-mint-200' : 'bg-rose-400'}`} 
-                style={{ width: `${commission * 100}%` }}
-              />
-            </div>
-
-            <div class="border-t border-current border-opacity-10 pt-3 space-y-1">
-              <div class="flex justify-between text-xs text-gray-500">
-                <span>Commission</span>
-                <span class="font-600">{(commission * 100).toFixed(0)}%</span>
-              </div>
-              <div class="flex justify-between text-xs text-gray-500">
-                <span>Platform fee</span>
-                <span class="font-600 text-rose-500">
-                  -{formatINR(fee)}
-                </span>
-              </div>
+            <p class={`text-[10px] font-950 uppercase tracking-widest mb-2 ${p.subColor}`}>{p.name}</p>
+            <p class={`text-4xl font-950 tracking-tighter mb-8 ${p.labelColor}`}>
+              {formatINR(p.takehome)}
+            </p>
+            
+            <div class="pt-6 border-t-[2px] border-gray-100/10 flex items-center justify-between">
+               <p class="text-[9px] font-950 text-gray-400 uppercase tracking-widest">COMMISSION</p>
+               <p class={`text-xs font-950 ${p.color}`}>-{formatINR(p.fee)}</p>
             </div>
           </div>
         ))}
-      </div>
-
-      {/* ── SAVINGS BANNER ──────────────────────────────── */}
-      <div class="rounded-2xl bg-gradient-to-r from-mint-500 to-emerald-400 p-5 sm:p-6 text-istay-900 shadow-md">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <p class="text-sm font-800 text-istay-900/80 mb-1">
-              vs Airbnb (15%), you save every month:
-            </p>
-            <p class="text-3xl font-900 drop-shadow-sm">
-              {formatINR(istaySavingsVsAirbnb)}
-            </p>
-          </div>
-          <div class="sm:text-right">
-            <p class="text-sm font-800 text-istay-900/80 mb-1">
-              vs MakeMyTrip (18%):
-            </p>
-            <p class="text-3xl font-900 drop-shadow-sm">
-              {formatINR(istaySavingsVsMMT)}
-            </p>
-          </div>
-        </div>
-        <p class="mt-4 text-xs text-istay-900/80 font-500">
-          * Calculation based on gross revenue of{" "}
-          {formatINR(grossRevenue)}/month. istay's flat ₹1,000 monthly SaaS subscription keeps your direct channel live.
-        </p>
       </div>
     </div>
   );

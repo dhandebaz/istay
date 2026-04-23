@@ -16,9 +16,9 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
   const [error, setError] = useState<string | null>(null);
 
   const TOPUP_OPTIONS = [
-    { amount: 100, label: "Starter", desc: "For ~500 AI chats" },
-    { amount: 500, label: "Pro", desc: "For ~2500 AI chats", popular: true },
-    { amount: 1000, label: "Whale", desc: "For heavy duty usage" },
+    { amount: 100, label: "STARTER_NODE", desc: "For ~500 AI chats" },
+    { amount: 500, label: "PRO_ENGINE", desc: "For ~2500 AI chats", popular: true },
+    { amount: 1000, label: "ELITE_WHALE", desc: "For heavy duty usage" },
   ];
 
   const handlePay = async (amount: number, type: "subscription" | "wallet_topup") => {
@@ -33,14 +33,14 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
       });
 
       const data = await res.json();
-      if (!data.ok) throw new Error(data.error || "Failed to initiate payment");
+      if (!data.ok) throw new Error(data.error || "GATEWAY_INIT_FAILURE");
 
       const options = {
         key: data.keyId,
         amount: data.amount,
         currency: "INR",
-        name: "istay",
-        description: type === "subscription" ? "Monthly SaaS Subscription" : "AI Wallet Top-up",
+        name: "iStay_OS",
+        description: type === "subscription" ? "KERNEL_ACCESS_RENEWAL" : "AI_WALLET_FUELING",
         order_id: data.orderId,
         handler: async function (response: any) {
           try {
@@ -60,7 +60,7 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
                 window.location.reload();
               }
             } else {
-              throw new Error(verifyData.error || "Verification failed");
+              throw new Error(verifyData.error || "VERIFICATION_SIG_ERROR");
             }
           } catch (err: any) {
             setError(err.message);
@@ -74,7 +74,7 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
         rzp.on("payment.failed", (response: any) => setError(response.error.description));
         rzp.open();
       } else {
-        throw new Error("Payment gateway not loaded. Please refresh.");
+        throw new Error("GATEWAY_NOT_LOADED_ERR");
       }
     } catch (err: any) {
       setError(err.message);
@@ -93,15 +93,14 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
         body: JSON.stringify({ hostId }),
       });
       const data = await res.json();
-      if (!data.ok) throw new Error(data.error || "Could not setup autopay");
+      if (!data.ok) throw new Error(data.error || "AUTOPAY_LINK_FAILURE");
 
-      // Razorpay provides a short_url for subscription auth
       if (data.short_url) {
         if (typeof window !== "undefined") {
           window.location.href = data.short_url;
         }
       } else {
-        throw new Error("No checkout URL found for subscription");
+        throw new Error("REDIRECT_URL_MISSING");
       }
     } catch (err: any) {
       setError(err.message);
@@ -111,87 +110,99 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
   };
 
   return (
-    <div class="space-y-6">
+    <div class="space-y-10">
       {/* ── Low Balance Alert ── */}
       {currentBalance < 20 && (
-        <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200 animate-pulse">
-           <div class="flex items-center gap-3">
-             <span class="text-xl">⚠️</span>
+        <div class="p-8 bg-rose-50 border-[4px] border-gray-900 rounded-[2rem] shadow-[10px_10px_0px_0px_#9f1239] animate-pulse">
+           <div class="flex items-center gap-6">
+             <span class="text-4xl">⚠️</span>
              <div>
-               <p class="text-xs font-900 text-amber-900 uppercase tracking-tight">Low Credits</p>
-               <p class="text-[10px] text-amber-700 font-500">Your AI Concierge will stop responding soon. Top up now.</p>
+               <p class="text-xs font-950 text-rose-900 uppercase tracking-[0.2em] mb-1">CRITICAL_FUEL_LEVEL</p>
+               <p class="text-[10px] text-rose-700/60 font-800 uppercase tracking-widest leading-relaxed">AI_CONCIERGE WILL STOP RESPONDING SOON. INITIATE_TOPUP IMMEDIATELY.</p>
              </div>
            </div>
         </div>
       )}
 
-      {/* ── Subscriptions ── */}
-      <div class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm relative overflow-hidden">
-        <div class="absolute -right-4 -top-4 w-16 h-16 bg-istay-900/5 rounded-full blur-xl" />
-        <h3 class="text-sm font-800 text-gray-900 uppercase tracking-tight mb-4 flex items-center justify-between">
-          SaaS Plan
-          <span class="text-[10px] text-gray-400 font-500">₹1,000/mo</span>
-        </h3>
-        
-        <div class="grid grid-cols-1 gap-2">
-          <button
-            onClick={() => handlePay(1000, "subscription")}
-            disabled={loading}
-            class={`w-full py-3 rounded-xl font-800 text-sm transition-all active:scale-95 border-2 ${
-              loading ? 'bg-gray-100 text-gray-400 border-gray-100' : 'bg-white text-istay-900 border-istay-900 hover:bg-istay-50'
-            }`}
-          >
-            Manual Renewal
-          </button>
-          
-          <button
-            onClick={handleEnableAutopay}
-            disabled={loading}
-            class={`w-full py-3 rounded-xl font-800 text-sm transition-all active:scale-95 shadow-md ${
-              loading ? 'bg-gray-100 text-gray-400' : 'bg-istay-900 text-white hover:bg-istay-800'
-            }`}
-          >
-            Enable Autopay ⚡️
-          </button>
+      {/* Top-up Selection */}
+      <div class="space-y-8">
+        <div class="flex items-center gap-4">
+           <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.4em] whitespace-nowrap">RECHARGE_CORE</p>
+           <div class="h-[2px] flex-1 bg-gray-100" />
         </div>
-        <p class="text-[10px] text-gray-400 text-center mt-3 font-500 italic">Autopay ensures zero downtime for your reservation link.</p>
-      </div>
-
-      {/* ── Top-ups ── */}
-      <div class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm">
-        <h3 class="text-sm font-800 text-gray-900 uppercase tracking-tight mb-6 text-center">Add AI Credits</h3>
-        <div class="grid grid-cols-1 gap-3">
+        
+        <div class="grid grid-cols-1 gap-6">
           {TOPUP_OPTIONS.map((opt) => (
             <button
               key={opt.amount}
               onClick={() => handlePay(opt.amount, "wallet_topup")}
               disabled={loading}
-              class={`group relative p-4 rounded-xl border-2 transition-all text-left ${
-                opt.popular ? 'border-mint-500 bg-mint-50/30 shadow-sm' : 'border-gray-50 bg-gray-50/50 hover:border-gray-200'
-              } active:scale-95`}
+              class="group relative flex items-center justify-between p-8 bg-white border-[4px] border-gray-900 rounded-[2rem] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:bg-mint-400 transition-all disabled:opacity-50 disabled:translate-x-0 disabled:translate-y-0 disabled:shadow-none"
             >
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-sm font-800 text-gray-900">₹{opt.amount}</p>
-                  <p class="text-[10px] text-gray-500 font-500">{opt.desc}</p>
+              <div class="text-left">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="text-xs font-950 text-gray-900 uppercase tracking-tighter">{opt.label}</span>
+                  {opt.popular && (
+                    <span class="px-3 py-1 bg-gray-900 text-white text-[8px] font-950 rounded-lg uppercase tracking-widest shadow-[2px_2px_0px_0px_#4ade80]">MAX_ROI</span>
+                  )}
                 </div>
-                {opt.popular && (
-                  <span class="text-[9px] font-900 bg-mint-500 text-istay-900 px-1.5 py-0.5 rounded-full uppercase tracking-tighter">Popular</span>
-                )}
+                <p class="text-[9px] font-800 text-gray-400 group-hover:text-gray-900 uppercase tracking-widest">{opt.desc}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-3xl font-950 text-gray-900 tracking-tighter leading-none">₹{opt.amount}</p>
               </div>
             </button>
           ))}
         </div>
       </div>
 
+      {/* Autopay Setup */}
+      <div class="pt-10 border-t-[4px] border-gray-50 space-y-6">
+        <button
+          onClick={handleEnableAutopay}
+          disabled={loading}
+          class="w-full py-7 rounded-[2.5rem] bg-gray-900 text-white border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_#4ade80] hover:bg-mint-400 hover:text-gray-900 transition-all flex flex-col items-center justify-center gap-3 disabled:opacity-50 group"
+        >
+          {loading ? (
+            <div class="w-8 h-8 border-[5px] border-mint-400 border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <>
+              <div class="flex items-center gap-4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="text-sm font-950 uppercase tracking-[0.4em]">ENABLE_SECURE_AUTOPAY</span>
+              </div>
+              <p class="text-[9px] font-950 text-mint-400 group-hover:text-gray-900/50 uppercase tracking-[0.2em] transition-colors">ZERO_DOWNTIME_PROTOCOL</p>
+            </>
+          )}
+        </button>
+
+        <p class="text-[9px] text-center text-gray-400 font-950 uppercase tracking-[0.2em] leading-relaxed">
+          PAYMENTS_SECURED_BY_RAZORPAY_L4 <br/> 
+          <span class="text-gray-200">END_TO_END_ENCRYPTED_SIGNAL_FLOW</span>
+        </p>
+      </div>
+
       {error && (
-        <div class="p-3 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 text-xs font-600 text-center shadow-sm">
-          {error}
+        <div class="p-6 bg-rose-50 border-[3px] border-rose-900 rounded-[1.5rem] shadow-[6px_6px_0px_0px_#9f1239] animate-shake">
+          <p class="text-[10px] font-950 text-rose-900 uppercase tracking-widest flex items-center gap-4">
+            <span class="text-xl">⚠️</span> KERNEL_ERROR: {error}
+          </p>
         </div>
       )}
 
       {/* Razorpay script injection */}
       <script src="https://checkout.razorpay.com/v1/checkout.js" async />
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-4px); }
+          75% { transform: translateX(4px); }
+        }
+        .animate-shake { animation: shake 0.4s ease-in-out; }
+      ` }} />
     </div>
   );
 }

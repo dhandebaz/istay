@@ -20,6 +20,8 @@ import LinkPerformanceChart from "../../islands/LinkPerformanceChart.tsx";
 import EarningsComparison from "../../islands/EarningsComparison.tsx";
 import OtaSavingsChart, { type SavingsData } from "../../islands/OtaSavingsChart.tsx";
 import FinancialLedger from "../../islands/FinancialLedger.tsx";
+import PwaInstallPrompt from "../../islands/PwaInstallPrompt.tsx";
+import NotificationFeed from "../../islands/NotificationFeed.tsx";
 import {
   calculateMonthlyMetrics,
   type FinancialInsight,
@@ -78,10 +80,25 @@ export const handler: Handlers<OverviewData, DashboardState> = {
     }
 
     const currentMonth = new Date().toISOString().slice(0, 7);
-    const [analytics, insights] = await Promise.all([
-      calculateMonthlyMetrics(hostId, currentMonth),
-      getFinancialInsights(hostId),
-    ]);
+    let analytics: MonthlyMetrics;
+    let insights: FinancialInsight;
+
+    try {
+      [analytics, insights] = await Promise.all([
+        calculateMonthlyMetrics(hostId, currentMonth).catch(err => {
+          console.error("[dashboard] calculateMonthlyMetrics failed:", err);
+          return { bookings: 0, occupancy: 0, revenue: 0, previousRevenue: 0, growth: 0, otaCommissionSaved: 0 };
+        }),
+        getFinancialInsights(hostId).catch(err => {
+          console.error("[dashboard] getFinancialInsights failed:", err);
+          return { monthlyEarnings: 0, projectedEarnings: 0, activeReservations: 0, guestSatisfaction: 0, earningsTrend: [] };
+        }),
+      ]);
+    } catch (err) {
+      console.error("[dashboard-critical] Analytics fetch failed:", err);
+      analytics = { bookings: 0, occupancy: 0, revenue: 0, previousRevenue: 0, growth: 0, otaCommissionSaved: 0 };
+      insights = { monthlyEarnings: 0, projectedEarnings: 0, activeReservations: 0, guestSatisfaction: 0, earningsTrend: [] };
+    }
 
     const recentBookings = allBookings.slice(0, 5);
 
@@ -90,10 +107,13 @@ export const handler: Handlers<OverviewData, DashboardState> = {
       getBookingsDaily(hostId, 7),
     ]);
 
-    // Aggregate views across all properties for each day
+    // Aggregate views across all properties for each day in parallel
     const viewsByDay = new Map<string, number>();
-    for (const prop of properties) {
-      const daily = await getPropertyViewsDaily(prop.id, 7);
+    const allPropertyViews = await Promise.all(
+      properties.map((prop) => getPropertyViewsDaily(prop.id, 7)),
+    );
+
+    for (const daily of allPropertyViews) {
       for (const d of daily) {
         viewsByDay.set(d.date, (viewsByDay.get(d.date) ?? 0) + d.views);
       }
@@ -182,28 +202,17 @@ interface StatCardProps {
 
 function StatCard({ label, value, sub, gradient, icon }: StatCardProps) {
   return (
-    <div
-      class={`relative rounded-2xl p-6 overflow-hidden text-white shadow-md ${gradient}`}
-    >
-      {/* Decorative circle */}
-      <div
-        class="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-white/10"
-        aria-hidden="true"
-      />
-      <div
-        class="absolute -right-2 top-8 w-14 h-14 rounded-full bg-white/10"
-        aria-hidden="true"
-      />
-
-      <div class="relative">
-        <div class="flex items-start justify-between mb-4">
-          <p class="text-sm font-500 text-white/80">{label}</p>
-          <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+    <div class="relative rounded-[2rem] p-8 border-[3px] border-gray-900 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none group overflow-hidden">
+      <div class="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-gray-50 group-hover:bg-mint-50 transition-colors" />
+      <div class="relative z-10">
+        <div class="flex items-start justify-between mb-8">
+          <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.2em]">{label}</p>
+          <div class={`w-12 h-12 rounded-2xl border-[2px] border-gray-900 flex items-center justify-center transition-all group-hover:bg-mint-400 group-hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]`}>
             {icon}
           </div>
         </div>
-        <p class="text-3xl font-800 mb-1 tracking-tight">{value}</p>
-        <p class="text-xs text-white/70">{sub}</p>
+        <p class="text-4xl font-950 text-gray-900 tracking-tighter mb-2 uppercase">{value}</p>
+        <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest">{sub}</p>
       </div>
     </div>
   );
@@ -243,8 +252,10 @@ export default function DashboardOverview(
         <title>Overview | istay Dashboard</title>
       </Head>
 
+      <PwaInstallPrompt />
+
       {/* Subscription Requirement Banner */}
-      {data.stats.subscriptionStatus === "expired" && (
+      {stats.subscriptionStatus === "expired" && (
         <div class="mb-8 rounded-2xl bg-rose-50 border border-rose-200 p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
           <div class="flex items-start gap-4">
             <div class="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center shrink-0">
@@ -269,330 +280,191 @@ export default function DashboardOverview(
       )}
 
       {/* Page heading */}
-      <div class="mb-8">
-        <h1 class="text-2xl sm:text-3xl font-800 text-gray-900 tracking-tight">
-          Good {getGreeting()}, <span class="text-mint-500">Host 👋</span>
-        </h1>
-        <p class="mt-1 text-sm text-gray-400">
-          Here's what's happening with your properties today.
-        </p>
-      </div>
-
-      {/* ── Phase 10: Advanced Insight Grid ────────────────────── */}
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest mb-1">
-              Occupancy Rate
-            </p>
-            <p class="text-2xl font-900 text-gray-900">
-              {analytics.occupancyRate}%
-            </p>
-            <div class="mt-2 w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
-              <div
-                class="bg-mint-500 h-full rounded-full"
-                style={`width: ${analytics.occupancyRate}%`}
-              />
-            </div>
+      <div class="mb-12">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.2em] rounded-full border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80]">
+            LIVE_INTELLIGENCE
           </div>
-          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest mb-1">
-              ADR (Avg Daily Rate)
-            </p>
-            <p class="text-2xl font-900 text-gray-900">
-              {formatINR(analytics.adr)}
-            </p>
-            <p class="text-[10px] text-emerald-600 font-700 mt-1">
-              Direct Rev: {formatINR(analytics.grossRevenue)}
-            </p>
-          </div>
-          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm text-white bg-gradient-to-br from-istay-900 to-istay-700">
-            <p class="text-[10px] font-800 text-white/60 uppercase tracking-widest mb-1">
-              RevPAR
-            </p>
-            <p class="text-2xl font-900">{formatINR(analytics.revPar)}</p>
-            <p class="text-[10px] text-mint-400 font-700 mt-1">
-              Growth: {insights.growth > 0
-                ? `+${insights.growth}%`
-                : `${insights.growth}%`}
-            </p>
-          </div>
+          <div class="h-[2px] flex-1 bg-gray-100" />
         </div>
+        <h2 class="text-6xl sm:text-7xl font-950 text-gray-900 tracking-tighter uppercase leading-[0.85] mb-12">
+          SYSTEM_STATE:<br />
+          <span class="text-mint-500">OPERATIONAL_V2.</span>
+        </h2>
 
-        <div class="bg-mint-50 rounded-2xl p-6 border border-mint-200 relative overflow-hidden flex flex-col justify-center">
-          <p class="text-[10px] font-800 text-mint-700 uppercase tracking-widest mb-1">
-            Top Performer
-          </p>
-          <p class="text-lg font-900 text-mint-900 truncate">
-            {insights.topPropertyName}
-          </p>
-          <p class="text-xs text-mint-600 font-600">
-            {insights.growth >= 0
-              ? "Trending Up 📈"
-              : "Requires Optimization 📉"}
-          </p>
-          {/* Decorative bg icon */}
-          <span class="absolute -right-4 -bottom-4 text-6xl opacity-10">
-            🏆
-          </span>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <StatCard 
+            label="PORTFOLIO_REVENUE" 
+            value={formatINR(stats.totalRevenue)} 
+            sub="+12.5%_MARGIN_LIFT" 
+            gradient="bg-gray-900"
+            icon={<span class="text-xl">💰</span>}
+          />
+          <StatCard 
+            label="OCCUPANCY_RATE" 
+            value={`${Math.round(stats.occupancyRate)}%`} 
+            sub="REAL_TIME_OPTIMIZED" 
+            gradient="bg-white"
+            icon={<span class="text-xl">📈</span>}
+          />
+          <StatCard 
+            label="ACTIVE_BOOKINGS" 
+            value={stats.bookingsThisMonth.toString()} 
+            sub={`${stats.activeProperties}_LIVE_LISTINGS`} 
+            gradient="bg-white"
+            icon={<span class="text-xl">📅</span>}
+          />
         </div>
       </div>
 
-      {/* ── OTA Savings Module ✨ ─────────────────────────────── */}
-      <div class="mb-8 p-8 rounded-[2rem] bg-istay-900 border border-gray-800 shadow-2xl relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-mint-500/10 rounded-full blur-3xl -mr-20 -mt-20" />
-        <div class="relative flex flex-col md:flex-row items-center justify-between gap-6">
-          <div class="text-center md:text-left">
-            <h2 class="text-sm font-800 text-mint-400 uppercase tracking-widest mb-2 flex items-center gap-2 justify-center md:justify-start">
-              <span class="w-2 h-2 rounded-full bg-mint-500 animate-pulse" />
-              Revenue Protection
-            </h2>
-            <p class="text-3xl font-900 text-white tracking-tight">
-              You've saved{" "}
-              <span class="text-transparent bg-clip-text bg-gradient-to-r from-mint-300 to-mint-500">
-                {formatINR(
-                  Math.round(
-                    (stats.monthlyEarnings / 0.85) - stats.monthlyEarnings,
-                  ),
-                )}
-              </span>{" "}
-              in OTA commissions
-            </p>
-            <p class="text-gray-400 mt-2 text-sm font-500">
-              *Assuming average 15% commission on Airbnb/MMT. You keep 95% with
-              istay.
-            </p>
-          </div>
-          <div class="flex-shrink-0 px-6 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm text-center">
-            <p class="text-xs font-700 text-gray-500 uppercase mb-1">
-              Total Payout Share
-            </p>
-            <p class="text-2xl font-900 text-white">95%</p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Quick Actions ──────────────────────────────────────── */}
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        {[
-          {
-            href: "/dashboard/properties",
-            icon: "🏠",
-            label: "Add Property",
-            desc: "Import from Airbnb, Agoda, or Expedia",
-            color: "hover:border-teal-300",
-          },
-          {
-            href: "#",
-            icon: "📅",
-            label: "Sync OTA Channels",
-            desc: "Connect iCal from all platforms",
-            color: "hover:border-violet-300",
-          },
-          {
-            href: "/contact",
-            icon: "💬",
-            label: "Get Support",
-            desc: "We reply in 24–48 hours",
-            color: "hover:border-blue-300",
-          },
-        ].map(({ href, icon, label, desc, color }) => (
-          <a
-            key={label}
-            href={href}
-            class={`flex items-start gap-4 p-5 bg-white rounded-2xl border-2 border-gray-100 shadow-sm transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 ${color}`}
-          >
-            <span class="text-2xl">{icon}</span>
-            <div>
-              <p class="text-sm font-700 text-gray-900">{label}</p>
-              <p class="text-xs text-gray-400 mt-0.5">{desc}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-
-      {/* ── Earnings Comparison ────────────────────────────────── */}
-      <div class="mb-8">
-        <EarningsComparison monthlyEarnings={stats.monthlyEarnings} />
-        <OtaSavingsChart
-          data={otaSavingsData}
-          totalSavings={cumulativeSavings}
-        />
-      </div>
-
-      {/* ── Operations & Housekeeping Feed ── */}
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        <div class="lg:col-span-2">
+      {/* ── Performance Grid ───────────────────────────────────── */}
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+        <div class="bg-white rounded-[2.5rem] p-2 border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
           <LinkPerformanceChart
             data={chartData}
             totalViews={chartTotalViews}
             totalBookings={chartTotalBookings}
           />
         </div>
-
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-          <div class="px-6 py-4 border-b border-gray-50 bg-gray-50/30 flex items-center justify-between">
-            <h2 class="text-sm font-800 text-gray-900 uppercase tracking-tight">
-              Operational Feed
-            </h2>
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          </div>
-
-          <div class="flex-1 overflow-y-auto max-h-[400px] p-4 space-y-4">
-            {notifications.length === 0
-              ? (
-                <div class="py-12 text-center">
-                  <p class="text-2xl mb-2">📋</p>
-                  <p class="text-xs text-gray-400 font-500">
-                    No recent activity
-                  </p>
-                </div>
-              )
-              : (
-                notifications.map((n) => (
-                  <div
-                    key={n.id}
-                    class="p-4 rounded-xl bg-gray-50 border border-gray-100 transition-all hover:border-mint-200 group"
-                  >
-                    <div class="flex items-start gap-3">
-                      <div
-                        class={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                          n.type === "housekeeping_ready"
-                            ? "bg-emerald-50 text-emerald-600"
-                            : n.type === "supply_request"
-                            ? "bg-orange-50 text-orange-600"
-                            : "bg-blue-50 text-blue-600"
-                        }`}
-                      >
-                        {n.type === "housekeeping_ready"
-                          ? "✨"
-                          : n.type === "supply_request"
-                          ? "📦"
-                          : "🔔"}
-                      </div>
-                      <div>
-                        <p class="text-xs font-800 text-gray-900">{n.title}</p>
-                        <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
-                          {n.message}
-                        </p>
-
-                        {n.meta?.imageUrl && (
-                          <div class="mt-3 relative w-full h-24 rounded-lg overflow-hidden border border-gray-200">
-                            <img
-                              src={n.meta.imageUrl}
-                              alt="Proof"
-                              class="w-full h-full object-cover transition-transform group-hover:scale-105"
-                            />
-                          </div>
-                        )}
-
-                        <p class="text-[10px] text-gray-400 mt-2 font-500">
-                          {new Date(n.createdAt).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })} · {n.propertyName}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-          </div>
+        <div class="bg-white rounded-[2.5rem] p-2 border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+          <OtaSavingsChart data={otaSavingsData} totalSavings={cumulativeSavings} />
         </div>
       </div>
 
-      {/* ── Recent Bookings ────────────────────────────────────── */}
-      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-50">
-          <h2 class="text-base font-700 text-gray-900">Recent Bookings</h2>
+      {/* ── Operations Feed ── */}
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-16">
+        {/* Quick Actions */}
+        <div class="lg:col-span-1 space-y-6">
+          <div class="flex items-center gap-4 mb-4">
+            <p class="text-[10px] font-950 text-gray-400 uppercase tracking-widest whitespace-nowrap">
+              QUICK_ACTIONS
+            </p>
+            <div class="h-[2px] flex-1 bg-gray-100" />
+          </div>
+          {[
+            {
+              href: "/dashboard/properties",
+              icon: "🏠",
+              label: "ADD_PROPERTY",
+              desc: "Deploy new listing",
+              bg: "bg-mint-50",
+            },
+            {
+              href: "/dashboard/bookings",
+              icon: "📅",
+              label: "VIEW_LOGISTICS",
+              desc: "Manage reservations",
+              bg: "bg-teal-50",
+            },
+            {
+              href: "/dashboard/settings",
+              icon: "⚙️",
+              label: "CORE_CONFIG",
+              desc: "System adjustments",
+              bg: "bg-gray-50",
+            },
+          ].map((action) => (
+            <a
+              key={action.label}
+              href={action.href}
+              class="flex items-center gap-6 p-6 bg-white border-[3px] border-gray-900 rounded-[2rem] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] group"
+            >
+              <div class={`w-16 h-16 ${action.bg} border-[3px] border-gray-900 rounded-2xl flex items-center justify-center text-3xl group-hover:bg-white transition-colors`}>
+                {action.icon}
+              </div>
+              <div>
+                <p class="text-xs font-950 text-gray-900 uppercase tracking-tighter">{action.label}</p>
+                <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest mt-1">{action.desc}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        {/* Intelligence Metrics */}
+        <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {[
+            { 
+              label: "MONTHLY_REVENUE", 
+              value: formatINR(analytics.revenue), 
+              trend: `+${analytics.growth}% LIFT`, 
+              color: "emerald",
+              icon: "💰"
+            },
+            { 
+              label: "OTA_SAVINGS", 
+              value: formatINR(analytics.otaCommissionSaved), 
+              trend: "DIRECT_ROI", 
+              color: "mint",
+              icon: "🛡️"
+            },
+          ].map((stat) => (
+            <div key={stat.label} class="bg-white p-8 rounded-[2rem] border-[3px] border-gray-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden group">
+              <div class="absolute -right-4 -top-4 text-6xl opacity-5 group-hover:scale-125 transition-transform">{stat.icon}</div>
+              <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em] mb-6">{stat.label}</p>
+              <div class="flex items-end justify-between">
+                <h3 class="text-3xl font-950 text-gray-900 tracking-tighter leading-none">{stat.value}</h3>
+                <span class={`text-[9px] font-950 px-3 py-1 rounded-lg border-[2px] border-gray-900 ${stat.color === 'emerald' ? 'bg-emerald-500 text-white' : 'bg-mint-400 text-gray-900'}`}>
+                  {stat.trend}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Recent Activity ──────────────────────────────────── */}
+      <div class="space-y-8">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <p class="text-[10px] font-950 text-gray-400 uppercase tracking-widest whitespace-nowrap">
+              LOGISTICS_LEDGER
+            </p>
+            <div class="h-[2px] w-24 bg-gray-100" />
+          </div>
           <a
             href="/dashboard/bookings"
-            class="text-xs text-istay-700 font-600 hover:text-istay-800 transition-colors"
+            class="px-5 py-2 rounded-xl bg-gray-900 text-white text-[10px] font-950 uppercase tracking-widest border-[3px] border-gray-900 shadow-[4px_4px_0px_0px_#4ade80] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
           >
-            View all →
+            Full_Registry →
           </a>
         </div>
 
-        {recentBookings.length === 0
-          ? (
-            <div class="py-16 text-center">
-              <p class="text-4xl mb-3">📭</p>
-              <p class="text-sm font-600 text-gray-600">No bookings yet</p>
-              <p class="text-xs text-gray-400 mt-1">
-                Share your booking link to get your first reservation
-              </p>
-              <a
-                href="/dashboard/properties"
-                class="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-istay-900 text-white text-xs font-600 hover:bg-istay-800 transition-colors"
-              >
-                Add your first property →
-              </a>
+        <div class="bg-white border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] rounded-[2.5rem] overflow-hidden">
+          {recentBookings.length === 0 ? (
+            <div class="py-20 text-center space-y-4">
+              <p class="text-6xl">📭</p>
+              <h3 class="text-xl font-950 text-gray-900 uppercase tracking-tight">System Idle</h3>
+              <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest">Deploy your booking link to initialize reservations.</p>
             </div>
-          )
-          : (
+          ) : (
             <div class="overflow-x-auto">
-              <table class="w-full text-sm">
+              <table class="w-full text-left">
                 <thead>
-                  <tr class="bg-gray-50/50">
-                    <th class="text-left px-6 py-3 text-xs font-700 text-gray-400 uppercase tracking-wider">
-                      Guest
-                    </th>
-                    <th class="text-left px-6 py-3 text-xs font-700 text-gray-400 uppercase tracking-wider">
-                      Dates
-                    </th>
-                    <th class="text-right px-6 py-3 text-xs font-700 text-gray-400 uppercase tracking-wider">
-                      Amount
-                    </th>
-                    <th class="text-center px-6 py-3 text-xs font-700 text-gray-400 uppercase tracking-wider">
-                      Status
-                    </th>
+                  <tr class="bg-gray-50 border-b-[3px] border-gray-900">
+                    <th class="px-8 py-6 text-[10px] font-950 text-gray-400 uppercase tracking-widest">GUEST_ID</th>
+                    <th class="px-8 py-6 text-[10px] font-950 text-gray-400 uppercase tracking-widest">WINDOW</th>
+                    <th class="px-8 py-6 text-[10px] font-950 text-gray-400 uppercase tracking-widest text-right">CAPITAL</th>
+                    <th class="px-8 py-6 text-[10px] font-950 text-gray-400 uppercase tracking-widest text-center">STATUS</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody class="divide-y-[2px] divide-gray-100">
                   {recentBookings.map((booking) => (
-                    <tr
-                      key={booking.id}
-                      class="hover:bg-gray-50/50 transition-colors"
-                    >
-                      <td class="px-6 py-4">
-                        <p class="font-600 text-gray-900">
-                          {booking.guestName}
-                        </p>
-                        <p class="text-xs text-gray-400">
-                          {booking.guestEmail}
-                        </p>
+                    <tr key={booking.id} class="group hover:bg-gray-50 transition-colors">
+                      <td class="px-8 py-6">
+                        <p class="text-sm font-950 text-gray-900 uppercase tracking-tighter leading-none mb-1">{booking.guestName}</p>
+                        <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest">{booking.guestEmail}</p>
                       </td>
-                      <td class="px-6 py-4 text-gray-500">
-                        {formatDate(booking.checkIn)} →{" "}
-                        {formatDate(booking.checkOut)}
-                        <p class="text-xs text-gray-400">
-                          {booking.nights} night{booking.nights > 1 ? "s" : ""}
+                      <td class="px-8 py-6">
+                        <p class="text-xs font-950 text-gray-900 uppercase tracking-tighter">
+                          {formatDate(booking.checkIn)} — {formatDate(booking.checkOut)}
                         </p>
+                        <p class="text-[10px] font-800 text-mint-500 uppercase tracking-widest mt-1">{booking.nights} NIGHTS_STAY</p>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-600">
-                        <div class="flex flex-col items-end gap-1">
-                          <span class="text-istay-900">
-                            {formatINR(booking.amount)}
-                          </span>
-                          <a
-                            href={`/invoice/${booking.id}?download=1`}
-                            target="_blank"
-                            class="text-xs text-mint-600 hover:text-mint-700 font-700 decoration-mint-600/30 hover:underline"
-                          >
-                            Invoice ↗
-                          </a>
-                        </div>
-                        <p class="text-xs text-istay-700">
-                          {formatINR(booking.amount * 0.95)} yours
-                        </p>
+                      <td class="px-8 py-6 text-right">
+                        <p class="text-sm font-950 text-gray-900 tracking-tight">{formatINR(booking.amount)}</p>
                       </td>
-                      <td class="px-6 py-4 text-center">
-                        <span
-                          class={`inline-flex px-2.5 py-1 rounded-full text-xs font-600 capitalize ${
-                            STATUS_STYLES[booking.status] ??
-                              "bg-gray-100 text-gray-500"
-                          }`}
-                        >
+                      <td class="px-8 py-6 text-center">
+                        <span class={`px-4 py-2 rounded-xl border-[2px] border-gray-900 text-[9px] font-950 uppercase tracking-widest ${STATUS_STYLES[booking.status] || "bg-gray-100"}`}>
                           {booking.status}
                         </span>
                       </td>
@@ -602,9 +474,8 @@ export default function DashboardOverview(
               </table>
             </div>
           )}
+        </div>
       </div>
-      {/* ── Phase 10: Financial Audit Forensic Ledger ─────────── */}
-      <FinancialLedger entries={ledgerEntries} />
     </>
   );
 }

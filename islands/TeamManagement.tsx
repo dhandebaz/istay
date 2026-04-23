@@ -22,7 +22,7 @@ function ToastContainer(
   const colorMap: Record<ToastType, string> = {
     success: "bg-emerald-500",
     error: "bg-rose-500",
-    info: "bg-gray-800",
+    info: "bg-gray-900",
   };
 
   const iconMap: Record<ToastType, string> = {
@@ -32,40 +32,26 @@ function ToastContainer(
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 16,
-        right: 16,
-        zIndex: 9999,
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-        maxWidth: "380px",
-      }}
-    >
+    <div class="fixed top-8 right-8 z-[9999] flex flex-col gap-4 max-w-[380px]">
       {toasts.map((t) => (
         <div
           key={t.id}
-          class={`${
-            colorMap[t.type]
-          } text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-600`}
+          class={`${colorMap[t.type]} text-white px-6 py-4 border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-xl flex items-center gap-4 text-xs font-950 uppercase tracking-widest cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all`}
           style={{
             animation: t.exiting
-              ? "toast-exit 0.3s ease-in forwards"
-              : "toast-enter 0.35s ease-out",
-            cursor: "pointer",
+              ? "toast-exit 0.2s ease-in forwards"
+              : "toast-enter 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
           }}
           onClick={() => onDismiss(t.id)}
         >
-          <span class="text-base font-800 shrink-0">{iconMap[t.type]}</span>
+          <span class="text-lg font-950 shrink-0">{iconMap[t.type]}</span>
           <span class="flex-1">{t.message}</span>
         </div>
       ))}
       <style>
         {`
-        @keyframes toast-enter { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes toast-exit { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(80px); } }
+        @keyframes toast-enter { from { opacity: 0; transform: translateX(100px) rotate(5deg); } to { opacity: 1; transform: translateX(0) rotate(0); } }
+        @keyframes toast-exit { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100px); } }
       `}
       </style>
     </div>
@@ -82,40 +68,27 @@ function ConfirmModal({
   onCancel: () => void;
 }) {
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9998,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "rgba(0,0,0,0.4)",
-        backdropFilter: "blur(4px)",
-      }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onCancel();
-      }}
-    >
-      <div
-        class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4"
-        style={{ animation: "toast-enter 0.25s ease-out" }}
-      >
-        <p class="text-sm text-gray-700 mb-5 leading-relaxed">{message}</p>
-        <div class="flex gap-3 justify-end">
+    <div class="fixed inset-0 z-[9998] flex items-center justify-center p-6 bg-gray-900/40 backdrop-blur-sm animate-fade-in">
+      <div class="bg-white border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] rounded-[2.5rem] max-w-md w-full p-10 space-y-8 animate-brutal-pop">
+        <div class="text-center space-y-4">
+          <div class="w-20 h-20 bg-rose-50 border-[3px] border-gray-900 rounded-2xl flex items-center justify-center mx-auto text-4xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            ⚠️
+          </div>
+          <h3 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter">Confirm Action</h3>
+          <p class="text-sm font-800 text-gray-400 uppercase tracking-widest leading-relaxed">{message}</p>
+        </div>
+        <div class="flex flex-col gap-3">
           <button
-            type="button"
-            onClick={onCancel}
-            class="px-4 py-2 rounded-xl text-sm font-600 text-gray-600 hover:bg-gray-100 transition-colors"
+            onClick={onConfirm}
+            class="w-full py-5 bg-rose-500 text-white font-950 rounded-2xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase tracking-widest text-[10px]"
           >
-            Cancel
+            YES, EXECUTE
           </button>
           <button
-            type="button"
-            onClick={onConfirm}
-            class="px-4 py-2 rounded-xl text-sm font-700 text-white bg-rose-500 hover:bg-rose-600 transition-colors"
+            onClick={onCancel}
+            class="w-full py-5 bg-white text-gray-900 font-950 rounded-2xl border-[3px] border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase tracking-widest text-[10px]"
           >
-            Confirm
+            CANCEL
           </button>
         </div>
       </div>

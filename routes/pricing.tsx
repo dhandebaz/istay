@@ -1,3 +1,4 @@
+import { Handlers, PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 import Header from "../islands/Header.tsx";
 import Footer from "../components/Footer.tsx";
@@ -25,315 +26,136 @@ export const handler: Handlers<PricingData> = {
     if (session) {
       try {
         const decoded = decodeURIComponent(session);
-        // Standard format is hostId|name
         hostId = decoded.includes("|") ? decoded.split("|")[0].trim() : decoded.trim();
-        
         if (hostId) {
-          try {
-            const host = await getHost(hostId);
-            if (host) {
-              subscriptionStatus = host.subscriptionStatus;
-            }
-          } catch (dbErr) {
-            console.error("[pricing-handler] Database error while fetching host:", dbErr);
-            // Don't crash the whole page, just act as if not logged in or show limited UI
-          }
+          const host = await getHost(hostId);
+          if (host) subscriptionStatus = host.subscriptionStatus;
         }
-      } catch (err) {
-        console.warn("[pricing-handler] Failed to parse session cookie:", err);
-      }
+      } catch {}
     }
-    
     return ctx.render({ hostId, subscriptionStatus });
   },
 };
 
-const SCHEMA = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  name: "istay",
-  applicationCategory: "BusinessApplication",
-  offers: {
-    "@type": "Offer",
-    price: "1000",
-    priceCurrency: "INR",
-    description: "₹1,000 monthly SaaS subscription for a Unified Hospitality Dashboard. AI usage credits are prepaid via wallet.",
-  },
-});
-
 const FAQS = [
-  {
-    q: "How does the pricing work?",
-    a: "istay charging a simple ₹1,000 monthly SaaS fee to keep your unified dashboard and direct booking channel live. AI token usage (Concierge chats, OCR) is billed separately through a prepaid wallet to ensure you only pay for what you use.",
-  },
-  {
-    q: "What is the AI Wallet?",
-    a: "The AI Wallet is where you top up credits (₹100, ₹500, or ₹1,000) for advanced AI tasks like autonomous WhatsApp responses and Global Guest Intelligence. We charge a fair rate based on actual tokens used.",
-  },
-  {
-    q: "Does istay replace Airbnb or MakeMyTrip?",
-    a: "No. istay connects them. We aren't here to replace the OTAs but to act as your central command center—connecting your calendars, messages, and reviews into one dashboard while giving you a low-fee direct channel for your repeat guests.",
-  },
-  {
-    q: "What happened to the lifetime fee?",
-    a: "We've moved to a monthly subscription of ₹1,000 to ensure we can provide continuous enterprise-grade support, real-time OTA syncing, and ongoing platform updates for all hosts.",
-  },
-  {
-    q: "How are guests charged?",
-    a: "Guests pay via UPI, debit/credit card, or net banking through our Easebuzz integration. You receive 95% directly to your linked bank account.",
-  },
+  { q: "HOW DOES PRICING WORK?", a: "ISTAY CHARGES A FLAT ₹1,000 MONTHLY KERNEL FEE TO KEEP YOUR UNIFIED DASHBOARD AND DIRECT CHANNEL LIVE. AI USAGE IS BILLED VIA PREPAID WALLET." },
+  { q: "WHAT IS THE AI WALLET?", a: "IT IS YOUR FUEL CELL FOR ADVANCED TASKS LIKE AUTONOMOUS WHATSAPP RESPONSES AND GLOBAL GUEST INTELLIGENCE. TOP UP AS NEEDED." },
+  { q: "DOES ISTAY REPLACE OTAS?", a: "NO. IT CONNECTS THEM. WE ARE YOUR CENTRAL COMMAND CENTER FOR AIRBNB, MMT, AND BOOKING.COM." },
+  { q: "HOW ARE GUESTS CHARGED?", a: "GUESTS PAY VIA UPI OR CARD. YOU RETAIN 95% DIRECTLY TO YOUR LINKED BANK ACCOUNT INSTANTLY." },
 ];
 
 export default function Pricing({ data }: PageProps<PricingData>) {
   return (
     <>
       <SEOMeta 
-        title="Pricing | istay — One Dashboard to Connect Them All"
-        description="istay connects your Airbnb, MMT, Booking.com, and more into one powerful dashboard. ₹1,000/mo flat fee. Own your guests, keep your margins."
-        schema={SCHEMA}
+        title="PRICING_KERNEL | ISTAY — UNIFIED_HOST_OS"
+        description="CONNECT EVERY CHANNEL. ONE INTERFACE TO RULE THEM ALL. ₹1,000/MO FLAT FEE."
       />
 
       <Header />
 
-      <main>
-        {/* ── HERO ─────────────────────────────────────────── */}
-        <section class="relative overflow-hidden bg-white py-20 sm:py-28">
-          <div
-            aria-hidden="true"
-            class="absolute top-0 right-0 w-96 h-96 rounded-full bg-mint-50 opacity-50 blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"
-          />
-          <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-mint-100 border border-mint-200 text-istay-900 text-xs font-800 uppercase tracking-wider mb-6">
-              Unified Host Dashboard
-            </div>
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-800 text-gray-900 tracking-tight leading-tight max-w-4xl mx-auto">
-              Connect every channel.
-              <br />
-              <span class="text-mint-500">One interface to rule them all.</span>
-            </h1>
-            <p class="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              istay isn't here to replace the OTAs — we're here to connect them. Direct booking power meets a unified command center for your entire hosting business.
-              <span class="block mt-2 font-600 text-istay-900">Manage Airbnb, Booking.com, and MMT in one place.</span>
-            </p>
-          </div>
+      <main class="bg-white pt-24">
+        {/* ── HERO ────────────────────────────────────────── */}
+        <section class="bg-gray-900 py-32 px-5 text-center relative overflow-hidden">
+           <div class="relative z-10 max-w-7xl mx-auto">
+             <span class="inline-block px-5 py-2 bg-white text-gray-900 text-[10px] font-950 uppercase tracking-[0.3em] mb-8 rounded-xl">PRICING_PROTOCOL_V4</span>
+             <h1 class="text-6xl sm:text-8xl font-950 text-white tracking-tighter leading-[0.9] uppercase mb-10">
+               OWN_EVERY_CHANNEL.<br />
+               <span class="text-mint-400">OWN_EVERY_GUEST.</span>
+             </h1>
+             <p class="text-lg sm:text-xl font-800 text-gray-400 uppercase max-w-3xl mx-auto leading-relaxed">
+               ONE COMMAND CENTER FOR AIRBNB, BOOKING.COM & MMT. DIRECT BOOKINGS AT A FLAT <span class="text-white border-b-[3px] border-mint-400">5%_MARGIN_LEAK.</span>
+             </p>
+           </div>
         </section>
 
-        {/* ── PRICING CARD ──────────────────────────────────── */}
-        <section class="py-4 pb-20 bg-white">
-          <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="relative rounded-3xl bg-gradient-to-br from-mint-400 to-emerald-600 p-px shadow-xl">
-              <div class="rounded-[23px] bg-white p-8 sm:p-12">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                  <div>
-                    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-100 text-istay-900 text-xs font-900 mb-5 tracking-tight uppercase">
-                      ✦ Professional Plan
-                    </div>
-                    <div class="mb-8">
-                      <div class="flex items-baseline gap-2 mb-1">
-                        <span class="text-5xl font-900 text-gray-900">
-                          ₹1,000
-                        </span>
-                        <span class="text-gray-400 text-sm font-500 uppercase tracking-wide">
-                          per month
-                        </span>
-                      </div>
-                      <div class="flex items-baseline gap-2">
-                        <span class="text-3xl font-800 text-mint-500">
-                          + Usage
-                        </span>
-                        <span class="text-gray-400 text-sm font-500 uppercase tracking-wide">
-                          AI Wallet
-                        </span>
-                      </div>
-                    </div>
+        {/* ── PRICING KERNEL ──────────────────────────────── */}
+        <section class="py-32 px-5 bg-white">
+           <div class="max-w-6xl mx-auto">
+             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+               <div class="p-12 bg-white border-[4px] border-gray-900 rounded-[3rem] shadow-[20px_20px_0px_0px_rgba(0,0,0,1)]">
+                  <span class="inline-block px-5 py-2 bg-mint-400 text-gray-900 text-[10px] font-950 uppercase tracking-[0.3em] mb-10 rounded-xl">PROFESSIONAL_STACK</span>
+                  <div class="flex items-baseline gap-4 mb-10">
+                    <span class="text-7xl font-950 text-gray-900 tracking-tighter">₹1,000</span>
+                    <span class="text-xs font-950 text-gray-400 uppercase tracking-widest">/MO_KERNEL</span>
+                  </div>
 
-                    <ul class="space-y-4 mb-10">
-                       {[
-                        "Unified Multi-OTA Dashboard",
-                        "24/7 AI Guest Concierge",
-                        "Real-time Calendar & Sync",
-                        "Smart OCR ID Verification",
-                        "Direct Checkout (Easebuzz)",
-                        "WhatsApp Bot Notifications",
-                        "Automated Subscription Renewal",
-                        "Manual & Instant Top-ups",
-                        "Unlimited Properties & Bookings",
-                      ].map((item) => (
-                        <li
-                          key={item}
-                          class="flex items-start gap-3 text-sm text-gray-600 font-500"
-                        >
-                          <span class="flex-shrink-0 mt-0.5 w-5 h-5 rounded-full bg-mint-50 flex items-center justify-center">
-                            <CheckIcon class="w-2.5 h-2.5" />
-                          </span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+                  <ul class="space-y-6 mb-12">
+                    {[
+                      "UNIFIED_MULTI_OTA_DASHBOARD",
+                      "24/7_AI_GUEST_CONCIERGE",
+                      "REAL_TIME_CALENDAR_SYNC",
+                      "SMART_OCR_ID_VERIFICATION",
+                      "DIRECT_BOOKING_PROTOCOL",
+                      "WHATSAPP_INCIDENT_DISPATCH",
+                      "UNLIMITED_PROPERTIES",
+                    ].map(f => (
+                      <li key={f} class="flex items-center gap-4 text-[11px] font-950 text-gray-900 uppercase tracking-widest">
+                        <div class="w-6 h-6 rounded-lg bg-mint-400 border-[2px] border-gray-900 flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                          <CheckIcon class="w-3 h-3" />
+                        </div>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
 
-                    {data.hostId ? (
-                      data.subscriptionStatus === "active" ? (
-                        <a
-                          href="/dashboard"
-                          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-istay-900 text-white font-800 shadow-md hover:bg-istay-800 hover:shadow-lg active:scale-95 transition-all duration-200"
-                        >
-                          Go to Dashboard
-                          <ArrowRightIcon class="w-4 h-4" />
-                        </a>
-                      ) : (
-                        <PricingCheckout hostId={data.hostId} />
-                      )
+                  {data.hostId ? (
+                    data.subscriptionStatus === "active" ? (
+                      <a href="/dashboard" class="block w-full py-6 bg-gray-900 text-mint-400 font-950 text-xs uppercase tracking-[0.2em] rounded-2xl border-[4px] border-gray-900 shadow-[8px_8px_0px_0px_#4ade80] text-center">ACCESS_DASHBOARD</a>
                     ) : (
-                      <a
-                        href="/register"
-                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-mint-500 text-istay-900 font-900 text-base shadow-md hover:bg-mint-400 hover:shadow-lg active:scale-95 transition-all duration-200"
-                      >
-                        Start Your Channel — ₹1,000
-                        <ArrowRightIcon class="w-4 h-4" />
-                      </a>
-                    )}
-                  </div>
+                      <PricingCheckout hostId={data.hostId} />
+                    )
+                  ) : (
+                    <a href="/register" class="block w-full py-6 bg-mint-400 text-gray-900 font-950 text-xs uppercase tracking-[0.2em] rounded-2xl border-[4px] border-gray-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center">INITIALIZE_STACK</a>
+                  )}
+               </div>
 
-                  {/* Comparison table */}
-                  <div class="rounded-2xl bg-gray-50 border border-gray-100 p-2">
-                    <table class="w-full text-sm">
-                      <thead>
-                        <tr>
-                          <th class="text-left px-4 py-4 text-xs font-700 text-gray-400 uppercase tracking-widest">
-                            Platform
-                          </th>
-                          <th class="text-right px-4 py-4 text-xs font-700 text-gray-400 uppercase tracking-widest">
-                            Fee
-                          </th>
-                          <th class="text-right px-4 py-4 text-xs font-700 text-gray-400 uppercase tracking-widest">
-                            Take Home
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="divide-y divide-gray-100">
-                        {[
-                          { name: "istay Dashboard", pct: "5%", home: "₹95,000", highlight: true },
-                          { name: "Airbnb", pct: "15%+", home: "₹85,000" },
-                          { name: "Booking.com", pct: "15%+", home: "₹85,000" },
-                          { name: "MakeMyTrip", pct: "18%+", home: "₹82,000" },
-                          { name: "Agoda", pct: "18%+", home: "₹82,000" },
-                          { name: "Expedia", pct: "18%+", home: "₹82,000" },
-                          { name: "VRBO", pct: "12%+", home: "₹88,000" },
-                          { name: "TripAdvisor", pct: "15%+", home: "₹85,000" },
-                          { name: "Goibibo", pct: "18%+", home: "₹82,000" },
-                        ].map(({ name, pct, home, highlight }) => (
-                          <tr
-                            key={name}
-                            class={`${
-                              highlight ? "bg-white shadow-sm rounded-xl" : ""
-                            }`}
-                          >
-                            <td
-                              class={`px-4 py-4 font-700 ${
-                                highlight ? "text-istay-900" : "text-gray-700"
-                              }`}
-                            >
-                              {name}
-                              {highlight && (
-                                <span class="ml-2 text-[10px] bg-mint-500 text-istay-900 font-900 px-1.5 py-0.5 rounded-full">
-                                  BEST VALUE
-                                </span>
-                              )}
-                            </td>
-                            <td
-                              class={`px-4 py-4 text-right font-600 ${
-                                highlight ? "text-mint-500" : "text-rose-400"
-                              }`}
-                            >
-                              {pct}
-                            </td>
-                            <td class="px-4 py-4 text-right font-800 text-gray-900">
-                              {home}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  <p class="mt-6 text-[10px] text-gray-400 text-center uppercase tracking-widest font-700">
-                    * Rates are exclusive of 18% GST as per Indian Tax Laws.
-                  </p>
-                </div>
+               <div class="space-y-12">
+                 <div class="p-10 bg-gray-50 border-[4px] border-gray-900 rounded-[2.5rem] shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+                   <p class="text-[10px] font-950 text-rose-500 uppercase tracking-widest mb-4">THE_ALTERNATIVE_LOSS</p>
+                   <table class="w-full text-left uppercase text-[10px] font-950 tracking-widest">
+                     <thead>
+                       <tr class="border-b-2 border-gray-900">
+                         <th class="py-4">ENTITY</th>
+                         <th class="py-4 text-right">COMMISSION</th>
+                       </tr>
+                     </thead>
+                     <tbody class="text-gray-500">
+                       <tr class="border-b-[1px] border-gray-200"><td class="py-4">AIRBNB</td><td class="py-4 text-right">15-20%</td></tr>
+                       <tr class="border-b-[1px] border-gray-200"><td class="py-4">BOOKING.COM</td><td class="py-4 text-right">15-25%</td></tr>
+                       <tr class="border-b-[1px] border-gray-200"><td class="py-4">MMT</td><td class="py-4 text-right">18-22%</td></tr>
+                       <tr class="text-mint-500"><td class="py-4 font-950">ISTAY_CORE</td><td class="py-4 text-right font-950">5%</td></tr>
+                     </tbody>
+                   </table>
+                 </div>
+
+                 <div class="p-10 bg-mint-400 border-[4px] border-gray-900 rounded-[2.5rem] shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+                    <p class="text-[10px] font-950 text-gray-900 uppercase tracking-widest mb-2">SYSTEM_HEALTH_SIGNAL</p>
+                    <p class="text-2xl font-950 text-gray-900 uppercase leading-snug">JOIN_1350+_HOSTS_WHO_STOPPED_THE_BLEEDING.</p>
+                 </div>
+               </div>
+             </div>
+           </div>
+        </section>
+
+        {/* ── REVENUE CALCULATOR ──────────────────────────── */}
+        <section class="py-32 bg-gray-50 px-5">
+           <div class="max-w-7xl mx-auto">
+             <LazyIsland placeholderHeight="600px">
+               <EarningsCalculator />
+             </LazyIsland>
+           </div>
+        </section>
+
+        {/* ── FAQ SEARCH ──────────────────────────────────── */}
+        <section class="py-32 bg-white px-5">
+           <div class="max-w-4xl mx-auto">
+              <div class="mb-20 text-center">
+                <span class="inline-block px-5 py-2 bg-gray-900 text-white text-[10px] font-950 uppercase tracking-[0.3em] mb-8 rounded-xl">KNOWLEDGE_BASE</span>
+                <h2 class="text-5xl font-950 text-gray-900 tracking-tighter uppercase">QUERY_THE_CORE.</h2>
               </div>
-            </div>
-          </div>
-        </section>
-        
-        {/* ── SOCIAL PROOF ────────────────────────────────────── */}
-        <section class="py-24 bg-istay-900 overflow-hidden relative">
-          <div class="absolute inset-0 opacity-10 pointer-events-none">
-            <div class="absolute top-10 left-10 w-64 h-64 bg-mint-500 rounded-full blur-[100px]" />
-            <div class="absolute bottom-10 right-10 w-96 h-96 bg-teal-500 rounded-full blur-[120px]" />
-          </div>
-          
-          <div class="max-w-7xl mx-auto px-6 lg:px-8 relative">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                { 
-                  quote: "Switched from Airbnb and saved ₹1.2L in commissions in the first 3 months. The direct booking experience is seamless.",
-                  author: "Aditi S.",
-                  role: "Superhost, Delhi"
-                },
-                { 
-                  quote: "istay gives me full control over guest selection. No more middleman taking a cut of my hard-earned revenue.",
-                  author: "Rahul M.",
-                  role: "Villa Owner, Goa"
-                },
-                { 
-                  quote: "The AI concierge handled 90% of my booking inquiries. It's like having a co-host that never sleeps.",
-                  author: "Priya V.",
-                  role: "Apartment Chain, Bangalore"
-                }
-              ].map((t) => (
-                <div key={t.author} class="bg-white/5 backdrop-blur-sm border border-white/10 p-8 rounded-3xl">
-                  <div class="flex gap-1 mb-4 text-mint-500">
-                    {[1,2,3,4,5].map(i => <StarIcon key={i} class="w-4 h-4 fill-current" />)}
-                  </div>
-                  <p class="text-lg text-white font-500 italic mb-6">"{t.quote}"</p>
-                  <div>
-                    <div class="text-white font-800 text-sm">{t.author}</div>
-                    <div class="text-white/40 text-xs">{t.role}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-
-        {/* ── EARNINGS CALCULATOR ──────────────────────────── */}
-        <section class="py-24 bg-gray-50">
-          <div class="max-w-4xl mx-auto px-4 text-center mb-12">
-            <h2 class="text-3xl sm:text-4xl font-900 text-gray-900 tracking-tight">
-              Calculate your freedom
-            </h2>
-            <p class="mt-4 text-gray-500 text-lg">
-              See exactly how much more you earn compared to high-commission
-              platforms.
-            </p>
-          </div>
-          <div class="max-w-4xl mx-auto px-4">
-            <LazyIsland placeholderHeight="400px">
-              <EarningsCalculator />
-            </LazyIsland>
-          </div>
-        </section>
-
-        {/* ── FAQ ───────────────────────────────────────────── */}
-        <section class="py-24 bg-white">
-          <div class="max-w-3xl mx-auto px-4">
-            <h2 class="text-3xl font-900 text-gray-900 text-center mb-16 underline decoration-istay-100 decoration-8 underline-offset-8">
-              Common Questions
-            </h2>
-            <LazyIsland placeholderHeight="300px">
               <FaqSearch faqs={FAQS} />
-            </LazyIsland>
-          </div>
+           </div>
         </section>
       </main>
 

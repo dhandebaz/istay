@@ -41,7 +41,8 @@ import type {
   WebhookConfig,
 } from "./types.ts";
 // Use the standard Prisma Client from the npm package with Deno-compatible import.
-import { PrismaClient } from "@prisma/client";
+import PrismaPkg from "@prisma/client";
+const { PrismaClient } = PrismaPkg;
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 
@@ -73,16 +74,20 @@ export function getPrisma(): any {
     
     // In Deno, we use the Driver Adapter for all non-Accelerate/non-Prisma-Postgres connections
     // to avoid native binary issues.
-    if (url.startsWith("prisma://") || url.startsWith("prisma+postgres://")) {
-      console.log("[db] Initializing standard PrismaClient (no adapter)");
-      _prisma = new PrismaClient();
-    } else {
-      console.log("[db] Initializing PrismaClient with Driver Adapter");
-      const pool = new pg.Pool({ connectionString: url });
-      const adapter = new PrismaPg(pool);
-      // NOTE: With driver-adapters, we STILL pass the datasource url to the client 
-      // but it communicates via the adapter.
-      _prisma = new PrismaClient({ adapter });
+    try {
+      if (url.startsWith("prisma://") || url.startsWith("prisma+postgres://")) {
+        console.log("[db] Initializing standard PrismaClient (no adapter)");
+        _prisma = new PrismaClient();
+      } else {
+        console.log("[db] Initializing PrismaClient with Driver Adapter");
+        const pool = new pg.Pool({ connectionString: url });
+        const adapter = new PrismaPg(pool);
+        _prisma = new PrismaClient({ adapter });
+      }
+    } catch (err) {
+      console.error("[db] Prisma Initialization Failed:", err.message);
+      // Create a dummy client or just let it be null so we can handle it later
+      return null;
     }
   }
   return _prisma;
@@ -613,35 +618,79 @@ export async function getBookingByPhone(
 }
 
 export async function listBookings(hostId: string): Promise<Booking[]> {
-  const kv = await getKv();
-  const bookings: Booking[] = [];
-  if (kv) {
-    const iter = kv.list<Booking>({ prefix: ["booking", hostId] });
-    for await (const entry of iter) {
-      bookings.push(entry.value);
-    }
-  }
-  return bookings.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  );
+  const prisma = getPrisma();
+  const bookings = await prisma.booking.findMany({
+    where: { hostId },
+    orderBy: { createdAt: "desc" },
+  });
+  return bookings.map((b) => ({
+    ...b,
+    status: b.status as any,
+    checkIn: b.checkIn.toISOString(),
+    checkOut: b.checkOut.toISOString(),
+    createdAt: b.createdAt.toISOString(),
+    updatedAt: b.updatedAt.toISOString(),
+    checkoutChecklist: b.checkoutChecklist as any,
+  }));
 }
 
 export async function listBookingsByProperty(
   hostId: string,
   propertyId: string,
 ): Promise<Booking[]> {
-  const kv = await getKv();
-  const bookings: Booking[] = [];
-  if (kv) {
-    const iter = kv.list<Booking>({ prefix: ["booking", hostId] });
-    for await (const entry of iter) {
-      if (entry.value.propertyId === propertyId) {
-        bookings.push(entry.value);
+  const prisma = getPrisma();
+  const bookings = await prisma.booking.findMany({
+    where: { hostId, propertyId },
+    orderBy: { createdAt: "desc" },
+  });
+  return bookings.map((b) => ({
+    ...b,
+    status: b.status as any,
+    checkIn: b.checkIn.toISOString(),
+    checkOut: b.checkOut.toISOString(),
+    createdAt: b.createdAt.toISOString(),
+    updatedAt: b.updatedAt.toISOString(),
+    checkoutChecklist: b.checkoutChecklist as any,
+  }));
+}
+
+/**
+ * Aggregates unique guests from all bookings for a given host.
+ */
+export async function listGuestsByHost(hostId: string) {
+  const prisma = getPrisma();
+  const bookings = await prisma.booking.findMany({
+    where: { hostId },
+    include: {
+      verification: true,
+    },
+  });
+
+  const guestMap = new Map<string, any>();
+  for (const b of bookings) {
+    const existing = guestMap.get(b.guestEmail);
+    if (existing) {
+      existing.bookingCount++;
+      existing.totalSpent += b.amount;
+      if (b.checkOut > new Date(existing.lastStay)) {
+        existing.lastStay = b.checkOut.toISOString();
       }
+      if (b.idVerified) existing.verified = true;
+    } else {
+      guestMap.set(b.guestEmail, {
+        name: b.guestName,
+        email: b.guestEmail,
+        phone: b.guestPhone ?? "",
+        bookingCount: 1,
+        totalSpent: b.amount,
+        lastStay: b.checkOut.toISOString(),
+        verified: b.idVerified ?? false,
+      });
     }
   }
-  return bookings.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+
+  return Array.from(guestMap.values()).sort((a, b) =>
+    b.lastStay.localeCompare(a.lastStay)
   );
 }
 
@@ -835,6 +884,23 @@ export async function getCaretakerToken(
 
 // ── GUEST VERIFICATION ────────────────────────────────────────
 
+export async function getGuestVerification(
+  bookingId: string,
+): Promise<GuestVerification | null> {
+  const prisma = getPrisma();
+  const verif = await prisma.guestVerification.findUnique({
+    where: { bookingId },
+  });
+  if (!verif) return null;
+  return {
+    ...verif,
+    status: verif.status as any,
+    extractedData: verif.extractedData as any,
+    createdAt: verif.createdAt.toISOString(),
+    verifiedAt: verif.verifiedAt?.toISOString(),
+  };
+}
+
 export async function saveGuestVerification(
   data: GuestVerification,
 ): Promise<void> {
@@ -842,6 +908,9 @@ export async function saveGuestVerification(
   await prisma.guestVerification.upsert({
     where: { bookingId: data.bookingId },
     update: {
+      guestName: data.guestName,
+      idType: data.idType,
+      idObjectKey: data.idObjectKey,
       status: data.status,
       extractedData: data.extractedData as any,
       matchScore: data.matchScore,
@@ -860,24 +929,6 @@ export async function saveGuestVerification(
       verifiedAt: data.verifiedAt ? new Date(data.verifiedAt) : null,
     },
   });
-}
-
-export async function getGuestVerification(
-  bookingId: string,
-): Promise<GuestVerification | null> {
-  const prisma = getPrisma();
-  const v = await prisma.guestVerification.findUnique({
-    where: { bookingId },
-  });
-  if (!v) return null;
-  return {
-    ...v,
-    idType: v.idType as any,
-    status: v.status as any,
-    extractedData: v.extractedData as any,
-    createdAt: v.createdAt.toISOString(),
-    verifiedAt: v.verifiedAt?.toISOString(),
-  };
 }
 
 // ── DASHBOARD AGGREGATE ───────────────────────────────────────
@@ -928,22 +979,45 @@ const KNOWLEDGE_CACHE = new Map<
 >();
 const KNOWLEDGE_TTL = 5 * 60 * 1000;
 
-export async function saveKnowledge(data: HostKnowledge): Promise<void> {
+export async function getKnowledgeByPropId(
+  propId: string,
+): Promise<HostKnowledge | null> {
   const prisma = getPrisma();
-  await prisma.hostKnowledge.upsert({
-    where: { id: `${data.hostId}_${data.propertyId}` }, // Unique ID for Knowledge
-    update: {
-      content: data.content,
-    },
-    create: {
-      id: `${data.hostId}_${data.propertyId}`,
-      hostId: data.hostId,
-      propertyId: data.propertyId,
-      content: data.content,
-    },
+  const knowledge = await prisma.hostKnowledge.findFirst({
+    where: { propertyId: propId },
+    orderBy: { updatedAt: "desc" },
   });
-  // Invalidate cache
-  KNOWLEDGE_CACHE.delete(data.propertyId);
+  if (!knowledge) return null;
+  return {
+    ...knowledge,
+    updatedAt: knowledge.updatedAt.toISOString(),
+  };
+}
+
+export async function saveKnowledge(
+  hostId: string,
+  propId: string,
+  content: string,
+): Promise<void> {
+  const prisma = getPrisma();
+  const existing = await prisma.hostKnowledge.findFirst({
+    where: { propertyId: propId },
+  });
+
+  if (existing) {
+    await prisma.hostKnowledge.update({
+      where: { id: existing.id },
+      data: { content },
+    });
+  } else {
+    await prisma.hostKnowledge.create({
+      data: {
+        hostId,
+        propertyId: propId,
+        content,
+      },
+    });
+  }
 }
 
 export async function getKnowledge(
@@ -1640,5 +1714,35 @@ export async function notifyHostLowBalance(
     });
   } catch (err) {
     console.error("[db] notifyHostLowBalance failed:", err);
+  }
+}
+
+export async function markNotificationAsRead(id: string): Promise<boolean> {
+  const prisma = getPrisma();
+  if (!prisma) return false;
+  try {
+    await prisma.notification.update({
+      where: { id },
+      data: { read: true },
+    });
+    return true;
+  } catch (err) {
+    console.error("[db] markNotificationAsRead failed:", err);
+    return false;
+  }
+}
+
+export async function markAllNotificationsAsRead(hostId: string): Promise<boolean> {
+  const prisma = getPrisma();
+  if (!prisma) return false;
+  try {
+    await prisma.notification.updateMany({
+      where: { hostId, read: false },
+      data: { read: true },
+    });
+    return true;
+  } catch (err) {
+    console.error("[db] markAllNotificationsAsRead failed:", err);
+    return false;
   }
 }

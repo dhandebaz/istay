@@ -1,6 +1,11 @@
 {
-  "name": "istay",
+  "name": "istay Host Dashboard",
   "short_name": "istay",
+  "description": "Manage your premium properties, check bookings, and get real-time notifications.",
+  "dir": "ltr",
+  "lang": "en",
+  "orientation": "portrait",
+  "scope": "/",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -10,11 +15,12 @@
     {
       "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "theme_color": "#0C4D4D",
   "background_color": "#ffffff",
   "display": "standalone",
-  "start_url": "/"
+  "start_url": "/dashboard"
 }

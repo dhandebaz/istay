@@ -1,17 +1,17 @@
-import { PrismaClient } from "npm:@prisma/client@6.4.1";
-import "https://deno.land/x/dotenv@v3.2.2/load.ts";
-
-const prisma = new PrismaClient();
+import { getPrisma, getKv } from "../utils/db.ts";
 
 async function test() {
+  console.log("Testing KV...");
+  const kv = await getKv();
+  console.log("KV status:", kv ? "Connected" : "Failed");
+
+  console.log("Testing Prisma...");
   try {
-    console.log("Connecting to database...");
-    const host = await prisma.host.findFirst();
-    console.log("Success! Found host:", host?.name || "None");
-  } catch (e) {
-    console.error("Connection failed:", e);
-  } finally {
-    await prisma.$disconnect();
+    const prisma = getPrisma();
+    const count = await prisma.host.count();
+    console.log("Prisma Host Count:", count);
+  } catch (err) {
+    console.error("Prisma Failed:", err.message);
   }
 }
 

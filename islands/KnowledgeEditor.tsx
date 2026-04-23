@@ -186,18 +186,23 @@ export default function KnowledgeEditor({
 
   // ── Render ────────────────────────────────────────────────
   return (
-    <div class="space-y-5">
+    <div class="space-y-8">
       {/* Property Header */}
-      <div class="flex items-center justify-between">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
-          <h2 class="text-lg font-700 text-gray-900">{propertyName}</h2>
-          <p class="text-xs text-gray-400 mt-0.5">
-            AI Concierge Knowledge Base
+          <div class="flex items-center gap-3 mb-2">
+             <div class="w-2 h-2 rounded-full bg-mint-500 animate-pulse" />
+             <h2 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter">{propertyName}</h2>
+          </div>
+          <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.2em]">
+            ASSET_COGNITIVE_KERNEL
           </p>
         </div>
-        <span class="text-xs text-gray-400">
-          {charCount.value.toLocaleString()} / {MAX_CHARS.toLocaleString()}
-        </span>
+        <div class="px-5 py-2 bg-gray-50 border-[2px] border-gray-900 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <span class="text-[10px] font-950 text-gray-900 uppercase tracking-widest">
+            {charCount.value.toLocaleString()} / {MAX_CHARS.toLocaleString()} _ BYTES
+          </span>
+        </div>
       </div>
 
       <KnowledgeUploader
@@ -210,7 +215,7 @@ export default function KnowledgeEditor({
       />
 
       {/* Editor */}
-      <div class="relative">
+      <div class="relative group">
         <textarea
           ref={textareaRef}
           value={content.value}
@@ -222,96 +227,53 @@ export default function KnowledgeEditor({
             }
           }}
           rows={16}
-          placeholder="Type your property knowledge base here in Markdown format...
-
-Include WiFi credentials, check-in instructions, house rules, nearby places, caretaker contact, and emergency numbers.
-
-Your AI concierge will use ONLY this information to answer guests."
-          class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 font-mono leading-relaxed focus:border-mint-400 focus:outline-none focus:ring-2 focus:ring-mint-100 resize-y transition-all"
+          placeholder="ENTER_ASSET_LOGIC_HERE..."
+          class="w-full px-8 py-8 rounded-[2rem] border-[4px] border-gray-900 bg-white text-xs font-900 text-gray-900 leading-relaxed focus:bg-gray-50 focus:shadow-[8px_8px_0px_0px_#4ade80] outline-none transition-all resize-y selection:bg-mint-400"
           aria-label="Knowledge base content"
           spellcheck={false}
         />
-
-        {/* Char count bar */}
-        <div class="absolute bottom-3 right-3 flex items-center gap-2">
-          {charCount.value > MAX_CHARS * 0.9 && (
-            <span class="text-xs text-amber-500 font-500">
-              {MAX_CHARS - charCount.value} left
-            </span>
-          )}
-        </div>
       </div>
 
       {/* Action Row */}
-      <div class="flex flex-wrap gap-3">
+      <div class="flex flex-wrap gap-5">
         {/* Save */}
         <button
           onClick={handleSave}
           disabled={state.value === "saving" || !content.value.trim()}
-          class={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-700 transition-all active:scale-95 ${
+          class={`flex items-center gap-3 px-8 py-4 rounded-2xl text-[11px] font-950 uppercase tracking-[0.2em] border-[3px] border-gray-900 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ${
             state.value === "saved"
-              ? "bg-emerald-500 text-white"
-              : "bg-mint-500 text-white hover:bg-mint-600"
+              ? "bg-emerald-500 text-white shadow-none"
+              : "bg-mint-400 text-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-mint-500"
           } disabled:opacity-40 disabled:cursor-not-allowed`}
         >
           {state.value === "saving" && (
-            <span class="w-4 h-4 border-2 border-white/60 border-t-white rounded-full animate-spin" />
+            <span class="w-4 h-4 border-[3px] border-gray-900 border-t-white rounded-full animate-spin" />
           )}
           {state.value === "saved" && (
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 14 14"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M2 7L5.5 10.5L12 3.5"
-                stroke="white"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
+              <polyline points="20 6 9 17 4 12" />
             </svg>
           )}
           {state.value === "saved"
-            ? "Saved!"
+            ? "COMMITTED"
             : state.value === "saving"
-            ? "Saving..."
-            : hasChanges
-            ? "Save Changes"
-            : "Save"}
+            ? "TRANSMITTING"
+            : "COMMIT_CHANGES"}
         </button>
 
         {/* Use Template */}
         <button
           onClick={handleUseTemplate}
-          class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-600 text-gray-600 hover:bg-gray-50 transition-colors active:scale-95"
+          class="flex items-center gap-3 px-8 py-4 bg-white border-[3px] border-gray-900 rounded-2xl text-[11px] font-950 text-gray-900 uppercase tracking-[0.2em] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            aria-hidden="true"
-          >
-            <rect
-              x="2"
-              y="1"
-              width="10"
-              height="12"
-              rx="1.5"
-              stroke="currentColor"
-              stroke-width="1.25"
-            />
-            <path
-              d="M5 4H9M5 7H9M5 10H7"
-              stroke="currentColor"
-              stroke-width="1.25"
-              stroke-linecap="round"
-            />
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10 9 9 9 8 9" />
           </svg>
-          Use Template
+          LOAD_TEMPLATE
         </button>
 
         {/* Test AI */}
@@ -326,35 +288,19 @@ Your AI concierge will use ONLY this information to answer guests."
             testSessionId.value = null;
             testSuggestions.value = [];
           }}
-          class={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-600 transition-all active:scale-95 ${
+          class={`flex items-center gap-3 px-8 py-4 rounded-2xl text-[11px] font-950 uppercase tracking-[0.2em] border-[3px] border-gray-900 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none ${
             showTestChat.value
-              ? "bg-purple-500 text-white"
-              : "border border-purple-200 text-purple-600 hover:bg-purple-50"
+              ? "bg-purple-500 text-white shadow-none"
+              : "bg-white text-purple-600 shadow-[6px_6px_0px_0px_#a855f7] hover:bg-purple-50"
           }`}
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle
-              cx="7"
-              cy="7"
-              r="5.5"
-              stroke="currentColor"
-              stroke-width="1.25"
-            />
-            <path
-              d="M5 5.5C5 4.67 5.67 4 6.5 4H7.5C8.33 4 9 4.67 9 5.5C9 6.33 8.33 7 7.5 7H7V8.5"
-              stroke="currentColor"
-              stroke-width="1.25"
-              stroke-linecap="round"
-            />
-            <circle cx="7" cy="10" r="0.75" fill="currentColor" />
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-10.6 8.5 8.5 0 0 1 7 3.7Z" />
+            <path d="m11 8 1 2 2-2" />
+            <path d="M12 11v4" />
+            <path d="M12 18h.01" />
           </svg>
-          {showTestChat.value ? "Close Test" : "Test AI"}
+          {showTestChat.value ? "ABORT_TEST" : "INITIALIZE_AI_PROBE"}
         </button>
       </div>
 
@@ -368,32 +314,25 @@ Your AI concierge will use ONLY this information to answer guests."
 
       {/* Side Drawer for Test AI */}
       {showTestChat.value && (
-        <div class="fixed inset-0 z-50 overflow-hidden">
+        <div class="fixed inset-0 z-[100] overflow-hidden">
           {/* Backdrop */}
           <div
-            class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity duration-300"
+            class="absolute inset-0 bg-gray-900/60 backdrop-blur-md transition-opacity duration-300"
             onClick={() => (showTestChat.value = false)}
           />
 
           {/* Drawer */}
-          <div class="absolute inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl flex flex-col transform transition-transform duration-300 translate-x-0">
+          <div class="absolute inset-y-0 right-0 w-full max-w-md bg-white border-l-[6px] border-gray-900 shadow-[-20px_0px_0px_0px_#a855f7] flex flex-col transform transition-transform duration-300 translate-x-0">
             {/* Header */}
-            <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
+            <div class="px-8 py-8 border-b-[4px] border-gray-900 flex items-center justify-between bg-white sticky top-0 z-10">
               <div>
-                <h3 class="text-base font-800 text-gray-900">AI Playground</h3>
-                <p class="text-[11px] text-gray-400 font-500 uppercase tracking-wider">
-                  Testing as Guest
+                <h3 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter">AI_Playground</h3>
+                <p class="text-[10px] text-gray-400 font-950 uppercase tracking-[0.3em] mt-1">
+                  KERNEL_PROBE // GUEST_EMULATION
                 </p>
               </div>
               <button
                 onClick={() => (showTestChat.value = false)}
-                class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-gray-100 text-gray-400 hover:text-gray-900 transition-all"
-              >
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M15 5L5 15M5 5L15 15"
-                    stroke="currentColor"
-                    stroke-width="2"
                     stroke-linecap="round"
                   />
                 </svg>
@@ -415,19 +354,18 @@ Your AI concierge will use ONLY this information to answer guests."
             )}
 
             {/* Chat Body */}
-            <div class="flex-1 overflow-y-auto px-6 py-6 space-y-4 no-scrollbar bg-gray-50/50">
+            <div class="flex-1 overflow-y-auto px-8 py-8 space-y-6 no-scrollbar bg-gray-50">
               {testMessages.value.length === 0 && (
-                <div class="h-full flex flex-col items-center justify-center text-center px-4 space-y-4">
-                  <div class="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center text-3xl">
+                <div class="h-full flex flex-col items-center justify-center text-center px-4 space-y-8">
+                  <div class="w-24 h-24 rounded-[2rem] bg-purple-400 border-[4px] border-gray-900 flex items-center justify-center text-5xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] animate-bounce">
                     🤖
                   </div>
                   <div>
-                    <h4 class="text-sm font-700 text-gray-900">
-                      Ask your Concierge
+                    <h4 class="text-lg font-950 text-gray-900 uppercase tracking-tighter">
+                      Probe_Initialized
                     </h4>
-                    <p class="text-[11px] text-gray-400 mt-1 max-w-[180px]">
-                      Type a question or pick a suggestion below to see how the
-                      AI answers.
+                    <p class="text-[10px] text-gray-400 font-800 uppercase tracking-[0.2em] mt-2 max-w-[200px] mx-auto">
+                      TRANSMIT A QUERY TO VERIFY KERNEL LOGIC ACCURACY.
                     </p>
                   </div>
                 </div>
@@ -441,10 +379,10 @@ Your AI concierge will use ONLY this information to answer guests."
                   }`}
                 >
                   <div
-                    class={`max-w-[85%] px-4 py-3 rounded-2xl text-xs leading-relaxed shadow-sm ${
+                    class={`max-w-[85%] px-6 py-4 rounded-2xl text-[11px] font-800 uppercase tracking-tight leading-relaxed border-[3px] border-gray-900 ${
                       msg.role === "user"
-                        ? "bg-purple-600 text-white rounded-tr-sm"
-                        : "bg-white border border-gray-100 text-gray-800 rounded-tl-sm"
+                        ? "bg-purple-500 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        : "bg-white text-gray-900 shadow-[4px_4px_0px_0px_#a855f7]"
                     }`}
                   >
                     {msg.content}
@@ -453,28 +391,29 @@ Your AI concierge will use ONLY this information to answer guests."
               ))}
 
               {testLoading.value && (
-                <div class="flex gap-1.5 items-center px-4 py-3 bg-white border border-gray-100 rounded-2xl w-fit shadow-sm">
+                <div class="flex gap-2 items-center px-6 py-4 bg-white border-[3px] border-gray-900 rounded-2xl w-fit shadow-[4px_4px_0px_0px_#a855f7]">
                   {[0, 1, 2].map((i) => (
                     <div
                       key={i}
-                      class="w-1.5 h-1.5 rounded-full bg-purple-400 animate-bounce"
-                      style={`animation-delay: ${i * 150}ms;`}
+                      class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"
+                      style={`animation-delay: ${i * 200}ms;`}
                     />
                   ))}
+                  <span class="text-[10px] font-950 text-gray-400 ml-2">PROBING...</span>
                 </div>
               )}
             </div>
 
             {/* Input & Footer */}
-            <div class="p-6 border-t border-gray-100 bg-white">
+            <div class="p-8 border-t-[4px] border-gray-900 bg-white">
               {/* Suggestions */}
               {testSuggestions.value.length > 0 && !testLoading.value && (
-                <div class="flex gap-2 overflow-x-auto no-scrollbar mb-4 pb-1">
+                <div class="flex gap-3 overflow-x-auto no-scrollbar mb-6 pb-2">
                   {testSuggestions.value.map((s, i) => (
                     <button
                       key={i}
                       onClick={() => sendTestMessage(s)}
-                      class="flex-shrink-0 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-[10px] font-700 text-purple-700 hover:bg-purple-100 transition-all whitespace-nowrap"
+                      class="flex-shrink-0 px-4 py-2 rounded-xl bg-gray-900 text-mint-400 text-[9px] font-950 uppercase tracking-widest border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all whitespace-nowrap"
                     >
                       {s}
                     </button>
@@ -495,24 +434,25 @@ Your AI concierge will use ONLY this information to answer guests."
                   onInput={(
                     e,
                   ) => (testInput.value = (e.target as HTMLInputElement).value)}
-                  placeholder="Ask a guest question..."
+                  placeholder="TRANSMIT_QUERY..."
                   disabled={!isApiConfigured.value}
-                  class="w-full pl-4 pr-12 py-3.5 rounded-2xl bg-gray-100 text-xs text-gray-900 placeholder:text-gray-400 focus:bg-white focus:ring-2 focus:ring-purple-100 focus:outline-none transition-all border-none disabled:opacity-50"
+                  class="w-full px-6 py-5 rounded-2xl bg-gray-50 border-[3px] border-gray-900 text-xs font-950 text-gray-900 placeholder:text-gray-300 focus:bg-white focus:shadow-[6px_6px_0px_0px_#a855f7] outline-none transition-all uppercase tracking-widest"
                   maxLength={500}
                 />
                 <button
                   type="submit"
                   disabled={!testInput.value.trim() || testLoading.value ||
                     !isApiConfigured.value}
-                  class="absolute right-2 top-2 w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center hover:bg-purple-700 active:scale-90 transition-all disabled:opacity-40 shadow-sm"
+                  class="absolute right-3 top-3 w-10 h-10 rounded-xl bg-gray-900 text-white border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#a855f7] flex items-center justify-center hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all disabled:opacity-40"
                 >
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M1 7L13 1L7 13L6.25 7.75L1 7Z" fill="white" />
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <line x1="22" y1="2" x2="11" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
                   </svg>
                 </button>
               </form>
-              <p class="mt-3 text-[10px] text-center text-gray-400">
-                AI uses your saved knowledge to respond.
+              <p class="mt-4 text-[9px] text-center text-gray-400 font-950 uppercase tracking-[0.2em]">
+                KERNEL RESPONDS BASED ON COMMITTED LOGIC.
               </p>
             </div>
           </div>
@@ -520,20 +460,17 @@ Your AI concierge will use ONLY this information to answer guests."
       )}
 
       {/* Help text */}
-      <div class="p-5 rounded-2xl bg-gray-50 border border-gray-100">
-        <div class="flex items-center gap-2 mb-2">
-          <span class="text-lg">📖</span>
-          <h4 class="text-xs font-800 text-gray-700">
-            Writing Great Knowledge
+      <div class="p-8 rounded-[2.5rem] bg-gray-900 border-[4px] border-gray-900 shadow-[10px_10px_0px_0px_#4ade80]">
+        <div class="flex items-center gap-4 mb-4">
+          <span class="text-3xl">📖</span>
+          <h4 class="text-sm font-950 text-white uppercase tracking-widest">
+            ENGINE_OPTIMIZATION
           </h4>
         </div>
-        <p class="text-[11px] text-gray-500 leading-relaxed">
-          Use clear bullet points. Include{" "}
-          <span class="text-gray-900 font-600">WiFi password</span>,
-          <span class="text-gray-900 font-600">caretaker name</span>, and{" "}
-          <span class="text-gray-900 font-600">emergency spots</span>. Markdown
-          is supported. The AI only knows what you write here — it has no access
-          to your Airbnb account once imported.
+        <p class="text-[11px] text-gray-400 font-700 uppercase leading-relaxed tracking-widest">
+          Use clear bullet points. Include <span class="text-mint-400">WiFi credentials</span>,
+          <span class="text-mint-400">caretaker protocols</span>, and <span class="text-mint-400">emergency extraction points</span>. 
+          Markdown is supported. The kernel only knows what you commit here.
         </p>
       </div>
     </div>

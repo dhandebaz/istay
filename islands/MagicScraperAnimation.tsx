@@ -11,86 +11,73 @@ export default function MagicScraperAnimation() {
   }, []);
 
   return (
-    <div class="relative bg-white rounded-3xl border border-gray-200 shadow-2xl overflow-hidden h-[340px] flex flex-col">
+    <div class="relative bg-white rounded-[2.5rem] border-[4px] border-gray-900 shadow-[20px_20px_0px_0px_rgba(0,0,0,1)] overflow-hidden h-[400px] flex flex-col">
       {/* Header bar simulating browser */}
-      <div class="bg-gray-50 border-b border-gray-100 flex items-center px-4 py-3 gap-2">
-        <div class="flex gap-1.5">
-          <div class="w-3 h-3 rounded-full bg-rose-400" />
-          <div class="w-3 h-3 rounded-full bg-amber-400" />
-          <div class="w-3 h-3 rounded-full bg-emerald-400" />
+      <div class="bg-gray-50 border-b-[4px] border-gray-900 flex items-center px-6 py-4 gap-4">
+        <div class="flex gap-2">
+          <div class="w-3 h-3 rounded-full bg-rose-500 border-[2px] border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" />
+          <div class="w-3 h-3 rounded-full bg-amber-400 border-[2px] border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" />
+          <div class="w-3 h-3 rounded-full bg-mint-500 border-[2px] border-gray-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]" />
         </div>
-        <div class="ml-4 flex-1 h-7 bg-white rounded-md border border-gray-200 flex items-center px-3 shadow-inner">
+        <div class="flex-1 h-9 bg-white rounded-xl border-[3px] border-gray-900 flex items-center px-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <span
-            class={`text-[10px] sm:text-xs text-gray-500 font-mono overflow-hidden whitespace-nowrap transition-opacity duration-300 ${
+            class={`text-[10px] text-gray-400 font-950 uppercase tracking-widest overflow-hidden whitespace-nowrap transition-opacity duration-300 ${
               step >= 1 ? "opacity-100" : "opacity-0"
             }`}
           >
-            https://airbnb.com/h/beautiful-villa-stay
+            HTTPS://AIRBNB.COM/H/VILLA_PRIME
           </span>
         </div>
       </div>
 
-      <div class="flex-1 relative flex flex-col items-center justify-center p-6 bg-white overflow-hidden">
+      <div class="flex-1 relative flex flex-col items-center justify-center p-8 bg-white overflow-hidden">
         {/* Step 0: Idle/Waiting */}
         <div
           class={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-out ${
             step === 0
               ? "opacity-100 translate-y-0"
-              : "opacity-0 -translate-y-4 pointer-events-none"
+              : "opacity-0 -translate-y-10 pointer-events-none"
           }`}
         >
-          <div class="w-16 h-16 rounded-2xl bg-mint-50 text-mint-600 flex items-center justify-center mb-4 border border-mint-100 shadow-sm">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71">
-              </path>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71">
-              </path>
-            </svg>
+          <div class="w-24 h-24 rounded-3xl bg-mint-400 border-[4px] border-gray-900 flex items-center justify-center mb-6 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] rotate-[-6deg]">
+             <span class="text-4xl">⚡</span>
           </div>
-          <p class="text-base font-800 text-gray-900">Paste your link</p>
-          <p class="text-sm font-500 text-gray-400 mt-1">
-            We'll handle the rest...
+          <h4 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter">Initialize_Asset</h4>
+          <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em] mt-2">
+            Awaiting source link...
           </p>
         </div>
 
         {/* Step 1: Scanning */}
         <div
-          class={`absolute inset-0 p-6 flex flex-col justify-center transition-all duration-500 ease-out ${
+          class={`absolute inset-0 p-10 flex flex-col justify-center transition-all duration-500 ease-out ${
             step === 1
               ? "opacity-100 translate-x-0"
               : step < 1
-              ? "opacity-0 translate-x-8"
-              : "opacity-0 -translate-x-8"
+              ? "opacity-0 translate-x-12"
+              : "opacity-0 -translate-x-12"
           }`}
         >
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs font-800">
-              A
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-10 h-10 rounded-2xl bg-rose-500 border-[3px] border-gray-900 text-white flex items-center justify-center text-xs font-950 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              OTA
             </div>
-            <div class="h-3 w-24 bg-gray-200 rounded-full" />
+            <div class="h-4 w-32 bg-gray-100 border-[2px] border-gray-900 rounded-full" />
           </div>
-          <div class="h-32 bg-gray-50 border border-gray-100 rounded-xl mb-4 relative overflow-hidden flex items-center justify-center p-2">
-            <div class="grid grid-cols-2 gap-2 w-full h-full">
-              <div class="bg-gray-200 rounded-lg h-full" />
-              <div class="flex flex-col gap-2">
-                <div class="bg-gray-200 rounded-lg h-1/2" />
-                <div class="bg-gray-200 rounded-lg h-1/2" />
+          <div class="h-40 bg-gray-50 border-[4px] border-gray-900 rounded-[2rem] mb-6 relative overflow-hidden flex items-center justify-center p-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <div class="grid grid-cols-2 gap-3 w-full h-full">
+              <div class="bg-gray-200 border-[2px] border-gray-900 rounded-xl h-full" />
+              <div class="flex flex-col gap-3">
+                <div class="bg-gray-200 border-[2px] border-gray-900 rounded-xl h-1/2" />
+                <div class="bg-gray-200 border-[2px] border-gray-900 rounded-xl h-1/2" />
               </div>
             </div>
-            {/* Pulsing indicator */}
-            <div class="absolute inset-0 bg-mint-500 opacity-10 animate-pulse pointer-events-none" />
+            {/* Scanning line */}
+            <div class="absolute inset-0 bg-mint-500/20 animate-pulse pointer-events-none" />
+            <div class="absolute top-0 left-0 w-full h-[4px] bg-mint-500 shadow-[0px_0px_20px_#4ade80] animate-scan" />
           </div>
-          <p class="text-xs font-700 text-mint-600 animate-pulse text-center">
-            Extracting photos & amenities...
+          <p class="text-[10px] font-950 text-mint-600 animate-pulse text-center uppercase tracking-widest">
+            EXTRACTING_ASSET_DNA...
           </p>
         </div>
 
@@ -99,83 +86,71 @@ export default function MagicScraperAnimation() {
           class={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-out ${
             step === 2
               ? "opacity-100 scale-100"
-              : "opacity-0 scale-95 pointer-events-none"
+              : "opacity-0 scale-90 pointer-events-none"
           }`}
         >
-          <div class="relative w-20 h-20 mb-8">
-            <div class="absolute inset-0 rounded-full border-4 border-gray-100/20" />
-            <div class="absolute inset-0 rounded-full border-4 border-t-teal-400 border-r-teal-500 border-b-transparent border-l-transparent animate-spin" />
-            <div class="absolute inset-0 flex items-center justify-center text-2xl animate-pulse">
+          <div class="relative w-28 h-28 mb-10">
+            <div class="absolute inset-0 rounded-full border-[6px] border-gray-100" />
+            <div class="absolute inset-0 rounded-full border-[6px] border-t-purple-500 border-r-purple-600 border-b-transparent border-l-transparent animate-spin" />
+            <div class="absolute inset-0 flex items-center justify-center text-4xl animate-bounce">
               🪄
             </div>
           </div>
-          <p class="text-base font-800 text-gray-900 tracking-tight">
-            AI Mapping Vibe...
-          </p>
-          <div class="flex flex-col items-center gap-2 mt-4">
-            <div class="flex items-center gap-2">
-              <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-ping" />
-              <p class="text-[11px] font-700 uppercase tracking-widest text-teal-600">
-                Drafting Knowledge Base
+          <h4 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter">AI_MAPPING_CORE</h4>
+          <div class="flex flex-col items-center gap-4 mt-6">
+            <div class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-ping" />
+              <p class="text-[10px] font-950 uppercase tracking-[0.3em] text-purple-600">
+                Drafting_Cognitive_Layer
               </p>
             </div>
-            <p class="text-[10px] font-500 text-gray-400">
-              Time to value: ~2s remaining
+            <p class="text-[9px] font-950 text-gray-400 uppercase tracking-widest">
+              T-MINUS: ~2s_REMAINING
             </p>
           </div>
         </div>
 
         {/* Step 3: Success */}
         <div
-          class={`absolute inset-0 p-6 flex flex-col justify-center transition-all duration-500 ease-out ${
+          class={`absolute inset-0 p-8 flex flex-col justify-center transition-all duration-500 ease-out ${
             step === 3
               ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-8 pointer-events-none"
+              : "opacity-0 translate-y-12 pointer-events-none"
           }`}
         >
-          <div class="bg-gradient-to-br from-istay-900 to-istay-800 rounded-2xl p-5 text-white flex flex-col shadow-xl border border-istay-700/50 h-full">
-            <div class="flex justify-between items-center mb-6">
-              <span class="text-xs font-900 tracking-wider flex items-center gap-1.5">
-                <img
-                  src="/logo.svg"
-                  alt="istay"
-                  class="h-4 brightness-0 invert"
-                />
+          <div class="bg-gray-900 rounded-[2.5rem] p-8 text-white flex flex-col border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_#4ade80] h-full relative overflow-hidden group">
+            <div class="absolute -right-10 -top-10 text-9xl opacity-10 group-hover:scale-125 transition-transform duration-700">⚡</div>
+            
+            <div class="flex justify-between items-center mb-8 relative z-10">
+              <span class="text-sm font-950 tracking-[0.2em] uppercase">
+                ISTAY_OS
               </span>
-              <span class="py-1 px-3 rounded-full bg-mint-500 text-istay-900 text-[10px] font-900 uppercase tracking-widest shadow-sm">
-                Live
+              <span class="px-5 py-2 rounded-xl bg-mint-400 text-gray-900 text-[10px] font-950 uppercase tracking-widest shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]">
+                ASSET_LIVE
               </span>
             </div>
 
-            <div class="h-20 bg-white/10 rounded-xl mb-4 relative overflow-hidden flex-shrink-0">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-              <div class="absolute bottom-2 left-2 right-2">
-                <div class="h-2 w-32 bg-white/80 rounded-full mb-1.5" />
-                <div class="h-1.5 w-16 bg-white/50 rounded-full" />
+            <div class="h-28 bg-white/5 border-[3px] border-white/20 rounded-[1.5rem] mb-6 relative overflow-hidden flex-shrink-0 group-hover:border-mint-500/50 transition-colors">
+              <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
+              <div class="absolute bottom-4 left-4 right-4">
+                <div class="h-3 w-40 bg-white/80 rounded-full mb-3" />
+                <div class="h-2 w-24 bg-white/30 rounded-full" />
               </div>
             </div>
 
-            <button
-              type="button"
-              class="w-full py-2 bg-mint-500 text-istay-900 font-900 rounded-xl text-xs shadow-md flex items-center justify-center gap-2 mt-auto hover:bg-white transition-colors"
-            >
-              Share Booking Link
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+            <div class="mt-auto space-y-4 relative z-10">
+              <button
+                type="button"
+                class="w-full py-5 bg-mint-400 text-gray-900 text-[11px] font-950 uppercase tracking-[0.2em] rounded-2xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(255,255,255,1)] flex items-center justify-center gap-3 transition-all hover:bg-white active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
               >
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6">
-                </path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            </button>
+                DEPLOY_RESERVATION_HUB
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>

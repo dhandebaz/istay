@@ -19,11 +19,11 @@ export const handler: Handlers<PropertiesData, DashboardState> = {
 
 const STATUS_CONFIG: Record<
   Property["status"],
-  { label: string; dot: string; text: string }
+  { label: string; dot: string; text: string; bg: string }
 > = {
-  active: { label: "Active", dot: "bg-emerald-400", text: "text-emerald-700" },
-  inactive: { label: "Inactive", dot: "bg-gray-300", text: "text-gray-500" },
-  pending: { label: "Pending", dot: "bg-amber-400", text: "text-amber-700" },
+  active: { label: "ACTIVE", dot: "bg-emerald-400", text: "text-emerald-700", bg: "bg-emerald-50" },
+  inactive: { label: "INACTIVE", dot: "bg-gray-300", text: "text-gray-500", bg: "bg-gray-50" },
+  pending: { label: "PENDING", dot: "bg-amber-400", text: "text-amber-700", bg: "bg-amber-50" },
 };
 
 function formatINR(amount: number): string {
@@ -40,160 +40,113 @@ export default function PropertiesPage({ data }: PageProps<PropertiesData>) {
   return (
     <>
       <Head>
-        <title>Properties | istay Dashboard</title>
+        <title>Portfolio Engine | iStay</title>
       </Head>
 
-      {/* Page Header */}
-      <div class="flex items-start justify-between mb-8">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-800 text-gray-900 tracking-tight">
-            Properties
-          </h1>
-          <p class="mt-1 text-sm text-gray-400">
-            {properties.length === 0
-              ? "Add your first property to start accepting direct bookings."
-              : `${properties.length} propert${
-                properties.length === 1 ? "y" : "ies"
-              } in your portfolio.`}
-          </p>
-        </div>
-      </div>
-
-      {/* ── Properties Grid ───────────────────────────────────── */}
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mb-6">
-        {/* Existing property cards */}
-        {properties.map((property) => {
-          const statusCfg = STATUS_CONFIG[property.status];
-          return (
-            <div
-              key={property.id}
-              class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
-            >
-              {/* Property Image */}
-              <div class="relative h-44 bg-gray-100 overflow-hidden">
-                {property.imageUrl
-                  ? (
-                    <img
-                      src={property.imageUrl}
-                      alt={property.name}
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  )
-                  : (
-                    <div class="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-istay-50 to-istay-100">
-                      🏠
-                    </div>
-                  )}
-                {/* Status badge */}
-                <div
-                  class={`absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-xs font-600 ${statusCfg.text} shadow-sm`}
-                >
-                  <span
-                    class={`w-1.5 h-1.5 rounded-full ${statusCfg.dot}`}
-                    aria-hidden="true"
-                  />
-                  {statusCfg.label}
-                </div>
+      <div class="space-y-16 pb-20">
+        {/* Page Header */}
+        <section class="flex flex-col lg:flex-row items-end justify-between gap-8">
+          <div>
+            <div class="flex items-center gap-4 mb-4">
+              <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.2em] rounded-full border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80]">
+                PORTFOLIO_ENGINE
               </div>
-
-              {/* Property Info */}
-              <div class="p-5">
-                <h3 class="font-700 text-gray-900 text-base leading-tight mb-1 truncate">
-                  {property.name}
-                </h3>
-                <p class="text-xs text-gray-400 line-clamp-2 mb-4 leading-relaxed">
-                  {property.description}
-                </p>
-
-                <div class="flex items-center justify-between">
-                  <div>
-                    <span class="text-lg font-800 text-istay-900">
-                      {formatINR(property.basePrice)}
-                    </span>
-                    <span class="text-xs text-gray-400 ml-1">/ night</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    {/* Embed Widget Modal */}
-                    <EmbedWidgetModal
-                      propId={property.id}
-                      propertyName={property.name}
-                    />
-                    
-                    {/* Copy booking link */}
-                    <button
-                      class="p-2 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-istay-900 transition-colors duration-150"
-                      title="Copy booking link"
-                      aria-label={`Copy booking link for ${property.name}`}
-                    >
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        fill="none"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M9 4.5H11.5C12.0523 4.5 12.5 4.94772 12.5 5.5V12.5C12.5 13.0523 12.0523 13.5 11.5 13.5H4.5C3.94772 13.5 3.5 13.0523 3.5 12.5V10M8.5 1.5H3.5C2.94772 1.5 2.5 1.94772 2.5 2.5V9.5C2.5 10.0523 2.94772 10.5 3.5 10.5H8.5C9.05228 10.5 9.5 10.0523 9.5 9.5V2.5C9.5 1.94772 9.05228 1.5 8.5 1.5Z"
-                          stroke="currentColor"
-                          stroke-width="1.25"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </button>
-                    {/* Airbnb source link */}
-                    {property.airbnbUrl && (
-                      <a
-                        href={property.airbnbUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="p-2 rounded-lg hover:bg-gray-50 text-gray-400 hover:text-rose-500 transition-colors duration-150"
-                        title="View original Airbnb listing"
-                        aria-label={`View ${property.name} on Airbnb`}
-                      >
-                        <svg
-                          width="15"
-                          height="15"
-                          viewBox="0 0 15 15"
-                          fill="none"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M11 8.5V12C11 12.5523 10.5523 13 10 13H3C2.44772 13 2 12.5523 2 12V5C2 4.44772 2.44772 4 3 4H6.5M9 2H13M13 2V6M13 2L6.5 8.5"
-                            stroke="currentColor"
-                            stroke-width="1.25"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <div class="h-[2px] w-24 bg-gray-100" />
             </div>
-          );
-        })}
-
-        {/* Add Property Card — always last */}
-        <div
-          id="add-property-card"
-          class="col-span-1 sm:col-span-2 xl:col-span-1"
-        >
+            <h2 class="text-4xl sm:text-7xl font-950 text-gray-900 tracking-tighter uppercase leading-[0.8]">
+              Asset <br/> <span class="text-mint-500">Registry.</span>
+            </h2>
+            <p class="mt-8 text-xs text-gray-400 font-800 uppercase tracking-widest leading-relaxed max-w-sm">
+              {properties.length === 0
+                ? "PORTFOLIO_EMPTY: Initialize your first listing to activate the direct booking engine."
+                : `${properties.length} ASSETS_LIVE: Tracking real-time performance across your inventory.`}
+            </p>
+          </div>
           <AddProperty />
-        </div>
-      </div>
+        </section>
 
-      {/* Empty state overlay message */}
-      {properties.length === 0 && (
-        <div class="mt-2 text-center">
-          <p class="text-sm text-gray-400">
-            ↑ Paste your Property URL in the card above to import your listing
-            instantly.
-          </p>
-        </div>
-      )}
+        {/* ── Properties Grid ───────────────────────────────────── */}
+        {properties.length === 0 ? (
+          <div class="bg-white border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] p-32 flex flex-col items-center justify-center text-center rounded-[3rem]">
+            <span class="text-8xl mb-8">🏠</span>
+            <h3 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">System_Idle</h3>
+            <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em] mt-4">Add a property to initialize your direct booking ecosystem.</p>
+          </div>
+        ) : (
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-12">
+            {properties.map((property) => {
+              const statusCfg = STATUS_CONFIG[property.status];
+              return (
+                <div
+                  key={property.id}
+                  class="group bg-white rounded-[3rem] border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] transition-all overflow-hidden relative"
+                >
+                  {/* Property Image */}
+                  <div class="relative h-72 bg-gray-100 overflow-hidden border-b-[4px] border-gray-900">
+                    {property.imageUrl ? (
+                      <img
+                        src={property.imageUrl}
+                        alt={property.name}
+                        class="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                      />
+                    ) : (
+                      <div class="w-full h-full flex items-center justify-center text-8xl bg-mint-50">
+                        🏠
+                      </div>
+                    )}
+                    {/* Status badge */}
+                    <div class={`absolute top-8 right-8 px-5 py-2 rounded-xl border-[3px] border-gray-900 bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-[10px] font-950 uppercase tracking-widest flex items-center gap-3 ${statusCfg.text}`}>
+                      <span class={`w-2.5 h-2.5 rounded-full ${statusCfg.dot} animate-pulse`} />
+                      {statusCfg.label}
+                    </div>
+                  </div>
+
+                  {/* Property Info */}
+                  <div class="p-10 space-y-10">
+                    <div>
+                      <div class="flex items-center gap-3 mb-4">
+                         <p class="text-[10px] font-950 text-mint-500 uppercase tracking-[0.3em]">ASSET_ID</p>
+                         <div class="h-[2px] flex-1 bg-gray-50" />
+                      </div>
+                      <h3 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter leading-none mb-3">{property.name}</h3>
+                      <p class="text-[11px] font-800 text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                         <span class="text-gray-900">📍</span> {property.location}
+                      </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                      <div class="p-5 bg-gray-50 border-[3px] border-gray-900 rounded-2xl">
+                        <p class="text-[8px] font-950 text-gray-400 uppercase tracking-widest mb-1">BASE_RATE</p>
+                        <p class="text-xl font-950 text-gray-900 tracking-tighter">{formatINR(property.basePrice)}</p>
+                      </div>
+                      <div class="p-5 bg-gray-50 border-[3px] border-gray-900 rounded-2xl">
+                        <p class="text-[8px] font-950 text-gray-400 uppercase tracking-widest mb-1">ROOMS</p>
+                        <p class="text-xl font-950 text-gray-900 tracking-tighter">04_UNIT</p>
+                      </div>
+                    </div>
+
+                    <div class="space-y-4">
+                      <EmbedWidgetModal
+                        propId={property.id}
+                        propertyName={property.name}
+                      />
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(`https://istay.space/book/${property.id}`);
+                          alert("System: Booking link copied to clipboard.");
+                        }}
+                        class="w-full py-4 bg-gray-900 text-white text-[10px] font-950 uppercase text-center rounded-2xl border-[3px] border-gray-900 shadow-[4px_4px_0px_0px_#4ade80] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                      >
+                        COPY_DIRECT_LINK
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </>
   );
 }

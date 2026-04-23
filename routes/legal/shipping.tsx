@@ -2,13 +2,13 @@ import { Head } from "$fresh/runtime.ts";
 import Header from "../../islands/Header.tsx";
 import Footer from "../../components/Footer.tsx";
 
-const LAST_UPDATED = "April 11, 2026";
+const LAST_UPDATED = "APRIL 11, 2026";
 
 export default function Shipping() {
   return (
     <>
       <Head>
-        <title>Shipping & Delivery Policy | istay</title>
+        <title>Delivery Protocol | iStay</title>
         <meta
           name="description"
           content="istay Shipping & Delivery Policy. istay is a digital platform — there is no physical shipping. All deliverables are digital: instant booking confirmations and dashboard access."
@@ -16,7 +16,7 @@ export default function Shipping() {
         <meta property="og:type" content="website" />
         <meta
           property="og:title"
-          content="Shipping & Delivery Policy | istay"
+          content="Delivery Protocol | istay"
         />
         <meta
           property="og:description"
@@ -27,208 +27,94 @@ export default function Shipping() {
 
       <Header />
 
-      <main class="py-16 sm:py-24">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="mb-10 pb-8 border-b border-gray-100">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-600 uppercase tracking-wider mb-4">
-              Legal
+      <main class="bg-white pt-32 pb-24 selection:bg-mint-400">
+        {/* Page Header */}
+        <section class="max-w-7xl mx-auto px-5 sm:px-8 mb-20">
+          <div class="flex items-center gap-4 mb-8">
+            <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.2em] rounded-full border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80]">
+              DELIVERY_STATS
             </div>
-            <h1 class="text-3xl sm:text-4xl font-800 text-gray-900 tracking-tight">
-              Shipping & Delivery Policy
-            </h1>
-            <p class="mt-3 text-sm text-gray-400">
-              Last updated: {LAST_UPDATED} · Operated by istay
-            </p>
+            <div class="h-[2px] flex-1 bg-gray-100" />
           </div>
+          
+          <h1 class="text-5xl sm:text-7xl font-950 text-gray-900 tracking-tighter uppercase leading-[0.85] mb-8">
+            INSTANT_<br />
+            <span class="text-mint-500">PROVISIONING.</span>
+          </h1>
+          <p class="text-xs text-gray-400 font-800 uppercase tracking-widest">
+            LAST_REVISION: {LAST_UPDATED} // OPERATED_BY_ISTAY
+          </p>
+        </section>
 
-          <div class="prose-legal">
-            <p>
-              This Shipping & Delivery Policy applies to all products and
-              services offered by istay, operated by Sheikh Arsalan Ullah
-              Chishti (istay).
-            </p>
-
-            <h2>1. Digital-Only Platform — No Physical Shipping</h2>
-            <p>
-              istay is exclusively a{" "}
-              <strong>
-                digital Software-as-a-Service (SaaS) platform
-              </strong>. We do not sell, manufacture, or ship any physical
-              goods. There is no physical product associated with any purchase
-              made on or through the istay platform.
-            </p>
-            <p>
-              All purchases — including the one-time Host setup fee and
-              per-booking commission arrangements — relate entirely to the
-              provision of digital services, access rights, and software
-              functionality delivered electronically over the internet.
-            </p>
-
-            <h2>2. Delivery of Platform Access (Hosts)</h2>
-            <p>
-              Upon successful payment of the ₹1,000 one-time setup fee, Host
-              account access and the branded booking page are delivered{" "}
-              <strong>instantly via digital activation</strong>, subject to a
-              processing and verification window not exceeding 3 business days.
-              Specifically:
-            </p>
-            <ul>
-              <li>
-                <strong>Booking Page:</strong>{" "}
-                Your personalised, branded direct booking URL is generated and
-                made live within the istay dashboard upon account activation.
-              </li>
-              <li>
-                <strong>Dashboard Access:</strong>{" "}
-                Full access to revenue reporting, guest management, AI concierge
-                settings, and all platform features is granted immediately upon
-                activation.
-              </li>
-              <li>
-                <strong>Confirmation:</strong>{" "}
-                An email confirmation containing your login credentials and
-                booking page link is sent to the registered email address.
-              </li>
-            </ul>
-
-            <h2>3. Delivery of Booking Confirmations (Guests)</h2>
-            <p>
-              When a Guest completes a booking through an istay-powered Host
-              page, the following digital deliverables are sent{" "}
-              <strong>instantly upon successful payment</strong>:
-            </p>
-            <ul>
-              <li>
-                <strong>Digital Booking Voucher:</strong>{" "}
-                A PDF booking confirmation containing the reservation details,
-                property address, Host contact information, and check-in
-                instructions, sent to the Guest's registered email address.
-              </li>
-              <li>
-                <strong>Host Dashboard Update:</strong>{" "}
-                The booking appears in real-time in the Host's istay dashboard,
-                triggering any configured automated messages (check-in
-                instructions, welcome message, etc.).
-              </li>
-              <li>
-                <strong>WhatsApp/SMS Notification:</strong>{" "}
-                Where enabled by the Host and consented to by the Guest, a
-                booking summary is delivered via WhatsApp or SMS.
-              </li>
-            </ul>
-
-            <h2>4. Delivery Timelines Summary</h2>
-            <div class="overflow-x-auto rounded-2xl border border-gray-100 my-4">
-              <table class="w-full text-sm">
-                <thead class="bg-gray-50 border-b border-gray-100">
-                  <tr>
-                    <th class="text-left px-5 py-3 text-xs font-700 text-gray-500 uppercase tracking-wider">
-                      Deliverable
-                    </th>
-                    <th class="text-left px-5 py-3 text-xs font-700 text-gray-500 uppercase tracking-wider">
-                      Method
-                    </th>
-                    <th class="text-left px-5 py-3 text-xs font-700 text-gray-500 uppercase tracking-wider">
-                      Timeline
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-50">
-                  {[
-                    [
-                      "Host Account Activation",
-                      "Email + Dashboard",
-                      "Instant–3 business days",
-                    ],
-                    [
-                      "Host Booking Page URL",
-                      "Email + Dashboard",
-                      "Instant upon activation",
-                    ],
-                    [
-                      "Guest Booking Voucher",
-                      "Email (PDF)",
-                      "Instant upon payment",
-                    ],
-                    [
-                      "Host Booking Notification",
-                      "Dashboard + Email",
-                      "Instant upon payment",
-                    ],
-                    [
-                      "WhatsApp/SMS Confirmation",
-                      "WhatsApp / SMS",
-                      "Within 2 minutes",
-                    ],
-                  ].map(([item, method, timeline]) => (
-                    <tr key={item} class="hover:bg-gray-50 transition-colors">
-                      <td class="px-5 py-3.5 text-gray-700 font-500">{item}</td>
-                      <td class="px-5 py-3.5 text-gray-500">{method}</td>
-                      <td class="px-5 py-3.5 text-teal-700 font-600">
-                        {timeline}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 grid grid-cols-1 lg:grid-cols-3 gap-16">
+          {/* Commitment Sidebar */}
+          <aside class="lg:col-span-1">
+            <div class="sticky top-40 bg-gray-900 border-[4px] border-gray-900 rounded-[2.5rem] p-10 shadow-[12px_12px_0px_0px_#4ade80]">
+              <h2 class="text-white font-950 text-xl uppercase tracking-tighter mb-8 flex items-center gap-3">
+                <span class="text-2xl">🌍</span>
+                GLOBAL_ACCESS
+              </h2>
+              <ul class="space-y-6">
+                {[
+                  "No physical freight — 100% digital transmission.",
+                  "Dashboard activation within 0-3 business days.",
+                  "Instant email confirmation for all transactions.",
+                  "Booking URLs generated immediately post-setup."
+                ].map((item) => (
+                  <li class="flex items-start gap-4">
+                    <span class="w-2 h-2 rounded-full bg-mint-400 mt-2 shrink-0" />
+                    <p class="text-[10px] font-950 text-gray-400 uppercase tracking-widest leading-relaxed">
+                      {item}
+                    </p>
+                  </li>
+                ))}
+              </ul>
             </div>
+          </aside>
 
-            <h2>5. Delivery Failures & Non-Receipt</h2>
-            <p>
-              If you have not received your booking confirmation or account
-              activation email within the stated timeframe, please:
-            </p>
-            <ul>
-              <li>Check your spam/junk or promotions folder.</li>
-              <li>
-                Verify the email address associated with your account is
-                correct.
-              </li>
-              <li>
-                Contact us at{" "}
-                <a href="mailto:support@istay.space">support@istay.space</a>
-                {" "}
-                with your payment reference number and we will resend your
-                deliverables promptly.
-              </li>
-            </ul>
+          {/* Main Shipping Content */}
+          <div class="lg:col-span-2 space-y-16">
+            <div class="prose-brutalist">
+              <section class="space-y-6">
+                <h2 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">01. DIGITAL_ONLY</h2>
+                <p class="text-sm text-gray-500 font-600 leading-relaxed">
+                  iStay is exclusively a <strong>digital Software-as-a-Service (SaaS) platform</strong>. We do not sell, manufacture, or ship any physical goods. There is no physical product associated with any purchase made on or through the iStay platform.
+                </p>
+              </section>
 
-            <h2>6. No Physical Address Required</h2>
-            <p>
-              As all deliverables are digital, no postal or physical delivery
-              address is required or collected for the purpose of service
-              delivery. Any address collected (e.g., from Hosts for legal entity
-              verification) is used solely for compliance and billing purposes.
-            </p>
+              <section class="space-y-8 pt-16 border-t-[4px] border-gray-100">
+                <h2 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">02. ACTIVATION_WINDOW</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div class="p-8 bg-mint-50 rounded-3xl border-[3px] border-gray-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    <h3 class="text-xs font-950 text-gray-900 uppercase tracking-[0.2em] mb-4">FOR_HOSTS</h3>
+                    <p class="text-[10px] text-gray-700 font-800 leading-relaxed uppercase tracking-widest">
+                      DASHBOARD ACCESS AND BRANDED URLS ARE PROVISIONED ELECTRONICALLY WITHIN 72 HOURS OF THE SETUP FEE VERIFICATION.
+                    </p>
+                  </div>
+                  <div class="p-8 bg-gray-50 rounded-3xl border-[3px] border-gray-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    <h3 class="text-xs font-950 text-gray-900 uppercase tracking-[0.2em] mb-4">FOR_GUESTS</h3>
+                    <p class="text-[10px] text-gray-700 font-800 leading-relaxed uppercase tracking-widest">
+                      BOOKING CONFIRMATIONS ARE TRANSMITTED VIA EMAIL AND WHATSAPP IMMEDIATELY UPON SUCCESSFUL PAYMENT AUTHORIZATION.
+                    </p>
+                  </div>
+                </div>
+              </section>
 
-            <h2>7. Contact</h2>
-            <p>
-              For queries regarding delivery of our digital services, email{" "}
-              <a href="mailto:support@istay.space">support@istay.space</a>{" "}
-              or write to istay, Ghaffar Manzil, Okhla, New Delhi, Delhi 110025,
-              India.
-            </p>
-          </div>
-
-          <div class="mt-12 pt-6 border-t border-gray-100 flex flex-wrap gap-4 text-xs text-gray-400">
-            <a
-              href="/legal/terms"
-              class="hover:text-teal-600 transition-colors"
-            >
-              Terms & Conditions
-            </a>
-            <a
-              href="/legal/privacy"
-              class="hover:text-teal-600 transition-colors"
-            >
-              Privacy Policy
-            </a>
-            <a
-              href="/legal/cancellation"
-              class="hover:text-teal-600 transition-colors"
-            >
-              Cancellation Policy
-            </a>
+              <section class="space-y-6 pt-16 border-t-[4px] border-gray-100">
+                <h2 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">03. AUDIT_TRAILS</h2>
+                <p class="text-sm text-gray-500 font-600 leading-relaxed">
+                  Every successful delivery of service is logged with a unique transaction hash. Hosts can view all provisioned services and their activation status within the 'System Registry' section of the dashboard.
+                </p>
+              </section>
+            </div>
+            
+            <div class="p-10 bg-gray-900 rounded-[2.5rem] border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_#4ade80]">
+              <p class="text-[10px] font-950 text-mint-400 uppercase tracking-[0.3em] mb-4">DELIVERY_SIGNAL</p>
+              <p class="text-sm text-white font-700 leading-relaxed">
+                SINCE ALL DELIVERABLES ARE DIGITAL, NO SHIPPING CHARGES APPLY TO ANY TRANSACTION ON THE iSTAY PLATFORM. DELIVERY IS GLOBAL AND INSTANTANEOUS UPON PROTOCOL CLEARANCE.
+              </p>
+            </div>
           </div>
         </div>
       </main>
