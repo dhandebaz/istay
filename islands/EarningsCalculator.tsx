@@ -2,33 +2,33 @@ import { useState } from "preact/hooks";
 
 const PLATFORMS = [
   {
-    name: "istay",
+    name: "iStay",
     commission: 0.05,
-    color: "text-mint-500",
+    color: "text-emerald-500",
     bg: "bg-gray-900",
     border: "border-gray-900",
-    shadow: "shadow-[12px_12px_0px_0px_#4ade80]",
+    shadow: "shadow-premium-lg",
     labelColor: "text-white",
     subColor: "text-gray-400",
-    badge: "WINNER_CORE",
+    badge: "Optimized Protocol",
   },
   {
     name: "Airbnb",
     commission: 0.15,
-    color: "text-rose-600",
+    color: "text-rose-500",
     bg: "bg-white",
-    border: "border-gray-900",
-    shadow: "shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]",
+    border: "border-gray-50",
+    shadow: "shadow-premium",
     labelColor: "text-gray-900",
     subColor: "text-gray-400",
   },
   {
     name: "Booking.com",
     commission: 0.20,
-    color: "text-blue-600",
+    color: "text-blue-500",
     bg: "bg-white",
-    border: "border-gray-900",
-    shadow: "shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]",
+    border: "border-gray-50",
+    shadow: "shadow-premium",
     labelColor: "text-gray-900",
     subColor: "text-gray-400",
   },
@@ -55,27 +55,29 @@ export default function EarningsCalculator() {
   }));
 
   return (
-    <div class="bg-white rounded-[3rem] border-[4px] border-gray-900 shadow-[24px_24px_0px_0px_rgba(0,0,0,1)] p-10 sm:p-20 overflow-hidden relative group">
-      <div class="mb-24">
-        <div class="flex items-center gap-4 mb-6">
-           <span class="px-5 py-2 rounded-xl bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.3em] border-[2px] border-gray-900 shadow-[4px_4px_0px_0px_#4ade80]">REVENUE_SIMULATOR_V4</span>
-           <div class="h-[2px] flex-1 bg-gray-100" />
+    <div class="bg-white rounded-[4rem] border border-gray-50 shadow-premium-xl p-12 sm:p-24 overflow-hidden relative group animate-fade-in">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.03)_0%,transparent_50%)]" />
+      
+      <div class="mb-24 relative z-10">
+        <div class="flex items-center gap-6 mb-8">
+           <span class="px-6 py-2.5 rounded-2xl bg-emerald-50 text-emerald-700 text-[11px] font-bold uppercase tracking-[0.4em] border border-emerald-100 shadow-sm">Optimization Engine</span>
+           <div class="h-px flex-1 bg-gray-50" />
         </div>
-        <h3 class="text-6xl sm:text-8xl font-950 text-gray-900 leading-[0.85] uppercase tracking-tighter">
-          Visualizing <br/> <span class="text-mint-500">Margin_Leak.</span>
+        <h3 class="text-6xl sm:text-8xl font-bold text-gray-900 leading-[0.85] tracking-tighter">
+          Visualizing <br/> <span class="text-emerald-500 italic font-medium font-serif">Yield Erosion.</span>
         </h3>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 mb-24">
-        <div class="space-y-20">
-          <div class="space-y-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-24 mb-24 relative z-10">
+        <div class="space-y-24">
+          <div class="space-y-10">
             <div class="flex items-end justify-between">
               <div>
-                <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest block mb-2">NIGHTLY_UNIT_RATE</label>
-                <span class="text-5xl font-950 text-gray-900 tracking-tighter">{formatINR(nightlyRate)}</span>
+                <label class="text-[11px] font-bold text-gray-300 uppercase tracking-[0.4em] block mb-4 italic">Nightly Residency Rate</label>
+                <span class="text-6xl font-bold text-gray-900 tracking-tighter transition-all">{formatINR(nightlyRate)}</span>
               </div>
             </div>
-            <div class="relative h-4 w-full bg-gray-100 border-[3px] border-gray-900 rounded-full overflow-hidden">
+            <div class="relative h-2.5 w-full bg-gray-50 rounded-full overflow-visible">
               <input
                 type="range"
                 min={500}
@@ -83,20 +85,22 @@ export default function EarningsCalculator() {
                 step={500}
                 value={nightlyRate}
                 onInput={(e) => setNightlyRate(Number((e.target as HTMLInputElement).value))}
-                class="absolute inset-0 w-full opacity-0 cursor-pointer z-10"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
               />
-              <div class="h-full bg-mint-400 border-r-[3px] border-gray-900 transition-all duration-300" style={{ width: `${(nightlyRate / 25000) * 100}%` }} />
+              <div class="absolute top-0 left-0 h-full bg-emerald-500 rounded-full transition-all duration-300" style={{ width: `${(nightlyRate / 25000) * 100}%` }}>
+                 <div class="absolute right-0 top-1/2 -translate-y-1/2 w-6 h-6 bg-white border-4 border-emerald-500 rounded-full shadow-premium scale-110" />
+              </div>
             </div>
           </div>
 
-          <div class="space-y-8">
+          <div class="space-y-10">
             <div class="flex items-end justify-between">
               <div>
-                <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest block mb-2">MONTHLY_UNIT_VOLUME</label>
-                <span class="text-5xl font-950 text-gray-900 tracking-tighter">{bookedNights} <span class="text-base font-950 text-gray-300">NIGHTS_SOLO</span></span>
+                <label class="text-[11px] font-bold text-gray-300 uppercase tracking-[0.4em] block mb-4 italic">Monthly Scaling</label>
+                <span class="text-6xl font-bold text-gray-900 tracking-tighter transition-all">{bookedNights} <span class="text-xl font-bold text-gray-300 uppercase tracking-widest ml-3">Days</span></span>
               </div>
             </div>
-            <div class="relative h-4 w-full bg-gray-100 border-[3px] border-gray-900 rounded-full overflow-hidden">
+            <div class="relative h-2.5 w-full bg-gray-50 rounded-full overflow-visible">
               <input
                 type="range"
                 min={1}
@@ -104,36 +108,38 @@ export default function EarningsCalculator() {
                 step={1}
                 value={bookedNights}
                 onInput={(e) => setBookedNights(Number((e.target as HTMLInputElement).value))}
-                class="absolute inset-0 w-full opacity-0 cursor-pointer z-10"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
               />
-              <div class="h-full bg-purple-400 border-r-[3px] border-gray-900 transition-all duration-300" style={{ width: `${(bookedNights / 30) * 100}%` }} />
+              <div class="absolute top-0 left-0 h-full bg-emerald-900 rounded-full transition-all duration-300" style={{ width: `${(bookedNights / 30) * 100}%` }}>
+                 <div class="absolute right-0 top-1/2 -translate-y-1/2 w-6 h-6 bg-white border-4 border-emerald-900 rounded-full shadow-premium scale-110" />
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="p-12 bg-gray-900 rounded-[3rem] border-[4px] border-gray-900 flex flex-col justify-center text-center sm:text-left shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] relative overflow-hidden">
-           <div class="absolute -right-6 -top-6 text-9xl opacity-5">💰</div>
-           <p class="text-[10px] font-950 text-mint-400 uppercase tracking-[0.3em] mb-6">GROSS_MONTHLY_CAPITAL</p>
-           <p class="text-7xl sm:text-8xl font-950 text-white tracking-tighter leading-none">{formatINR(grossRevenue)}</p>
+        <div class="p-16 bg-gray-900 rounded-[4rem] flex flex-col justify-center text-center sm:text-left shadow-premium-xl relative overflow-hidden group/gross transition-transform duration-700 hover:scale-[1.02]">
+           <div class="absolute -right-12 -top-12 text-[15rem] opacity-5 transition-transform duration-1000 group-hover/gross:scale-110 group-hover/gross:rotate-12 select-none">💰</div>
+           <p class="text-[11px] font-bold text-emerald-400 uppercase tracking-[0.5em] mb-8 relative z-10">Gross Monthly Revenue</p>
+           <p class="text-7xl sm:text-[6.5rem] font-bold text-white tracking-tighter leading-none relative z-10">{formatINR(grossRevenue)}</p>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10">
         {results.map((p) => (
-          <div key={p.name} class={`p-10 rounded-[2.5rem] border-[4px] transition-all hover:scale-[1.02] ${p.border} ${p.bg} ${p.shadow}`}>
+          <div key={p.name} class={`p-12 rounded-[3.5rem] border transition-all duration-700 hover:-translate-y-3 ${p.border} ${p.bg} ${p.shadow} flex flex-col`}>
             {p.badge && (
-               <div class="inline-block px-3 py-1 bg-white border-2 border-gray-900 rounded-lg text-[8px] font-950 text-gray-900 uppercase tracking-widest mb-6">
+               <div class="self-start px-4 py-1.5 bg-emerald-50 text-[9px] font-bold text-emerald-600 uppercase tracking-[0.3em] rounded-xl mb-10 border border-emerald-100">
                  {p.badge}
                </div>
             )}
-            <p class={`text-[10px] font-950 uppercase tracking-widest mb-2 ${p.subColor}`}>{p.name}</p>
-            <p class={`text-4xl font-950 tracking-tighter mb-8 ${p.labelColor}`}>
+            <p class={`text-[11px] font-bold uppercase tracking-[0.4em] mb-4 ${p.subColor} ${!p.badge ? 'mt-4' : ''}`}>{p.name}</p>
+            <p class={`text-5xl font-bold tracking-tighter mb-12 ${p.labelColor}`}>
               {formatINR(p.takehome)}
             </p>
             
-            <div class="pt-6 border-t-[2px] border-gray-100/10 flex items-center justify-between">
-               <p class="text-[9px] font-950 text-gray-400 uppercase tracking-widest">COMMISSION</p>
-               <p class={`text-xs font-950 ${p.color}`}>-{formatINR(p.fee)}</p>
+            <div class="mt-auto pt-8 border-t border-gray-100/10 flex items-center justify-between">
+               <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest opacity-60">Overhead</p>
+               <p class={`text-[13px] font-bold ${p.color}`}>-{formatINR(p.fee)}</p>
             </div>
           </div>
         ))}
@@ -141,3 +147,4 @@ export default function EarningsCalculator() {
     </div>
   );
 }
+

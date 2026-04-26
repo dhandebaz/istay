@@ -13,8 +13,8 @@ interface BookingFlowProps {
   propertyImage?: string;
 }
 
-const POLL_INTERVAL_MS = 5_000; // Poll every 5s
-const MAX_POLL_DURATION_MS = 10 * 60_000; // Stop after 10 minutes
+const POLL_INTERVAL_MS = 5_000;
+const MAX_POLL_DURATION_MS = 10 * 60_000;
 
 export default function BookingFlow({
   bookingId,
@@ -29,7 +29,6 @@ export default function BookingFlow({
 }: BookingFlowProps) {
   const isConfirmed = status === "confirmed" || status === "room_ready";
 
-  // ── Live verification state (reactive polling) ──────────────
   const [liveVerificationStatus, setLiveVerificationStatus] = useState(
     initialVerificationStatus,
   );
@@ -39,7 +38,6 @@ export default function BookingFlow({
   const isVerified = liveVerificationStatus === "verified";
   const canAccessDetails = isConfirmed && isVerified;
 
-  // Poll for verification status changes
   const pollVerificationStatus = useCallback(async () => {
     try {
       const res = await fetch(`/api/verify/status?bookingId=${bookingId}`);
@@ -47,7 +45,6 @@ export default function BookingFlow({
         const data = await res.json();
         if (data.status && data.status !== liveVerificationStatus) {
           setLiveVerificationStatus(data.status);
-          // Stop polling once verified or failed (terminal states)
           if (data.status === "verified" || data.status === "failed") {
             if (pollTimerRef.current) {
               clearInterval(pollTimerRef.current);
@@ -57,12 +54,11 @@ export default function BookingFlow({
         }
       }
     } catch (_err) {
-      // Silently fail — network hiccups shouldn't crash the flow
+      // Silently fail
     }
   }, [bookingId, liveVerificationStatus]);
 
   useEffect(() => {
-    // Only start polling if the booking is confirmed but verification is pending/processing
     if (!isConfirmed || isVerified || liveVerificationStatus === "failed") {
       return;
     }
@@ -70,7 +66,6 @@ export default function BookingFlow({
     pollStartRef.current = Date.now();
 
     pollTimerRef.current = setInterval(() => {
-      // Auto-stop after MAX_POLL_DURATION_MS to prevent infinite network usage
       if (Date.now() - pollStartRef.current > MAX_POLL_DURATION_MS) {
         if (pollTimerRef.current) {
           clearInterval(pollTimerRef.current);
@@ -98,129 +93,123 @@ export default function BookingFlow({
   };
 
   return (
-    <div class="max-w-2xl mx-auto w-full space-y-6">
-      {/* Bespoke Header Card */}
-      <div class="relative bg-white/80 backdrop-blur-md rounded-[2rem] border border-gray-100 shadow-xl overflow-hidden p-8">
-        {/* Property Branding Layer */}
+    <div class="max-w-2xl mx-auto w-full space-y-10 animate-fade-in">
+      {/* Premium Residency Card */}
+      <div class="relative bg-white rounded-[3.5rem] border border-gray-50 shadow-premium-lg overflow-hidden p-12 group hover:shadow-premium-xl transition-all duration-700">
         {propertyImage && (
-          <div class="absolute top-0 left-0 w-full h-32 opacity-10 overflow-hidden pointer-events-none">
+          <div class="absolute top-0 left-0 w-full h-48 opacity-[0.05] overflow-hidden pointer-events-none group-hover:opacity-[0.08] transition-opacity duration-1000">
             <img
               src={propertyImage}
-              class="w-full h-full object-cover blur-sm"
+              class="w-full h-full object-cover blur-2xl scale-110"
             />
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-white/80" />
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-white" />
           </div>
         )}
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 to-teal-500">
-        </div>
+        <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-emerald-400 to-emerald-600 shadow-sm" />
+        
         <div class="relative z-10 flex items-start justify-between">
-          <div>
-            <h1 class="text-2xl font-800 text-gray-900 tracking-tight">
-              Your Stay
+          <div class="space-y-2">
+            <h1 class="text-3xl font-bold text-gray-900 tracking-tighter">
+              Residency Profile
             </h1>
-            <p class="text-gray-500 mt-1">{propertyName}</p>
+            <p class="text-[11px] font-bold text-gray-400 uppercase tracking-[0.3em] italic opacity-60">{propertyName}</p>
           </div>
           <div class="text-right">
             <span
-              class={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-700 ${
+              class={`inline-flex items-center gap-3 px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] shadow-premium transition-all duration-500 ${
                 status === "room_ready"
-                  ? "bg-teal-50 text-teal-700"
+                  ? "bg-emerald-50 text-emerald-600 border border-emerald-100 animate-pulse"
                   : isConfirmed
-                  ? "bg-blue-50 text-blue-700"
-                  : "bg-orange-50 text-orange-700"
+                  ? "bg-gray-900 text-white shadow-emerald-900/20"
+                  : "bg-amber-50 text-amber-600 border border-amber-100"
               }`}
             >
               {status === "room_ready"
-                ? "✨ Room Ready"
+                ? "✨ Residence Prepared"
                 : isConfirmed
-                ? "✅ Confirmed"
-                : "⏳ Pending"}
+                ? "✓ Confirmed Residency"
+                : "⏳ Processing Protocol"}
             </span>
           </div>
         </div>
 
-        <div class="flex items-center gap-4 mt-8 pb-6 border-b border-gray-100">
-          <div class="flex-1">
-            <p class="text-xs font-600 text-gray-400 uppercase tracking-widest">
-              Check-in
+        <div class="grid grid-cols-2 gap-10 mt-16 pb-12 border-b border-gray-50 relative">
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-[1.5rem] bg-white flex items-center justify-center text-gray-200 border border-gray-50 shadow-premium z-10">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          
+          <div class="space-y-3">
+            <p class="text-[10px] font-bold text-gray-300 uppercase tracking-[0.4em] italic">
+              Arrival Node
             </p>
-            <p class="text-lg font-700 text-gray-900 mt-1">
+            <p class="text-2xl font-bold text-gray-900 tracking-tight">
               {formatDate(checkIn)}
             </p>
           </div>
-          <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300">
-            →
-          </div>
-          <div class="flex-1 text-right">
-            <p class="text-xs font-600 text-gray-400 uppercase tracking-widest">
-              Check-out
+          
+          <div class="text-right space-y-3">
+            <p class="text-[10px] font-bold text-gray-300 uppercase tracking-[0.4em] italic">
+              Departure Node
             </p>
-            <p class="text-lg font-700 text-gray-900 mt-1">
+            <p class="text-2xl font-bold text-gray-900 tracking-tight">
               {formatDate(checkOut)}
             </p>
           </div>
         </div>
 
-        <div class="pt-6">
+        <div class="pt-10 flex items-center justify-between">
           <a
             href={`/invoice/${bookingId}?download=1`}
             target="_blank"
-            class="inline-flex items-center gap-2 text-sm font-600 text-teal-600 hover:text-teal-700 transition-colors"
+            class="group inline-flex items-center gap-4 text-[10px] font-bold text-gray-400 hover:text-emerald-600 uppercase tracking-[0.3em] transition-all duration-500"
           >
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-              <path
-                d="M14 6V3a1 1 0 00-1-1H7a1 1 0 00-1 1v3M6 14H5a2 2 0 01-2-2V8a2 2 0 012-2h10a2 2 0 012 2v4a2 2 0 01-2 2h-1M6 10h8v8H6v-8z"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-            Download Invoice
+            <div class="w-12 h-12 rounded-[1.2rem] bg-gray-50 flex items-center justify-center group-hover:bg-emerald-50 group-hover:shadow-premium transition-all duration-500">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 2v6h6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            Residency Invoice
           </a>
+          
+          <div class="text-right">
+             <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-[0.4em] opacity-60">Verified Direct Stay</p>
+          </div>
         </div>
       </div>
 
-      {/* Conditional Access Block */}
+      {/* Access Authentication Block */}
       {!canAccessDetails
         ? (
-          <div class="bg-white/80 backdrop-blur-md rounded-[2rem] border border-gray-100 shadow-xl p-8 text-center space-y-6">
-            <div class="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center mx-auto border border-gray-100 shadow-inner">
-              <svg
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                class="text-gray-400"
-              >
-                <path
-                  d="M19 11H5a2 2 0 00-2 2v7a2 2 0 002 2h14a2 2 0 002-2v-7a2 2 0 00-2-2zM7 11V7a5 5 0 0110 0v4"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+          <div class="bg-white rounded-[3.5rem] border border-gray-50 shadow-premium-lg p-16 text-center space-y-10 animate-fade-in transition-all duration-700 hover:shadow-premium-xl group">
+            <div class="relative w-28 h-28 mx-auto">
+               <div class="absolute inset-0 rounded-[2.5rem] bg-emerald-50/50 animate-pulse border border-emerald-100/50" />
+               <div class="absolute inset-0 flex items-center justify-center text-5xl grayscale filter opacity-20 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-1000">🔒</div>
             </div>
-            <div>
-              <h2 class="text-xl font-800 text-gray-900">
-                Unlock Check-in Details
+            
+            <div class="space-y-4">
+              <h2 class="text-2xl font-bold text-gray-900 tracking-tight">
+                Authorize Residency Access
               </h2>
-              <p class="text-sm text-gray-500 mt-2 max-w-sm mx-auto">
+              <p class="text-[14px] text-gray-500 leading-relaxed max-w-sm mx-auto font-medium opacity-80 italic">
                 {!isConfirmed
-                  ? "Your booking is still pending confirmation. The details will unlock once the payment is fully processed."
+                  ? "Your residency node is being synchronized. Arrival credentials will unlock once the professional audit is complete."
                   : liveVerificationStatus === "processing"
-                  ? "Your ID is being verified. This page will update automatically — no need to refresh."
-                  : "For security and compliance, verify your government ID to unlock the WiFi passwords and check-in codes."}
+                  ? "Security protocol in progress. Identification is being verified across the synchronized network."
+                  : "Authenticate your guest profile to unlock the residency credentials, WiFi protocols, and arrival instructions."}
               </p>
             </div>
 
-            {/* Live processing indicator */}
             {isConfirmed && liveVerificationStatus === "processing" && (
-              <div class="flex items-center justify-center gap-2 p-3 rounded-xl bg-blue-50 border border-blue-100">
-                <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                <p class="text-xs font-700 text-blue-700">
-                  Verification in progress — auto-updating...
+              <div class="flex items-center justify-center gap-4 p-6 rounded-[2rem] bg-emerald-50/50 border border-emerald-100 animate-fade-in shadow-inner">
+                <div class="relative w-3 h-3">
+                   <div class="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75" />
+                   <div class="absolute inset-0 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                </div>
+                <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.4em] italic">
+                  Authentication in progress — Auto-updating...
                 </p>
               </div>
             )}
@@ -229,43 +218,53 @@ export default function BookingFlow({
               (liveVerificationStatus === "pending" ||
                 !liveVerificationStatus) &&
               (
-                <div class="text-left mt-8">
+                <div class="text-left mt-12 animate-slide-up">
                   <IdVerification bookingId={bookingId} guestName={guestName} />
                 </div>
               )}
           </div>
         )
         : (
-          <div class="bg-white/80 backdrop-blur-md rounded-[2rem] border border-gray-100 shadow-xl p-8 space-y-6">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center">
+          <div class="bg-white rounded-[3.5rem] border border-gray-50 shadow-premium-lg p-16 space-y-12 animate-fade-in transition-all duration-700 hover:shadow-premium-xl group">
+            <div class="flex items-center gap-6">
+              <div class="w-16 h-16 rounded-[1.5rem] bg-emerald-500 text-white flex items-center justify-center shadow-premium-emerald transition-transform duration-700 group-hover:rotate-12">
                 <svg
-                  width="20"
-                  height="20"
+                  width="28"
+                  height="28"
                   viewBox="0 0 24 24"
                   fill="none"
-                  class="text-teal-600"
                 >
                   <path
                     d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"
                     stroke="currentColor"
-                    stroke-width="2"
+                    stroke-width="2.5"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                 </svg>
               </div>
-              <h2 class="text-xl font-800 text-gray-900 tracking-tight">
-                Check-in & Credentials
-              </h2>
+              <div class="space-y-1">
+                <h2 class="text-3xl font-bold text-gray-900 tracking-tighter">
+                  Residency Credentials
+                </h2>
+                <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-[0.4em] opacity-60">Authentication Protocol Successful</p>
+              </div>
             </div>
 
-            <div class="prose prose-sm max-w-none text-gray-600 break-words whitespace-pre-wrap">
+            <div class="p-10 rounded-[2.5rem] bg-gray-50/50 border border-gray-100 prose prose-sm max-w-none text-gray-700 font-medium leading-relaxed break-words whitespace-pre-wrap shadow-inner italic relative group">
+              <div class="absolute top-8 right-10 text-4xl opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">✨</div>
               {instructionsContent ||
-                "No instructions provided by the host yet."}
+                "Curation of your residency credentials is in progress."}
+            </div>
+            
+            <div class="flex items-center justify-center gap-4 text-[10px] font-bold text-gray-300 uppercase tracking-[0.4em] pt-6 opacity-40 italic">
+               <div class="w-1.5 h-px bg-gray-300" />
+               Professional Residency Protocol
+               <div class="w-1.5 h-px bg-gray-300" />
             </div>
           </div>
         )}
     </div>
   );
 }
+

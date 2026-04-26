@@ -60,110 +60,98 @@ export default function CheckoutPage({ data }: PageProps<CheckoutData>) {
   return (
     <>
       <Head>
-        <title>Complete Booking — {property.name} | istay</title>
+        <title>Initialize Residency Request — {property.name} | istay</title>
         <meta name="robots" content="noindex" />
       </Head>
 
-      <div class="min-h-screen bg-gray-50">
+      <div class="min-h-screen bg-gray-50/50">
         {/* Top Bar */}
-        <header class="bg-white border-b border-gray-100 py-4 px-4 sm:px-6">
-          <div class="max-w-3xl mx-auto flex items-center justify-between">
+        <header class="bg-white border-b border-gray-50 py-6 px-6 sm:px-10 sticky top-0 z-50 backdrop-blur-xl bg-white/80">
+          <div class="max-w-5xl mx-auto flex items-center justify-between">
             <a
               href="/"
-              class="flex items-center gap-2 group transition-transform hover:scale-[1.02] active:scale-95"
+              class="flex items-center gap-3 group transition-all hover:scale-[1.02] active:scale-95"
             >
-              <img src="/logo.svg" alt="istay logo" class="h-6 w-auto" />
+              <img src="/logo.svg" alt="istay logo" class="h-7 w-auto" />
             </a>
-            <div class="flex items-center gap-1.5 text-xs text-gray-400">
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 13 13"
-                fill="none"
-                aria-hidden="true"
-              >
-                <rect
-                  x="1"
-                  y="1"
-                  width="11"
-                  height="11"
-                  rx="2"
-                  stroke="#d1d5db"
-                  stroke-width="1.25"
-                />
-                <path
-                  d="M4 6.5L5.5 8L9 4.5"
-                  stroke="#00E676"
-                  stroke-width="1.25"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              Secure Checkout
+            <div class="flex items-center gap-3 px-4 py-2 rounded-2xl bg-gray-50 border border-gray-100 shadow-inner">
+              <div class="relative w-2 h-2">
+                 <div class="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75" />
+                 <div class="absolute inset-0 rounded-full bg-emerald-500" />
+              </div>
+              <span class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">Secure Protocol Active</span>
             </div>
           </div>
         </header>
 
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-          <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
-            {/* ── Booking Summary ────────────────────────────── */}
-            <div class="md:col-span-2 order-2 md:order-1">
-              <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden sticky top-6">
+        <div class="max-w-5xl mx-auto px-6 sm:px-10 py-12">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            
+            {/* ── Residency Valuation ────────────────────────────── */}
+            <div class="lg:col-span-5 order-2 lg:order-1 lg:sticky lg:top-32">
+              <div class="bg-white rounded-[3rem] border border-gray-50 shadow-premium-lg overflow-hidden transition-all duration-700 hover:shadow-premium-xl group animate-fade-in">
                 {/* Property image */}
                 {property.imageUrl && (
-                  <img
-                    src={property.imageUrl}
-                    alt={property.name}
-                    class="w-full h-36 object-cover"
-                  />
+                  <div class="relative h-48 overflow-hidden">
+                    <img
+                      src={property.imageUrl}
+                      alt={property.name}
+                      class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent opacity-60" />
+                  </div>
                 )}
-                <div class="p-5 space-y-4">
-                  <div>
-                    <h2 class="font-700 text-gray-900 text-base leading-tight">
+                <div class="p-8 space-y-8">
+                  <div class="space-y-2">
+                    <h2 class="text-2xl font-bold text-gray-900 tracking-tighter leading-tight">
                       {property.name}
                     </h2>
                     {property.address && (
-                      <p class="text-xs text-gray-400 mt-0.5">
+                      <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest opacity-60 italic">
                         📍 {property.address}
                       </p>
                     )}
                   </div>
 
                   {/* Date range */}
-                  <div class="flex items-center gap-2 p-3 rounded-xl bg-gray-50 text-sm">
-                    <div class="flex-1">
-                      <p class="text-xs text-gray-400 font-500">Check-in</p>
-                      <p class="font-700 text-gray-900">
+                  <div class="grid grid-cols-2 gap-4 p-6 rounded-[2rem] bg-gray-50/50 border border-gray-100 relative group/dates">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-gray-300 shadow-premium group-hover/dates:rotate-180 transition-all duration-700">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    
+                    <div class="space-y-1">
+                      <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest italic">Arrival</p>
+                      <p class="text-[15px] font-bold text-gray-900 tracking-tight">
                         {formatDate(checkIn)}
                       </p>
                     </div>
-                    <div class="text-gray-300 text-lg">→</div>
-                    <div class="flex-1 text-right">
-                      <p class="text-xs text-gray-400 font-500">Check-out</p>
-                      <p class="font-700 text-gray-900">
+                    <div class="text-right space-y-1">
+                      <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest italic">Departure</p>
+                      <p class="text-[15px] font-bold text-gray-900 tracking-tight">
                         {formatDate(checkOut)}
                       </p>
                     </div>
                   </div>
 
                   {/* Price breakdown */}
-                  <div class="space-y-2">
-                    <div class="flex justify-between text-sm">
-                      <span class="text-gray-500">
-                        {formatINR(property.basePrice)} × {nights} night
-                        {nights > 1 ? "s" : ""}
+                  <div class="space-y-4">
+                    <div class="flex justify-between items-center text-[13px] font-medium text-gray-500">
+                      <span class="italic opacity-60">
+                        {formatINR(property.basePrice)} × {nights} Operational Night{nights > 1 ? "s" : ""}
                       </span>
-                      <span class="font-600 text-gray-900">
+                      <span class="font-bold text-gray-900">
                         {formatINR(amount)}
                       </span>
                     </div>
-                    <div class="flex justify-between text-sm">
-                      <span class="text-gray-400">Platform fee (5%)</span>
-                      <span class="text-gray-400">Included</span>
+                    <div class="flex justify-between items-center text-[13px] font-medium text-gray-400">
+                      <span class="italic opacity-60 underline decoration-gray-100 underline-offset-4">Sync Fee (5%)</span>
+                      <span class="font-bold">Included</span>
                     </div>
-                    <div class="border-t border-gray-100 pt-2 flex justify-between">
-                      <span class="font-700 text-gray-900">Total</span>
-                      <span class="font-800 text-istay-900 text-lg">
+                    <div class="pt-6 border-t border-gray-100 flex justify-between items-baseline">
+                      <span class="text-[12px] font-bold text-gray-900 uppercase tracking-[0.4em]">Residency Valuation</span>
+                      <span class="text-3xl font-bold text-gray-900 tracking-tighter transition-all group-hover:text-emerald-600">
                         {formatINR(amount)}
                       </span>
                     </div>
@@ -172,23 +160,25 @@ export default function CheckoutPage({ data }: PageProps<CheckoutData>) {
                   {/* Change dates */}
                   <a
                     href={`/p/${property.id}`}
-                    class="block text-center text-xs text-istay-900 hover:text-istay-800 font-500 transition-colors"
+                    class="block text-center text-[10px] font-bold text-gray-300 hover:text-gray-900 uppercase tracking-widest transition-all hover:tracking-[0.2em] opacity-60 hover:opacity-100 pt-4"
                   >
-                    ← Change dates
+                    ← Modify Synchronization
                   </a>
                 </div>
               </div>
             </div>
 
-            {/* ── Checkout Form ──────────────────────────────── */}
-            <div class="md:col-span-3 order-1 md:order-2">
-              <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                <h1 class="text-xl font-800 text-gray-900 mb-1">
-                  Guest Details
-                </h1>
-                <p class="text-sm text-gray-400 mb-6">
-                  Enter your details to secure your stay.
-                </p>
+            {/* ── Residency Principal Form ──────────────────────────────── */}
+            <div class="lg:col-span-7 order-1 lg:order-2">
+              <div class="bg-white rounded-[3rem] border border-gray-50 shadow-premium-lg p-10 sm:p-14 space-y-10 animate-slide-up">
+                <div class="space-y-4">
+                  <h1 class="text-3xl font-bold text-gray-900 tracking-tighter">
+                    Residency Principal
+                  </h1>
+                  <p class="text-[14px] text-gray-500 font-medium leading-relaxed opacity-80 italic">
+                    Define the primary operational credentials to initialize your secure residency request.
+                  </p>
+                </div>
 
                 <CheckoutForm
                   propId={property.id}
@@ -199,6 +189,12 @@ export default function CheckoutPage({ data }: PageProps<CheckoutData>) {
                   propertyName={property.name}
                 />
               </div>
+              
+              <div class="mt-10 flex items-center justify-center gap-4 text-[10px] font-bold text-gray-300 uppercase tracking-[0.4em] opacity-40 italic">
+                 <div class="w-1.5 h-px bg-gray-300" />
+                 Professional Residency Protocol
+                 <div class="w-1.5 h-px bg-gray-300" />
+              </div>
             </div>
           </div>
         </div>
@@ -206,3 +202,4 @@ export default function CheckoutPage({ data }: PageProps<CheckoutData>) {
     </>
   );
 }
+

@@ -19,10 +19,10 @@ export default function FaqSearch({ faqs }: FaqSearchProps) {
   );
 
   return (
-    <div class="space-y-12">
-      <div class="relative max-w-2xl mx-auto group">
-        <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none z-10">
-          <svg class="w-6 h-6 text-gray-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
+    <div class="space-y-16 animate-fade-in">
+      <div class="relative max-w-3xl mx-auto group">
+        <div class="absolute inset-y-0 left-8 flex items-center pointer-events-none z-10">
+          <svg class="w-6 h-6 text-gray-400 group-focus-within:text-emerald-500 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
             <circle cx="11" cy="11" r="8" />
             <path d="M21 21l-4.35-4.35" />
           </svg>
@@ -31,46 +31,57 @@ export default function FaqSearch({ faqs }: FaqSearchProps) {
           type="text"
           value={query}
           onInput={(e) => setQuery((e.target as HTMLInputElement).value)}
-          placeholder="SEARCH_KNOWLEDGE_BASE"
-          class="w-full bg-white border-[4px] border-gray-900 text-sm font-950 text-gray-900 placeholder-gray-300 rounded-[2rem] pl-16 pr-8 py-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] focus:shadow-[8px_8px_0px_0px_#4ade80] outline-none transition-all uppercase tracking-widest"
+          placeholder="Search Insights Portfolio..."
+          class="w-full bg-white border border-gray-100 text-[15px] font-medium text-gray-900 placeholder-gray-300 rounded-[2rem] pl-18 pr-8 py-6 shadow-premium focus:shadow-premium-lg focus:border-emerald-100 outline-none transition-all"
         />
       </div>
 
-      <div class="grid grid-cols-1 gap-6">
+      <div class="grid grid-cols-1 gap-8">
         {filteredFaqs.length > 0 ? (
           filteredFaqs.map(({ q, a }, i) => (
             <details
               key={i}
-              class="group bg-white border-[3px] border-gray-900 rounded-[2rem] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden open:shadow-[6px_6px_0px_0px_#4ade80] transition-all"
+              class="group bg-white border border-gray-50 rounded-[2.5rem] shadow-premium overflow-hidden transition-all duration-500 open:shadow-premium-lg open:border-emerald-50"
             >
-              <summary class="flex items-center justify-between px-10 py-6 cursor-pointer list-none text-xs font-950 text-gray-900 uppercase tracking-widest">
-                <span class="flex items-center gap-4">
-                  <span class="text-mint-500 font-950">Q{i + 1}.</span>
-                  {q}
+              <summary class="flex items-center justify-between px-10 py-8 cursor-pointer list-none text-[13px] font-bold text-gray-900 uppercase tracking-[0.2em] transition-all hover:bg-emerald-50/20">
+                <span class="flex items-center gap-6">
+                  <span class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-[11px] font-bold shadow-sm transition-transform group-open:scale-110 group-open:bg-emerald-500 group-open:text-white">
+                    {i + 1}
+                  </span>
+                  <span class="tracking-tight">{q}</span>
                 </span>
-                <svg
-                  class="w-5 h-5 text-gray-900 group-open:rotate-180 transition-transform"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="4"
-                >
-                  <path d="M19 9l-7 7-7-7" />
-                </svg>
+                <div class="w-10 h-10 rounded-full border border-gray-100 flex items-center justify-center transition-all duration-500 group-open:rotate-180 group-open:bg-emerald-50 group-open:border-emerald-100">
+                  <svg
+                    class="w-5 h-5 text-gray-400 group-open:text-emerald-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="3"
+                  >
+                    <path d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </summary>
-              <div class="px-10 pb-8 text-sm font-700 text-gray-500 leading-relaxed uppercase tracking-tight">
-                <div class="pt-4 border-t-2 border-gray-100">
+              <div class="px-10 pb-10 text-[15px] font-medium text-gray-500 leading-relaxed animate-slide-up">
+                <div class="pt-8 border-t border-gray-50">
                   {a}
                 </div>
               </div>
             </details>
           ))
         ) : (
-          <div class="text-center py-20 bg-gray-50 border-[3px] border-dashed border-gray-900 rounded-[3rem]">
-            <p class="text-[11px] font-950 text-gray-400 uppercase tracking-[0.4em]">NO_RECORDS_FOUND_FOR: "{query}"</p>
+          <div class="text-center py-24 bg-gray-50/50 border border-dashed border-gray-100 rounded-[3.5rem] shadow-inner">
+            <div class="w-20 h-20 rounded-full bg-white flex items-center justify-center mx-auto mb-8 text-gray-300 shadow-premium">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </div>
+            <p class="text-[12px] font-bold text-gray-400 uppercase tracking-[0.4em]">No Insights Synchronized for: <span class="text-emerald-600">"{query}"</span></p>
           </div>
         )}
       </div>
     </div>
   );
 }
+

@@ -8,12 +8,12 @@ interface IdVerificationProps {
 }
 
 type VerifyStep =
-  | "upload" // initial: pick file
-  | "preview" // file selected, ready to submit
-  | "scanning" // POST in progress + animation
-  | "verified" // matchScore >= 90, verified
-  | "review" // matchScore < 90, needs manual review
-  | "error"; // failed
+  | "upload" 
+  | "preview" 
+  | "scanning" 
+  | "verified" 
+  | "review" 
+  | "error";
 
 const ID_TYPES = [
   { value: "aadhaar", label: "Aadhaar Card" },
@@ -25,71 +25,43 @@ const ID_TYPES = [
 
 function ScanningAnimation() {
   return (
-    <div class="relative flex items-center justify-center w-36 h-36 mx-auto">
-      {/* Outer pulse rings */}
-      <div class="absolute inset-0 rounded-full border-4 border-mint-500/20 animate-ping" />
+    <div class="relative flex items-center justify-center w-48 h-48 mx-auto">
+      <div class="absolute inset-0 rounded-[2.5rem] border-4 border-emerald-500/10 animate-ping" />
       <div
-        class="absolute inset-2 rounded-full border-4 border-mint-500/30 animate-ping"
-        style="animation-delay: 300ms;"
-      />
-      <div
-        class="absolute inset-4 rounded-full border-4 border-mint-500/40 animate-ping"
-        style="animation-delay: 600ms;"
+        class="absolute inset-4 rounded-[2rem] border-4 border-emerald-500/5 animate-ping"
+        style="animation-delay: 500ms;"
       />
 
-      {/* Center spinner */}
-      <div class="relative w-16 h-16">
-        <div class="absolute inset-0 rounded-full border-4 border-mint-100" />
-        <div class="absolute inset-0 rounded-full border-4 border-mint-500 border-t-transparent animate-spin" />
-
-        {/* ID icon in center */}
-        <div class="absolute inset-0 flex items-center justify-center">
+      <div class="relative w-32 h-32 rounded-[2rem] bg-white shadow-premium border border-emerald-50 flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-transparent" />
+        <div class="absolute inset-4 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin opacity-40" />
+        
+        <div class="relative z-10 scale-125">
           <svg
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
             fill="none"
-            aria-hidden="true"
           >
-            <rect
-              x="1"
-              y="4"
-              width="20"
-              height="14"
-              rx="2"
-              stroke="#00E676"
-              stroke-width="1.5"
-            />
-            <circle
-              cx="7"
-              cy="10"
-              r="2.5"
-              stroke="#00E676"
-              stroke-width="1.5"
-            />
-            <path
-              d="M12 8H18M12 11H16"
-              stroke="#00E676"
-              stroke-width="1.5"
-              stroke-linecap="round"
-            />
+            <rect x="3" y="6" width="18" height="12" rx="2" stroke="#10b981" stroke-width="2.5" />
+            <circle cx="8.5" cy="12" r="2.5" stroke="#10b981" stroke-width="2.5" />
+            <path d="M14.5 10h4M14.5 14h2" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" />
           </svg>
         </div>
+        
+        <div
+          class="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-60 z-20"
+          style="animation: scanBeam 3s ease-in-out infinite;"
+        />
       </div>
-
-      {/* Scanning beam */}
-      <div
-        class="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-mint-400 to-transparent opacity-80"
-        style="animation: scanBeam 2s ease-in-out infinite;"
-      />
 
       <style>
         {`
         @keyframes scanBeam {
-          0% { top: 20%; opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { top: 80%; opacity: 0; }
+          0% { top: 0%; opacity: 0; }
+          20% { opacity: 1; }
+          80% { opacity: 1; }
+          100% { top: 100%; opacity: 0; }
         }
       `}
       </style>
@@ -111,24 +83,19 @@ export default function IdVerification(
     const file = (e.target as HTMLInputElement).files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith("image/") && file.type !== "application/pdf") {
-      errorMsg.value = "Please upload an image (JPG, PNG) or PDF.";
+      errorMsg.value = "Document format not supported. Please provide JPG, PNG or PDF.";
       return;
     }
 
-    // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      errorMsg.value = "File is too large. Maximum size is 10MB.";
+      errorMsg.value = "Document size limit exceeded. Please provide a file under 10MB.";
       return;
     }
 
     errorMsg.value = "";
-
-    // Generate preview URL
     previewUrl.value = URL.createObjectURL(file);
 
-    // Convert to base64 for upload
     const reader = new FileReader();
     reader.onload = async (ev) => {
       const rawB64 = (ev.target?.result as string) ?? null;
@@ -136,7 +103,6 @@ export default function IdVerification(
         try {
           imageB64.value = await compressImage(rawB64);
         } catch (err) {
-          console.error("Compression failed:", err);
           imageB64.value = rawB64;
         }
       } else {
@@ -172,12 +138,11 @@ export default function IdVerification(
 
       if (!res.ok) {
         step.value = "error";
-        errorMsg.value = data.error ?? "Verification failed. Please try again.";
+        errorMsg.value = data.error ?? "Protocol error. Please re-submit your identification.";
         return;
       }
 
-      // Show scanning animation for at least 2.5 seconds for UX effect
-      await new Promise((r) => setTimeout(r, 2500));
+      await new Promise((r) => setTimeout(r, 3000));
 
       matchScore.value = data.matchScore ?? 0;
       verifyMessage.value = data.message ?? "";
@@ -189,39 +154,39 @@ export default function IdVerification(
       }
     } catch {
       step.value = "error";
-      errorMsg.value = "Network error. Please check your connection.";
+      errorMsg.value = "Secure connection discrepancy. Please refresh and try again.";
     }
   }
 
-  // ── Upload Step ────────────────────────────────────────────
   if (step.value === "upload") {
     return (
-      <div class="space-y-5">
-        <div class="text-center">
-          <p class="text-sm font-600 text-gray-700 mb-1">
-            Verify your identity, {guestName.split(" ")[0]}
+      <div class="space-y-10 animate-fade-in">
+        <div class="text-center space-y-2">
+          <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-[0.3em]">
+            Protocol Authentication
           </p>
-          <p class="text-xs text-gray-400">
-            Upload a photo of your government-issued ID. Your data is encrypted
-            and used only for verification.
+          <h2 class="text-2xl font-bold text-gray-900 tracking-tight">
+            Verify Residency, {guestName.split(" ")[0]}
+          </h2>
+          <p class="text-[13px] font-medium text-gray-400 mt-3 max-w-sm mx-auto leading-relaxed">
+            Please provide a professional capture of your government-issued identification for secure residency authentication.
           </p>
         </div>
 
-        {/* ID type selector */}
-        <div>
-          <label class="block text-xs font-600 text-gray-500 mb-2">
-            ID Type
+        <div class="space-y-4">
+          <label class="block text-[10px] font-bold text-gray-300 uppercase tracking-widest text-center">
+            Document Selection
           </label>
-          <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+          <div class="grid grid-cols-2 gap-4">
             {ID_TYPES.map(({ value, label }) => (
               <button
                 key={value}
                 type="button"
                 onClick={() => (selectedIdType.value = value)}
-                class={`py-2 px-3 rounded-xl border text-xs font-600 transition-all duration-150 ${
+                class={`py-4 px-6 rounded-2xl border text-[11px] font-bold uppercase tracking-widest transition-all duration-500 shadow-sm ${
                   selectedIdType.value === value
-                    ? "border-istay-400 bg-istay-50 text-istay-900"
-                    : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
+                    ? "border-emerald-500 bg-emerald-500 text-white shadow-premium"
+                    : "border-gray-50 bg-gray-50/50 text-gray-400 hover:border-emerald-200 hover:bg-emerald-50/30"
                 }`}
               >
                 {label}
@@ -230,42 +195,26 @@ export default function IdVerification(
           </div>
         </div>
 
-        {/* File drop zone */}
         <div
           onClick={() => fileInputRef.current?.click()}
-          class="flex flex-col items-center justify-center gap-3 p-8 rounded-2xl border-2 border-dashed border-gray-200 hover:border-mint-300 bg-gray-50 hover:bg-mint-50/50 cursor-pointer transition-all duration-200 group"
+          class="group relative flex flex-col items-center justify-center gap-6 p-16 rounded-[2.5rem] border-2 border-dashed border-gray-100 bg-gray-50/30 hover:bg-white hover:border-emerald-400/50 hover:shadow-premium-lg cursor-pointer transition-all duration-700 overflow-hidden"
         >
-          <div class="w-12 h-12 rounded-2xl bg-gray-200 group-hover:bg-mint-100 flex items-center justify-center transition-colors">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M12 16V8M12 8L9 11M12 8L15 11"
-                stroke="#9ca3af"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="group-hover:stroke-istay-600 transition-colors"
-              />
-              <path
-                d="M4 16C4 18.2091 5.79086 20 8 20H16C18.2091 20 20 18.2091 20 16"
-                stroke="#9ca3af"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                class="group-hover:stroke-istay-600 transition-colors"
-              />
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          
+          <div class="relative w-20 h-20 rounded-[1.5rem] bg-white border border-gray-100 group-hover:bg-gray-900 group-hover:text-white flex items-center justify-center transition-all duration-500 shadow-sm group-hover:scale-110 group-hover:-rotate-6">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
             </svg>
           </div>
-          <div class="text-center">
-            <p class="text-sm font-700 text-gray-700 group-hover:text-istay-900">
-              Tap to upload your ID
+          
+          <div class="text-center relative">
+            <p class="text-[12px] font-bold text-gray-900 uppercase tracking-widest">
+              Submit Identification
             </p>
-            <p class="text-xs text-gray-400 mt-0.5">
-              JPG, PNG or PDF · Max 10MB
+            <p class="text-[10px] font-bold text-gray-300 mt-2 uppercase tracking-widest">
+              High Resolution JPG, PNG or PDF
             </p>
           </div>
         </div>
@@ -276,186 +225,169 @@ export default function IdVerification(
           accept="image/*,application/pdf"
           onChange={handleFileChange}
           class="hidden"
-          aria-label="Upload ID document"
           capture="environment"
         />
 
         {errorMsg.value && (
-          <p class="text-xs text-rose-600 text-center">{errorMsg.value}</p>
+          <div class="p-5 bg-rose-50 border border-rose-100 rounded-3xl animate-shake">
+            <p class="text-[11px] font-bold text-rose-600 text-center uppercase tracking-widest leading-relaxed">
+              Discrepancy: {errorMsg.value}
+            </p>
+          </div>
         )}
+        
+        <div class="pt-4 flex items-center justify-center gap-4 text-[9px] font-bold text-gray-300 uppercase tracking-widest">
+           <div class="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+           256-Bit Encrypted Protocol
+           <div class="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+        </div>
       </div>
     );
   }
 
-  // ── Preview Step ───────────────────────────────────────────
   if (step.value === "preview") {
     return (
-      <div class="space-y-4">
-        <div class="relative rounded-2xl overflow-hidden border border-gray-200 bg-gray-50">
+      <div class="space-y-8 animate-fade-in">
+        <div class="text-center space-y-2">
+          <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-[0.3em]">Curation Preview</p>
+          <h3 class="text-2xl font-bold text-gray-900 tracking-tight">Verify Legibility</h3>
+        </div>
+
+        <div class="relative rounded-[3rem] overflow-hidden border border-gray-100 bg-white shadow-premium-lg group">
           {previewUrl.value && !previewUrl.value.startsWith("blob:pdf") && (
             <img
               src={previewUrl.value}
-              alt="ID preview"
-              class="w-full h-48 object-contain"
+              alt="Identification Capture"
+              class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-1000"
             />
           )}
-          <div class="absolute top-3 right-3">
-            <span class="px-2.5 py-1 rounded-full bg-white/90 text-xs font-600 text-gray-700 shadow-sm">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+          <div class="absolute bottom-6 left-6">
+            <span class="px-5 py-2.5 rounded-2xl bg-white/90 backdrop-blur-md shadow-premium text-[10px] font-bold text-gray-900 uppercase tracking-widest">
               {ID_TYPES.find((t) => t.value === selectedIdType.value)?.label}
             </span>
           </div>
         </div>
 
-        <div class="flex gap-3">
+        <div class="grid grid-cols-2 gap-6">
           <button
             onClick={() => {
               step.value = "upload";
               previewUrl.value = null;
               imageB64.value = null;
             }}
-            class="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-600 text-gray-600 hover:bg-gray-50 transition-colors"
+            class="py-5 rounded-[1.5rem] border border-gray-100 bg-white text-[11px] font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-50 hover:text-gray-900 transition-all duration-500"
           >
-            ← Retake
+            ← Recapture
           </button>
           <button
             onClick={handleSubmit}
-            class="flex-1 py-3 rounded-xl bg-teal-600 text-white text-sm font-700 hover:bg-teal-700 active:scale-95 transition-all shadow-sm"
+            class="py-5 rounded-[1.5rem] bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest shadow-premium hover:bg-emerald-600 hover:-translate-y-1 transition-all duration-500"
           >
-            Submit & Verify →
+            Synchronize →
           </button>
         </div>
       </div>
     );
   }
 
-  // ── Scanning Step ──────────────────────────────────────────
   if (step.value === "scanning") {
     return (
-      <div class="flex flex-col items-center justify-center py-8 gap-5">
+      <div class="flex flex-col items-center justify-center py-16 gap-10 animate-fade-in">
         <ScanningAnimation />
-        <div class="text-center">
-          <p class="text-sm font-700 text-gray-900 mb-1">Scanning your ID...</p>
-          <p class="text-xs text-gray-400">
-            AI-powered verification in progress
+        <div class="text-center space-y-3">
+          <p class="text-2xl font-bold text-gray-900 tracking-tight">Synchronizing Identity</p>
+          <p class="text-[13px] font-medium text-gray-400 max-w-xs mx-auto leading-relaxed">
+            Bespoke identity audit in progress...
           </p>
         </div>
-        <div class="flex items-center gap-1.5 text-xs text-gray-400">
-          {["Uploading", "Analyzing", "Verifying"].map((label, i) => (
-            <span key={label} class="flex items-center gap-1">
-              {i > 0 && <span class="text-gray-200">→</span>}
-              <span class={`font-500 ${i === 0 ? "text-istay-600" : ""}`}>
+        <div class="flex items-center gap-5">
+          {["Encryption", "Analysis", "Validation"].map((label, i) => (
+            <div key={label} class="flex items-center gap-5">
+              {i > 0 && <div class="w-2 h-0.5 bg-gray-100 rounded-full" />}
+              <span class={`text-[10px] font-bold uppercase tracking-[0.2em] ${i === 1 ? "text-emerald-500 animate-pulse" : "text-gray-200"}`}>
                 {label}
               </span>
-            </span>
+            </div>
           ))}
         </div>
       </div>
     );
   }
 
-  // ── Verified Step (matchScore >= 90) ──────────────────────
   if (step.value === "verified") {
     return (
-      <div class="flex flex-col items-center justify-center py-8 gap-4 text-center">
-        <div class="relative w-16 h-16">
-          <div class="absolute inset-0 rounded-full bg-emerald-50 border-2 border-emerald-200" />
-          <div class="absolute inset-0 flex items-center justify-center">
-            <svg
-              width="30"
-              height="30"
-              viewBox="0 0 30 30"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M6 15L12 21L24 9"
-                stroke="#10b981"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
+      <div class="flex flex-col items-center justify-center py-12 gap-10 text-center animate-fade-in">
+        <div class="w-24 h-24 rounded-[2rem] bg-emerald-50 border border-emerald-100 flex items-center justify-center text-4xl shadow-sm animate-scale-in">
+          ✓
         </div>
-        <div>
-          <h3 class="text-base font-800 text-gray-900">
-            Verified ✅
+        <div class="space-y-3">
+          <h3 class="text-2xl font-bold text-gray-900 tracking-tight">
+            Authentication Successful
           </h3>
-          <p class="text-xs text-gray-400 mt-1.5 leading-relaxed max-w-xs">
-            {verifyMessage.value ||
-              "Your identity has been verified successfully!"}
+          <p class="text-[13px] font-medium text-gray-400 leading-relaxed max-w-sm mx-auto">
+            {verifyMessage.value || "Residency protocol complete. Your stay credentials have been successfully authorized."}
           </p>
         </div>
-        <div class="mt-2 p-3 rounded-xl bg-emerald-50 border border-emerald-100 w-full">
-          <p class="text-xs text-emerald-700 font-600 text-center">
-            ✓ Booking #{bookingId.slice(0, 8).toUpperCase()}{" "}
-            — ID Verified (Score: {matchScore.value}%)
+        <div class="p-8 rounded-[2.5rem] bg-emerald-50/50 border border-emerald-100 w-full space-y-3 shadow-inner">
+          <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
+            Residency Audit Record
+          </p>
+          <p class="text-sm font-bold text-emerald-900 tracking-tight">
+            SEC_ID_{bookingId.slice(0, 8).toUpperCase()} • {matchScore.value}% Clarity
           </p>
         </div>
         <a
           href="#checkin-instructions"
-          class="w-full py-3 rounded-xl bg-teal-600 text-white text-sm font-700 hover:bg-teal-700 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2"
+          class="w-full py-5 rounded-[1.5rem] bg-gray-900 text-white text-[11px] font-bold uppercase tracking-widest shadow-premium hover:bg-emerald-600 hover:-translate-y-1 transition-all duration-500 flex items-center justify-center gap-4"
         >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M8 1L1.5 5.5V14.5H6V10H10V14.5H14.5V5.5L8 1Z"
-              fill="white"
-            />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
-          View Check-in Instructions
+          Arrival Credentials
         </a>
       </div>
     );
   }
 
-  // ── Review Step (matchScore < 90) ───────────────────────
   if (step.value === "review") {
     return (
-      <div class="flex flex-col items-center justify-center py-8 gap-4 text-center">
-        <div class="relative w-16 h-16">
-          <div class="absolute inset-0 rounded-full bg-amber-50 border-2 border-amber-200" />
-          <div class="absolute inset-0 flex items-center justify-center text-2xl">
-            🔍
-          </div>
+      <div class="flex flex-col items-center justify-center py-12 gap-10 text-center animate-fade-in">
+        <div class="w-24 h-24 rounded-[2rem] bg-amber-50 border border-amber-100 flex items-center justify-center text-4xl shadow-sm animate-pulse">
+          ⏳
         </div>
-        <div>
-          <h3 class="text-base font-800 text-gray-900">
-            Under Review
+        <div class="space-y-3">
+          <h3 class="text-2xl font-bold text-gray-900 tracking-tight">
+            Audit in Progress
           </h3>
-          <p class="text-xs text-gray-400 mt-1.5 leading-relaxed max-w-xs">
-            {verifyMessage.value ||
-              "Your ID is being reviewed by our team. You'll receive a confirmation email shortly."}
+          <p class="text-[13px] font-medium text-gray-400 leading-relaxed max-w-sm mx-auto">
+            {verifyMessage.value || "Your identification is undergoing professional curation. This is a standard procedure."}
           </p>
         </div>
-        <div class="mt-2 p-3 rounded-xl bg-amber-50 border border-amber-100 w-full">
-          <p class="text-xs text-amber-700 font-600 text-center">
-            ⏳ Booking #{bookingId.slice(0, 8).toUpperCase()}{" "}
-            — Manual Review (Score: {matchScore.value}%)
+        <div class="p-8 rounded-[2.5rem] bg-amber-50/50 border border-amber-100 w-full space-y-3 shadow-inner">
+          <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">
+            Authentication Status
+          </p>
+          <p class="text-sm font-bold text-amber-900 tracking-tight">
+            REF_{bookingId.slice(0, 8).toUpperCase()} • Manual Verification
           </p>
         </div>
-        <p class="text-xs text-gray-400">
-          Your stay is still confirmed. Check-in instructions will be sent via
-          email after review.
+        <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest leading-relaxed max-w-xs">
+          Residency confirmed. Arrival access details will be synchronized shortly.
         </p>
       </div>
     );
   }
 
-  // ── Error Step ─────────────────────────────────────────────
   return (
-    <div class="flex flex-col items-center justify-center py-8 gap-4 text-center">
-      <div class="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-2xl">
-        ⚠️
+    <div class="flex flex-col items-center justify-center py-16 gap-10 text-center animate-fade-in">
+      <div class="w-24 h-24 rounded-[2rem] bg-rose-50 border border-rose-100 flex items-center justify-center text-4xl shadow-sm">
+        !
       </div>
-      <div>
-        <p class="text-sm font-700 text-gray-900 mb-1">Verification failed</p>
-        <p class="text-xs text-gray-500 leading-relaxed">
+      <div class="space-y-3">
+        <h3 class="text-2xl font-bold text-gray-900 tracking-tight">Authentication Discrepancy</h3>
+        <p class="text-[13px] font-medium text-rose-500 leading-relaxed max-w-sm mx-auto">
           {errorMsg.value}
         </p>
       </div>
@@ -466,9 +398,9 @@ export default function IdVerification(
           previewUrl.value = null;
           imageB64.value = null;
         }}
-        class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-600 text-gray-700 hover:bg-gray-50 transition-colors"
+        class="px-10 py-5 rounded-[1.5rem] border border-gray-100 bg-white text-[11px] font-bold text-gray-400 uppercase tracking-widest hover:bg-gray-50 hover:text-gray-900 transition-all duration-500"
       >
-        ← Try again
+        ← Restart Protocol
       </button>
     </div>
   );

@@ -6,12 +6,12 @@ interface SettingsTabsProps {
 
 export default function SettingsTabs({ activeTab }: SettingsTabsProps) {
   const tabs = [
-    { id: "general", label: "GENERAL_CORE", icon: "⚙️" },
-    { id: "compliance", label: "LEGAL_SYNC", icon: "⚖️" },
-    { id: "notifications", label: "SIGNAL_LOCK", icon: "🔔" },
-    { id: "team", label: "UNIT_SYNC", icon: "👥" },
-    { id: "developers", label: "API_BRIDGE", icon: "🔌" },
-    { id: "billing", label: "CAPITAL_HUB", icon: "💳" },
+    { id: "general", label: "General", icon: "⚙️" },
+    { id: "compliance", label: "Business", icon: "🏢" },
+    { id: "notifications", label: "Notifications", icon: "🔔" },
+    { id: "team", label: "Team", icon: "👥" },
+    { id: "developers", label: "API & Developers", icon: "🔌" },
+    { id: "billing", label: "Billing", icon: "💳" },
   ];
 
   const switchTab = (id: string) => {
@@ -21,19 +21,19 @@ export default function SettingsTabs({ activeTab }: SettingsTabsProps) {
   };
 
   return (
-    <div class="px-12 py-8 bg-gray-50 border-b-[4px] border-gray-900 overflow-x-auto no-scrollbar">
-      <div class="flex items-center gap-6 min-w-max">
+    <div class="px-12 py-8 bg-gray-50/50 border-b border-gray-100 overflow-x-auto no-scrollbar">
+      <div class="flex items-center gap-4 min-w-max">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => switchTab(tab.id)}
-            class={`flex items-center gap-3 px-8 py-4 rounded-2xl text-[9px] font-950 uppercase tracking-[0.2em] transition-all border-[3px] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none ${
+            class={`flex items-center gap-3 px-6 py-3.5 rounded-xl text-[11px] font-bold uppercase tracking-widest transition-all border ${
               activeTab === tab.id
-                ? "bg-mint-400 text-gray-900 border-gray-900"
-                : "bg-white text-gray-400 border-gray-900 grayscale hover:grayscale-0"
+                ? "bg-gray-900 text-white border-gray-900 shadow-premium"
+                : "bg-white text-gray-400 border-gray-100 hover:border-emerald-200 hover:text-emerald-600 hover:shadow-sm"
             }`}
           >
-            <span class="text-xl">{tab.icon}</span>
+            <span class="text-lg">{tab.icon}</span>
             {tab.label}
           </button>
         ))}

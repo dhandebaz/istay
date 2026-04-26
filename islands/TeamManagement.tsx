@@ -36,7 +36,7 @@ function ToastContainer(
       {toasts.map((t) => (
         <div
           key={t.id}
-          class={`${colorMap[t.type]} text-white px-6 py-4 border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-xl flex items-center gap-4 text-xs font-950 uppercase tracking-widest cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all`}
+          class={`${colorMap[t.type]} text-white px-6 py-4 shadow-premium-lg rounded-2xl flex items-center gap-4 text-xs font-bold uppercase tracking-widest cursor-pointer hover:-translate-y-0.5 transition-all`}
           style={{
             animation: t.exiting
               ? "toast-exit 0.2s ease-in forwards"
@@ -44,13 +44,13 @@ function ToastContainer(
           }}
           onClick={() => onDismiss(t.id)}
         >
-          <span class="text-lg font-950 shrink-0">{iconMap[t.type]}</span>
+          <span class="text-lg font-bold shrink-0">{iconMap[t.type]}</span>
           <span class="flex-1">{t.message}</span>
         </div>
       ))}
       <style>
         {`
-        @keyframes toast-enter { from { opacity: 0; transform: translateX(100px) rotate(5deg); } to { opacity: 1; transform: translateX(0) rotate(0); } }
+        @keyframes toast-enter { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-exit { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100px); } }
       `}
       </style>
@@ -69,26 +69,26 @@ function ConfirmModal({
 }) {
   return (
     <div class="fixed inset-0 z-[9998] flex items-center justify-center p-6 bg-gray-900/40 backdrop-blur-sm animate-fade-in">
-      <div class="bg-white border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] rounded-[2.5rem] max-w-md w-full p-10 space-y-8 animate-brutal-pop">
+      <div class="bg-white border border-gray-100 shadow-premium rounded-[2.5rem] max-w-md w-full p-10 space-y-8 animate-slide-up">
         <div class="text-center space-y-4">
-          <div class="w-20 h-20 bg-rose-50 border-[3px] border-gray-900 rounded-2xl flex items-center justify-center mx-auto text-4xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <div class="w-20 h-20 bg-rose-50 border border-rose-100 rounded-3xl flex items-center justify-center mx-auto text-4xl shadow-sm">
             ⚠️
           </div>
-          <h3 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter">Confirm Action</h3>
-          <p class="text-sm font-800 text-gray-400 uppercase tracking-widest leading-relaxed">{message}</p>
+          <h3 class="text-2xl font-bold text-gray-900 tracking-tight">Confirm Action</h3>
+          <p class="text-sm font-medium text-gray-400 leading-relaxed">{message}</p>
         </div>
         <div class="flex flex-col gap-3">
           <button
             onClick={onConfirm}
-            class="w-full py-5 bg-rose-500 text-white font-950 rounded-2xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase tracking-widest text-[10px]"
+            class="w-full py-5 bg-rose-500 text-white font-bold rounded-2xl shadow-premium hover:bg-rose-600 transition-all uppercase tracking-widest text-[11px]"
           >
-            YES, EXECUTE
+            Remove Member
           </button>
           <button
             onClick={onCancel}
-            class="w-full py-5 bg-white text-gray-900 font-950 rounded-2xl border-[3px] border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase tracking-widest text-[10px]"
+            class="w-full py-5 bg-gray-50 text-gray-900 font-bold rounded-2xl border border-gray-100 hover:bg-white transition-all uppercase tracking-widest text-[11px]"
           >
-            CANCEL
+            Cancel
           </button>
         </div>
       </div>
@@ -242,15 +242,15 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
         />
       )}
 
-      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div class="p-6 border-b border-gray-50 flex items-center justify-between">
+      <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-premium overflow-hidden">
+        <div class="p-8 border-b border-gray-50 flex items-center justify-between bg-gray-50/30">
           <div>
-            <h2 class="text-base font-700 text-gray-900">Team Members</h2>
-            <p class="text-xs text-gray-400">
+            <h2 class="text-xl font-bold text-gray-900 tracking-tight">Team Members</h2>
+            <p class="text-sm font-medium text-gray-400 mt-1">
               Manage who has access to your properties and earnings
             </p>
           </div>
-          <span class="px-3 py-1 rounded-full bg-gray-50 border border-gray-100 text-[10px] font-700 text-gray-500 uppercase tracking-wider">
+          <span class="px-4 py-1.5 rounded-full bg-white border border-gray-100 text-[11px] font-bold text-emerald-600 uppercase tracking-widest shadow-sm">
             {members.length} Members
           </span>
         </div>
@@ -258,13 +258,13 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
         <div class="divide-y divide-gray-50">
           {loading
             ? (
-              <div class="p-12 text-center text-gray-400 text-sm italic">
+              <div class="p-16 text-center text-gray-400 text-sm font-medium animate-pulse">
                 Loading team...
               </div>
             )
             : members.length === 0
             ? (
-              <div class="p-12 text-center text-gray-400 text-sm italic">
+              <div class="p-16 text-center text-gray-400 text-sm font-medium">
                 No team members found
               </div>
             )
@@ -272,30 +272,30 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
               members.map((member) => (
                 <div
                   key={member.email}
-                  class="p-4 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
+                  class="p-6 flex items-center justify-between hover:bg-emerald-50/30 transition-colors"
                 >
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-istay-50 border border-istay-100 flex items-center justify-center text-istay-600 font-800 text-xs">
+                  <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-sm shadow-sm">
                       {(member.name || member.email).slice(0, 2).toUpperCase()}
                     </div>
                     <div>
-                      <div class="flex items-center gap-2">
-                        <p class="text-sm font-700 text-gray-900">
+                      <div class="flex items-center gap-3">
+                        <p class="text-sm font-bold text-gray-900 tracking-tight">
                           {member.name || "Unnamed User"}
                         </p>
                         <span
-                          class={`px-2 py-0.5 rounded-md text-[9px] font-800 uppercase tracking-tight ${
+                          class={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border ${
                             member.role === "owner"
-                              ? "bg-amber-100 text-amber-700"
+                              ? "bg-amber-50 text-amber-700 border-amber-100"
                               : member.role === "manager"
-                              ? "bg-blue-100 text-blue-700"
-                              : "bg-gray-100 text-gray-600"
+                              ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+                              : "bg-gray-50 text-gray-500 border-gray-100"
                           }`}
                         >
                           {member.role}
                         </span>
                       </div>
-                      <p class="text-xs text-gray-400">{member.email}</p>
+                      <p class="text-xs font-medium text-gray-400 mt-0.5">{member.email}</p>
                     </div>
                   </div>
 
@@ -303,16 +303,16 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
                     <button
                       type="button"
                       onClick={() => handleRemove(member.email)}
-                      class="p-2 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                      class="p-2.5 text-gray-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all group"
                       title="Remove Member"
                     >
                       <svg
-                        width="18"
-                        height="18"
+                        width="20"
+                        height="20"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        stroke-width="2"
+                        stroke-width="2.5"
                         stroke-linecap="round"
                         stroke-linejoin="round"
                       >
@@ -327,44 +327,47 @@ export default function TeamManagement({ hostId }: { hostId: string }) {
       </div>
 
       {/* Invite Form */}
-      <div class="bg-gray-50 rounded-2xl border border-gray-100 p-6">
-        <h3 class="text-sm font-800 text-gray-900 mb-1">Invite Team Member</h3>
-        <p class="text-xs text-gray-400 mb-4">
-          New members will be able to log in with their email.
-        </p>
+      <div class="bg-gray-900 rounded-[2.5rem] p-10 shadow-premium-lg border border-gray-900 relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent pointer-events-none" />
+        <div class="relative z-10">
+          <h3 class="text-lg font-bold text-white tracking-tight mb-2">Invite Team Member</h3>
+          <p class="text-xs font-medium text-gray-400 mb-8 max-w-sm">
+            Add team members to help manage your properties. They will receive an invitation via email.
+          </p>
 
-        <form
-          onSubmit={handleInvite}
-          class="grid grid-cols-1 sm:grid-cols-4 gap-4"
-        >
-          <div class="sm:col-span-2">
-            <input
-              name="email"
-              type="email"
-              placeholder="Email address"
-              required
-              class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:ring-2 focus:ring-istay-500/10 focus:border-istay-500 transition-all outline-none"
-            />
-          </div>
-          <div>
-            <select
-              name="role"
-              required
-              class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:ring-2 focus:ring-istay-500/10 focus:border-istay-500 transition-all outline-none appearance-none"
-            >
-              <option value="staff">Staff</option>
-              <option value="manager">Manager</option>
-              <option value="accountant">Accountant</option>
-            </select>
-          </div>
-          <button
-            type="submit"
-            disabled={inviting}
-            class="px-4 py-2.5 rounded-xl bg-istay-900 text-white text-sm font-800 hover:bg-istay-800 active:scale-95 transition-all disabled:opacity-50"
+          <form
+            onSubmit={handleInvite}
+            class="grid grid-cols-1 sm:grid-cols-4 gap-4"
           >
-            {inviting ? "Inviting..." : "Invite"}
-          </button>
-        </form>
+            <div class="sm:col-span-2">
+              <input
+                name="email"
+                type="email"
+                placeholder="Email address"
+                required
+                class="w-full px-6 py-4 rounded-2xl bg-gray-800/50 border border-gray-800 text-white text-sm font-medium focus:border-emerald-500 focus:bg-gray-800 outline-none transition-all placeholder:text-gray-500"
+              />
+            </div>
+            <div>
+              <select
+                name="role"
+                required
+                class="w-full px-6 py-4 rounded-2xl bg-gray-800/50 border border-gray-800 text-white text-sm font-bold focus:border-emerald-500 focus:bg-gray-800 outline-none appearance-none cursor-pointer"
+              >
+                <option value="staff" class="bg-gray-900 text-white">Staff</option>
+                <option value="manager" class="bg-gray-900 text-white">Manager</option>
+                <option value="accountant" class="bg-gray-900 text-white">Accountant</option>
+              </select>
+            </div>
+            <button
+              type="submit"
+              disabled={inviting}
+              class="px-6 py-4 rounded-2xl bg-emerald-500 text-white text-sm font-bold shadow-premium hover:bg-emerald-600 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50"
+            >
+              {inviting ? "Inviting..." : "Invite Member"}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

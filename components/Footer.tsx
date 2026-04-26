@@ -1,75 +1,78 @@
 import { InstagramIcon, WhatsAppIcon } from "../components/Icons.tsx";
 
 const LEGAL_LINKS = [
-  { href: "/legal/terms", label: "TERMS_&_CONDITIONS" },
-  { href: "/legal/privacy", label: "PRIVACY_PROTOCOL" },
-  { href: "/legal/cancellation", label: "CANCELLATION_LOG" },
-  { href: "/legal/shipping", label: "DELIVERY_STATS" },
+  { href: "/legal/terms", label: "Terms of Operation" },
+  { href: "/legal/privacy", label: "Privacy Security" },
+  { href: "/legal/cancellation", label: "Cancellation Protocol" },
+  { href: "/legal/shipping", label: "Shipping Policy" },
 ];
 
 const NAV_LINKS = [
-  { href: "/", label: "HOME_BASE" },
-  { href: "/pricing", label: "PRICING_KERNEL" },
-  { href: "/contact", label: "QUERY_CORE" },
+  { href: "/", label: "Residency Base" },
+  { href: "/pricing", label: "Economics Portfolio" },
+  { href: "/contact", label: "Concierge Support" },
 ];
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer class="bg-gray-900 text-white border-t-[8px] border-mint-500">
+    <footer class="bg-gray-900 text-white border-t border-gray-800 relative overflow-hidden">
+      {/* Background Ambience */}
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[80rem] h-[20rem] bg-emerald-500/5 rounded-full blur-[120px] opacity-20 pointer-events-none" />
+      
       {/* Main Footer Grid */}
-      <div class="max-w-7xl mx-auto px-5 sm:px-8 pt-24 pb-16">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-16 lg:gap-24">
+      <div class="max-w-7xl mx-auto px-8 sm:px-10 pt-28 pb-20 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-20 lg:gap-32">
           {/* Column 1 — Brand */}
-          <div class="md:col-span-2 space-y-10">
-            <a href="/" class="group inline-block">
+          <div class="md:col-span-2 space-y-12">
+            <a href="/" class="group inline-block transition-transform hover:scale-105 active:scale-95">
               <img
                 src="/logo.svg"
                 alt="istay logo"
-                width="56"
-                height="56"
-                class="h-14 w-auto invert brightness-0"
+                width="64"
+                height="64"
+                class="h-16 w-auto invert brightness-0"
               />
             </a>
-            <h2 class="text-3xl font-950 text-white leading-[0.9] max-w-sm uppercase tracking-tighter">
-              TAKING_BACK_CONTROL_OF.<br />
-              <span class="text-mint-400">INDIAN_HOSPITALITY.</span>
+            <h2 class="text-4xl font-bold text-white leading-[1.1] max-w-sm tracking-tighter">
+              Redefining Direct<br />
+              <span class="text-emerald-500 italic font-serif font-medium">Indian Residency.</span>
             </h2>
             
-            <div class="flex gap-6">
+            <div class="flex gap-8">
                <a 
                   href="https://instagram.com/istay.space" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  class="w-14 h-14 flex items-center justify-center rounded-2xl bg-white text-gray-900 border-[3px] border-mint-500 shadow-[6px_6px_0px_0px_#4ade80] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all" 
+                  class="w-14 h-14 flex items-center justify-center rounded-2xl bg-white/5 text-white border border-white/10 hover:bg-white hover:text-gray-900 hover:shadow-premium-lg transition-all duration-500 group" 
                   aria-label="Instagram"
                 >
-                  <InstagramIcon class="w-7 h-7" />
+                  <InstagramIcon class="w-7 h-7 group-hover:scale-110 transition-transform" />
                 </a>
                 <a 
                   href="https://wa.me/919873420803" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  class="w-14 h-14 flex items-center justify-center rounded-2xl bg-mint-500 text-gray-900 border-[3px] border-white shadow-[6px_6px_0px_0px_#fff] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all" 
+                  class="w-14 h-14 flex items-center justify-center rounded-2xl bg-emerald-500 text-white hover:bg-emerald-400 hover:shadow-premium shadow-emerald-500/20 transition-all duration-500 group" 
                   aria-label="WhatsApp"
                 >
-                  <WhatsAppIcon class="w-7 h-7" />
+                  <WhatsAppIcon class="w-7 h-7 group-hover:scale-110 transition-transform" />
                 </a>
             </div>
           </div>
 
           {/* Column 2 — Navigation */}
-          <div>
-            <h3 class="text-[10px] font-950 uppercase tracking-[0.4em] text-mint-400 mb-8">
-              NAVIGATION_LINKS
+          <div class="space-y-10">
+            <h3 class="text-[11px] font-bold uppercase tracking-[0.4em] text-emerald-500 opacity-60">
+              Network Nodes
             </h3>
-            <ul class="space-y-5">
+            <ul class="space-y-6">
               {NAV_LINKS.map(({ href, label }) => (
                 <li key={href}>
                   <a
                     href={href}
-                    class="text-xs font-950 text-gray-400 hover:text-mint-400 transition-colors duration-200 uppercase tracking-widest"
+                    class="text-[13px] font-bold text-gray-400 hover:text-emerald-500 transition-all duration-300 uppercase tracking-[0.2em] hover:tracking-[0.3em]"
                   >
                     {label}
                   </a>
@@ -79,16 +82,16 @@ export default function Footer() {
           </div>
 
           {/* Column 3 — Legal Links */}
-          <div>
-            <h3 class="text-[10px] font-950 uppercase tracking-[0.4em] text-mint-400 mb-8">
-              COMPLIANCE_PROTOCOLS
+          <div class="space-y-10">
+            <h3 class="text-[11px] font-bold uppercase tracking-[0.4em] text-emerald-500 opacity-60">
+              Compliance Protocols
             </h3>
-            <ul class="space-y-5">
+            <ul class="space-y-6">
               {LEGAL_LINKS.map(({ href, label }) => (
                 <li key={href}>
                   <a
                     href={href}
-                    class="text-xs font-950 text-gray-400 hover:text-mint-400 transition-colors duration-200 uppercase tracking-widest"
+                    class="text-[13px] font-bold text-gray-400 hover:text-emerald-500 transition-all duration-300 uppercase tracking-[0.2em] hover:tracking-[0.3em]"
                   >
                     {label}
                   </a>
@@ -100,23 +103,29 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div class="border-t-[4px] border-white/5">
-        <div class="max-w-7xl mx-auto px-5 sm:px-8 py-10">
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-10">
-            <div class="space-y-2">
-              <p class="text-[9px] font-950 text-gray-500 uppercase tracking-[0.3em]">
-                REGISTERED_OFFICE_01
+      <div class="border-t border-white/5 bg-black/20">
+        <div class="max-w-7xl mx-auto px-8 sm:px-10 py-12">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-12">
+            <div class="space-y-3">
+              <p class="text-[10px] font-bold text-emerald-500/40 uppercase tracking-[0.4em] italic">
+                Operational Node
               </p>
-              <p class="text-[10px] text-gray-400 font-800 uppercase tracking-widest">
-                GHAFFAR MANZIL, OKHLA, NEW DELHI, DELHI 110025, INDIA.
+              <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[0.2em] max-w-md leading-relaxed opacity-60">
+                Ghaffar Manzil, Okhla, New Delhi, Delhi 110025, India.
               </p>
             </div>
-            <p class="text-[10px] font-950 text-gray-500 uppercase tracking-[0.4em]">
-              ©_{currentYear}_ISTAY.SPACE // BUILT_FOR_THE_BOLD.
-            </p>
+            <div class="text-right space-y-2">
+              <p class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] opacity-40">
+                © {currentYear} istay.space | Precision Hospitality
+              </p>
+              <p class="text-[9px] font-bold text-emerald-500/30 uppercase tracking-[0.6em] italic">
+                Autonomous Residency Engine
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </footer>
   );
 }
+

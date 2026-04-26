@@ -46,11 +46,11 @@ export default function PropertyGrid({
           checkOut: initialCheckOut,
         });
         const res = await fetch(`/api/public/search?${params.toString()}`);
-        if (!res.ok) throw new Error("Failed to fetch properties");
+        if (!res.ok) throw new Error("Failed to synchronize property portfolio");
         const data = await res.json();
         setProperties(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
+        setError(err instanceof Error ? err.message : "Autonomous sync discrepancy");
       } finally {
         setLoading(false);
       }
@@ -61,19 +61,19 @@ export default function PropertyGrid({
 
   if (loading) {
     return (
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden animate-pulse">
-            <div class="h-56 bg-gray-200" />
-            <div class="p-6 space-y-4">
-              <div class="h-6 bg-gray-200 rounded-lg w-3/4" />
-              <div class="h-4 bg-gray-200 rounded-lg w-1/2" />
-              <div class="flex gap-2">
-                {[1, 2, 3].map((j) => <div key={j} class="h-6 w-16 bg-gray-200 rounded-full" />)}
+          <div key={i} class="bg-white rounded-[2.5rem] border border-gray-50 shadow-premium overflow-hidden animate-pulse">
+            <div class="h-72 bg-gray-50" />
+            <div class="p-10 space-y-6">
+              <div class="h-8 bg-gray-50 rounded-xl w-3/4" />
+              <div class="h-4 bg-gray-50 rounded-xl w-1/2" />
+              <div class="flex gap-3">
+                {[1, 2, 3].map((j) => <div key={j} class="h-8 w-24 bg-gray-50 rounded-xl" />)}
               </div>
-              <div class="pt-6 flex items-center justify-between">
-                <div class="h-8 w-24 bg-gray-200 rounded-lg" />
-                <div class="h-10 w-10 bg-gray-200 rounded-full" />
+              <div class="pt-8 flex items-center justify-between">
+                <div class="h-12 w-32 bg-gray-50 rounded-2xl" />
+                <div class="h-14 w-14 bg-gray-50 rounded-2xl" />
               </div>
             </div>
           </div>
@@ -84,13 +84,16 @@ export default function PropertyGrid({
 
   if (error) {
     return (
-      <div class="text-center py-20 bg-white rounded-[3rem] shadow-xl border border-gray-100">
-        <p class="text-rose-500 font-700">Error: {error}</p>
+      <div class="text-center py-24 bg-gray-50 rounded-[4rem] border border-emerald-50 max-w-2xl mx-auto px-10 animate-fade-in shadow-inner">
+        <div class="w-24 h-24 rounded-[2rem] bg-white flex items-center justify-center mx-auto mb-8 text-emerald-500 shadow-premium">
+          <span class="text-3xl">⚠️</span>
+        </div>
+        <p class="text-emerald-900 font-bold uppercase tracking-[0.2em] text-[11px] mb-8">Protocol Discrepancy: {error}</p>
         <button 
           onClick={() => window.location.reload()}
-          class="mt-4 px-6 py-2 bg-gray-900 text-white rounded-xl text-sm font-700"
+          class="px-10 py-4 bg-gray-900 text-white rounded-[1.2rem] text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-emerald-600 transition-all shadow-premium"
         >
-          Try Again
+          Initialize Re-Sync
         </button>
       </div>
     );
@@ -98,28 +101,28 @@ export default function PropertyGrid({
 
   if (properties.length === 0) {
     return (
-      <div class="text-center py-20 bg-white rounded-[3rem] shadow-xl border border-gray-100 max-w-2xl mx-auto px-6">
-        <div class="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center mx-auto mb-6 text-teal-500">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="text-center py-24 bg-white rounded-[4rem] shadow-premium-lg border border-gray-50 max-w-3xl mx-auto px-12 animate-fade-in">
+        <div class="w-24 h-24 rounded-[2rem] bg-emerald-50 flex items-center justify-center mx-auto mb-10 text-emerald-500 shadow-sm">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </div>
-        <h3 class="text-2xl font-800 text-gray-900">No properties found</h3>
-        <p class="text-gray-500 mt-2 mb-8 leading-relaxed">
-          We couldn't find any stays matching your criteria. Get notified when new hosts join in this area.
+        <h3 class="text-4xl font-bold text-gray-900 tracking-tighter mb-4">Discovery Discrepancy</h3>
+        <p class="text-[13px] text-gray-400 mb-12 leading-relaxed font-bold uppercase tracking-[0.2em]">
+          No residencies match your current acquisition criteria.
         </p>
-        <form action="/api/contact" method="GET" class="flex items-center gap-2">
-          <input type="hidden" name="context" value={`Search Alert: ${initialQuery} ${initialVibe}`} />
+        <form action="/api/contact" method="GET" class="flex flex-col sm:flex-row items-center gap-4 group">
+          <input type="hidden" name="context" value={`Portfolio Alert: ${initialQuery} ${initialVibe}`} />
           <input 
             type="email" 
             name="email" 
-            placeholder="Enter your email address" 
+            placeholder="Portfolio synchronization protocol (email)..." 
             required 
-            class="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all font-500"
+            class="w-full flex-1 bg-gray-50 border border-emerald-50 rounded-[1.5rem] px-8 py-5 text-sm focus:outline-none focus:bg-white focus:shadow-inner transition-all font-medium placeholder:text-gray-300"
           />
-          <button type="submit" class="px-6 py-3 rounded-xl bg-gray-900 hover:bg-gray-800 text-white font-700 text-sm transition-colors cursor-pointer">
-            Notify Me
+          <button type="submit" class="w-full sm:w-auto px-12 py-5 rounded-[1.5rem] bg-gray-900 hover:bg-emerald-600 text-white font-bold text-[11px] uppercase tracking-[0.2em] shadow-premium transition-all">
+            Subscribe
           </button>
         </form>
       </div>
@@ -127,92 +130,102 @@ export default function PropertyGrid({
   }
 
   return (
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 pb-32">
       {properties.map((prop) => (
         <a
           key={prop.id}
           href={`/p/${prop.id}`}
-          class={`group flex flex-col bg-white rounded-[2rem] border border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden ${
-            !prop.isAvailable && initialCheckIn ? "opacity-70 grayscale-[0.3]" : ""
+          class={`group flex flex-col bg-white rounded-[3rem] border border-gray-50 shadow-premium hover:shadow-premium-lg transition-all duration-700 hover:-translate-y-3 overflow-hidden ${
+            !prop.isAvailable && initialCheckIn ? "opacity-60 grayscale-[0.5]" : ""
           }`}
         >
-          <div class="relative h-56 bg-gray-100 overflow-hidden">
+          <div class="relative h-72 bg-gray-50 overflow-hidden">
             {prop.imageUrl ? (
               <img
                 src={prop.imageUrl}
                 alt={prop.name}
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
                 loading="lazy"
               />
             ) : (
-              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-teal-50 to-emerald-100">
-                <span class="text-6xl opacity-40">🏠</span>
+              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-50 to-emerald-100/30">
+                <span class="text-[8rem] opacity-20 filter grayscale">🏠</span>
               </div>
             )}
 
             {!prop.isAvailable && initialCheckIn && (
-              <div class="absolute inset-0 bg-rose-900/40 backdrop-blur-[2px] flex items-center justify-center z-10">
-                <span class="px-4 py-2 rounded-full bg-white/95 text-rose-600 font-800 text-xs shadow-xl">
-                  Sold Out for these dates
+              <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-md flex items-center justify-center z-10">
+                <span class="px-8 py-3 rounded-2xl bg-white text-gray-900 font-bold text-[11px] uppercase tracking-[0.2em] shadow-premium-lg border border-gray-50">
+                  Residency Occupied
                 </span>
               </div>
             )}
 
             {prop._vibeScore && (
-              <div class="absolute top-4 left-4 z-20 group/tooltip">
-                <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-800 uppercase tracking-widest shadow-lg cursor-help">
-                  <span class="text-amber-400">⚡</span>
-                  {prop._vibeScore}% Match
+              <div class="absolute top-6 left-6 z-20 group/tooltip">
+                <div class="flex items-center gap-3 px-4 py-2.5 rounded-[1.2rem] bg-white/90 backdrop-blur-md shadow-premium border border-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-[0.2em] cursor-help transition-all group-hover:scale-105">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  {prop._vibeScore}% Compatibility
                 </div>
-                <div class="absolute left-0 mt-2 w-48 p-3 bg-gray-900 text-white text-xs font-500 rounded-xl shadow-xl opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-200 pointer-events-none z-30">
-                  <strong>Why?</strong> {prop._vibeReason}
+                <div class="absolute left-0 mt-4 w-64 p-6 bg-gray-900 text-white text-[12px] font-medium rounded-[2rem] shadow-premium-lg opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-500 pointer-events-none z-30 leading-relaxed border border-white/10">
+                  <strong class="block mb-2 text-emerald-400 uppercase tracking-[0.3em] text-[9px]">Autonomous Logic:</strong>
+                  {prop._vibeReason}
                 </div>
               </div>
             )}
           </div>
 
-          <div class="p-6 flex-1 flex flex-col">
-            <h3 class="text-lg font-800 text-gray-900 truncate group-hover:text-teal-600 transition-colors">
+          <div class="p-10 flex-1 flex flex-col">
+            <div class="flex items-center gap-4 mb-6">
+              <span class="px-4 py-1.5 rounded-xl bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-[0.2em] border border-emerald-100">
+                Bespoke Residency
+              </span>
+              <div class="h-px flex-1 bg-gray-50" />
+            </div>
+            
+            <h3 class="text-2xl font-bold text-gray-900 truncate group-hover:text-emerald-600 transition-colors tracking-tighter leading-tight">
               {prop.name}
             </h3>
-            <p class="text-sm text-gray-500 mt-1 line-clamp-1 font-500">
-              {prop.address || "Location unavailable"}
+            <p class="text-[11px] text-gray-300 mt-2 line-clamp-1 font-bold uppercase tracking-[0.3em] opacity-80 italic">
+              {prop.address || "Proprietary Node"}
             </p>
 
             {!prop.isAvailable && prop.matchReason && (
-              <p class="text-xs font-600 text-rose-500 mt-2 pt-2 border-t border-gray-50">
-                {prop.matchReason}
-              </p>
+              <div class="mt-6 p-4 bg-emerald-50/20 rounded-[1.2rem] border border-emerald-100/50">
+                <p class="text-[10px] font-bold text-emerald-900/60 uppercase tracking-[0.2em]">
+                  Schedule Note: {prop.matchReason}
+                </p>
+              </div>
             )}
 
-            <div class="mt-4 flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded-md bg-istay-900 text-white text-[9px] font-900 uppercase tracking-widest">
+            <div class="mt-8 flex items-center gap-4">
+              <span class="px-3 py-1 rounded-[0.8rem] bg-gray-900 text-white text-[10px] font-bold uppercase tracking-[0.2em]">
                 Direct
               </span>
-              <span class="text-[10px] text-gray-400 font-500 italic">
-                No platform fees
+              <span class="text-[11px] text-emerald-600 font-bold uppercase tracking-[0.2em] opacity-60">
+                Yield Optimized
               </span>
             </div>
 
-            <div class="mt-auto pt-5 flex items-center justify-between">
+            <div class="mt-auto pt-10 flex items-center justify-between gap-6">
               <div class="flex-1">
-                <p class="text-[10px] font-700 text-gray-400 uppercase tracking-wider mb-0.5">
-                  {initialCheckIn ? "Average / night" : "Starting at"}
+                <p class="text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em] mb-2">
+                  {initialCheckIn ? "Net Residency / night" : "Entry Level"}
                 </p>
-                <div class="flex items-center gap-2">
-                  <span class="text-xl font-900 text-teal-600">
+                <div class="flex items-center gap-3">
+                  <span class="text-3xl font-bold text-gray-900 tracking-tighter">
                     {formatINR(prop.dynamicPrice || prop.basePrice)}
                   </span>
                   {prop.isSurge && (
-                    <span class="px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-600 text-[9px] font-900 uppercase animate-pulse">
+                    <span class="px-3 py-1.5 rounded-xl bg-amber-50 text-amber-600 text-[9px] font-bold uppercase tracking-widest animate-pulse border border-amber-100">
                       Surge
                     </span>
                   )}
                 </div>
               </div>
-              <div class="px-4 py-2 rounded-xl bg-teal-50 text-teal-600 group-hover:bg-teal-500 group-hover:text-white transition-all text-xs font-900 uppercase tracking-wider flex items-center gap-2">
-                Book
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <div class="px-8 py-4 rounded-2xl bg-gray-50 text-gray-400 group-hover:bg-emerald-600 group-hover:text-white group-hover:shadow-premium-lg transition-all duration-500 text-[11px] font-bold uppercase tracking-[0.3em] flex items-center gap-3">
+                Acquisition
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                   <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
@@ -223,3 +236,4 @@ export default function PropertyGrid({
     </div>
   );
 }
+

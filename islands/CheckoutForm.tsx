@@ -31,7 +31,7 @@ function FloatingInput({
   autocomplete?: string;
 }) {
   return (
-    <div class="relative">
+    <div class="relative group">
       <input
         id={id}
         name={id}
@@ -42,14 +42,14 @@ function FloatingInput({
         pattern={pattern}
         autocomplete={autocomplete}
         placeholder=" "
-        class="peer w-full px-4 pt-6 pb-2 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-900 placeholder-transparent focus:border-teal-400 focus:bg-white focus:outline-none transition-all duration-200"
+        class="peer w-full px-6 pt-7 pb-3 rounded-2xl border border-gray-100 bg-gray-50/50 text-[15px] font-medium text-gray-900 placeholder-transparent focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/5 focus:outline-none transition-all duration-300"
       />
       <label
         for={id}
-        class="absolute left-4 top-2 text-xs font-600 text-gray-400 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-focus:top-2 peer-focus:text-xs peer-focus:text-teal-600 transition-all duration-200 pointer-events-none"
+        class="absolute left-6 top-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest peer-placeholder-shown:top-5 peer-placeholder-shown:text-[13px] peer-placeholder-shown:font-medium peer-placeholder-shown:tracking-normal peer-focus:top-3 peer-focus:text-[10px] peer-focus:font-bold peer-focus:tracking-widest peer-focus:text-emerald-600 transition-all duration-300 pointer-events-none opacity-60 peer-focus:opacity-100"
       >
         {label}
-        {required && <span class="text-rose-400 ml-0.5">*</span>}
+        {required && <span class="text-rose-400 ml-1">*</span>}
       </label>
     </div>
   );
@@ -81,18 +81,18 @@ export default function CheckoutForm(
       !guestName.value.trim() || !guestEmail.value.trim() ||
       !guestPhone.value.trim()
     ) {
-      errorMsg.value = "Please fill in all required fields.";
+      errorMsg.value = "All residency principal protocols must be defined.";
       return;
     }
 
     const phoneRaw = guestPhone.value.replace(/\s/g, "");
     if (!/^[6-9]\d{9}$/.test(phoneRaw)) {
-      errorMsg.value = "Please enter a valid 10-digit Indian mobile number.";
+      errorMsg.value = "Please provide a valid 10-digit operational contact number.";
       return;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.value)) {
-      errorMsg.value = "Please enter a valid email address.";
+      errorMsg.value = "Communication node (email) format discrepancy.";
       return;
     }
 
@@ -117,7 +117,7 @@ export default function CheckoutForm(
 
       if (!res.ok) {
         step.value = "error";
-        errorMsg.value = data.error ?? "Booking failed. Please try again.";
+        errorMsg.value = data.error ?? "Residency synchronization discrepancy. Please verify and retry.";
         return;
       }
 
@@ -131,26 +131,26 @@ export default function CheckoutForm(
       } else {
         // No payment link returned — show error
         step.value = "error";
-        errorMsg.value = "Payment link not available. Please contact support.";
+        errorMsg.value = "Secure protocol link not available. Please contact concierge.";
       }
     } catch {
       step.value = "error";
       errorMsg.value =
-        "Network error. Please check your connection and try again.";
+        "Synchronization node error. Please check your connectivity protocol.";
     }
   }
 
   // ── Submitting State ───────────────────────────────────────
   if (step.value === "submitting") {
     return (
-      <div class="flex flex-col items-center justify-center py-12 gap-4">
-        <div class="relative w-14 h-14">
-          <div class="absolute inset-0 rounded-full border-4 border-teal-100" />
-          <div class="absolute inset-0 rounded-full border-4 border-teal-500 border-t-transparent animate-spin" />
+      <div class="flex flex-col items-center justify-center py-20 gap-10 animate-fade-in">
+        <div class="relative w-24 h-24 rounded-[2rem] bg-emerald-500/5 flex items-center justify-center border border-emerald-500/10">
+          <div class="absolute inset-0 rounded-[2rem] border-2 border-emerald-500/20 animate-ping" />
+          <div class="w-12 h-12 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" />
         </div>
-        <div class="text-center">
-          <p class="text-sm font-700 text-gray-900">Creating your booking...</p>
-          <p class="text-xs text-gray-400 mt-1">Setting up secure payment</p>
+        <div class="text-center space-y-3">
+          <p class="text-[11px] font-bold text-gray-900 uppercase tracking-[0.4em]">Initializing Residency Request...</p>
+          <p class="text-xs text-gray-400 font-medium tracking-widest italic opacity-60">Synchronizing Secure Protocol</p>
         </div>
       </div>
     );
@@ -159,36 +159,35 @@ export default function CheckoutForm(
   // ── Redirecting State ──────────────────────────────────────
   if (step.value === "redirecting") {
     return (
-      <div class="flex flex-col items-center justify-center py-12 gap-4">
-        <div class="w-14 h-14 rounded-full bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center">
+      <div class="flex flex-col items-center justify-center py-20 gap-10 animate-fade-in">
+        <div class="w-24 h-24 rounded-[2.5rem] bg-emerald-500 text-white flex items-center justify-center shadow-premium-emerald animate-bounce">
           <svg
-            width="28"
-            height="28"
-            viewBox="0 0 28 28"
+            width="40"
+            height="40"
+            viewBox="0 0 24 24"
             fill="none"
-            aria-hidden="true"
           >
             <path
-              d="M5 14L11.5 20.5L23 8"
-              stroke="#10b981"
-              stroke-width="2.5"
+              d="M20 6L9 17L4 12"
+              stroke="currentColor"
+              stroke-width="3"
               stroke-linecap="round"
               stroke-linejoin="round"
             />
           </svg>
         </div>
-        <div class="text-center">
-          <p class="text-sm font-700 text-gray-900">Booking created!</p>
-          <p class="text-xs text-gray-400 mt-1">
-            Redirecting to secure payment...
+        <div class="text-center space-y-3">
+          <p class="text-[11px] font-bold text-emerald-600 uppercase tracking-[0.4em]">Residency Node Synchronized</p>
+          <p class="text-xs text-gray-400 font-medium tracking-widest italic opacity-60">
+            Redirecting to Secure Protocol...
           </p>
         </div>
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-3">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-bounce"
-              style={`animation-delay: ${i * 150}ms`}
+              class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"
+              style={`animation-delay: ${i * 200}ms`}
             />
           ))}
         </div>
@@ -199,13 +198,13 @@ export default function CheckoutForm(
   // ── Error State ────────────────────────────────────────────
   if (step.value === "error") {
     return (
-      <div class="flex flex-col items-center justify-center py-8 gap-4 text-center">
-        <div class="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-2xl">
+      <div class="flex flex-col items-center justify-center py-16 gap-8 text-center animate-fade-in">
+        <div class="w-24 h-24 rounded-[2.5rem] bg-rose-50 border border-rose-100 flex items-center justify-center text-4xl shadow-inner">
           ⚠️
         </div>
-        <div>
-          <p class="text-sm font-700 text-gray-900 mb-1">Booking failed</p>
-          <p class="text-xs text-gray-500 leading-relaxed max-w-xs">
+        <div class="space-y-3">
+          <p class="text-[11px] font-bold text-rose-600 uppercase tracking-[0.4em]">Synchronization Discrepancy</p>
+          <p class="text-[14px] text-gray-500 leading-relaxed max-w-sm mx-auto font-medium opacity-80 italic">
             {errorMsg.value}
           </p>
         </div>
@@ -214,9 +213,9 @@ export default function CheckoutForm(
             step.value = "details";
             errorMsg.value = "";
           }}
-          class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-600 text-gray-700 hover:bg-gray-50 transition-colors"
+          class="px-10 py-5 rounded-2xl border border-gray-100 text-[10px] font-bold text-gray-400 hover:text-gray-900 hover:bg-gray-50 transition-all uppercase tracking-widest active:scale-95"
         >
-          ← Try again
+          ← Initialize Recovery
         </button>
       </div>
     );
@@ -224,92 +223,107 @@ export default function CheckoutForm(
 
   // ── Details Form ───────────────────────────────────────────
   return (
-    <form onSubmit={handleSubmit} class="space-y-4" novalidate>
-      <FloatingInput
-        id="guest-name"
-        label="Full Name"
-        value={guestName.value}
-        onInput={(v) => (guestName.value = v)}
-        autocomplete="name"
-      />
-      <FloatingInput
-        id="guest-email"
-        label="Email Address"
-        type="email"
-        value={guestEmail.value}
-        onInput={(v) => (guestEmail.value = v)}
-        autocomplete="email"
-      />
-      <FloatingInput
-        id="guest-phone"
-        label="Mobile Number (10 digits)"
-        type="tel"
-        value={guestPhone.value}
-        onInput={(v) => (guestPhone.value = v)}
-        pattern="[6-9][0-9]{9}"
-        autocomplete="tel"
-      />
+    <form onSubmit={handleSubmit} class="space-y-8 animate-fade-in" novalidate>
+      <div class="space-y-6">
+        <FloatingInput
+          id="guest-name"
+          label="Residency Principal (Full Name)"
+          value={guestName.value}
+          onInput={(v) => (guestName.value = v)}
+          autocomplete="name"
+        />
+        <FloatingInput
+          id="guest-email"
+          label="Communication Node (Email Address)"
+          type="email"
+          value={guestEmail.value}
+          onInput={(v) => (guestEmail.value = v)}
+          autocomplete="email"
+        />
+        <FloatingInput
+          id="guest-phone"
+          label="Operational Contact (WhatsApp)"
+          type="tel"
+          value={guestPhone.value}
+          onInput={(v) => (guestPhone.value = v)}
+          pattern="[6-9][0-9]{9}"
+          autocomplete="tel"
+        />
+      </div>
 
       {errorMsg.value && (
-        <div class="flex items-start gap-2 p-3 rounded-xl bg-rose-50 border border-rose-200">
-          <span class="text-rose-500 text-sm mt-0.5">⚠️</span>
-          <p class="text-xs text-rose-700 leading-relaxed">
-            {errorMsg.value}
+        <div class="p-6 bg-rose-50 border border-rose-100 rounded-2xl animate-shake">
+          <p class="text-[10px] font-bold text-rose-600 uppercase tracking-[0.3em] flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse" /> {errorMsg.value}
           </p>
         </div>
       )}
 
       {/* Terms notice */}
-      <p class="text-xs text-gray-400 leading-relaxed">
-        By clicking "Confirm Booking", you agree to our{" "}
-        <a
-          href="/legal/terms"
-          class="text-teal-600 hover:underline"
-          target="_blank"
-        >
-          Terms
-        </a>{" "}
-        and{" "}
-        <a
-          href="/legal/cancellation"
-          class="text-teal-600 hover:underline"
-          target="_blank"
-        >
-          Cancellation Policy
-        </a>. Your ID may be verified after payment.
-      </p>
+      <div class="p-6 rounded-[2rem] bg-gray-50/50 border border-gray-100 italic">
+        <p class="text-[11px] text-gray-400 font-medium leading-relaxed">
+          By initializing the request, you acknowledge the{" "}
+          <a
+            href="/legal/terms"
+            class="text-emerald-600 font-bold border-b border-emerald-100 hover:border-emerald-500 transition-all"
+            target="_blank"
+          >
+            Operational Terms
+          </a>{" "}
+          and{" "}
+          <a
+            href="/legal/cancellation"
+            class="text-emerald-600 font-bold border-b border-emerald-100 hover:border-emerald-500 transition-all"
+            target="_blank"
+          >
+            Cancellation Protocol
+          </a>. Identification authentication will be synchronized after protocol initialization.
+        </p>
+      </div>
 
       {/* Submit */}
       <button
         id="confirm-booking-btn"
         type="submit"
-        class="w-full py-4 rounded-xl bg-mint-500 text-istay-900 font-900 text-sm shadow-sm hover:bg-mint-400 active:scale-95 transition-all duration-150 flex items-center justify-center gap-2"
+        class="w-full py-7 rounded-[2rem] bg-gray-900 text-white font-bold text-[11px] uppercase tracking-[0.4em] shadow-premium-lg hover:bg-emerald-600 transition-all active:scale-95 group"
       >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          aria-hidden="true"
-        >
-          <rect
-            x="1"
-            y="4"
-            width="14"
-            height="10"
-            rx="1.5"
-            stroke="currentColor"
-            stroke-width="1.25"
-          />
-          <path
-            d="M5 4V3C5 1.89543 5.89543 1 7 1H9C10.1046 1 11 1.89543 11 3V4"
-            stroke="currentColor"
-            stroke-width="1.25"
-          />
-          <circle cx="8" cy="9" r="1.5" fill="currentColor" />
-        </svg>
-        Confirm Booking — {formatINR(amount)}
+        <span class="flex items-center justify-center gap-4">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            class="opacity-40 group-hover:opacity-100 transition-all"
+          >
+            <rect
+              x="3"
+              y="6"
+              width="18"
+              height="14"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="2.5"
+            />
+            <path
+              d="M7 6V5C7 3.89543 7.89543 3 9 3H15C16.1046 3 17 3.89543 17 5V6"
+              stroke="currentColor"
+              stroke-width="2.5"
+            />
+            <circle cx="12" cy="13" r="2" fill="currentColor" />
+          </svg>
+          Initialize Residency Request — {formatINR(amount)}
+        </span>
       </button>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-4px); }
+          75% { transform: translateX(4px); }
+        }
+        .animate-shake { animation: shake 0.4s ease-in-out; }
+      ` }} />
     </form>
   );
 }
+

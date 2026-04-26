@@ -10,7 +10,6 @@ interface BookingCalendarProps {
   propId: string;
 }
 
-// Days header (Monday-start)
 const DAY_LABELS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 const MONTHS = [
   "January",
@@ -27,24 +26,20 @@ const MONTHS = [
   "December",
 ];
 
-/** Returns today's date in IST as YYYY-MM-DD */
 function getTodayIST(): string {
   const now = new Date();
   const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
   return ist.toISOString().slice(0, 10);
 }
 
-/** Returns YYYY-MM-DD string for a given year/month/day */
 function toDateStr(year: number, month: number, day: number): string {
   return `${year}-${String(month + 1).padStart(2, "0")}-${
     String(day).padStart(2, "0")
   }`;
 }
 
-/** Builds a 6-row × 7-col calendar grid of date strings or nulls */
 function buildMonthGrid(year: number, month: number): (string | null)[][] {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  // getDay(): 0=Sun. Convert to Mon-start: Mon=0 … Sun=6
   const rawFirstDay = new Date(year, month, 1).getDay();
   const firstDayOffset = rawFirstDay === 0 ? 6 : rawFirstDay - 1;
 
@@ -58,14 +53,13 @@ function buildMonthGrid(year: number, month: number): (string | null)[][] {
   return weeks;
 }
 
-/** Checks if any date from (checkIn exclusive) to (target exclusive) is blocked */
 function hasBlockedInRange(
   checkIn: string,
   target: string,
   blocked: Set<string>,
 ): boolean {
   const cur = new Date(checkIn + "T00:00:00Z");
-  cur.setUTCDate(cur.getUTCDate() + 1); // start from day after checkIn
+  cur.setUTCDate(cur.getUTCDate() + 1);
   const end = new Date(target + "T00:00:00Z");
   while (cur < end) {
     if (blocked.has(cur.toISOString().slice(0, 10))) return true;
@@ -88,7 +82,6 @@ export default function BookingCalendar(
   const today = getTodayIST();
   const blocked = new Set(blockedDates);
 
-  // ── State signals ──────────────────────────────────────────
   const todayDate = new Date(today);
   const displayYear = useSignal(todayDate.getFullYear());
   const displayMonth = useSignal(todayDate.getMonth());
@@ -96,6 +89,8 @@ export default function BookingCalendar(
   const checkOut = useSignal<string | null>(null);
   const hovered = useSignal<string | null>(null);
   const showSoldOutAlert = useSignal(false);
+  
+  const isWidget = typeof window !== "undefined" && window.location.search.includes("widget=true");
 
   const nights = computed(() => {
     if (!checkIn.value || !checkOut.value) return 0;
@@ -113,7 +108,6 @@ export default function BookingCalendar(
     return cur > now;
   });
 
-  // ── Navigation ─────────────────────────────────────────────
   function prevMonth() {
     if (!canGoBack.value) return;
     if (displayMonth.value === 0) {
@@ -133,7 +127,6 @@ export default function BookingCalendar(
     }
   }
 
-  // ── Date selection logic ───────────────────────────────────
   function handleDateClick(date: string) {
     if (date < today || blocked.has(date)) {
       if (blocked.has(date)) {
@@ -145,17 +138,13 @@ export default function BookingCalendar(
     showSoldOutAlert.value = false;
 
     if (!checkIn.value || (checkIn.value && checkOut.value)) {
-      // Start fresh selection
       checkIn.value = date;
       checkOut.value = null;
     } else {
-      // checkIn set, checkOut not set
       if (date <= checkIn.value) {
-        // Clicked before or on checkIn — restart
         checkIn.value = date;
         checkOut.value = null;
       } else if (hasBlockedInRange(checkIn.value, date, blocked)) {
-        // Blocked date in range — restart from clicked date
         checkIn.value = date;
         checkOut.value = null;
       } else {
@@ -176,21 +165,21 @@ export default function BookingCalendar(
       date > checkIn.value && date <= hovered.value;
 
     const base =
-      "w-9 h-9 flex items-center justify-center text-sm rounded-full transition-all duration-100 select-none";
+      "w-11 h-11 flex items-center justify-center text-[13px] font-bold rounded-2xl transition-all duration-300 select-none";
 
     if (isPast || isBlocked) {
-      return `${base} text-gray-300 line-through cursor-not-allowed`;
+      return `${base} text-gray-200 line-through cursor-not-allowed opacity-30`;
     }
     if (isCheckIn || isCheckOut) {
-      return `${base} bg-mint-500 text-white font-700 shadow-sm cursor-pointer`;
+      return `${base} bg-gray-900 text-white shadow-premium z-10 scale-110`;
     }
     if (inRange) {
-      return `${base} bg-mint-100 text-mint-800 rounded-none cursor-pointer`;
+      return `${base} bg-emerald-50 text-emerald-600 rounded-none cursor-pointer relative after:absolute after:inset-y-2 after:inset-x-0 after:bg-emerald-50/50 hover:bg-emerald-100 transition-colors`;
     }
     if (inHover) {
-      return `${base} bg-mint-50 text-mint-600 rounded-none cursor-pointer`;
+      return `${base} bg-emerald-50/50 text-emerald-400 rounded-none cursor-pointer transition-colors`;
     }
-    return `${base} text-gray-700 hover:bg-gray-100 cursor-pointer`;
+    return `${base} text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 cursor-pointer`;
   }
 
   function handleBookNow() {
@@ -205,8 +194,6 @@ export default function BookingCalendar(
     const url = `/p/checkout?${params.toString()}`;
     
     if (isWidget) {
-      // For widgets, we want to redirect the PARENT window if possible
-      // to the istay checkout page for better conversion.
       try {
         if (window.parent && window.parent !== window) {
           window.parent.location.href = url;
@@ -214,7 +201,6 @@ export default function BookingCalendar(
           globalThis.location.href = url;
         }
       } catch {
-        // Handle cross-origin restrictions: fallback to new tab
         window.open(url, "_blank");
       }
     } else {
@@ -226,198 +212,186 @@ export default function BookingCalendar(
   const monthLabel = `${MONTHS[displayMonth.value]} ${displayYear.value}`;
 
   return (
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-md overflow-hidden">
-      {/* Month Navigation */}
-      <div class="flex items-center justify-between px-5 py-4 border-b border-gray-50">
+    <div class="bg-white rounded-[3rem] border border-gray-50 shadow-premium-lg overflow-hidden transition-all duration-700 hover:shadow-premium-xl animate-fade-in">
+      <div class="flex items-center justify-between px-10 py-8 border-b border-gray-50 bg-gray-50/20">
         <button
           onClick={prevMonth}
           disabled={!canGoBack.value}
-          class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          class="w-12 h-12 rounded-2xl flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-white hover:shadow-premium transition-all disabled:opacity-10 disabled:cursor-not-allowed"
           aria-label="Previous month"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M9 2L4 7L9 12"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
-        <h3 class="text-sm font-700 text-gray-900">{monthLabel}</h3>
+        <h3 class="text-[12px] font-bold text-gray-900 uppercase tracking-[0.4em]">{monthLabel}</h3>
         <button
           onClick={nextMonth}
-          class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-colors"
+          class="w-12 h-12 rounded-2xl flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-white hover:shadow-premium transition-all"
           aria-label="Next month"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 14 14"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M5 2L10 7L5 12"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18l6-6-6-6" />
           </svg>
         </button>
       </div>
 
-      {/* Calendar Grid */}
-      <div class="px-4 py-3">
-        {/* Day labels */}
-        <div class="grid grid-cols-7 mb-1">
+      <div class="px-10 py-10">
+        <div class="grid grid-cols-7 mb-6">
           {DAY_LABELS.map((d) => (
             <div
               key={d}
-              class="flex items-center justify-center h-8 text-xs font-600 text-gray-400"
+              class="flex items-center justify-center h-10 text-[11px] font-bold text-gray-300 uppercase tracking-widest"
             >
               {d}
             </div>
           ))}
         </div>
 
-        {/* Date rows */}
-        {weeks.map((week, wi) => (
-          <div key={wi} class="grid grid-cols-7">
-            {week.map((date, di) => (
-              <div
-                key={di}
-                class="flex items-center justify-center py-0.5"
-              >
-                {date
-                  ? (
-                    <button
-                      type="button"
-                      onClick={() => handleDateClick(date)}
-                      onMouseEnter={() => {
-                        if (checkIn.value && !checkOut.value) {
-                          hovered.value = date;
-                        }
-                      }}
-                      onMouseLeave={() => {
-                        hovered.value = null;
-                      }}
-                      class={getDayClasses(date)}
-                      aria-label={date}
-                      aria-disabled={date < today || blocked.has(date)}
-                      aria-pressed={date === checkIn.value ||
-                        date === checkOut.value}
-                    >
-                      {Number(date.slice(8))}
-                    </button>
-                  )
-                  : <div class="w-9 h-9" />}
-              </div>
-            ))}
-          </div>
-        ))}
+        <div class="space-y-1">
+          {weeks.map((week, wi) => (
+            <div key={wi} class="grid grid-cols-7">
+              {week.map((date, di) => (
+                <div
+                  key={di}
+                  class="flex items-center justify-center py-0.5"
+                >
+                  {date
+                    ? (
+                      <button
+                        type="button"
+                        onClick={() => handleDateClick(date)}
+                        onMouseEnter={() => {
+                          if (checkIn.value && !checkOut.value) {
+                            hovered.value = date;
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          hovered.value = null;
+                        }}
+                        class={getDayClasses(date)}
+                        aria-label={date}
+                      >
+                        {Number(date.slice(8))}
+                      </button>
+                    )
+                    : <div class="w-11 h-11" />}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Legend */}
-      <div class="px-5 pb-3 flex items-center gap-4 text-xs text-gray-400">
-        <span class="flex items-center gap-1.5">
-          <span class="w-3 h-3 rounded-full bg-mint-500 inline-block" />
+      <div class="px-10 pb-8 flex items-center gap-10 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] border-t border-gray-50 pt-8 mx-10 mb-6">
+        <span class="flex items-center gap-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-gray-900" />
           Selected
         </span>
-        <span class="flex items-center gap-1.5">
-          <span class="w-3 h-3 rounded-full bg-gray-200 inline-block" />
-          Unavailable
+        <span class="flex items-center gap-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-50" />
+          In Range
+        </span>
+        <span class="flex items-center gap-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-gray-100 opacity-30" />
+          Occupied
         </span>
       </div>
 
-      {/* Booking Summary + CTA */}
-      <div class="px-5 pb-5">
+      <div class="px-10 pb-12">
         {checkIn.value && !checkOut.value && (
-          <p class="text-xs text-mint-600 font-500 text-center py-2">
-            Now select your check-out date
-          </p>
+          <div class="bg-emerald-50/50 text-emerald-600 text-[11px] font-bold uppercase tracking-[0.4em] text-center py-5 rounded-[1.8rem] mb-6 animate-pulse border border-emerald-100 italic">
+            Confirm Departure Protocol
+          </div>
         )}
 
         {checkIn.value && checkOut.value && (
-          <div class="space-y-3">
-            {/* Summary */}
-            <div class="p-3 rounded-xl bg-gray-50 space-y-1.5">
-              <div class="flex justify-between text-sm">
-                <span class="text-gray-500">
-                  {formatINR(basePrice)} × {nights}{" "}
-                  night{nights.value > 1 ? "s" : ""}
-                </span>
-                <span class="font-700 text-gray-900">
+          <div class="space-y-8 animate-slide-up">
+            <div class="p-8 rounded-[2.5rem] bg-gray-50/50 border border-gray-100 space-y-4 shadow-inner">
+              <div class="flex justify-between items-center">
+                <div class="flex flex-col">
+                   <span class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em] italic">Stay Duration</span>
+                   <span class="text-base font-bold text-gray-900 mt-1">
+                      {nights} Operational Night{nights.value > 1 ? "s" : ""}
+                   </span>
+                </div>
+                <div class="text-right">
+                   <span class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em] italic">Protocol Rate</span>
+                   <p class="text-base font-bold text-emerald-600 mt-1">{formatINR(basePrice)}</p>
+                </div>
+              </div>
+              <div class="pt-5 border-t border-gray-100 flex justify-between items-center">
+                <span class="text-[11px] font-bold text-gray-900 uppercase tracking-[0.4em]">Residency Valuation</span>
+                <span class="text-2xl font-bold text-gray-900 tracking-tighter transition-all">
                   {formatINR(totalAmount.value)}
                 </span>
               </div>
-              <div class="flex justify-between text-xs text-gray-400">
-                <span>{checkIn.value} → {checkOut.value}</span>
-                <span class="text-mint-600 font-500">No hidden fees</span>
+              <div class="text-[10px] font-bold text-emerald-500 uppercase tracking-[0.4em] text-center pt-3 opacity-60">
+                ✓ Optimized Yield Protocol
               </div>
             </div>
 
-            {/* Book Now CTA */}
             <button
               id="book-now-btn"
               onClick={handleBookNow}
-              class="w-full py-3.5 rounded-xl bg-mint-500 text-white font-700 text-sm shadow-sm hover:bg-mint-600 active:scale-95 transition-all duration-150"
+              class="w-full py-6 rounded-[1.8rem] bg-gray-900 text-white font-bold text-[12px] uppercase tracking-[0.4em] shadow-premium-lg hover:bg-emerald-600 hover:-translate-y-1 transition-all duration-500 group"
             >
-              Book Now — {formatINR(totalAmount.value)}
+              <span class="flex items-center justify-center gap-3">
+                Secure Residency
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
+                  <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
             </button>
 
-            {/* Reset */}
             <button
               onClick={() => {
                 checkIn.value = null;
                 checkOut.value = null;
               }}
-              class="w-full text-center text-xs text-gray-400 hover:text-gray-600 transition-colors py-1"
+              class="w-full text-center text-[10px] font-bold text-gray-400 hover:text-gray-900 uppercase tracking-[0.4em] transition-all duration-500 hover:tracking-[0.6em] opacity-40 hover:opacity-100"
             >
-              Clear selection
+              Reset Synchronization
             </button>
           </div>
         )}
 
         {!checkIn.value && (
-          <div class="space-y-3">
+          <div class="space-y-6">
             {showSoldOutAlert.value && (
-              <div class="p-3 rounded-xl bg-amber-50 border border-amber-100 animate-fade-in">
-                <p class="text-[11px] font-700 text-amber-900 leading-tight">
-                  Sold Out for these dates!
+              <div class="p-8 rounded-[2.5rem] bg-rose-50/50 border border-rose-100 animate-slide-up relative overflow-hidden group">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(244,63,94,0.05)_0%,transparent_50%)]" />
+                <p class="text-[11px] font-bold text-rose-500 uppercase tracking-[0.4em] mb-2 italic relative z-10">
+                  Occupancy Threshold Reached
                 </p>
-                <p class="text-[10px] text-amber-700 mt-1">
-                  This stay is fully booked. Want to see similar vibes nearby?
+                <p class="text-[13px] font-medium text-rose-700/70 leading-relaxed relative z-10">
+                  These dates are currently synchronized with another residency node. Would you like to view curated alternatives?
                 </p>
                 <a
                   href={`#vibe-match?checkIn=${checkIn.value || ""}`}
-                  class="mt-2 block w-full py-2 rounded-lg bg-amber-200 text-amber-900 text-center text-[10px] font-800 hover:bg-amber-300 transition-colors"
+                  class="mt-6 block w-full py-5 rounded-2xl bg-white border border-rose-100 text-rose-600 text-center text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-rose-50 transition-all shadow-sm relative z-10 active:scale-95"
                   onClick={(e) => {
-                    if (checkIn.value) {
-                      e.preventDefault();
-                      globalThis.location.href =
-                        `?checkIn=${checkIn.value}#vibe-match`;
+                    const el = document.getElementById("vibe-match");
+                    if (el) {
+                       e.preventDefault();
+                       el.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
                 >
-                  See Similar Stays You'll Love →
+                  Explore Alternatives →
                 </a>
               </div>
             )}
-            <p class="text-xs text-gray-400 text-center py-2">
-              Select your check-in date to begin
-            </p>
+            <div class="py-6 text-center space-y-4">
+               <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 mx-auto animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+               <p class="text-[11px] font-bold text-gray-300 uppercase tracking-[0.4em] italic opacity-60">
+                 Initialize Check-In Node
+               </p>
+            </div>
           </div>
         )}
       </div>
     </div>
   );
 }
+

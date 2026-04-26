@@ -113,20 +113,28 @@ export default function ProofOfCleanUploader(
 
   if (success) {
     return (
-      <div class="mt-4 p-4 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center gap-3">
-        <span class="text-xl">✨</span>
-        <p class="text-sm font-600 text-teal-400">Room marked as ready!</p>
+      <div class="mt-6 p-5 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center gap-4 animate-fade-in">
+        <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xl shadow-sm">
+          ✓
+        </div>
+        <div>
+          <p class="text-sm font-bold text-gray-900 leading-tight">Property Ready!</p>
+          <p class="text-xs font-medium text-emerald-600">Marked as ready for guest check-in.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div class="mt-4 pt-4 border-t border-gray-800">
-      <h3 class="text-xs font-600 text-gray-400 uppercase tracking-widest mb-3">
-        Housekeeping
-      </h3>
+    <div class="mt-6 pt-6 border-t border-gray-100">
+      <div class="flex items-center gap-4 mb-6">
+        <div class="px-3 py-1 bg-white border border-gray-100 text-[11px] font-bold text-emerald-600 uppercase tracking-widest rounded-full shadow-sm">
+          Cleaning Audit
+        </div>
+        <div class="h-px flex-1 bg-gray-100" />
+      </div>
 
-      <div class="mb-6">
+      <div class="mb-8 bg-gray-50/50 p-6 rounded-[2rem] border border-gray-100">
         <CaretakerChecklist
           bookingId={bookingId}
           onComplete={setChecklist}
@@ -140,50 +148,39 @@ export default function ProofOfCleanUploader(
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isCompressing}
-            class="w-full flex flex-col items-center justify-center gap-2 p-6 rounded-xl border border-dashed border-gray-700 bg-gray-900/50 hover:bg-gray-800 hover:border-gray-600 transition-colors disabled:opacity-50"
+            class="w-full flex flex-col items-center justify-center gap-4 p-10 rounded-[2rem] border-2 border-dashed border-gray-100 bg-gray-50/30 hover:bg-white hover:border-emerald-500/50 hover:shadow-premium transition-all disabled:opacity-50 group"
           >
             {isCompressing
               ? (
-                <>
-                  <span class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">
-                    <svg
-                      class="animate-spin"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                    </svg>
+                <div class="flex flex-col items-center gap-4">
+                  <div class="w-12 h-12 rounded-full border-4 border-emerald-100 border-t-emerald-500 animate-spin" />
+                  <span class="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                    Optimizing photo...
                   </span>
-                  <span class="text-sm font-600 text-gray-400">
-                    Compressing image...
-                  </span>
-                </>
+                </div>
               )
               : (
                 <>
-                  <span class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400">
+                  <div class="w-16 h-16 rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-3xl shadow-sm group-hover:scale-110 transition-transform">
                     📷
-                  </span>
-                  <span class="text-sm font-600 text-gray-300">
-                    Take a photo of the clean room
-                  </span>
+                  </div>
+                  <div class="text-center">
+                    <span class="block text-sm font-bold text-gray-900">Room Verification</span>
+                    <span class="text-xs font-medium text-gray-400 mt-1 block">Take a photo of the prepared room</span>
+                  </div>
                 </>
               )}
           </button>
         )
         : (
-          <div class="space-y-4">
-            <div class="relative w-full h-32 rounded-xl overflow-hidden border border-gray-700 group">
+          <div class="space-y-6">
+            <div class="relative w-full h-48 rounded-[2rem] overflow-hidden border border-gray-100 shadow-premium-lg group">
               <img
                 src={previewUrl}
                 alt="Room condition"
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div class="absolute inset-0 bg-gray-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
                 <button
                   type="button"
                   onClick={() => {
@@ -191,22 +188,34 @@ export default function ProofOfCleanUploader(
                     setPreviewUrl(null);
                     setUploadProgress(0);
                   }}
-                  class="text-sm font-600 text-white bg-black/50 px-3 py-1.5 rounded-lg"
+                  class="bg-white text-gray-900 px-6 py-3 rounded-xl text-xs font-bold uppercase tracking-widest shadow-lg hover:bg-emerald-500 hover:text-white transition-all"
                 >
-                  Retake
+                  Retake Photo
                 </button>
               </div>
             </div>
 
-            {error && <p class="text-xs font-500 text-rose-400">{error}</p>}
+            {error && (
+              <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl animate-shake">
+                <p class="text-xs font-bold text-rose-700 flex items-center gap-2">
+                  <span>⚠️</span> {error}
+                </p>
+              </div>
+            )}
 
             {/* Upload Progress Bar */}
             {isUploading && (
-              <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
-                <div
-                  class="bg-teal-500 h-full rounded-full transition-all duration-300 ease-out"
-                  style={`width: ${uploadProgress}%`}
-                />
+              <div class="space-y-2">
+                <div class="flex justify-between items-center px-1">
+                  <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Uploading Report</span>
+                  <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">{Math.round(uploadProgress)}%</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
+                  <div
+                    class="bg-emerald-500 h-full rounded-full transition-all duration-300 ease-out shadow-[0_0_10px_rgba(16,185,129,0.5)]"
+                    style={`width: ${uploadProgress}%`}
+                  />
+                </div>
               </div>
             )}
 
@@ -214,11 +223,11 @@ export default function ProofOfCleanUploader(
               type="button"
               onClick={handleUpload}
               disabled={isUploading || !checklistComplete}
-              class="w-full py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 active:scale-95 text-gray-950 font-800 text-sm transition-all disabled:opacity-50 disabled:active:scale-100 disabled:grayscale"
+              class="w-full py-4 rounded-2xl bg-gray-900 text-white font-bold text-sm uppercase tracking-widest shadow-premium hover:bg-emerald-500 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:grayscale"
             >
               {isUploading
-                ? `Uploading... ${uploadProgress}%`
-                : "Mark Room as Ready"}
+                ? "Submitting Report..."
+                : "Submit Cleaning Report"}
             </button>
           </div>
         )}

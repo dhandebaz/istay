@@ -1,7 +1,3 @@
-// ================================================================
-// routes/dashboard/bookings.tsx — Host Bookings Management
-// ================================================================
-
 import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 import type { Booking, DashboardState } from "../../utils/types.ts";
@@ -44,15 +40,15 @@ export const handler: Handlers<BookingsPageData, DashboardState> = {
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    confirmed: "bg-emerald-500 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
-    pending: "bg-amber-400 text-gray-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
-    cancelled: "bg-rose-500 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
-    refunded: "bg-gray-400 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
+    confirmed: "bg-emerald-50 text-emerald-700 border-emerald-100",
+    pending: "bg-amber-50 text-amber-700 border-amber-100",
+    cancelled: "bg-rose-50 text-rose-600 border-rose-100",
+    refunded: "bg-gray-50 text-gray-400 border-gray-100",
   };
 
   return (
     <span
-      class={`inline-flex px-4 py-2 rounded-xl text-[9px] font-950 uppercase tracking-widest border-[2px] border-gray-900 ${
+      class={`inline-flex px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border ${
         styles[status] ?? "bg-gray-100"
       }`}
     >
@@ -76,86 +72,84 @@ export default function BookingsPage({ data }: PageProps<BookingsPageData>) {
     return d.toLocaleDateString("en-IN", {
       day: "numeric",
       month: "short",
-    }).toUpperCase();
+    });
   };
 
   return (
     <>
       <Head>
-        <title>Reservations | iStay</title>
+        <title>Guest Reservations | iStay</title>
         <meta name="robots" content="noindex" />
       </Head>
       <div class="space-y-16 pb-20">
         {/* Header */}
         <section class="flex flex-col lg:flex-row items-end justify-between gap-8">
           <div>
-            <div class="flex items-center gap-4 mb-4">
-              <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.2em] rounded-full border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80]">
-                LOGISTICS_ENGINE
-              </div>
-              <div class="h-[2px] w-24 bg-gray-100" />
+            <div class="flex items-center gap-4 mb-6">
+              <span class="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-700 text-[11px] font-bold uppercase tracking-widest rounded-full border border-emerald-100">Reservations</span>
+              <div class="h-px w-24 bg-gray-100" />
             </div>
-            <h2 class="text-4xl sm:text-7xl font-950 text-gray-900 tracking-tighter uppercase leading-[0.8]">
-              Reservations & <br/> <span class="text-mint-500">Logistics.</span>
+            <h2 class="text-5xl font-bold text-gray-900 tracking-tight leading-tight">
+              Guest <br/> <span class="text-emerald-500 font-serif italic">Reservations.</span>
             </h2>
           </div>
-          <div class="bg-white p-8 rounded-[2.5rem] border-[4px] border-gray-900 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] flex items-center gap-8 group hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
+          <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-premium flex items-center gap-8 group hover:shadow-premium-hover hover:-translate-y-1 transition-all">
             <div>
-              <p class="text-[9px] font-950 text-gray-400 uppercase tracking-[0.3em] mb-2">ACTIVE_LOAD</p>
-              <p class="text-4xl font-950 text-gray-900 tracking-tighter leading-none">
+              <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Confirmed</p>
+              <p class="text-4xl font-bold text-gray-900 tracking-tight leading-none">
                 {bookings.filter(b => b.status === 'confirmed').length}
               </p>
             </div>
-            <div class="w-16 h-16 rounded-2xl bg-mint-400 border-[3px] border-gray-900 flex items-center justify-center text-3xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:rotate-[-5deg] transition-transform">
+            <div class="w-16 h-16 rounded-[1.5rem] bg-emerald-50 border border-emerald-100 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
               📋
             </div>
           </div>
         </section>
 
         {/* Bookings Content */}
-        <div class="bg-white border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] rounded-[3rem] overflow-hidden">
+        <div class="bg-white border border-gray-100 shadow-premium rounded-[3rem] overflow-hidden">
           {bookings.length === 0 ? (
             <div class="py-40 text-center space-y-6">
               <p class="text-8xl">🏜️</p>
-              <h3 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">Logistics_Zero</h3>
-              <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em]">No reservation signals detected in the current cycle.</p>
+              <h3 class="text-2xl font-bold text-gray-900 tracking-tight">No reservations found</h3>
+              <p class="text-sm font-medium text-gray-400 max-w-xs mx-auto leading-relaxed">Your bookings will appear here once guests start making reservations.</p>
             </div>
           ) : (
             <div class="overflow-x-auto">
               <table class="w-full text-left">
                 <thead>
-                  <tr class="bg-gray-50 border-b-[4px] border-gray-900">
-                    <th class="px-10 py-8 text-[10px] font-950 text-gray-400 uppercase tracking-widest">GUEST_ID</th>
-                    <th class="px-10 py-8 text-[10px] font-950 text-gray-400 uppercase tracking-widest">WINDOW</th>
-                    <th class="px-10 py-8 text-[10px] font-950 text-gray-400 uppercase tracking-widest text-right">CAPITAL</th>
-                    <th class="px-10 py-8 text-[10px] font-950 text-gray-400 uppercase tracking-widest text-center">INTELLIGENCE</th>
-                    <th class="px-10 py-8 text-[10px] font-950 text-gray-400 uppercase tracking-widest text-center">STATUS</th>
+                  <tr class="bg-gray-50/50 border-b border-gray-100">
+                    <th class="px-10 py-8 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Guest</th>
+                    <th class="px-10 py-8 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Stay Dates</th>
+                    <th class="px-10 py-8 text-[11px] font-bold text-gray-400 uppercase tracking-widest text-right">Revenue</th>
+                    <th class="px-10 py-8 text-[11px] font-bold text-gray-400 uppercase tracking-widest text-center">Verification</th>
+                    <th class="px-10 py-8 text-[11px] font-bold text-gray-400 uppercase tracking-widest text-center">Status</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y-[3px] divide-gray-100">
+                <tbody class="divide-y divide-gray-100">
                   {bookings.map((booking) => (
-                    <tr key={booking.id} class="group hover:bg-gray-50 transition-colors">
+                    <tr key={booking.id} class="group hover:bg-emerald-50/30 transition-colors">
                       <td class="px-10 py-8">
-                        <p class="text-sm font-950 text-gray-900 uppercase tracking-tighter leading-none mb-1">{booking.guestName}</p>
-                        <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest">{booking.guestEmail}</p>
+                        <p class="text-sm font-bold text-gray-900 tracking-tight mb-1">{booking.guestName}</p>
+                        <p class="text-xs font-medium text-gray-400">{booking.guestEmail}</p>
                       </td>
                       <td class="px-10 py-8">
-                        <p class="text-xs font-950 text-gray-900 uppercase tracking-tighter">
+                        <p class="text-xs font-bold text-gray-900 tracking-tight">
                           {formatDate(booking.checkIn)} — {formatDate(booking.checkOut)}
                         </p>
-                        <p class="text-[10px] font-800 text-mint-500 uppercase tracking-widest mt-1">{booking.nights} NIGHTS_STAY</p>
+                        <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-1">{booking.nights} nights</p>
                       </td>
                       <td class="px-10 py-8 text-right">
-                        <p class="text-sm font-950 text-gray-900 tracking-tight">{formatINR(booking.amount)}</p>
+                        <p class="text-sm font-bold text-gray-900 tracking-tight">{formatINR(booking.amount)}</p>
                       </td>
                       <td class="px-10 py-8 text-center">
                         <div class="flex flex-col items-center gap-2">
                           {booking.kycScore ? (
-                            <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[9px] font-950 uppercase tracking-widest rounded-lg border-2 border-gray-900">
-                              SCORE_{booking.kycScore}%
+                            <div class="px-3 py-1 bg-gray-900 text-emerald-400 text-[10px] font-bold uppercase tracking-widest rounded-lg shadow-sm">
+                              Safety Score {booking.kycScore}%
                             </div>
                           ) : (
-                            <span class="text-[9px] font-950 text-gray-300 uppercase tracking-widest">NO_KYC_SIGNAL</span>
+                            <span class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">No verification data</span>
                           )}
                         </div>
                       </td>

@@ -52,23 +52,23 @@ export default function GuestsPage({ data }: PageProps<GuestsPageData>) {
         <section class="flex flex-col lg:flex-row items-end justify-between gap-8">
           <div>
             <div class="flex items-center gap-4 mb-4">
-              <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.2em] rounded-full border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80]">
-                RELATIONSHIP_ENGINE
+              <div class="px-3 py-1 bg-white border border-gray-100 text-[11px] font-bold text-emerald-600 uppercase tracking-widest rounded-full shadow-sm">
+                Guest Directory
               </div>
-              <div class="h-[2px] w-24 bg-gray-100" />
+              <div class="h-px w-24 bg-gray-100" />
             </div>
-            <h2 class="text-4xl sm:text-7xl font-950 text-gray-900 tracking-tighter uppercase leading-[0.8]">
-              Guest <br/> <span class="text-mint-500">Intelligence.</span>
+            <h2 class="text-4xl sm:text-6xl font-bold text-gray-900 tracking-tight leading-[0.9]">
+              Guest <br/> <span class="text-emerald-500">Intelligence.</span>
             </h2>
           </div>
-          <div class="bg-white p-8 rounded-[2.5rem] border-[4px] border-gray-900 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] flex items-center gap-8 group hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
+          <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-premium flex items-center gap-8 group hover:-translate-y-1 transition-all">
             <div>
-              <p class="text-[9px] font-950 text-gray-400 uppercase tracking-[0.3em] mb-2">LOYALTY_LIFT</p>
-              <p class="text-4xl font-950 text-gray-900 tracking-tighter">
+              <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Repeat Value</p>
+              <p class="text-4xl font-bold text-gray-900 tracking-tight">
                 {formatINR(guests.reduce((acc, g) => acc + (g.bookingCount > 1 ? g.totalSpent * 0.15 : 0), 0))}
               </p>
             </div>
-            <div class="w-16 h-16 rounded-2xl bg-mint-400 border-[3px] border-gray-900 flex items-center justify-center text-3xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:rotate-[-5deg] transition-transform">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-3xl shadow-sm group-hover:scale-110 transition-transform">
               📈
             </div>
           </div>
@@ -76,10 +76,10 @@ export default function GuestsPage({ data }: PageProps<GuestsPageData>) {
 
         {/* Guest Content */}
         {guests.length === 0 ? (
-          <div class="bg-white border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] p-32 flex flex-col items-center justify-center text-center rounded-[3rem]">
+          <div class="bg-white border border-gray-100 shadow-premium p-32 flex flex-col items-center justify-center text-center rounded-[3rem]">
             <span class="text-8xl mb-8">👥</span>
-            <h3 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">Database_Idle</h3>
-            <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em] mt-4">Profiles generate automatically upon reservation entry.</p>
+            <h3 class="text-3xl font-bold text-gray-900 tracking-tight">No guests yet</h3>
+            <p class="text-sm font-medium text-gray-400 mt-4 max-w-sm">Your guest directory will build automatically as bookings come in.</p>
           </div>
         ) : (
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -90,28 +90,28 @@ export default function GuestsPage({ data }: PageProps<GuestsPageData>) {
               return (
                 <div
                   key={g.email}
-                  class="bg-white rounded-[2.5rem] border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] p-10 hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] transition-all overflow-hidden relative group"
+                  class="bg-white rounded-[2.5rem] border border-gray-100 shadow-premium p-10 hover:-translate-y-2 hover:shadow-premium-hover transition-all overflow-hidden relative group"
                 >
                   {isRepeat && (
-                    <div class="absolute top-10 right-10 w-14 h-14 bg-mint-400 border-[3px] border-gray-900 rounded-2xl flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rotate-12 group-hover:rotate-0 transition-all z-10">
+                    <div class="absolute top-10 right-10 w-14 h-14 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-center shadow-sm rotate-12 group-hover:rotate-0 transition-all z-10">
                       <span class="text-2xl">👑</span>
                     </div>
                   )}
 
                   <div class="mb-10 relative">
-                    <p class="text-[10px] font-950 text-mint-500 uppercase tracking-[0.3em] mb-4">GUEST_ID</p>
-                    <h3 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter leading-none mb-2">{g.name}</h3>
-                    <p class="text-[11px] font-800 text-gray-400 uppercase tracking-widest">{g.email}</p>
+                    <p class="text-[11px] font-bold text-emerald-500 uppercase tracking-widest mb-4">Guest Information</p>
+                    <h3 class="text-2xl font-bold text-gray-900 tracking-tight leading-none mb-2">{g.name}</h3>
+                    <p class="text-xs font-medium text-gray-400">{g.email}</p>
                   </div>
 
                   <div class="grid grid-cols-2 gap-4 mb-10">
-                    <div class="p-5 bg-gray-50 border-[3px] border-gray-900 rounded-2xl">
-                      <p class="text-[8px] font-950 text-gray-400 uppercase tracking-widest mb-1">STAYS</p>
-                      <p class="text-xl font-950 text-gray-900 tracking-tighter">{g.bookingCount}</p>
+                    <div class="p-5 bg-gray-50 border border-gray-100 rounded-2xl">
+                      <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Stays</p>
+                      <p class="text-xl font-bold text-gray-900 tracking-tight">{g.bookingCount}</p>
                     </div>
-                    <div class="p-5 bg-gray-50 border-[3px] border-gray-900 rounded-2xl">
-                      <p class="text-[8px] font-950 text-gray-400 uppercase tracking-widest mb-1">VOLUME</p>
-                      <p class="text-xl font-950 text-gray-900 tracking-tighter">{formatINR(g.totalSpent)}</p>
+                    <div class="p-5 bg-gray-50 border border-gray-100 rounded-2xl">
+                      <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Spent</p>
+                      <p class="text-xl font-bold text-gray-900 tracking-tight">{formatINR(g.totalSpent)}</p>
                     </div>
                   </div>
 
@@ -119,9 +119,9 @@ export default function GuestsPage({ data }: PageProps<GuestsPageData>) {
                     <a
                       href={getWhatsAppLink(g.phone, loyaltyMsg)}
                       target="_blank"
-                      class="block w-full py-4 bg-emerald-500 text-white text-[10px] font-950 uppercase text-center rounded-2xl border-[3px] border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                      class="block w-full py-4 bg-emerald-500 text-white text-[11px] font-bold uppercase tracking-widest text-center rounded-2xl shadow-premium hover:bg-emerald-600 transition-all"
                     >
-                      ENGAGE_LOYALTY_WHATSAPP
+                      Send Loyalty Offer
                     </a>
                   </div>
                 </div>

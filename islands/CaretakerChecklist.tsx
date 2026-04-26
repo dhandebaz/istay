@@ -52,43 +52,46 @@ export default function CaretakerChecklist(
   };
 
   return (
-    <div class="space-y-3">
-      <h3 class="text-xs font-700 text-gray-500 uppercase tracking-widest mb-4">
-        Check-out Preparation
-      </h3>
+    <div class="space-y-6">
+      <div class="flex items-center gap-4 mb-2">
+        <h3 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+          Departure Audit
+        </h3>
+        <div class="h-px flex-1 bg-gray-100" />
+      </div>
 
       {/* ── Checklist Items ──────────────────────────────────── */}
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {CHECKLIST_ITEMS.map((item) => (
           <button
             type="button"
             key={item.id}
             disabled={disabled}
             onClick={() => toggle(item.id)}
-            class={`flex items-center justify-between p-3.5 rounded-xl border-2 transition-all duration-200 outline-none ${
+            class={`flex items-center justify-between p-5 rounded-2xl border transition-all duration-300 outline-none ${
               state[item.id]
-                ? "bg-teal-500/10 border-teal-500/30 text-teal-400 font-700 shadow-[0_0_15px_rgba(20,184,166,0.1)]"
-                : "bg-gray-900 border-gray-800 text-gray-500 hover:border-gray-700"
+                ? "bg-emerald-50 border-emerald-100 text-emerald-700 shadow-sm"
+                : "bg-white border-gray-100 text-gray-500 hover:border-emerald-200 hover:bg-emerald-50/10"
             } ${
               disabled
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer active:scale-95"
             }`}
           >
-            <span class="text-sm">{item.label}</span>
+            <span class="text-sm font-bold tracking-tight">{item.label}</span>
             <div
-              class={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${
+              class={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-300 ${
                 state[item.id]
-                  ? "bg-teal-500 border-teal-500"
-                  : "border-gray-700"
+                  ? "bg-emerald-500 border-emerald-500 shadow-sm scale-110"
+                  : "border-gray-200 bg-gray-50"
               }`}
             >
               {state[item.id] && (
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <path
-                    d="M2.5 6L5 8.5L9.5 3.5"
+                    d="M20 6L9 17l-5-5"
                     stroke="white"
-                    stroke-width="2"
+                    stroke-width="3"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
@@ -99,44 +102,51 @@ export default function CaretakerChecklist(
         ))}
       </div>
 
-      {/* ── Proof of Clean Photo (OUTSIDE button loop) ────── */}
-      <div class="mt-6 p-4 rounded-2xl bg-gray-50 border border-gray-100">
-        <h4 class="text-xs font-800 text-gray-900 mb-2 uppercase flex items-center gap-2">
-          📸 Proof of Clean
+      {/* ── Proof of Clean Photo ────── */}
+      <div class="mt-8 p-6 rounded-[2rem] bg-white border border-gray-100 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-[11px] font-bold text-gray-900 uppercase tracking-widest flex items-center gap-2">
+            📸 Cleanliness Verification
+          </h4>
           {photo && (
-            <span class="text-emerald-500 font-900 text-[10px]">VERIFIED</span>
+            <span class="bg-emerald-500 text-white font-bold text-[9px] px-2 py-1 rounded-full shadow-sm animate-bounce">
+              VERIFIED
+            </span>
           )}
-        </h4>
+        </div>
 
         {photo
           ? (
-            <div class="relative group aspect-video rounded-xl overflow-hidden border border-gray-200">
+            <div class="relative group aspect-video rounded-2xl overflow-hidden border border-gray-100 shadow-premium-lg">
               <img
                 src={`data:image/jpeg;base64,${photo}`}
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 alt="Clean proof"
               />
-              <button
-                type="button"
-                onClick={() => setPhoto(null)}
-                class="absolute top-2 right-2 p-2 rounded-full bg-white/90 backdrop-blur shadow-sm text-gray-900 hover:bg-white transition-all"
-              >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
+              <div class="absolute inset-0 bg-gray-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                <button
+                  type="button"
+                  onClick={() => setPhoto(null)}
+                  class="bg-white text-gray-900 p-3 rounded-full shadow-lg hover:bg-rose-500 hover:text-white transition-all"
+                  aria-label="Remove photo"
                 >
-                  <path d="M18 6L6 18M6 6l12 12" />
-                </svg>
-              </button>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
           )
           : (
-            <label class="flex flex-col items-center justify-center aspect-video rounded-xl border-2 border-dashed border-gray-200 hover:border-istay-500 hover:bg-istay-50/10 cursor-pointer transition-all">
-              <div class="p-3 rounded-full bg-gray-100 text-gray-400 group-hover:bg-istay-500 group-hover:text-white transition-all">
+            <label class="flex flex-col items-center justify-center aspect-video rounded-2xl border-2 border-dashed border-gray-100 bg-gray-50/30 hover:border-emerald-500/50 hover:bg-emerald-50/10 cursor-pointer transition-all group">
+              <div class="w-14 h-14 rounded-2xl bg-white border border-gray-100 text-gray-400 group-hover:bg-emerald-500 group-hover:text-white group-hover:scale-110 flex items-center justify-center transition-all shadow-sm">
                 <svg
                   width="24"
                   height="24"
@@ -149,8 +159,8 @@ export default function CaretakerChecklist(
                   <circle cx="12" cy="13" r="4" />
                 </svg>
               </div>
-              <p class="text-[10px] font-700 text-gray-400 mt-2">
-                Capture Cleaning Proof
+              <p class="text-[11px] font-bold text-gray-400 mt-4 uppercase tracking-widest">
+                Take Verification Photo
               </p>
               <input
                 type="file"
@@ -164,9 +174,12 @@ export default function CaretakerChecklist(
       </div>
 
       {!allChecked && !disabled && (
-        <p class="text-[10px] text-orange-400 font-600 text-center animate-pulse">
-          ⚠️ Complete all checks and capture a photo to mark room as ready
-        </p>
+        <div class="p-4 bg-amber-50 border border-amber-100 rounded-2xl flex items-center justify-center gap-2 animate-pulse">
+          <span class="text-amber-500">⚠️</span>
+          <p class="text-[11px] font-bold text-amber-700 uppercase tracking-widest">
+            Please verify all items and provide a photo to finalize.
+          </p>
+        </div>
       )}
     </div>
   );

@@ -1,7 +1,3 @@
-// ================================================================
-// routes/dashboard/settings.tsx — Host Settings
-// ================================================================
-
 import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 import type { DashboardState, Host } from "../../utils/types.ts";
@@ -84,68 +80,66 @@ export default function SettingsPage({ data, url, state }: PageProps<SettingsPag
   return (
     <>
       <Head>
-        <title>Kernel_Config | iStay</title>
+        <title>Account Settings | iStay</title>
       </Head>
 
       <div class="space-y-16 pb-20">
         {/* Header */}
         <section class="flex flex-col lg:flex-row items-end justify-between gap-8">
           <div>
-            <div class="flex items-center gap-4 mb-4">
-              <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.2em] rounded-full border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80]">
-                SYSTEM_CONFIG
-              </div>
-              <div class="h-[2px] w-24 bg-gray-100" />
+            <div class="flex items-center gap-4 mb-6">
+              <span class="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-700 text-[11px] font-bold uppercase tracking-widest rounded-full border border-emerald-100">Settings</span>
+              <div class="h-px w-24 bg-gray-100" />
             </div>
-            <h2 class="text-4xl sm:text-7xl font-950 text-gray-900 tracking-tighter uppercase leading-[0.8]">
-              Platform <br/> <span class="text-mint-500">Settings.</span>
+            <h2 class="text-5xl font-bold text-gray-900 tracking-tight leading-tight">
+              Account <br/> <span class="text-emerald-500 font-serif italic">Configuration.</span>
             </h2>
           </div>
           {saved && (
-            <div class="bg-emerald-500 text-white px-8 py-4 rounded-2xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-[11px] font-950 uppercase tracking-[0.2em] animate-bounce">
-              CONFIG_SYNCED_SUCCESSFULLY
+            <div class="bg-emerald-50 text-emerald-600 px-8 py-4 rounded-2xl border border-emerald-100 shadow-premium text-sm font-bold animate-bounce flex items-center gap-3">
+              <span class="text-lg">✨</span> Settings saved successfully!
             </div>
           )}
         </section>
 
         {/* Settings Interface */}
-        <div class="bg-white rounded-[3rem] border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] overflow-hidden min-h-[600px] flex flex-col">
+        <div class="bg-white rounded-[3rem] border border-gray-100 shadow-premium overflow-hidden min-h-[600px] flex flex-col">
           <SettingsTabs activeTab={activeTab} />
 
-          <div class="p-12 flex-1">
+          <div class="p-12 flex-1 bg-gray-50/30">
             {activeTab === "general" && (
               <form method="POST" class="max-w-3xl space-y-12">
                 <div>
-                  <h3 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter mb-8 pb-4 border-b-[3px] border-gray-100">Primary_Protocol</h3>
+                  <h3 class="text-2xl font-bold text-gray-900 tracking-tight mb-8 pb-4 border-b border-gray-100">Personal Information</h3>
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="space-y-3">
-                      <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest ml-1">HOST_NAME</label>
+                    <div class="space-y-2.5">
+                      <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
                       <input
                         type="text"
                         name="name"
                         value={host?.name}
-                        class="w-full px-6 py-4 bg-gray-50 border-[3px] border-gray-900 rounded-2xl focus:bg-white focus:shadow-[4px_4px_0px_0px_#4ade80] outline-none transition-all font-950 text-gray-900"
+                        class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:border-emerald-200 focus:shadow-premium outline-none transition-all font-bold text-gray-900"
                         required
                       />
                     </div>
-                    <div class="space-y-3">
-                      <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest ml-1">COMM_EMAIL</label>
+                    <div class="space-y-2.5">
+                      <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
                       <input
                         type="email"
                         name="email"
                         value={host?.email}
-                        class="w-full px-6 py-4 bg-gray-50 border-[3px] border-gray-900 rounded-2xl focus:bg-white focus:shadow-[4px_4px_0px_0px_#4ade80] outline-none transition-all font-950 text-gray-900"
+                        class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:border-emerald-200 focus:shadow-premium outline-none transition-all font-bold text-gray-900"
                         required
                       />
                     </div>
-                    <div class="space-y-3 md:col-span-2">
-                      <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest ml-1">PHONE_UPLINK</label>
+                    <div class="space-y-2.5 md:col-span-2">
+                      <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Phone Number</label>
                       <input
                         type="tel"
                         name="phone"
                         value={host?.phone}
                         placeholder="+91 XXXX XXX XXX"
-                        class="w-full px-6 py-4 bg-gray-50 border-[3px] border-gray-900 rounded-2xl focus:bg-white focus:shadow-[4px_4px_0px_0px_#4ade80] outline-none transition-all font-950 text-gray-900"
+                        class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:border-emerald-200 focus:shadow-premium outline-none transition-all font-bold text-gray-900"
                       />
                     </div>
                   </div>
@@ -154,9 +148,9 @@ export default function SettingsPage({ data, url, state }: PageProps<SettingsPag
                 <div class="pt-8">
                   <button
                     type="submit"
-                    class="px-12 py-5 bg-gray-900 text-white text-[11px] font-950 uppercase tracking-[0.2em] rounded-2xl border-[3px] border-gray-900 shadow-[8px_8px_0px_0px_#4ade80] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                    class="px-12 py-5 bg-gray-900 text-white text-sm font-bold rounded-2xl shadow-premium hover:bg-emerald-500 hover:shadow-premium-hover hover:-translate-y-0.5 transition-all"
                   >
-                    DEPLOY_CHANGES_TO_KERNEL
+                    Save Changes
                   </button>
                 </div>
               </form>
@@ -165,33 +159,33 @@ export default function SettingsPage({ data, url, state }: PageProps<SettingsPag
             {activeTab === "compliance" && (
               <form method="POST" class="max-w-3xl space-y-12">
                 <div>
-                  <h3 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter mb-8 pb-4 border-b-[3px] border-gray-100">Legal_Directives</h3>
+                  <h3 class="text-2xl font-bold text-gray-900 tracking-tight mb-8 pb-4 border-b border-gray-100">Business Details</h3>
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="space-y-3">
-                      <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest ml-1">ENTITY_LEGAL_NAME</label>
+                    <div class="space-y-2.5">
+                      <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Legal Business Name</label>
                       <input
                         type="text"
                         name="businessName"
                         value={host?.settings?.businessName}
-                        class="w-full px-6 py-4 bg-gray-50 border-[3px] border-gray-900 rounded-2xl focus:bg-white focus:shadow-[4px_4px_0px_0px_#4ade80] outline-none transition-all font-950 text-gray-900"
+                        class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:border-emerald-200 focus:shadow-premium outline-none transition-all font-bold text-gray-900"
                       />
                     </div>
-                    <div class="space-y-3">
-                      <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest ml-1">TAX_IDENTIFIER (GSTIN)</label>
+                    <div class="space-y-2.5">
+                      <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">GST Number (Optional)</label>
                       <input
                         type="text"
                         name="gstin"
                         value={host?.settings?.gstin}
                         placeholder="22AAAAA0000A1Z5"
-                        class="w-full px-6 py-4 bg-gray-50 border-[3px] border-gray-900 rounded-2xl focus:bg-white focus:shadow-[4px_4px_0px_0px_#4ade80] outline-none transition-all font-950 text-gray-900"
+                        class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:border-emerald-200 focus:shadow-premium outline-none transition-all font-bold text-gray-900"
                       />
                     </div>
-                    <div class="space-y-3 md:col-span-2">
-                      <label class="text-[10px] font-950 text-gray-400 uppercase tracking-widest ml-1">REGISTERED_OFFICE_ADDRESS</label>
+                    <div class="space-y-2.5 md:col-span-2">
+                      <label class="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Business Address</label>
                       <textarea
                         name="businessAddress"
                         rows={3}
-                        class="w-full px-6 py-4 bg-gray-50 border-[3px] border-gray-900 rounded-2xl focus:bg-white focus:shadow-[4px_4px_0px_0px_#4ade80] outline-none transition-all font-950 text-gray-900 no-scrollbar"
+                        class="w-full px-6 py-4 bg-white border border-gray-100 rounded-2xl focus:border-emerald-200 focus:shadow-premium outline-none transition-all font-bold text-gray-900 no-scrollbar"
                       >{host?.settings?.businessAddress}</textarea>
                     </div>
                   </div>
@@ -200,9 +194,9 @@ export default function SettingsPage({ data, url, state }: PageProps<SettingsPag
                 <div class="pt-8">
                   <button
                     type="submit"
-                    class="px-12 py-5 bg-gray-900 text-white text-[11px] font-950 uppercase tracking-[0.2em] rounded-2xl border-[3px] border-gray-900 shadow-[8px_8px_0px_0px_#4ade80] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+                    class="px-12 py-5 bg-gray-900 text-white text-sm font-bold rounded-2xl shadow-premium hover:bg-emerald-500 hover:shadow-premium-hover hover:-translate-y-0.5 transition-all"
                   >
-                    COMMIT_LEGAL_OVERRIDE
+                    Update Business Info
                   </button>
                 </div>
               </form>
@@ -211,18 +205,18 @@ export default function SettingsPage({ data, url, state }: PageProps<SettingsPag
             {activeTab === "team" && <TeamManagement />}
             {activeTab === "developers" && <DeveloperApi host={host!} />}
             {activeTab === "notifications" && (
-              <div class="py-20 text-center space-y-6">
+              <div class="py-24 text-center space-y-6">
                 <p class="text-7xl">🔕</p>
-                <h3 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">Signal_Silence</h3>
-                <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em]">Notification steering protocols are currently locked by the kernel.</p>
+                <h3 class="text-2xl font-bold text-gray-900 tracking-tight">Notifications</h3>
+                <p class="text-sm font-medium text-gray-400 max-w-xs mx-auto leading-relaxed">System notifications are currently managed by the platform to ensure reliability.</p>
               </div>
             )}
             {activeTab === "billing" && (
-              <div class="py-20 text-center space-y-6">
+              <div class="py-24 text-center space-y-6">
                 <p class="text-7xl">💳</p>
-                <h3 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">Financial_Module</h3>
-                <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em]">Visit the WALLET section for granular capital control.</p>
-                <a href="/dashboard/billing" class="inline-block mt-8 px-12 py-5 bg-gray-900 text-white text-[11px] font-950 uppercase tracking-[0.2em] rounded-2xl border-[3px] border-gray-900 shadow-[8px_8px_0px_0px_#4ade80] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">GOTO_WALLET</a>
+                <h3 class="text-2xl font-bold text-gray-900 tracking-tight">Billing & Payments</h3>
+                <p class="text-sm font-medium text-gray-400 max-w-xs mx-auto leading-relaxed">Manage your subscriptions, invoices, and payouts in the billing section.</p>
+                <a href="/dashboard/billing" class="inline-block mt-8 px-12 py-5 bg-gray-900 text-white text-sm font-bold rounded-2xl shadow-premium hover:bg-emerald-500 hover:-translate-y-0.5 transition-all">Go to Billing</a>
               </div>
             )}
           </div>

@@ -67,10 +67,10 @@ export default function KnowledgeUploader(
   return (
     <div class="mb-10">
       <div
-        class={`relative flex flex-col items-center justify-center p-12 border-[4px] border-dashed rounded-[2.5rem] transition-all duration-300 group shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] ${
+        class={`relative flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-[2.5rem] transition-all duration-300 group shadow-premium ${
           isScanning
-            ? "border-mint-500 bg-mint-50/50 shadow-[12px_12px_0px_0px_#4ade80]"
-            : "border-gray-200 bg-gray-50 hover:bg-white hover:border-mint-400 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[16px_16px_0px_0px_rgba(0,0,0,1)]"
+            ? "border-emerald-500 bg-emerald-50/30"
+            : "border-gray-100 bg-gray-50/50 hover:bg-white hover:border-emerald-300 hover:-translate-y-1 hover:shadow-premium-hover"
         }`}
       >
         <input
@@ -86,35 +86,35 @@ export default function KnowledgeUploader(
         {isScanning
           ? (
             <div class="flex flex-col items-center justify-center text-center">
-              <div class="w-20 h-20 border-[6px] border-gray-900 border-t-mint-500 rounded-full animate-spin mb-6" />
-              <p class="text-xs font-950 text-gray-900 uppercase tracking-[0.3em]">
-                SCANNING_DOCUMENT...
+              <div class="w-16 h-16 border-4 border-gray-100 border-t-emerald-500 rounded-full animate-spin mb-6 shadow-sm" />
+              <p class="text-sm font-bold text-gray-900 uppercase tracking-widest animate-pulse">
+                Scanning Document...
               </p>
-              <p class="text-[10px] text-mint-600 font-800 uppercase tracking-widest mt-2">
-                EXTRACTING_KNOWLEDGE_KERNEL
+              <p class="text-[11px] text-emerald-600 font-bold uppercase tracking-widest mt-2">
+                Extracting property details
               </p>
             </div>
           )
           : (
             <div class="flex flex-col items-center justify-center text-center pointer-events-none">
-              <div class="w-20 h-20 rounded-[2rem] bg-white border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center mb-6 text-4xl group-hover:rotate-[-5deg] transition-transform">
+              <div class="w-20 h-20 rounded-[1.5rem] bg-white border border-gray-100 shadow-premium flex items-center justify-center mb-6 text-4xl group-hover:scale-110 transition-transform">
                 📷
               </div>
-              <h4 class="text-sm font-950 text-gray-900 uppercase tracking-widest mb-2">
-                Scan_Rules_Protocol
+              <h4 class="text-sm font-bold text-gray-900 uppercase tracking-widest mb-2">
+                Import from Photo
               </h4>
-              <p class="text-[10px] text-gray-400 font-800 uppercase tracking-widest max-w-[250px] leading-relaxed">
-                UPLOAD A PHOTO OF PHYSICAL HOUSE RULES OR WIFI SIGN FOR AUTOMATED INGESTION.
+              <p class="text-[11px] text-gray-400 font-medium max-w-[280px] leading-relaxed">
+                Upload a photo of your house rules or WiFi sign to automatically import details into your knowledge base.
               </p>
             </div>
           )}
       </div>
 
       {error && (
-        <div class="mt-6 p-6 rounded-2xl bg-rose-50 border-[3px] border-rose-900 shadow-[6px_6px_0px_0px_#9f1239] animate-shake">
-          <p class="text-[10px] font-950 text-rose-900 uppercase tracking-widest flex items-center justify-center gap-3">
+        <div class="mt-6 p-6 rounded-2xl bg-rose-50 border border-rose-100 shadow-premium animate-shake">
+          <p class="text-xs font-bold text-rose-900 flex items-center justify-center gap-3">
              <span class="text-lg">⚠️</span>
-             SCAN_FAILURE: {error}
+             Scan failed: {error}
           </p>
         </div>
       )}

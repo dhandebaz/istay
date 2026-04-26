@@ -1,4 +1,5 @@
 import { type Handlers, type PageProps } from "$fresh/server.ts";
+import { Head } from "$fresh/runtime.ts";
 import Header from "../../islands/Header.tsx";
 import Footer from "../../components/Footer.tsx";
 import SEOMeta from "../../components/SEOMeta.tsx";
@@ -59,7 +60,6 @@ export const handler: Handlers<PropertyPageData> = {
     const blocks = await listBlockedDates(propId);
     const blockedDates = blocks.map((b) => b.date);
 
-    // Check if property is highly booked (>= 60% of next 30 days blocked)
     const today = new Date();
     const next30 = new Set<string>();
     for (let i = 0; i < 30; i++) {
@@ -68,9 +68,8 @@ export const handler: Handlers<PropertyPageData> = {
       next30.add(d.toISOString().slice(0, 10));
     }
     const blockedNext30 = blockedDates.filter((d) => next30.has(d)).length;
-    const isHighlyBooked = blockedNext30 >= 18; // 60% of 30
+    const isHighlyBooked = blockedNext30 >= 18;
 
-    // Dynamic Pricing (Yield Management)
     const todayStr = today.toISOString().slice(0, 10);
     const pricingRes = await getDynamicPrice(
       propId,
@@ -80,7 +79,6 @@ export const handler: Handlers<PropertyPageData> = {
     const dynamicBasePrice = pricingRes.finalPrice;
     const yieldRules = pricingRes.appliedRules;
 
-    // If highly booked, fetch Vibe Match recommendations (availability-aware)
     let vibeMatches: VibeMatch[] = [];
     if (isHighlyBooked) {
       try {
@@ -129,10 +127,17 @@ export default function PropertyPage(
   const { property, blockedDates, vibeMatches, isHighlyBooked, bookingData, reviews } =
     data;
 
+  const formatINR = (n: number) =>
+    new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(n || 0);
+
   return (
     <>
       <SEOMeta 
-        title={`${property.name} | istay`}
+        title={`${property.name} | iStay Professional Residency`}
         description={property.description?.substring(0, 160)}
         image={property.imageUrl}
         type="website"
@@ -146,14 +151,15 @@ export default function PropertyPage(
               left: 0;
               right: 0;
               z-index: 50;
-              padding: 1rem 1.5rem;
+              padding: 1.5rem 2rem;
               background: rgba(255, 255, 255, 0.9);
-              backdrop-filter: blur(12px);
-              border-top: 1px solid rgba(0, 0, 0, 0.05);
+              backdrop-filter: blur(24px);
+              border-top: 1px solid rgba(0, 0, 0, 0.03);
               display: flex;
               align-items: center;
               justify-content: space-between;
-              box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+              box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.1);
+              border-radius: 2.5rem 2.5rem 0 0;
             }
           }
           @media (min-width: 641px) {
@@ -162,264 +168,251 @@ export default function PropertyPage(
         `}} />
       </Head>
 
-      <div class="min-h-screen bg-white font-sans">
-        {/* ── Hero Image ──────────────────────────────────────── */}
-        <div class="relative h-80 sm:h-[450px] lg:h-[550px] overflow-hidden bg-gray-100">
+      <div class="min-h-screen bg-white font-sans selection:bg-emerald-100">
+        {/* ── Property Hero ──────────────────────────────────────── */}
+        <div class="relative h-[450px] sm:h-[600px] lg:h-[750px] overflow-hidden bg-gray-50 lg:rounded-b-[4rem] shadow-premium-lg">
           {property.imageUrl
             ? (
               <img
                 src={property.imageUrl}
                 alt={property.name}
-                class="w-full h-full object-cover"
+                class="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-[3000ms] ease-out"
               />
             )
             : (
-              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-mint-50 to-emerald-100">
-                <span class="text-8xl opacity-40">🏠</span>
+              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-50 to-emerald-100/30">
+                <span class="text-[10rem] opacity-20 filter grayscale">🏠</span>
               </div>
             )}
 
-          {/* Gradient overlay */}
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+          <div class="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent hidden lg:block" />
 
-          {/* istay branding on top */}
-          <div class="absolute top-6 left-6">
+          <div class="absolute top-10 left-10 right-10 flex items-center justify-between z-20">
             <a
               href="/"
-              class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 backdrop-blur-md text-xs font-800 text-mint-600 shadow-xl hover:bg-white transition-all transform hover:scale-105"
+              class="inline-flex items-center gap-4 px-6 py-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 text-[10px] font-bold text-white uppercase tracking-[0.2em] hover:bg-white hover:text-gray-900 transition-all duration-500 shadow-premium group"
             >
-              <span class="w-5 h-5 rounded bg-mint-500 flex items-center justify-center">
-                <HomeIcon class="w-2.5 h-2.5 text-white" />
-              </span>
-              Direct Booking via istay
+              <div class="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center shadow-premium transition-transform group-hover:rotate-12">
+                <HomeIcon class="w-4 h-4 text-white" />
+              </div>
+              Direct Residency Protocol
             </a>
+
+            {isHighlyBooked && (
+              <span class="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-[0.2em] shadow-premium-lg border border-emerald-400/30 animate-fade-in">
+                <span class="w-2 h-2 rounded-full bg-white animate-pulse" />
+                High Occupancy Threshold
+              </span>
+            )}
           </div>
 
-          {/* Highly booked badge */}
-          {isHighlyBooked && (
-            <div class="absolute top-6 right-6">
-              <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-500 text-white text-xs font-800 shadow-xl animate-pulse">
-                🔥 Filling up fast
-              </span>
+          <div class="absolute bottom-16 left-10 right-10 max-w-7xl mx-auto z-10">
+            <div class="max-w-5xl space-y-8">
+              <h1 class="text-5xl sm:text-7xl lg:text-9xl font-bold text-white leading-[0.9] tracking-tighter drop-shadow-premium animate-slide-up">
+                {property.name}
+              </h1>
+              {property.address && (
+                <div class="flex flex-wrap items-center gap-8 animate-slide-up delay-100">
+                  <p class="text-xl text-white/90 flex items-center gap-3 font-bold uppercase tracking-[0.2em] text-[13px]">
+                    <MapPinIcon class="w-6 h-6 text-emerald-400" />
+                    {property.address}
+                  </p>
+                  <div class="h-1.5 w-1.5 rounded-full bg-white/40 hidden sm:block" />
+                  <div class="flex items-center gap-4">
+                    <div class="flex items-center text-emerald-400 gap-1">
+                      {[1, 2, 3, 4, 5].map(i => (
+                        <StarIcon key={i} class="w-5 h-5 fill-current" />
+                      ))}
+                    </div>
+                    <span class="text-white/60 text-[11px] font-bold uppercase tracking-[0.3em]">
+                      Professional Curation
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-
-          {/* Property name on hero */}
-          <div class="absolute bottom-10 left-6 right-6 max-w-5xl mx-auto">
-            <h1 class="text-3xl sm:text-5xl font-900 text-white leading-tight drop-shadow-2xl">
-              {property.name}
-            </h1>
-            {property.address && (
-              <p class="mt-2 text-base text-white/90 flex items-center gap-2 font-500">
-                <MapPinIcon class="w-4 h-4" />
-                {property.address}
-              </p>
-            )}
           </div>
         </div>
 
-        {/* ── Main Content ─────────────────────────────────────── */}
-        <div class="max-w-6xl mx-auto px-6 py-6 md:py-12 pb-32 sm:pb-12">
-          {/* Breadcrumbs */}
-          <nav aria-label="Breadcrumb" class="mb-6">
-            <ol class="flex items-center space-x-2 text-sm text-gray-500 font-500">
+        {/* ── Main Residency Details ──────────────────────────────── */}
+        <div class="max-w-7xl mx-auto px-10 py-16 lg:py-28 pb-48 sm:pb-28">
+          <nav aria-label="Breadcrumb" class="mb-20">
+            <ol class="flex flex-wrap items-center gap-4 text-[11px] font-bold text-gray-300 uppercase tracking-[0.2em]">
               <li>
-                <a href="/" class="hover:text-mint-600 transition-colors">Home</a>
+                <a href="/" class="hover:text-emerald-600 transition-colors">Network</a>
               </li>
+              <li class="opacity-20">/</li>
               <li>
-                <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </li>
-              <li>
-                <div class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-mint-50 text-mint-700 text-[10px] font-800 uppercase tracking-widest border border-mint-100">
-                  <CheckIcon class="w-2.5 h-2.5" strokeWidth="3" />
-                  Verified Host
+                <div class="flex items-center gap-2.5 px-4 py-1.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 shadow-sm">
+                  <CheckIcon class="w-3.5 h-3.5" strokeWidth="4" />
+                  Bespoke Authenticated
                 </div>
               </li>
+              <li class="opacity-20">/</li>
               <li>
-                <div class="w-1 h-1 rounded-full bg-gray-300" />
-              </li>
-              <li>
-                <a href="/search" class="hover:text-mint-600 transition-colors">Search</a>
+                <a href="/search" class="hover:text-emerald-600 transition-colors">Portfolio</a>
               </li>
               {property.address && (
                 <>
+                  <li class="opacity-20">/</li>
                   <li>
-                    <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </li>
-                  <li class="capitalize">
-                    <a 
-                      href={`/search?q=${encodeURIComponent(property.address.split(',').slice(-3, -2)[0]?.trim() || property.address.split(',').slice(-2, -1)[0]?.trim() || "India")}`} 
-                      class="hover:text-mint-600 transition-colors"
-                    >
+                    <span class="hover:text-emerald-600 transition-colors cursor-default">
                       {property.address.split(',').slice(-3, -2)[0]?.trim() || property.address.split(',').slice(-2, -1)[0]?.trim() || "India"}
-                    </a>
+                    </span>
                   </li>
                 </>
               )}
-              <li>
-                <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              </li>
-              <li class="text-gray-900 font-600 truncate max-w-[200px] sm:max-w-xs" aria-current="page">
+              <li class="opacity-20">/</li>
+              <li class="text-gray-900 truncate max-w-[150px] sm:max-w-xs" aria-current="page">
                 {property.name}
               </li>
             </ol>
           </nav>
 
-          <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
-            {/* Left column: info */}
-            <div class="lg:col-span-3 space-y-10">
-              {/* Price + trust badges */}
-              <div class="flex items-center justify-between pb-6 border-b border-gray-100">
-                <div>
-                  <span class="text-4xl font-900 text-mint-600">
-                    {formatINR(data.dynamicBasePrice)}
-                  </span>
-
-                  <span class="text-gray-400 text-base ml-1 font-500">
-                    / night
-                  </span>
-                </div>
-                <div class="flex items-center gap-3">
-                  {data.yieldRules.map((rule) => (
-                    <span
-                      key={rule}
-                      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 text-[10px] font-800 uppercase tracking-tight"
-                    >
-                      ⚡ {rule}
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-20 lg:gap-32">
+            <div class="lg:col-span-7 space-y-24">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-12 pb-16 border-b border-gray-50">
+                <div class="space-y-3">
+                  <div class="flex items-baseline gap-3">
+                    <span class="text-6xl font-bold text-gray-900 tracking-tighter">
+                      {formatINR(data.dynamicBasePrice)}
                     </span>
-                  ))}
-                  <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-mint-50 text-mint-700 text-xs font-700">
-                    ✨ 0% OTA Commission
-                  </span>
-                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-700">
-                    🔒 Verified Stay
-                  </span>
+                    <span class="text-gray-300 text-sm font-bold uppercase tracking-[0.2em]">
+                      / residency
+                    </span>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-3">
+                    {data.yieldRules.map((rule) => (
+                      <span
+                        key={rule}
+                        class="px-4 py-1.5 rounded-xl bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase tracking-widest border border-emerald-100"
+                      >
+                        ⚡ {rule}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-4">
+                  <div class="group relative">
+                    <span class="inline-flex items-center gap-3 px-6 py-3.5 rounded-2xl bg-gray-900 text-white text-[11px] font-bold uppercase tracking-[0.2em] shadow-premium transition-all hover:bg-emerald-600 cursor-help">
+                      ✨ Professional Yield Advantage
+                    </span>
+                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-72 p-6 bg-gray-900 text-white text-[12px] font-medium rounded-3xl shadow-premium-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 leading-relaxed z-30 border border-white/10">
+                      By prioritizing direct residency, you eliminate up to 20% in OTA fee volatility.
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Direct Booking Callout */}
-              <div class="flex items-start gap-4 p-6 rounded-3xl bg-mint-50 border border-mint-100 shadow-sm transition-transform hover:scale-[1.01]">
-                <span class="text-2xl mt-0.5">🚀</span>
-                <div>
-                  <p class="text-base font-800 text-mint-900">
-                    The Smart Way to Stay
-                  </p>
-                  <p class="text-sm text-mint-700 mt-1 leading-relaxed font-500">
-                    By booking through istay, you avoid platform fees and help
-                    the host earn 100% of their nightly rate. Better service,
-                    lower prices.
+              <div class="relative p-12 rounded-[3.5rem] bg-emerald-50/30 border border-emerald-100 shadow-sm overflow-hidden group">
+                <div class="absolute -right-16 -top-16 text-[12rem] opacity-5 filter grayscale group-hover:rotate-12 transition-transform duration-1000">🏠</div>
+                <div class="relative z-10 space-y-6">
+                  <h3 class="text-2xl font-bold text-emerald-900 tracking-tight flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-base shadow-premium">✓</div>
+                    The Bespoke Residency Experience
+                  </h3>
+                  <p class="text-[15px] text-emerald-800/70 leading-relaxed font-medium">
+                    Choosing an iStay synchronized residency ensures your net yield supports the professionals curating your stay. Experience a high-trust, low-overhead environment tailored for professional travelers.
                   </p>
                 </div>
               </div>
 
-              {/* Description */}
-              <div>
-                <h2 class="text-2xl font-800 text-gray-900 mb-4 tracking-tight">
-                  About this property
-                </h2>
-                <p class="text-base text-gray-600 leading-relaxed whitespace-pre-line font-400">
+              <div class="space-y-10">
+                <div class="flex items-center gap-6">
+                  <h2 class="text-4xl font-bold text-gray-900 tracking-tighter">
+                    The Accommodations
+                  </h2>
+                  <div class="h-px flex-1 bg-gray-50" />
+                </div>
+                <p class="text-lg text-gray-400 leading-relaxed whitespace-pre-line font-medium opacity-90">
                   {property.description}
                 </p>
               </div>
 
-              {/* Amenities */}
               {property.amenities && property.amenities.length > 0 && (
-                <div>
-                  <h2 class="text-2xl font-800 text-gray-900 mb-6 tracking-tight">
-                    Premium Amenities
-                  </h2>
-                  <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-12">
+                  <div class="flex items-center gap-6">
+                    <h2 class="text-4xl font-bold text-gray-900 tracking-tighter">
+                      Bespoke Amenities
+                    </h2>
+                    <div class="h-px flex-1 bg-gray-50" />
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {property.amenities.map((amenity) => (
                       <div
                         key={amenity}
-                        class="flex items-center gap-3 text-base text-gray-600 font-500 p-3 rounded-2xl border border-gray-50 hover:bg-gray-50 transition-colors"
+                        class="flex items-center gap-6 p-7 rounded-[2rem] border border-gray-50 bg-white hover:border-emerald-100 hover:bg-emerald-50/10 transition-all duration-500 group"
                       >
-                        <span class="w-2 h-2 rounded-full bg-mint-500" />
-                        {amenity}
+                        <div class="w-14 h-14 rounded-2xl bg-gray-50 text-emerald-500 flex items-center justify-center text-2xl group-hover:bg-white group-hover:shadow-premium transition-all">
+                          ✨
+                        </div>
+                        <span class="text-[15px] font-bold text-gray-700 tracking-tight">{amenity}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* ── Vibe Match Recommendations ──────────────────── */}
               {vibeMatches.length > 0 && (
-                <div class="pt-6 border-t border-gray-100" id="vibe-match">
-                  <div class="flex items-end justify-between mb-8">
-                    <div>
-                      <h2 class="text-2xl font-900 text-gray-900 tracking-tight">
-                        ✨ Similar Stays You'll Love
+                <div class="pt-24 border-t border-gray-50" id="vibe-match">
+                  <div class="flex items-end justify-between mb-16">
+                    <div class="space-y-2">
+                      <h2 class="text-4xl font-bold text-gray-900 tracking-tighter">
+                        Reciprocal Recommendations
                       </h2>
-                      <p class="text-sm text-gray-400 mt-1 font-500 uppercase tracking-wider">
-                        Handpicked by istay AI for you
+                      <p class="text-[11px] font-bold text-gray-300 uppercase tracking-[0.3em]">
+                        Autonomous Curation for Guest Preferences
                       </p>
                     </div>
                   </div>
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
                     {vibeMatches.map((match) => (
                       <a
                         key={match.propId}
                         href={`/p/${match.propId}`}
-                        class="group block rounded-[32px] overflow-hidden border border-gray-100 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white"
+                        class="group block rounded-[3rem] overflow-hidden border border-gray-50 shadow-premium hover:shadow-premium-lg transition-all duration-700 hover:-translate-y-3 bg-white"
                       >
-                        {/* Image */}
-                        <div class="relative h-44 bg-gray-100 overflow-hidden">
+                        <div class="relative h-64 bg-gray-50 overflow-hidden">
                           {match.imageUrl
                             ? (
                               <img
                                 src={match.imageUrl}
                                 alt={match.propertyName}
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms]"
                               />
                             )
                             : (
-                              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-mint-50 to-emerald-100">
-                                <span class="text-5xl opacity-40">🏠</span>
+                              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-50 to-emerald-100/30">
+                                <span class="text-7xl opacity-20 filter grayscale">🏠</span>
                               </div>
                             )}
-                          {/* Match score badge */}
-                          <div class="absolute top-3 right-3">
-                            <span class="px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-xs font-900 text-mint-600 shadow-md">
-                              {match.score}% MATCH
+                          <div class="absolute top-6 right-6">
+                            <span class="px-5 py-2.5 rounded-2xl bg-white/90 backdrop-blur-md shadow-premium text-[10px] font-bold text-emerald-600 uppercase tracking-[0.2em] border border-emerald-50">
+                              {match.score}% Compatibility
                             </span>
                           </div>
                         </div>
 
-                        {/* Card body */}
-                        <div class="p-6">
-                          <h3 class="text-lg font-800 text-gray-900 truncate group-hover:text-mint-500 transition-colors">
+                        <div class="p-10">
+                          <h3 class="text-2xl font-bold text-gray-900 truncate group-hover:text-emerald-600 transition-colors tracking-tight">
                             {match.propertyName}
                           </h3>
-                          <p class="text-xs text-gray-400 mt-2 line-clamp-2 leading-relaxed font-500 italic">
+                          <p class="text-[12px] text-gray-400 mt-4 line-clamp-2 leading-relaxed font-bold uppercase tracking-[0.15em] italic opacity-60">
                             "{match.reason}"
                           </p>
-                          <div class="flex items-center justify-between mt-5 pt-4 border-t border-gray-50">
-                            <span class="text-xl font-900 text-mint-600">
-                              {formatINR(match.basePrice)}
-                              <span class="text-xs font-500 text-gray-400 ml-1">
-                                /NIGHT
+                          <div class="flex items-center justify-between mt-10 pt-8 border-t border-gray-50">
+                            <div class="flex flex-col">
+                              <span class="text-3xl font-bold text-gray-900 tracking-tight">
+                                {formatINR(match.basePrice)}
                               </span>
-                            </span>
-                            <div class="w-10 h-10 rounded-full bg-mint-50 flex items-center justify-center group-hover:bg-mint-500 group-hover:text-white transition-all">
-                              <svg
-                                width="18"
-                                height="18"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  d="M6 12L10 8L6 4"
-                                  stroke-width="2.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
+                              <span class="text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em] mt-1">
+                                Net Residency
+                              </span>
+                            </div>
+                            <div class="w-14 h-14 rounded-[1.5rem] bg-gray-50 text-gray-400 flex items-center justify-center group-hover:bg-gray-900 group-hover:text-white group-hover:shadow-premium transition-all duration-500">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                               </svg>
                             </div>
                           </div>
@@ -430,68 +423,65 @@ export default function PropertyPage(
                 </div>
               )}
 
-              {/* ── Reviews Section ──────────────────────────── */}
-              <div class="pt-10 border-t border-gray-100" id="reviews">
-                <div class="flex items-center justify-between mb-8">
-                  <div>
-                    <h2 class="text-2xl font-900 text-gray-900 tracking-tight">
-                      Guest Reviews
+              <div class="pt-24 border-t border-gray-50" id="reviews">
+                <div class="flex items-center justify-between mb-16">
+                  <div class="space-y-3">
+                    <h2 class="text-4xl font-bold text-gray-900 tracking-tighter">
+                      Stay Testimonials
                     </h2>
-                    <div class="flex items-center gap-2 mt-1">
-                      <div class="flex items-center text-amber-400">
-                        <StarIcon class="w-4 h-4 fill-current" />
-                        <StarIcon class="w-4 h-4 fill-current" />
-                        <StarIcon class="w-4 h-4 fill-current" />
-                        <StarIcon class="w-4 h-4 fill-current" />
-                        <StarIcon class="w-4 h-4 fill-current" />
+                    <div class="flex items-center gap-4">
+                      <div class="flex items-center text-emerald-500 gap-1">
+                        {[1, 2, 3, 4, 5].map(i => (
+                          <StarIcon key={i} class="w-5 h-5 fill-current" />
+                        ))}
                       </div>
-                      <span class="text-xs font-700 text-gray-400 uppercase tracking-wider">
-                        {reviews.length} {reviews.length === 1 ? "Review" : "Reviews"}
+                      <span class="text-[11px] font-bold text-gray-300 uppercase tracking-[0.3em]">
+                        {reviews.length} Synchronized Experiences
                       </span>
                     </div>
                   </div>
                 </div>
 
                 {reviews.length === 0 ? (
-                  <div class="p-8 rounded-3xl bg-gray-50 border border-gray-100 text-center">
-                    <p class="text-sm text-gray-400 font-500 italic">
-                      No reviews yet for this property.
+                  <div class="p-20 rounded-[3.5rem] bg-gray-50/50 border border-gray-50 text-center space-y-6">
+                    <div class="text-6xl filter grayscale opacity-10">💬</div>
+                    <p class="text-[11px] text-gray-300 font-bold uppercase tracking-[0.3em]">
+                      Initial Residency Curation Pending
                     </p>
                   </div>
                 ) : (
-                  <div class="space-y-6">
+                  <div class="space-y-10">
                     {reviews.map((review) => (
-                      <div key={review.id} class="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                        <div class="flex items-center justify-between mb-4">
-                          <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-istay-900 flex items-center justify-center text-white text-sm font-800">
+                      <div key={review.id} class="p-12 rounded-[3rem] bg-white border border-gray-50 shadow-premium hover:shadow-premium-lg transition-all duration-700 group">
+                        <div class="flex items-center justify-between mb-10">
+                          <div class="flex items-center gap-5">
+                            <div class="w-16 h-16 rounded-[1.5rem] bg-gray-900 flex items-center justify-center text-white text-2xl font-bold shadow-premium group-hover:bg-emerald-600 transition-all duration-700">
                               {review.guestName.charAt(0).toUpperCase()}
                             </div>
-                            <div>
-                              <p class="text-sm font-800 text-gray-900">{review.guestName}</p>
-                              <p class="text-[10px] text-gray-400 font-500 uppercase tracking-widest">
+                            <div class="space-y-1">
+                              <p class="text-xl font-bold text-gray-900 tracking-tight">{review.guestName}</p>
+                              <p class="text-[11px] text-gray-300 font-bold uppercase tracking-[0.2em]">
                                 {new Date(review.createdAt).toLocaleDateString("en-IN", { month: "long", year: "numeric" })}
                               </p>
                             </div>
                           </div>
                           
-                          {/* Badge based on source */}
-                          <div class={`px-3 py-1 rounded-full text-[9px] font-900 uppercase tracking-wider border ${
+                          <div class={`px-5 py-2 rounded-xl text-[10px] font-bold uppercase tracking-[0.2em] border transition-colors ${
                             review.source === "direct" 
-                              ? "bg-mint-50 text-mint-700 border-mint-100" 
-                              : "bg-orange-50 text-orange-700 border-orange-100"
+                              ? "bg-emerald-50 text-emerald-600 border-emerald-100" 
+                              : "bg-gray-50 text-gray-400 border-gray-100"
                           }`}>
-                            {review.source === "direct" ? "✓ Verified Guest" : review.sourceLabel}
+                            {review.source === "direct" ? "✓ Synchronized Guest" : review.sourceLabel}
                           </div>
                         </div>
                         
-                        <div class="flex items-center gap-1 mb-3 text-amber-400">
+                        <div class="flex items-center gap-1.5 mb-6 text-emerald-500">
                           {Array.from({ length: 5 }).map((_, i) => (
-                            <StarIcon key={i} class={`w-3 h-3 ${i < review.rating ? "fill-current" : "text-gray-200"}`} />
+                            <StarIcon key={i} class={`w-5 h-5 ${i < review.rating ? "fill-current" : "text-gray-100"}`} />
                           ))}
                         </div>
                         
-                        <p class="text-sm text-gray-600 leading-relaxed italic">
+                        <p class="text-lg text-gray-400 leading-relaxed font-medium italic opacity-80">
                           "{review.comment}"
                         </p>
                       </div>
@@ -500,49 +490,46 @@ export default function PropertyPage(
                 )}
               </div>
 
-              {/* Trust Footer */}
-              <div class="pt-10 border-t border-gray-100 space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="p-4 rounded-2xl bg-gray-50 flex items-center gap-3">
-                    <span class="text-xl">💳</span>
-                    <div>
-                      <p class="text-xs font-800 text-gray-900">
-                        Secure Payments
+              <div class="pt-24 border-t border-gray-50 space-y-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  <div class="p-10 rounded-[2.5rem] bg-gray-50 border border-gray-50 flex items-center gap-6 transition-all hover:bg-white hover:shadow-premium group">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-white shadow-sm border border-gray-50 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">💳</div>
+                    <div class="space-y-1">
+                      <p class="text-[12px] font-bold text-gray-900 uppercase tracking-[0.2em]">
+                        Secure Protocol
                       </p>
-                      <p class="text-[10px] text-gray-500">
-                        Processed via Easebuzz Slices API
+                      <p class="text-[10px] text-gray-300 font-bold uppercase tracking-[0.2em]">
+                        256-Bit Synchronization
                       </p>
                     </div>
                   </div>
-                  <div class="p-4 rounded-2xl bg-gray-50 flex items-center gap-3">
-                    <span class="text-xl">⚖️</span>
-                    <div>
-                      <p class="text-xs font-800 text-gray-900">
-                        Refund Policy
+                  <div class="p-10 rounded-[2.5rem] bg-gray-50 border border-gray-50 flex items-center gap-6 transition-all hover:bg-white hover:shadow-premium group">
+                    <div class="w-16 h-16 rounded-[1.5rem] bg-white shadow-sm border border-gray-50 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">⚖️</div>
+                    <div class="space-y-1">
+                      <p class="text-[12px] font-bold text-gray-900 uppercase tracking-[0.2em]">
+                        Host Guarantee
                       </p>
-                      <p class="text-[10px] text-gray-500">
-                        Standard istay Cancellation Rules
+                      <p class="text-[10px] text-gray-300 font-bold uppercase tracking-[0.2em]">
+                        Bespoke Coverage Charter
                       </p>
                     </div>
                   </div>
                 </div>
-                <p class="text-[11px] text-gray-400 text-center px-4 leading-relaxed">
-                  istay | Ghaffar Manzil, Okhla, New Delhi, India.<br />
-                  All payments are processed securely. By booking, you agree to
-                  our{" "}
-                  <a
-                    href="/legal/terms"
-                    class="underline hover:text-mint-600 transition-colors"
-                  >
-                    Terms of Service
-                  </a>.
-                </p>
+                <div class="text-center px-10 pt-8 space-y-6">
+                  <p class="text-[10px] text-gray-300 font-bold uppercase tracking-[0.4em] leading-loose">
+                    iStay Professional Hospitality Network | Okhla, New Delhi, India<br />
+                    Proprietary Protocol for Global Residency Management
+                  </p>
+                  <div class="flex items-center justify-center gap-10">
+                    <a href="/legal/terms" class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] hover:text-emerald-600 transition-colors">Network Terms</a>
+                    <a href="/legal/privacy" class="text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] hover:text-emerald-600 transition-colors">Privacy Charter</a>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Right column: calendar sticky OR Booking Flow */}
-            <div class="lg:col-span-2" id="booking-section">
-              <div class="lg:sticky lg:top-10">
+            <div class="lg:col-span-5" id="booking-section">
+              <div class="lg:sticky lg:top-24">
                 {bookingData
                   ? (
                     <BookingFlow
@@ -571,14 +558,14 @@ export default function PropertyPage(
         </div>
       </div>
 
-      {/* Sticky Mobile Booking Bar */}
+      {/* Mobile Sticky Action Bar */}
       <div class="mobile-sticky-bar">
-        <div class="flex flex-col">
-          <span class="text-xl font-900 text-mint-600">
+        <div class="flex flex-col gap-1">
+          <span class="text-3xl font-bold text-gray-900 tracking-tighter">
             {formatINR(data.dynamicBasePrice)}
           </span>
-          <span class="text-[10px] font-700 text-gray-400 uppercase tracking-widest">
-            per night
+          <span class="text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em]">
+            Net Residency
           </span>
         </div>
         <button 
@@ -586,18 +573,20 @@ export default function PropertyPage(
             const el = document.getElementById("booking-section");
             if (el) el.scrollIntoView({ behavior: 'smooth' });
           }}
-          class="px-8 py-3 rounded-full bg-mint-500 text-istay-900 font-900 text-sm shadow-lg shadow-mint-500/20 active:scale-95 transition-all"
+          class="px-12 py-5 rounded-[1.5rem] bg-gray-900 text-white font-bold text-[11px] uppercase tracking-[0.2em] shadow-premium active:scale-95 transition-all duration-500"
         >
-          Check Availability
+          Request Residency
         </button>
       </div>
 
-      {/* AI Concierge Chat Bubble */}
       <GuestChat
         propId={property.id}
         propertyName={property.name}
         propertyImage={property.imageUrl}
       />
+
+      <Footer />
     </>
   );
 }
+

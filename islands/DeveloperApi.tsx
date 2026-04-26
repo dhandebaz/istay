@@ -36,7 +36,7 @@ function ToastContainer(
       {toasts.map((t) => (
         <div
           key={t.id}
-          class={`${colorMap[t.type]} text-white px-6 py-4 border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-xl flex items-center gap-4 text-xs font-950 uppercase tracking-widest cursor-pointer hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all`}
+          class={`${colorMap[t.type]} text-white px-6 py-4 shadow-premium-lg rounded-2xl flex items-center gap-4 text-xs font-bold uppercase tracking-widest cursor-pointer hover:-translate-y-0.5 transition-all`}
           style={{
             animation: t.exiting
               ? "toast-exit 0.2s ease-in forwards"
@@ -44,15 +44,15 @@ function ToastContainer(
           }}
           onClick={() => onDismiss(t.id)}
         >
-          <span class="text-lg font-950 shrink-0">{iconMap[t.type]}</span>
+          <span class="text-lg font-bold shrink-0">{iconMap[t.type]}</span>
           <span class="flex-1">{t.message}</span>
         </div>
       ))}
       <style>
         {`
         @keyframes toast-enter {
-          from { opacity: 0; transform: translateX(100px) rotate(5deg); }
-          to   { opacity: 1; transform: translateX(0) rotate(0); }
+          from { opacity: 0; transform: translateX(100px); }
+          to   { opacity: 1; transform: translateX(0); }
         }
         @keyframes toast-exit {
           from { opacity: 1; transform: translateX(0); }
@@ -77,26 +77,26 @@ function ConfirmModal({
 }) {
   return (
     <div class="fixed inset-0 z-[9998] flex items-center justify-center p-6 bg-gray-900/40 backdrop-blur-sm animate-fade-in">
-      <div class="bg-white border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] rounded-[2.5rem] max-w-md w-full p-10 space-y-8 animate-brutal-pop">
+      <div class="bg-white border border-gray-100 shadow-premium rounded-[2.5rem] max-w-md w-full p-10 space-y-8 animate-slide-up">
         <div class="text-center space-y-4">
-          <div class="w-20 h-20 bg-rose-50 border-[3px] border-gray-900 rounded-2xl flex items-center justify-center mx-auto text-4xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <div class="w-20 h-20 bg-rose-50 border border-rose-100 rounded-3xl flex items-center justify-center mx-auto text-4xl shadow-sm">
             ⚠️
           </div>
-          <h3 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter">Confirm_Action</h3>
-          <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest leading-relaxed">{message}</p>
+          <h3 class="text-2xl font-bold text-gray-900 tracking-tight">Are you sure?</h3>
+          <p class="text-sm font-medium text-gray-400 leading-relaxed">{message}</p>
         </div>
         <div class="flex flex-col gap-3">
           <button
             onClick={onConfirm}
-            class="w-full py-5 bg-rose-500 text-white font-950 rounded-2xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase tracking-widest text-[10px]"
+            class="w-full py-5 bg-rose-500 text-white font-bold rounded-2xl shadow-premium hover:bg-rose-600 transition-all uppercase tracking-widest text-[11px]"
           >
-            YES, EXECUTE
+            Regenerate Token
           </button>
           <button
             onClick={onCancel}
-            class="w-full py-5 bg-white text-gray-900 font-950 rounded-2xl border-[3px] border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase tracking-widest text-[10px]"
+            class="w-full py-5 bg-gray-50 text-gray-900 font-bold rounded-2xl border border-gray-100 hover:bg-white transition-all uppercase tracking-widest text-[11px]"
           >
-            CANCEL
+            Cancel
           </button>
         </div>
       </div>
@@ -212,15 +212,15 @@ export default function DeveloperApi(
       {/* ── API Access Section ─────────────────────────────────── */}
       <section class="space-y-8">
         <div class="flex items-center gap-4">
-          <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.4em] whitespace-nowrap">AUTHENTICATION_PROTOCOL</p>
-          <div class="h-[2px] flex-1 bg-gray-100" />
+          <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">API Authentication</p>
+          <div class="h-px flex-1 bg-gray-100" />
         </div>
 
-        <div class="bg-white p-10 rounded-[2.5rem] border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+        <div class="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-premium">
           <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
-            <div class="flex-1 space-y-4">
-              <h3 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter">Global_Access_Token</h3>
-              <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest leading-relaxed max-w-xl">
+            <div class="flex-1 space-y-3">
+              <h3 class="text-2xl font-bold text-gray-900 tracking-tight">Access Token</h3>
+              <p class="text-sm font-medium text-gray-400 leading-relaxed max-w-xl">
                 Use this token to authenticate server-to-server requests. 
                 Keep it secret. Regenerating will invalidate the previous token immediately.
               </p>
@@ -232,22 +232,21 @@ export default function DeveloperApi(
                   onConfirm: rotateKey
                 })}
                 disabled={rotating}
-                class="px-8 py-4 bg-gray-900 text-white font-950 rounded-2xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_#4ade80] hover:bg-mint-400 hover:text-gray-900 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none disabled:opacity-50 text-[10px] uppercase tracking-widest"
+                class="px-8 py-4 bg-gray-900 text-white font-bold rounded-2xl shadow-premium hover:bg-emerald-500 transition-all disabled:opacity-50 text-[11px] uppercase tracking-widest"
               >
-                {rotating ? "REGENERATING..." : "ROTATE_TOKEN"}
+                {rotating ? "Regenerating..." : "Regenerate Token"}
               </button>
             </div>
           </div>
 
           <div class="mt-10 relative group">
-            <div class="absolute inset-0 bg-gray-900 rounded-2xl border-[3px] border-gray-900 transform translate-x-[6px] translate-y-[6px]" />
-            <div class="relative bg-gray-900 p-8 rounded-2xl border-[3px] border-gray-900 flex items-center justify-between gap-6 overflow-hidden">
-               <code class="text-mint-400 font-mono text-sm tracking-widest truncate">
-                 {apiKey || "TOKEN_NOT_PROVISIONED"}
+            <div class="relative bg-gray-900 p-8 rounded-2xl border border-gray-800 flex items-center justify-between gap-6 overflow-hidden shadow-premium-lg">
+               <code class="text-emerald-400 font-mono text-sm tracking-widest truncate">
+                 {apiKey || "No token provisioned"}
                </code>
                <button
                  onClick={() => copyToClipboard(apiKey, "API Key")}
-                 class="p-4 bg-mint-400 text-gray-900 rounded-xl border-[2px] border-gray-900 hover:scale-105 active:scale-95 transition-all shrink-0"
+                 class="p-4 bg-emerald-500 text-white rounded-xl shadow-sm hover:bg-emerald-600 active:scale-95 transition-all shrink-0"
                  title="Copy to buffer"
                >
                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
@@ -263,21 +262,21 @@ export default function DeveloperApi(
       {/* ── Webhooks Section ───────────────────────────────────── */}
       <section class="space-y-8">
         <div class="flex items-center gap-4">
-          <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.4em] whitespace-nowrap">EVENT_DISPATCH_PIPELINE</p>
-          <div class="h-[2px] flex-1 bg-gray-100" />
+          <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Webhooks</p>
+          <div class="h-px flex-1 bg-gray-100" />
         </div>
 
-        <div class="bg-white rounded-[3rem] border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
-          <div class="px-10 py-10 border-b-[4px] border-gray-900 bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div class="bg-white rounded-[3rem] border border-gray-100 shadow-premium overflow-hidden">
+          <div class="px-10 py-10 border-b border-gray-50 bg-gray-50/30 flex flex-col sm:flex-row items-center justify-between gap-6">
             <div>
-              <h3 class="text-2xl font-950 text-gray-900 uppercase tracking-tighter">Webhooks</h3>
-              <p class="text-[10px] font-800 text-gray-400 uppercase tracking-widest mt-2">REAL-TIME SIGNAL STREAMING</p>
+              <h3 class="text-2xl font-bold text-gray-900 tracking-tight">Webhooks</h3>
+              <p class="text-xs font-medium text-gray-400 mt-2 uppercase tracking-widest">Receive real-time updates for property events.</p>
             </div>
             <button
                onClick={() => showToast("Webhook creation coming soon", "info")}
-               class="px-8 py-4 bg-mint-400 text-gray-900 font-950 rounded-2xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all text-[10px] uppercase tracking-widest"
+               class="px-8 py-4 bg-gray-900 text-white text-sm font-bold rounded-2xl shadow-premium hover:bg-emerald-500 transition-all uppercase tracking-widest"
             >
-              + NEW_ENDPOINT
+              + Add Webhook
             </button>
           </div>
 
@@ -285,45 +284,45 @@ export default function DeveloperApi(
             {webhooks.length === 0 ? (
               <div class="py-32 text-center space-y-6">
                 <p class="text-6xl grayscale opacity-20">📡</p>
-                <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em]">NO_ACTIVE_PIPELINES_DETECTED</p>
+                <p class="text-[11px] font-bold text-gray-300 uppercase tracking-widest">No webhooks configured</p>
               </div>
             ) : (
               <table class="w-full text-left">
                 <thead>
-                  <tr class="bg-white border-b-[3px] border-gray-900">
-                    <th class="px-10 py-6 text-[10px] font-950 text-gray-400 uppercase tracking-widest">ENDPOINT_URL</th>
-                    <th class="px-10 py-6 text-[10px] font-950 text-gray-400 uppercase tracking-widest">EVENT_FILTER</th>
-                    <th class="px-10 py-6 text-[10px] font-950 text-gray-400 uppercase tracking-widest">STATUS</th>
-                    <th class="px-10 py-6 text-[10px] font-950 text-gray-400 uppercase tracking-widest text-right">ACTIONS</th>
+                  <tr class="bg-white border-b border-gray-50">
+                    <th class="px-10 py-6 text-[11px] font-bold text-gray-400 uppercase tracking-widest">URL</th>
+                    <th class="px-10 py-6 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Event</th>
+                    <th class="px-10 py-6 text-[11px] font-bold text-gray-400 uppercase tracking-widest">Status</th>
+                    <th class="px-10 py-6 text-[11px] font-bold text-gray-400 uppercase tracking-widest text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y-[2px] divide-gray-100">
+                <tbody class="divide-y divide-gray-50">
                   {webhooks.map((w) => (
-                    <tr key={w.id} class="group hover:bg-gray-50 transition-colors">
+                    <tr key={w.id} class="group hover:bg-emerald-50/30 transition-colors">
                       <td class="px-10 py-8">
-                        <p class="text-sm font-950 text-gray-900 tracking-tighter mb-1">{w.url}</p>
-                        <p class="text-[9px] font-800 text-gray-400 uppercase tracking-widest">ID: {w.id}</p>
+                        <p class="text-sm font-bold text-gray-900 tracking-tight mb-1">{w.url}</p>
+                        <p class="text-[10px] font-medium text-gray-400">ID: {w.id}</p>
                       </td>
                       <td class="px-10 py-8">
-                        <span class="px-3 py-1 bg-gray-900 text-mint-400 text-[9px] font-950 rounded-lg uppercase tracking-widest">
+                        <span class="px-3 py-1 bg-gray-900 text-emerald-400 text-[10px] font-bold rounded-lg uppercase tracking-widest">
                           {w.event}
                         </span>
                       </td>
                       <td class="px-10 py-8">
                          <div class="flex items-center gap-3">
                            <div class={`w-2 h-2 rounded-full ${w.active ? 'bg-emerald-500 animate-pulse' : 'bg-gray-300'}`} />
-                           <span class="text-[10px] font-950 text-gray-900 uppercase tracking-widest">{w.active ? 'ACTIVE' : 'DISABLED'}</span>
+                           <span class="text-[10px] font-bold text-gray-900 uppercase tracking-widest">{w.active ? 'Active' : 'Disabled'}</span>
                          </div>
                       </td>
                       <td class="px-10 py-8 text-right space-x-3">
-                        <button class="p-3 bg-white border-[2px] border-gray-900 rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <button class="p-3 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-premium-hover hover:-translate-y-0.5 transition-all text-gray-400 hover:text-emerald-500">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                             <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                           </svg>
                         </button>
-                        <button class="p-3 bg-rose-50 text-rose-500 border-[2px] border-gray-900 rounded-xl shadow-[3px_3px_0px_0px_#9f1239] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <button class="p-3 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-premium-hover hover:-translate-y-0.5 transition-all text-gray-400 hover:text-rose-500">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <polyline points="3 6 5 6 21 6" />
                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                           </svg>
@@ -339,28 +338,24 @@ export default function DeveloperApi(
       </section>
 
       {/* ── Help Section ───────────────────────────────────────── */}
-      <div class="p-10 bg-gray-900 rounded-[2.5rem] border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_#4ade80]">
+      <div class="p-10 bg-gray-900 rounded-[2.5rem] shadow-premium-lg relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent pointer-events-none" />
         <div class="flex items-start gap-8">
-           <div class="w-16 h-16 bg-mint-400 border-[3px] border-gray-900 rounded-2xl flex items-center justify-center text-4xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] shrink-0">
+           <div class="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center text-4xl shadow-sm shrink-0">
              📚
            </div>
            <div>
-             <h4 class="text-lg font-950 text-white uppercase tracking-tighter mb-3">API_Documentation</h4>
-             <p class="text-[11px] text-gray-400 font-700 uppercase tracking-widest leading-relaxed max-w-2xl">
+             <h4 class="text-lg font-bold text-white tracking-tight mb-3">API Documentation</h4>
+             <p class="text-[11px] text-gray-400 font-medium uppercase tracking-widest leading-relaxed max-w-2xl">
                Build custom integrations using our RESTful JSON interface. 
-               All requests must include the <span class="text-mint-400">Authorization: Bearer [TOKEN]</span> header. 
-               Webhooks are dispatched via POST with a HMAC-SHA256 signature in the <span class="text-mint-400">X-IStay-Signature</span> header.
+               All requests must include the <span class="text-emerald-400 font-bold">Authorization: Bearer [TOKEN]</span> header. 
+               Webhooks are dispatched via POST with a HMAC-SHA256 signature.
              </p>
            </div>
         </div>
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes brutal-pop {
-          0% { transform: scale(0.9) translateY(20px); opacity: 0; }
-          100% { transform: scale(1) translateY(0); opacity: 1; }
-        }
-        .animate-brutal-pop { animation: brutal-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
       ` }} />

@@ -1,7 +1,3 @@
-// ================================================================
-// routes/dashboard/knowledge.tsx — Host AI Knowledge Base Editor
-// ================================================================
-
 import { type Handlers, type PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 import { getKnowledge, listProperties } from "../../utils/db.ts";
@@ -49,7 +45,7 @@ export default function KnowledgePage(
   return (
     <>
       <Head>
-        <title>AI Knowledge Base | istay Dashboard</title>
+        <title>Knowledge Hub | iStay</title>
         <meta name="robots" content="noindex" />
       </Head>
 
@@ -57,34 +53,32 @@ export default function KnowledgePage(
         {/* Page Header */}
         <section class="flex flex-col lg:flex-row items-end justify-between gap-8">
           <div>
-            <div class="flex items-center gap-4 mb-4">
-              <div class="px-3 py-1 bg-gray-900 text-mint-400 text-[10px] font-950 uppercase tracking-[0.2em] rounded-full border-[2px] border-gray-900 shadow-[3px_3px_0px_0px_#4ade80]">
-                COGNITIVE_ENGINE
-              </div>
-              <div class="h-[2px] w-24 bg-gray-100" />
+            <div class="flex items-center gap-4 mb-6">
+              <span class="inline-block px-4 py-1.5 bg-emerald-50 text-emerald-700 text-[11px] font-bold uppercase tracking-widest rounded-full border border-emerald-100">AI Brain</span>
+              <div class="h-px w-24 bg-gray-100" />
             </div>
-            <h2 class="text-4xl sm:text-7xl font-950 text-gray-900 tracking-tighter uppercase leading-[0.8]">
-              AI <br/> <span class="text-mint-500">Knowledge.</span>
+            <h2 class="text-5xl font-bold text-gray-900 tracking-tight leading-tight">
+              Knowledge <br/> <span class="text-emerald-500 font-serif italic">Hub.</span>
             </h2>
           </div>
-          <div class="bg-white p-8 rounded-[2.5rem] border-[4px] border-gray-900 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] flex items-center gap-8 group hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
+          <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-premium flex items-center gap-8 group hover:shadow-premium-hover hover:-translate-y-1 transition-all">
             <div>
-              <p class="text-[9px] font-950 text-gray-400 uppercase tracking-[0.3em] mb-2">SYSTEM_ACCURACY</p>
-              <p class="text-4xl font-950 text-gray-900 tracking-tighter">100%</p>
+              <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-2">Bot Accuracy</p>
+              <p class="text-4xl font-bold text-gray-900 tracking-tight">100%</p>
             </div>
-            <div class="w-16 h-16 rounded-2xl bg-purple-400 border-[3px] border-gray-900 flex items-center justify-center text-3xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] group-hover:rotate-[-5deg] transition-transform">
+            <div class="w-16 h-16 rounded-[1.5rem] bg-purple-50 border border-purple-100 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
               🧠
             </div>
           </div>
         </section>
 
         {/* Info Banner */}
-        <div class="p-10 bg-purple-50 rounded-[2.5rem] border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_#a855f7]">
+        <div class="p-10 bg-purple-50/50 rounded-[2.5rem] border border-purple-100 shadow-premium">
           <div class="flex items-start gap-6">
-            <span class="text-4xl">🤖</span>
-            <div class="space-y-2">
-              <h3 class="text-sm font-950 text-gray-900 uppercase tracking-widest">PROTOCOL_INSTRUCTIONS</h3>
-              <p class="text-xs text-purple-900/60 font-800 uppercase leading-relaxed tracking-widest">
+            <span class="text-4xl bg-white p-3 rounded-2xl shadow-sm">🤖</span>
+            <div class="space-y-3">
+              <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest">How it works</h3>
+              <p class="text-sm text-purple-900/70 font-medium leading-relaxed max-w-2xl">
                 Write your property details below — WiFi passwords, check-in
                 instructions, house rules, nearby restaurants, caretaker number.
                 Your guests will see a chat bubble on the booking page and can ask
@@ -96,15 +90,15 @@ export default function KnowledgePage(
 
         {/* No properties state */}
         {properties.length === 0 && (
-          <div class="bg-white border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] p-32 flex flex-col items-center justify-center text-center rounded-[3rem]">
+          <div class="bg-white border border-gray-100 shadow-premium p-32 flex flex-col items-center justify-center text-center rounded-[3rem]">
             <span class="text-8xl mb-8">🏠</span>
-            <h3 class="text-3xl font-950 text-gray-900 uppercase tracking-tighter">Registry_Empty</h3>
-            <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.3em] mt-4 mb-10">Add a property first, then set up its AI knowledge base.</p>
+            <h3 class="text-2xl font-bold text-gray-900 tracking-tight">No properties yet</h3>
+            <p class="text-sm font-medium text-gray-400 mt-4 mb-10 max-w-xs mx-auto">Once you add a property, you can train your AI concierge here.</p>
             <a
               href="/dashboard/properties"
-              class="px-10 py-5 bg-mint-400 text-gray-900 text-[11px] font-950 uppercase tracking-[0.2em] rounded-2xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+              class="px-10 py-5 bg-gray-900 text-white text-sm font-bold rounded-2xl shadow-premium hover:bg-emerald-500 transition-all"
             >
-              GO_TO_PROPERTIES
+              Go to Properties
             </a>
           </div>
         )}
@@ -114,7 +108,7 @@ export default function KnowledgePage(
           {properties.map((prop) => (
             <div
               key={prop.id}
-              class="bg-white rounded-[3rem] border-[4px] border-gray-900 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] p-12"
+              class="bg-white rounded-[3rem] border border-gray-100 shadow-premium p-12"
             >
               <KnowledgeEditor
                 hostId={hostId}

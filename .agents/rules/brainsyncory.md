@@ -1,7 +1,7 @@
 
 
 # Project Memory — istay
-> 2155 notes | Score threshold: >40
+> 2421 notes | Score threshold: >40
 
 ## Safety — Never Run Destructive Commands
 
@@ -20,30 +20,33 @@
 
 ## 📝 NOTE: 1 uncommitted file(s) in working tree.\n\n## Important Warnings
 
-- **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 2142 notes | Score threshold: >40
-+ > 2147 notes | Score threshold
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Patched security issue Cnadk
-+ - problem-fix in island-scrolltotop
-- **⚠️ GOTCHA: Added JWT tokens authentication** — - - gotcha in agent-rules.md
-+ - ⚠️ GOTCHA: problem-fix in agent-rules
-- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - Patched security issue SbqKolb
-+ - problem-fix in island-scrolltot
-- **gotcha in agent-rules.md** — File updated (external): .brainsync/agent-rules.md
-
-Content summary (8
-- **⚠️ GOTCHA: Optimized Score — evolves the database schema to support new requirements** — - > 2096 notes | Score threshold: >40
-+ > 2123 notes | Score threshold
+- **⚠️ GOTCHA: problem-fix in agent-rules.md** — - - problem-fix in shared-context.json
++ - Fixed null crash in Event
+-
+- **gotcha in shared-context.json** — -     }
++     },
+-   ]
++     {
+- }
++       "id": "85536b963d765c44",
++
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 2361 notes | Score threshold: >40
++ > 2364 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 2360 notes | Score threshold: >40
++ > 2361 notes | Score threshold
+- **⚠️ GOTCHA: Added JWT tokens authentication — evolves the database schema to support new ...** — - > 2356 notes | Score threshold: >40
++ > 2357 notes | Score threshold
 
 ## Project Standards
 
-- Added JWT tokens authentication — confirmed 3x
-- what-changed in shared-context.json — confirmed 7x
-- Patched security issue Cnadk — confirmed 3x
-- convention in fresh.gen.ts
-- Added JWT tokens authentication — confirmed 3x
+- discovery in shared-context.json — confirmed 3x
 - what-changed in shared-context.json — confirmed 9x
-- Strengthened types NotificationFeed — parallelizes async operations for speed
-- problem-fix in agent-rules.md — confirmed 3x
+- Patched security issue PawJfXN — hardens HTTP security headers — confirmed 4x
+- Fixed null crash in IdVerification — prevents null/undefined runtime crashes — confirmed 3x
+- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 4x
+- Added JWT tokens authentication — introduces API versioning for backward comp... — confirmed 3x
+- what-changed in shared-context.json — confirmed 3x
+- what-changed in brainsync_auto.md — confirmed 3x
 
 ## Known Fixes
 
@@ -55,10 +58,10 @@ Content summary (8
 
 ## Recent Decisions
 
+- decision in PropertyGrid.tsx
 - Optimized Score — evolves the database schema to support new requirements
 - Optimized Score — evolves the database schema to support new requirements
 - Optimized Project — offloads heavy computation off the main thread
-- decision in index.tsx
 
 ## Learned Patterns
 

@@ -16,9 +16,9 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
   const [error, setError] = useState<string | null>(null);
 
   const TOPUP_OPTIONS = [
-    { amount: 100, label: "STARTER_NODE", desc: "For ~500 AI chats" },
-    { amount: 500, label: "PRO_ENGINE", desc: "For ~2500 AI chats", popular: true },
-    { amount: 1000, label: "ELITE_WHALE", desc: "For heavy duty usage" },
+    { amount: 100, label: "Starter Pack", desc: "Estimated ~500 AI chats" },
+    { amount: 500, label: "Recommended", desc: "Estimated ~2500 AI chats", popular: true },
+    { amount: 1000, label: "Power User", desc: "Heavy duty AI usage" },
   ];
 
   const handlePay = async (amount: number, type: "subscription" | "wallet_topup") => {
@@ -33,14 +33,14 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
       });
 
       const data = await res.json();
-      if (!data.ok) throw new Error(data.error || "GATEWAY_INIT_FAILURE");
+      if (!data.ok) throw new Error(data.error || "Failed to initialize payment.");
 
       const options = {
         key: data.keyId,
         amount: data.amount,
         currency: "INR",
-        name: "iStay_OS",
-        description: type === "subscription" ? "KERNEL_ACCESS_RENEWAL" : "AI_WALLET_FUELING",
+        name: "iStay Platform",
+        description: type === "subscription" ? "Subscription Renewal" : "Credits Recharge",
         order_id: data.orderId,
         handler: async function (response: any) {
           try {
@@ -60,13 +60,13 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
                 window.location.reload();
               }
             } else {
-              throw new Error(verifyData.error || "VERIFICATION_SIG_ERROR");
+              throw new Error(verifyData.error || "Payment verification failed.");
             }
           } catch (err: any) {
             setError(err.message);
           }
         },
-        theme: { color: "#00E676" },
+        theme: { color: "#10b981" },
       };
 
       if (typeof window !== "undefined" && window.Razorpay) {
@@ -74,7 +74,7 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
         rzp.on("payment.failed", (response: any) => setError(response.error.description));
         rzp.open();
       } else {
-        throw new Error("GATEWAY_NOT_LOADED_ERR");
+        throw new Error("Payment gateway failed to load. Please refresh.");
       }
     } catch (err: any) {
       setError(err.message);
@@ -93,14 +93,14 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
         body: JSON.stringify({ hostId }),
       });
       const data = await res.json();
-      if (!data.ok) throw new Error(data.error || "AUTOPAY_LINK_FAILURE");
+      if (!data.ok) throw new Error(data.error || "Failed to set up autopay.");
 
       if (data.short_url) {
         if (typeof window !== "undefined") {
           window.location.href = data.short_url;
         }
       } else {
-        throw new Error("REDIRECT_URL_MISSING");
+        throw new Error("Redirect failed. Please try again.");
       }
     } catch (err: any) {
       setError(err.message);
@@ -113,12 +113,14 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
     <div class="space-y-10">
       {/* ── Low Balance Alert ── */}
       {currentBalance < 20 && (
-        <div class="p-8 bg-rose-50 border-[4px] border-gray-900 rounded-[2rem] shadow-[10px_10px_0px_0px_#9f1239] animate-pulse">
+        <div class="p-8 bg-rose-50 border border-rose-100 rounded-[2rem] shadow-premium animate-pulse">
            <div class="flex items-center gap-6">
              <span class="text-4xl">⚠️</span>
              <div>
-               <p class="text-xs font-950 text-rose-900 uppercase tracking-[0.2em] mb-1">CRITICAL_FUEL_LEVEL</p>
-               <p class="text-[10px] text-rose-700/60 font-800 uppercase tracking-widest leading-relaxed">AI_CONCIERGE WILL STOP RESPONDING SOON. INITIATE_TOPUP IMMEDIATELY.</p>
+               <p class="text-sm font-bold text-rose-900 tracking-tight mb-1">Low Balance Alert</p>
+               <p class="text-xs font-medium text-rose-700/70 leading-relaxed">
+                 Your AI Concierge will stop responding soon. Please top up your credits to avoid service interruption.
+               </p>
              </div>
            </div>
         </div>
@@ -127,8 +129,8 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
       {/* Top-up Selection */}
       <div class="space-y-8">
         <div class="flex items-center gap-4">
-           <p class="text-[10px] font-950 text-gray-400 uppercase tracking-[0.4em] whitespace-nowrap">RECHARGE_CORE</p>
-           <div class="h-[2px] flex-1 bg-gray-100" />
+           <p class="text-[11px] font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Recharge Credits</p>
+           <div class="h-px flex-1 bg-gray-100" />
         </div>
         
         <div class="grid grid-cols-1 gap-6">
@@ -137,19 +139,19 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
               key={opt.amount}
               onClick={() => handlePay(opt.amount, "wallet_topup")}
               disabled={loading}
-              class="group relative flex items-center justify-between p-8 bg-white border-[4px] border-gray-900 rounded-[2rem] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:bg-mint-400 transition-all disabled:opacity-50 disabled:translate-x-0 disabled:translate-y-0 disabled:shadow-none"
+              class="group relative flex items-center justify-between p-8 bg-white border border-gray-100 rounded-[2rem] shadow-premium hover:shadow-premium-hover hover:-translate-y-1 hover:bg-emerald-50/30 transition-all disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none"
             >
               <div class="text-left">
                 <div class="flex items-center gap-3 mb-2">
-                  <span class="text-xs font-950 text-gray-900 uppercase tracking-tighter">{opt.label}</span>
+                  <span class="text-sm font-bold text-gray-900 tracking-tight">{opt.label}</span>
                   {opt.popular && (
-                    <span class="px-3 py-1 bg-gray-900 text-white text-[8px] font-950 rounded-lg uppercase tracking-widest shadow-[2px_2px_0px_0px_#4ade80]">MAX_ROI</span>
+                    <span class="px-3 py-1 bg-emerald-500 text-white text-[10px] font-bold rounded-lg uppercase tracking-widest shadow-sm">Popular</span>
                   )}
                 </div>
-                <p class="text-[9px] font-800 text-gray-400 group-hover:text-gray-900 uppercase tracking-widest">{opt.desc}</p>
+                <p class="text-[11px] font-medium text-gray-400 group-hover:text-gray-600 tracking-wide transition-colors">{opt.desc}</p>
               </div>
               <div class="text-right">
-                <p class="text-3xl font-950 text-gray-900 tracking-tighter leading-none">₹{opt.amount}</p>
+                <p class="text-3xl font-bold text-gray-900 tracking-tight leading-none">₹{opt.amount}</p>
               </div>
             </button>
           ))}
@@ -157,37 +159,37 @@ export default function BillingManager({ hostId, currentBalance }: BillingManage
       </div>
 
       {/* Autopay Setup */}
-      <div class="pt-10 border-t-[4px] border-gray-50 space-y-6">
+      <div class="pt-10 border-t border-gray-100 space-y-6">
         <button
           onClick={handleEnableAutopay}
           disabled={loading}
-          class="w-full py-7 rounded-[2.5rem] bg-gray-900 text-white border-[4px] border-gray-900 shadow-[12px_12px_0px_0px_#4ade80] hover:bg-mint-400 hover:text-gray-900 transition-all flex flex-col items-center justify-center gap-3 disabled:opacity-50 group"
+          class="w-full py-6 rounded-[2.5rem] bg-gray-900 text-white shadow-premium hover:bg-emerald-500 transition-all flex flex-col items-center justify-center gap-2.5 disabled:opacity-50 group"
         >
           {loading ? (
-            <div class="w-8 h-8 border-[5px] border-mint-400 border-t-transparent rounded-full animate-spin" />
+            <div class="w-7 h-7 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin" />
           ) : (
             <>
-              <div class="flex items-center gap-4">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
+              <div class="flex items-center gap-3">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span class="text-sm font-950 uppercase tracking-[0.4em]">ENABLE_SECURE_AUTOPAY</span>
+                <span class="text-base font-bold tracking-tight">Enable Autopay</span>
               </div>
-              <p class="text-[9px] font-950 text-mint-400 group-hover:text-gray-900/50 uppercase tracking-[0.2em] transition-colors">ZERO_DOWNTIME_PROTOCOL</p>
+              <p class="text-[10px] font-bold text-emerald-400 group-hover:text-white uppercase tracking-widest transition-colors">Automatic Renewals</p>
             </>
           )}
         </button>
 
-        <p class="text-[9px] text-center text-gray-400 font-950 uppercase tracking-[0.2em] leading-relaxed">
-          PAYMENTS_SECURED_BY_RAZORPAY_L4 <br/> 
-          <span class="text-gray-200">END_TO_END_ENCRYPTED_SIGNAL_FLOW</span>
+        <p class="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest leading-relaxed">
+          Payments secured by Razorpay <br/> 
+          <span class="opacity-50">PCI-DSS Compliant & Encrypted</span>
         </p>
       </div>
 
       {error && (
-        <div class="p-6 bg-rose-50 border-[3px] border-rose-900 rounded-[1.5rem] shadow-[6px_6px_0px_0px_#9f1239] animate-shake">
-          <p class="text-[10px] font-950 text-rose-900 uppercase tracking-widest flex items-center gap-4">
-            <span class="text-xl">⚠️</span> KERNEL_ERROR: {error}
+        <div class="p-6 bg-rose-50 border border-rose-100 rounded-[1.5rem] shadow-premium animate-shake">
+          <p class="text-[11px] font-bold text-rose-900 flex items-center gap-4">
+            <span class="text-xl">⚠️</span> Error: {error}
           </p>
         </div>
       )}
